@@ -852,6 +852,18 @@ FACE_TRACKING_ENABLED = False
 # ByteTrack sees weak detections; identity acquisition still requires PERSON_CONF_THRESHOLD.
 BYTE_TRACK_LOW_THRESHOLD = 0.10
 
+# Observation-only sidecar. GMC and control experiments remain offline.
+CAMERA_MOTION_DIAGNOSTICS_ENABLED = os.environ.get('PTZ_CAMERA_MOTION_DIAGNOSTICS', '0') == '1'
+CAMERA_MOTION_GMC_ENABLED = False  # Offline replay only; never applied in runtime.
+CAMERA_MOTION_AWARE_CONTROL_ENABLED = False  # No runtime behavior wired to this flag.
+CAMERA_MOTION_METHOD = 'sparse_optical_flow'
+CAMERA_MOTION_DOWNSCALE = 2
+CAMERA_MOTION_OSD_BOXES = ()  # Original frame coordinates; configure for a capture session.
+CAMERA_MOTION_RECORD_ENABLED = os.environ.get('PTZ_CAMERA_MOTION_RECORD', '0') == '1'
+CAMERA_MOTION_RECORD_DIRECTORY = str(PROJECT_ROOT / 'logs' / 'motion_capture')
+CAMERA_MOTION_RECORD_MAX_BYTES = 256_000_000
+CAMERA_MOTION_RECORD_MAX_FRAMES = 600
+
 # Physical body centering, independent of optical/digital zoom toggles.
 AUTO_PAN_TILT_ENABLED = True
 AUTO_PAN_TILT_DEADZONE = 0.08  # Fraction of full image width/height from center.

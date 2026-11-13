@@ -47,8 +47,14 @@ class ByteTrackPersonTracker:
         self._snapshot_context = None
         self._last_selection = None
         self._last_reacquired = None
+        self.motion_observer = None
+        if getattr(cfg, 'CAMERA_MOTION_DIAGNOSTICS_ENABLED', False) or getattr(cfg, 'CAMERA_MOTION_RECORD_ENABLED', False):
+            from .camera_motion import MotionObserver
+            self.motion_observer = MotionObserver(cfg)
 
     def reset(self):
+        if self.motion_observer is not None:
+            self.motion_observer.reset()
         self.tracker.reset()
         self.ids.clear()
         self.last_received = None
@@ -73,6 +79,18 @@ class ByteTrackPersonTracker:
             else:
                 latency.profiler.count('repeated_detection_aliases')
         persons = unique
+        if self.motion_observer is not None:
+            try:
+                context = latency.context.get()
+                metadata = self.motion_observer.observe(frame, received, frame_id,
+                    [p['bbox'] for p in persons],
+                    (context.get('lock_session_id'), context.get('track_generation')),
+                    detections=persons)
+                if metadata is not None:
+                    latency.profiler.event('CAMERA_MOTION_OBSERVATION', **metadata)
+            except Exception as exc:
+                # Optional diagnostics must not change association or admission.
+                latency.profiler.event('CAMERA_MOTION_DIAGNOSTIC_FAILED', error_type=type(exc).__name__)
         rows = np.asarray([[*p['bbox'], p.get('confidence', 1.), i]
                            for i, p in enumerate(persons)], dtype=np.float32).reshape(-1, 6)
         output = []
