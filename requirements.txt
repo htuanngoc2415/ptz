@@ -1,0 +1,10 @@
+numpy>=1.24
+opencv-python>=4.8
+onnxruntime-gpu==1.23.2  # Tested in Conda py; do not install alongside onnxruntime
+Pillow>=10.0
+python-mpv>=1.0  # Requires system libmpv (Ubuntu: libmpv1)
+requests>=2.31
+websockets>=12.0
+ultralytics==8.4.25  # ByteTrack adapter tested against this API
+lap>=0.5.12,<0.6
+tkinterdnd2>=0.4.2  # native file drop for Target Person panel

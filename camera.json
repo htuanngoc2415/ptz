@@ -1,0 +1,14 @@
+{
+  "uri": "rtsp://192.168.0.108:554/cam/realmonitor?channel=1&subtype=1",
+  "username": "admin",
+  "password": "hanet123",
+  "ptz_ip": "192.168.0.108",
+  "ptz_username": "admin",
+  "ptz_password": "hanet123",
+  "ptz_speed": 4,
+  "ptz_timeout": 5.0,
+  "focus_method": "UNSUPPORTED",
+  "video_backend": "opencv",
+  "ptz_backend": "hanet",
+  "display_uri": "rtsp://192.168.0.108:554/cam/realmonitor?channel=1&subtype=0"
+}
