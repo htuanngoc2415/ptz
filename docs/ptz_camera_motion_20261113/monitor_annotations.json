@@ -1,0 +1,203 @@
+{
+  "source": "/mnt/files/Project/ptz/13_11.mov",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "annotation_type": "Manual visual keyframes reviewed by coding agent; approximate visible-body boxes",
+  "independent_review_required": true,
+  "exhaustive_person_annotations": false,
+  "coordinate_space": "monitor recording pixels; NOT raw camera pixels",
+  "time_mapping": "Video position and read OSD second only; clock offset and GUI delay uncalibrated",
+  "valid_for_raw_replay_ground_truth": false,
+  "selected_target_identity_unknown": true,
+  "frames": [
+    {
+      "video_seconds": 118,
+      "osd_time_read": "2026-11-13 11:24:17",
+      "image": "monitor_118s.jpg",
+      "image_sha256": "6687fabe175ac4af9eb06f6012227f7c576cddb06f33e129daf9402d8c1eb582",
+      "persons": [
+        {
+          "visual_label": "dark_shirt_light_trousers",
+          "visible": true,
+          "bbox": [
+            1295,
+            345,
+            1580,
+            985
+          ],
+          "visibility_note": "Lower body clipped by displayed image border"
+        },
+        {
+          "visual_label": "red_jacket_seated",
+          "visible": true,
+          "bbox": [
+            1205,
+            165,
+            1460,
+            565
+          ],
+          "visibility_note": "Lower body partly occluded by furniture/foreground"
+        }
+      ],
+      "intended_target_identity": null,
+      "system_track_id_used": false
+    },
+    {
+      "video_seconds": 122,
+      "osd_time_read": "2026-11-13 11:24:21",
+      "image": "monitor_122s.jpg",
+      "image_sha256": "bd539a8ce427055d08e20bdb42986797c3d8beb3152e01b4bb82d0ffd18100f2",
+      "persons": [
+        {
+          "visual_label": "dark_shirt_light_trousers",
+          "visible": true,
+          "bbox": [
+            1150,
+            350,
+            1420,
+            1020
+          ],
+          "visibility_note": "Lower body clipped by displayed image border"
+        },
+        {
+          "visual_label": "red_jacket_seated",
+          "visible": true,
+          "bbox": [
+            1145,
+            220,
+            1355,
+            580
+          ],
+          "visibility_note": "Lower body partly occluded by furniture/foreground"
+        }
+      ],
+      "intended_target_identity": null,
+      "system_track_id_used": false
+    },
+    {
+      "video_seconds": 125,
+      "osd_time_read": "2026-11-13 11:24:24",
+      "image": "monitor_125s.jpg",
+      "image_sha256": "5d153d3a6e45710897125a8a57f6d3d165c6b1bcaa285df3192b7b6bd95b1986",
+      "persons": [
+        {
+          "visual_label": "dark_shirt_light_trousers",
+          "visible": true,
+          "bbox": [
+            1160,
+            390,
+            1400,
+            1050
+          ],
+          "visibility_note": "Lower body clipped by displayed image border"
+        },
+        {
+          "visual_label": "red_jacket_seated",
+          "visible": true,
+          "bbox": [
+            1145,
+            255,
+            1360,
+            570
+          ],
+          "visibility_note": "Lower body partly occluded by furniture/foreground"
+        }
+      ],
+      "intended_target_identity": null,
+      "system_track_id_used": false
+    },
+    {
+      "video_seconds": 128,
+      "osd_time_read": "2026-11-13 11:24:27",
+      "image": "monitor_128s.jpg",
+      "image_sha256": "21d2b173307dc8028d577602c10d6f72031e8b6642b40010265b5cb905f3e1ee",
+      "persons": [
+        {
+          "visual_label": "dark_shirt_light_trousers",
+          "visible": true,
+          "bbox": [
+            1190,
+            395,
+            1460,
+            1065
+          ],
+          "visibility_note": "Lower body clipped by displayed image border"
+        },
+        {
+          "visual_label": "red_jacket_seated",
+          "visible": true,
+          "bbox": [
+            1150,
+            270,
+            1370,
+            610
+          ],
+          "visibility_note": "Lower body partly occluded by furniture/foreground"
+        }
+      ],
+      "intended_target_identity": null,
+      "system_track_id_used": false
+    },
+    {
+      "video_seconds": 132,
+      "osd_time_read": "2026-11-13 11:24:31",
+      "image": "monitor_132s.jpg",
+      "image_sha256": "ec19f666cefa969d66c62cf618dd41e7a4080444216367c2c87181ef78fd7d50",
+      "persons": [
+        {
+          "visual_label": "dark_shirt_light_trousers",
+          "visible": true,
+          "bbox": [
+            1030,
+            395,
+            1285,
+            1060
+          ],
+          "visibility_note": "Lower body clipped by displayed image border"
+        },
+        {
+          "visual_label": "red_jacket_seated",
+          "visible": true,
+          "bbox": [
+            1145,
+            275,
+            1360,
+            650
+          ],
+          "visibility_note": "Lower body partly occluded by furniture/foreground"
+        }
+      ],
+      "intended_target_identity": null,
+      "system_track_id_used": false
+    },
+    {
+      "video_seconds": 138,
+      "osd_time_read": "2026-11-13 11:24:37",
+      "image": "monitor_138s.jpg",
+      "image_sha256": "758292052ff38be85035085a6440510ee55eca5fb72ee0a3daa4c41e6b460493",
+      "persons": [
+        {
+          "visual_label": "dark_shirt_light_trousers",
+          "visible": false,
+          "bbox": null,
+          "visibility_note": "Not visible in displayed camera view"
+        },
+        {
+          "visual_label": "red_jacket_seated",
+          "visible": true,
+          "bbox": [
+            1140,
+            280,
+            1365,
+            650
+          ],
+          "visibility_note": "Lower body partly occluded by furniture/foreground"
+        }
+      ],
+      "intended_target_identity": null,
+      "system_track_id_used": false
+    }
+  ]
+}

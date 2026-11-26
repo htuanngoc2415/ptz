@@ -1,0 +1,1602 @@
+--- a/ptz/config.py
++++ b/ptz/config.py
+@@ -907,3 +907,28 @@
+ REID_HOLD_SCAN_INTERVAL = 0.5  # ambiguous geometry: bounded global retry, no spatial exclusion
+ TRACK_SNAPSHOT_COOLDOWN = 1.0
+ TRACK_SNAPSHOT_MAX_BYTES = 64_000_000  # raw+annotated JPEG+JSON bundles; OFF by default
++
++# Opt-in identity-aware BoT-SORT path. The previous hybrid path is the default
++# until annotated replay and supervised physical-camera acceptance are complete.
++IDENTITY_TRACKING_ENABLED = os.environ.get('PTZ_IDENTITY_TRACKING', '0') == '1'
++IDENTITY_GMC_ENABLED = os.environ.get('PTZ_IDENTITY_GMC', '1') == '1'
++IDENTITY_GMC_MIN_QUALITY = .35
++IDENTITY_ASSOC_IOU = .30
++IDENTITY_MAX_OBSERVATION_GAP = .45
++IDENTITY_PREDICTION_MAX_AGE = .75
++IDENTITY_TEMPORAL_MAX_AGE = 12.0
++IDENTITY_VERIFY_STABLE_INTERVAL = 1.0
++IDENTITY_VERIFY_UNCERTAIN_INTERVAL = .25
++IDENTITY_SEARCH_INTERVAL = .25
++IDENTITY_CONFIRM_MAX_GAP = 2.0
++IDENTITY_CONTRADICTION_SCORE = .20
++IDENTITY_GALLERY_MAX_SIZE = 12  # includes all immutable reference variants
++IDENTITY_GALLERY_DUPLICATE = .98
++IDENTITY_GALLERY_MIN_VISIBILITY = .95
++IDENTITY_GALLERY_INTERVAL = 1.0
++IDENTITY_DIAGNOSTICS = os.environ.get('PTZ_IDENTITY_DIAGNOSTICS', '0') == '1'
++IDENTITY_DIAGNOSTIC_INTERVAL = 1.0
++IDENTITY_GALLERY_ROLLBACK_FRAMES = 30
++IDENTITY_DISTANT_CONFIRM_EXTRA = 1
++if IDENTITY_TRACKING_ENABLED and TARGET_CONTINUOUS_REID:
++    raise ValueError('Identity tracking requires TARGET_CONTINUOUS_REID=False')
+--- a/ptz/gui/cctv_app.py
++++ b/ptz/gui/cctv_app.py
+@@ -37,6 +37,9 @@
+ from ai.hybrid_reid import HybridReIDTargetSelector as ReIDTargetSelector
+ 
+ import config as cfg
++
++if cfg.IDENTITY_TRACKING_ENABLED:
++    from ai.identity_manager import IdentityAwareTargetSelector as ReIDTargetSelector
+ 
+ 
+ # ============================================================
+--- a/ptz/runtime/inference_worker.py
++++ b/ptz/runtime/inference_worker.py
+@@ -35,11 +35,11 @@
+     def __setattr__(self, name, value):
+         setattr(self._context, name, value)
+ 
+-    def reset_tracking_worker(self):
++    def reset_tracking_worker(self, preserve_tracks=False):
+         """Only the AI thread mutates tracking state; UI requests resets via Event."""
+         if hasattr(self, 'auto_pan_tilt'):
+             self.auto_pan_tilt.cancel()
+-        if hasattr(self, 'person_tracker'):
++        if hasattr(self, 'person_tracker') and not (preserve_tracks and cfg.IDENTITY_TRACKING_ENABLED):
+             self.person_tracker.reset()
+         if hasattr(self, 'target_session'):
+             self.target_session.publish(None)
+@@ -131,6 +131,9 @@
+             reason = 'DISABLED'
+         elif not self.reid_target.locked or self.reid_target.crossing_hold or self.tracking_reset.is_set():
+             reason = 'TARGET_NOT_VALIDATED'
++        elif (cfg.IDENTITY_TRACKING_ENABLED and getattr(self.reid_target, 'observation', None) is not None
++                and not self.reid_target.observation.zoom_allowed):
++            reason = 'IDENTITY_TEMPORAL_ZOOM_HOLD'
+         elif self.zoom_policy.session == session and self.zoom_policy.face_mode:
+             reason = 'FACE_OWNER'
+         elif (getattr(getattr(self, 'face_framing', None), 'locked', False) is True
+@@ -195,9 +198,14 @@
+                 self.reid_target.invalidate(exc)
+                 self.disable_reid_auto_zoom()
+                 return
+-        print('[TARGET] Selection mode: '+('YOLO + OSNet every frame; spatial tracking disabled'
++        print('[TARGET] Selection mode: '+('BoT-SORT + identity-aware asynchronous OSNet'
++            if cfg.IDENTITY_TRACKING_ENABLED else 'YOLO + OSNet every frame; spatial tracking disabled'
+             if cfg.TARGET_CONTINUOUS_REID else 'ByteTrack + periodic/event-driven OSNet verification'))
+-        self.person_tracker = ByteTrackPersonTracker(cfg)
++        if cfg.IDENTITY_TRACKING_ENABLED:
++            from runtime.identity_tracking import IdentityPersonTracker
++            self.person_tracker = IdentityPersonTracker(cfg)
++        else:
++            self.person_tracker = ByteTrackPersonTracker(cfg)
+         self.target_session = TargetSession()
+         self.zoom_policy = ZoomPolicy(context=cfg.CONTEXT_FRAMING)
+         self.auto_zoom.track_valid = self.target_session.matches
+@@ -431,6 +439,13 @@
+                     detection['track_id'] = -(index+1)
+             else:
+                 persons = self.person_tracker.update(persons, frame_time, frame=frame_bgr, frame_id=frame_sequence)
++                if cfg.IDENTITY_TRACKING_ENABLED:
++                    self.reid_target.update_predictions(self.person_tracker.hypotheses(frame_time))
++                    command_active = (self.auto_zoom.busy is True or
++                        getattr(getattr(self, 'auto_pan_tilt', None), 'busy', False) is True)
++                    for observed_person in persons:
++                        observed_person['camera_movement']['ptz_command_active'] = command_active
++                        observed_person['camera_movement']['physical_motor_stopped'] = None
+             if persons and self.auto_zoom.enabled:
+                 self.acquisition_trial.start(frame_time)
+ 
+@@ -459,6 +474,12 @@
+                         self.auto_pan_tilt.cancel()
+                     latency.record_stale('SELECTION_DEADLINE_EXPIRED')
+                     continue
++                observation = getattr(self.reid_target, 'observation', None)
++                if cfg.IDENTITY_TRACKING_ENABLED and observation is not None:
++                    if (not observation.control_allowed or observation.frame_id != frame_sequence
++                            or observation.session_generation != self.reid_target.track_generation):
++                        person = None
++                        self.target_session.publish(None)
+                 binding = (self.reid_target.lock_session_id, self.reid_target.track_id,
+                            self.reid_target.track_generation)
+                 previous_binding = getattr(self, '_profile_binding', None)
+@@ -468,7 +489,8 @@
+                         evidence='runtime_binding_change_not_ground_truth_ID_switch')
+                     self._profile_binding = binding
+                 self.target_session.publish(self.reid_target.lock_session_id
+-                    if self.reid_target.locked and not self.reid_target.crossing_hold else None, self.reid_target.track_id)
++                    if self.reid_target.locked and not self.reid_target.crossing_hold
++                    and (not cfg.IDENTITY_TRACKING_ENABLED or person is not None) else None, self.reid_target.track_id)
+                 if self.reid_target.crossing_hold:
+                     self.auto_zoom.request_stop(reason='IDENTITY_UNCERTAIN')
+                 if self.reid_target.just_locked:
+@@ -540,7 +562,7 @@
+                 lost = self.reid_target.finish_frame(person, face, face_observed=face_result is not None)
+                 if lost:
+                     self.auto_zoom.request_stop(reason="TARGET_LOST")
+-                    self.reset_tracking_worker()
++                    self.reset_tracking_worker(preserve_tracks=True)
+                     person = face = None
+             except Exception as exc:
+                 if hasattr(self, 'auto_pan_tilt'):
+@@ -698,6 +720,10 @@
+ 
+             decision = self.zoom_policy.decide(self.reid_target.lock_session_id, person, face,
+                 control, frame_bgr.shape, frame_time, face_observed=face_result is not None, face_received=control_frame_time)
++            if (cfg.IDENTITY_TRACKING_ENABLED and person is not None
++                    and self.reid_target.observation is not None
++                    and not self.reid_target.observation.zoom_allowed):
++                decision.update(action='HOLD', decision_reason='IDENTITY_TEMPORAL_ZOOM_HOLD')
+             latency.context.set(dict(latency.context.get(), **{k:v for k,v in decision.items() if k != 'action'}))
+             latency.profiler.event('ZOOM_POLICY_DECISION', **decision,
+                 decision=decision['action'], decision_suppression_reason=(decision['decision_reason']
+@@ -958,6 +984,10 @@
+                     sleep_time
+                 )
+ 
++        close_identity = getattr(type(self.reid_target), 'close', None)
++        if close_identity is not None:
++            close_identity(self.reid_target)
++
+     # ========================================================
+     # LOST TARGET
+     # ========================================================
+--- a/ptz/ai/reid_target.py
++++ b/ptz/ai/reid_target.py
+@@ -265,6 +265,11 @@
+         gallery = self.gallery or TargetEmbeddingGallery(self.embedding[None, :])
+         with latency.span('REID_MATCH', 'reid_match_ms'):
+             raw = gallery.score(embeddings).detach().cpu().tolist()
++        if getattr(self, 'retain_candidate_embeddings', False):
++            references = gallery.reference_score(embeddings).detach().cpu().tolist()
++            for person, embedding, reference in zip(persons, embeddings, references):
++                person['_identity_embedding'] = embedding.detach().cpu()
++                person['reference_similarity'] = reference
+         normalized = [None] * len(crops)
+         qualities = [self.quality.analyze(frame, p) for p in persons]
+         indices = [i for i,q in enumerate(qualities) if q and
+--- a/ptz/runtime/face_worker.py
++++ b/ptz/runtime/face_worker.py
+@@ -246,6 +246,7 @@
+             return (px1 <= x1 < x2 <= px2 and py1 <= y1 < y2 <= py2 and
+                     (y1+y2)/2 <= py1+cfg.FACE_PERSON_ROI_TOP_RATIO*(py2-py1))
+         eligible = [f for f in faces if job.person is None or head_associated(f, job.person)]
++        head_eligible_count = len(eligible)
+         # Track IDs distinguish two overlapping people even when bboxes coincide.
+         def other_person(person):
+             if job.person is None:
+@@ -281,6 +282,14 @@
+         latency.profiler.event('FACE_DETECTION_RESULT', face_detected=face is not None)
+         if face is None:
+             if faces:
++                reason = ('OUTSIDE_TARGET_HEAD' if not head_eligible_count else
++                          'SHARED_WITH_OTHER_PERSON' if not eligible else
++                          'PREVIOUS_FACE_GEOMETRY_OR_MARGIN' if job.previous_face is not None
++                          and not getattr(cfg, 'TARGET_CONTINUOUS_REID', False)
++                          else 'MULTIPLE_ELIGIBLE_FACES')
++                latency.profiler.event('FACE_ASSOCIATION_REJECTION_DETAIL', **job.correlation(),
++                    reason=reason, detected_count=len(faces), head_eligible_count=head_eligible_count,
++                    exclusive_count=len(eligible))
+                 self.reject(job, 'FACE_ASSOCIATION_AMBIGUOUS')
+             else:
+                 latency.profiler.event('FACE_LOST', **job.correlation(), evidence='detector_miss')
+--- /dev/null
++++ b/ptz/runtime/identity_tracking.py
+@@ -0,0 +1,179 @@
++"""BoT-SORT adapter. Only detector observations can authorize target control."""
++from dataclasses import dataclass, asdict
++import numpy as np
++from ultralytics.trackers.bot_sort import BOTSORT, BOTrack
++from .byte_tracking import ByteTrackPersonTracker
++from .camera_motion import CameraMotionEstimator, MotionEstimate
++from ai.reid_target import iou
++from telemetry import latency
++
++
++@dataclass(frozen=True)
++class TargetObservation:
++    bbox: tuple | None
++    observation_timestamp: float
++    frame_id: int
++    target_identity_id: str
++    track_id: int | None
++    tracking_confidence: float
++    identity_confidence: str  # evidence tier, not a calibrated probability
++    status: str
++    session_generation: int
++    camera_movement: dict | None
++    control_allowed: bool
++    zoom_allowed: bool = False
++
++    def payload(self):
++        return asdict(self)
++
++
++def admitted_warp(estimate, minimum_quality):
++    if not estimate.valid or not np.isfinite(estimate.confidence) or estimate.confidence < minimum_quality:
++        return None
++    H = np.asarray(estimate.transform, dtype=float)
++    if H.shape != (2, 3) or not np.isfinite(H).all():
++        return None
++    # XYWH is axis aligned. Do not rotate width/height with a generic R-kron warp.
++    if abs(H[0, 1]) > .01 or abs(H[1, 0]) > .01 or not .85 <= H[0, 0] <= 1.18 or not .85 <= H[1, 1] <= 1.18:
++        return None
++    return H
++
++
++class EvidenceBoTSORT(BOTSORT):
++    def __init__(self, args, frame_rate):
++        super().__init__(args, frame_rate)
++        self.warp = None
++        self.predictions = {}
++
++    def init_track(self, results, img=None):
++        return [BOTrack(np.r_[box, row[5]], score, 0)
++                for box, row, score in zip(results.xywh, results.rows, results.conf)]
++
++    def multi_predict(self, tracks):
++        super().multi_predict(tracks)
++        pending = list(tracks) + [t for t in self.tracked_stracks if not t.is_activated]
++        seen = set()
++        self.predictions = {}
++        for track in pending:
++            if id(track) in seen or track.mean is None:
++                continue
++            seen.add(id(track))
++            if self.warp is not None:
++                H = self.warp
++                J = np.diag([H[0, 0], H[1, 1]] * 4)
++                track.mean = J @ track.mean
++                track.mean[:2] += H[:, 2]
++                track.covariance = J @ track.covariance @ J.T
++                track.covariance[:2, :2] += np.eye(2)
++            self.predictions[track.track_id] = tuple(float(v) for v in track.xyxy)
++
++
++class IdentityPersonTracker(ByteTrackPersonTracker):
++    """Maintained Kalman/lost buffering plus time, ambiguity, and GMC evidence.
++
++    Appearance is consumed by the identity manager, never substituted for a
++    native ID. This adapter does not load Ultralytics' separate ReID encoder.
++    """
++    def __init__(self, cfg):
++        super().__init__(cfg)
++        args = self.tracker.args
++        args.gmc_method = 'none'
++        args.with_reid = False
++        args.proximity_thresh = .5
++        args.appearance_thresh = .8
++        self.tracker = EvidenceBoTSORT(args, cfg.AI_MAX_FPS)
++        self.estimator = CameraMotionEstimator(cfg.CAMERA_MOTION_DOWNSCALE)
++        self.previous = None
++        self.history = {}
++        self.motion = MotionEstimate(reason='FIRST_FRAME')
++        self.last_frame_id = None
++
++    def reset(self):
++        super().reset()
++        self.previous = None
++        self.history = {}
++        self.last_frame_id = None
++        self.motion = MotionEstimate(reason='RESET')
++
++    @latency.measured('IDENTITY_TRACK_ASSOCIATION', 'identity_track_association_ms')
++    def update(self, persons, received, frame=None, frame_id=None):
++        if not np.isfinite(received) or (self.last_received is not None and received <= self.last_received) or (
++                frame_id is not None and self.last_frame_id is not None and frame_id <= self.last_frame_id):
++            latency.profiler.count('identity_tracker_stale_frames')
++            return []
++        if self.last_received is not None and received-self.last_received > self.cfg.REID_LOST_GRACE_SEC:
++            self.reset()
++        persons = list({id(p): p for p in persons}.values())
++        boxes = [p['bbox'] for p in persons]
++        self.motion = MotionEstimate(reason='NO_FRAME_PAIR')
++        if frame is not None and self.previous is not None and self.cfg.IDENTITY_GMC_ENABLED:
++            old, stamp, old_boxes = self.previous
++            self.motion = self.estimator.estimate(old, frame, stamp, received, old_boxes, boxes,
++                                                   self.cfg.CAMERA_MOTION_OSD_BOXES)
++        self.previous = (frame.copy(), received, boxes) if frame is not None else None
++        self.tracker.warp = admitted_warp(self.motion, self.cfg.IDENTITY_GMC_MIN_QUALITY)
++        self.last_frame_id = frame_id
++        # Native tracker sees no image, so its own GMC cannot apply a second warp.
++        output = super().update(persons, received, frame=None, frame_id=frame_id)
++        active = {t.track_id: t for t in self.tracker.tracked_stracks}
++        reverse = {v: k for k, v in self.ids.items()}
++        for person in output:
++            tid = person['track_id']
++            native = reverse[tid]
++            predicted = self.tracker.predictions.get(native)
++            association = iou(predicted, person['bbox']) if predicted else 0.
++            competitors = [iou(predicted, p['bbox']) for p in persons
++                           if p is not persons[person['tracker_source_index']]] if predicted else []
++            competitors.extend(iou(box, person['bbox']) for other, box in self.tracker.predictions.items()
++                               if other != native)
++            margin = association-max(competitors, default=0.)
++            old = self.history.get(tid)
++            gap = received-old['last_observed_timestamp'] if old else None
++            track = active[native]
++            visible = 1.
++            if frame is not None:
++                h, w = frame.shape[:2]
++                x1, y1, x2, y2 = person['bbox']
++                area = max(1., (x2-x1)*(y2-y1))
++                visible = max(0, min(w, x2)-max(0, x1))*max(0, min(h, y2)-max(0, y1))/area
++                # Border-touching crops may already have been clipped by YOLO.
++                if x1 <= 1 or y1 <= 1 or x2 >= w-1 or y2 >= h-1:
++                    visible = min(visible, .5)
++            person.update(last_observed_frame_id=frame_id, last_observed_timestamp=received,
++                predicted_bbox=predicted, velocity_estimate=track.mean[4:6].tolist(),
++                track_age=self.tracker.frame_id-track.start_frame+1, time_since_update=0.,
++                observation_gap=gap, association_confidence=association, association_margin=margin,
++                visibility=visible, tracking_status='OBSERVED',
++                camera_movement=dict(self.motion.payload(), applied=self.tracker.warp is not None),
++                temporal_reliable=bool(old is not None and gap <= self.cfg.IDENTITY_MAX_OBSERVATION_GAP
++                    and association >= self.cfg.IDENTITY_ASSOC_IOU and margin >= self.cfg.REID_ASSOC_MARGIN))
++            self.history[tid] = dict(person)
++        # Native BoT-SORT suppresses tentative/weak unmatched tracks. Keep those
++        # detections visible to identity/face ambiguity gates; provisional IDs
++        # cannot accumulate identity confirmations across frames.
++        emitted = {p['tracker_source_index'] for p in output}
++        for index, detection in enumerate(persons):
++            if index not in emitted:
++                output.append(dict(detection, track_id=-(self.tracker.frame_id*100000+index+1),
++                    tracker_source_index=index, last_observed_frame_id=frame_id,
++                    last_observed_timestamp=received, temporal_reliable=False,
++                    tracking_status='TENTATIVE', association_confidence=0.,
++                    association_margin=0., visibility=0., track_age=1,
++                    camera_movement=dict(self.motion.payload(), applied=self.tracker.warp is not None)))
++        self.history = {k: v for k, v in self.history.items()
++                        if received-v['last_observed_timestamp'] <= self.cfg.REID_LOST_GRACE_SEC}
++        return output
++
++    def hypotheses(self, now):
++        """Diagnostics/recovery hints only; never returned by update as observations."""
++        rows = []
++        for tid, item in self.history.items():
++            age = now-item['last_observed_timestamp']
++            if not 0 < age <= self.cfg.IDENTITY_PREDICTION_MAX_AGE:
++                continue
++            box = np.array(item['bbox'], dtype=float)
++            velocity = np.array(item['velocity_estimate']) * self.cfg.AI_MAX_FPS * age
++            box += np.tile(velocity, 2)
++            rows.append(dict(track_id=tid, bbox=box.tolist(), time_since_update=age,
++                             tracking_status='PREDICTED', control_allowed=False))
++        return rows
+--- /dev/null
++++ b/ptz/ai/identity_manager.py
+@@ -0,0 +1,379 @@
++"""Persistent target identity, separate from native tracks and motor sessions.
++
++Evidence tiers are rule-based, not probabilities. All OSNet work runs in one
++bounded background job; only the AI owner consumes results and mutates identity.
++"""
++from concurrent.futures import Future
++from contextvars import copy_context
++import copy
++import math
++import threading
++import time
++from uuid import uuid4
++from ai.hybrid_reid import HybridReIDTargetSelector
++from ai.reid_target import iou
++from ai.reid.trusted_gallery import TrustedTargetGallery
++from runtime.identity_tracking import TargetObservation
++from telemetry import latency
++
++
++class IdentityAwareTargetSelector(HybridReIDTargetSelector):
++    retain_candidate_embeddings = True
++
++    def __init__(self, cfg, reid=None, clock=time.monotonic):
++        self.clock = clock
++        self._job = None
++        self._closed = False
++        self.metrics = dict(observed_frames=0, authorized_frames=0, uncertain_frames=0,
++            predicted_frames=0, reid_invocations=0, stale_results=0, recoveries=0,
++            recovery_attempts=0, abandoned_recoveries=0, short_recovery_failures=0,
++            occlusion_attempts=0, occlusion_recoveries=0, tracker_rebindings=0, recovery_latency_s=[],
++            reid_latency_ms=[], observed_target_seconds=0., ptz_commands_during_uncertain=None)
++        super().__init__(cfg, reid)
++
++    def reset(self, preserve_reacquire=False):
++        history = getattr(self, 'last_reliable_observation', None)
++        recovery = getattr(self, '_recovery_since', None)
++        occlusion = getattr(self, '_recovery_was_occlusion', False)
++        if recovery is not None and not preserve_reacquire:
++            self.metrics['abandoned_recoveries'] += 1
++        previous_uid = getattr(self, 'target_uid', None)
++        reference = getattr(self, 'embedding', None)
++        same_reference = reference is getattr(self, '_identity_reference', None)
++        super().reset(preserve_reacquire)
++        if same_reference and previous_uid is not None:
++            self.target_uid = previous_uid
++        self._identity_reference = reference
++        self.last_reliable_observation = history if preserve_reacquire else None
++        self._recovery_since = recovery if preserve_reacquire else None
++        self._recovery_was_occlusion = occlusion if preserve_reacquire else False
++        self._last_job_at = float('-inf')
++        self._last_result_frame = -1
++        self._last_observation_frame = -1
++        self._candidate_result_time = None
++        self._last_gallery_time = float('-inf')
++        self._last_diagnostic = float('-inf')
++        self._metric_time = None
++        self._previous_authorized = False
++        self._previous_status = None
++        self.observation = None
++        self._predictions = ()
++        self.last_raw_similarity = None
++        self._evidence_timestamp = self._evidence_frame_id = None
++        # Keep an in-flight slot occupied until it completes: resets cannot spawn
++        # unbounded GPU jobs. Its old epoch is rejected on consumption.
++
++    def _hold(self, reason, missing=False):
++        if missing and not self._recovery_was_occlusion:
++            self.metrics['occlusion_attempts'] += 1
++            self._recovery_was_occlusion = True
++        if not self.crossing_hold:
++            self._recovery_since = self.observation_time
++            self._last_job_at = float('-inf')
++            self.metrics['recovery_attempts'] += 1
++            super()._hold(reason, missing)
++        else:
++            self.transition_reason = reason
++            self.tracking_status = 'MISSING' if missing else 'TRACKED'
++            self.identity_status = 'UNCERTAIN'
++
++    def update_predictions(self, hypotheses):
++        # Hints are diagnostic only. They cannot become current observations or
++        # contribute to identity/gallery confirmation.
++        self._predictions = tuple(copy.deepcopy(hypotheses))
++
++    def _token(self):
++        return (self.target_uid, self.verification_epoch, self.lock_session_id, self.track_generation)
++
++    def close(self):
++        self._closed = True
++        self.verification_epoch = uuid4().hex
++        latency.profiler.event('IDENTITY_METRICS_FINAL', target_identity_id=self.target_uid,
++            metrics=copy.deepcopy(self.metrics), unresolved_recovery=self._recovery_since is not None)
++
++    def _prepare_gallery(self):
++        self._identity_reference = self.embedding
++        if self.gallery is None and self.embedding is not None:
++            self.gallery = TrustedTargetGallery(self.embedding[None, :],
++                max_size=self.cfg.IDENTITY_GALLERY_MAX_SIZE)
++            self.gallery.reference_floor = self.cfg.REID_KEEP_THRESHOLD
++        if self.gallery is not None and not isinstance(self.gallery, TrustedTargetGallery):
++            self.gallery = TrustedTargetGallery(self.gallery.embeddings,
++                max_size=self.cfg.IDENTITY_GALLERY_MAX_SIZE)
++            self.gallery.reference_floor = self.cfg.REID_KEEP_THRESHOLD
++
++    def _launch(self, frame, persons, now):
++        if self._job is not None or not persons:
++            return
++        scorer = copy.copy(self)
++        token = self._token()
++        scorer._score_trigger = 'IDENTITY_RECOVERY' if self.crossing_hold or self.reacquiring else (
++            'IDENTITY_VERIFY' if self.locked else 'IDENTITY_ACQUIRE')
++        scorer._score_valid = lambda: self._token() == token and 0 <= self.clock()-now <= self.cfg.REID_VERIFY_RESULT_MAX_AGE
++        rows = copy.deepcopy(persons)
++        image = frame.copy()
++        future = Future()
++        self._job = (future, token, now, self.frame_id, rows)
++        self._last_job_at = now
++        self.metrics['reid_invocations'] += 1
++        context = copy_context()
++        def run():
++            begin = time.perf_counter()
++            try:
++                scores = scorer._scores(image, rows)
++                future.set_result((scores, (time.perf_counter()-begin)*1000))
++            except Exception as exc:
++                future.set_exception(exc)
++        threading.Thread(target=lambda: context.run(run), name='identity-reid', daemon=True).start()
++
++    def _consume(self, persons, now):
++        job = self._job
++        if job is None or not job[0].done():
++            return
++        future, token, captured, frame_id, rows = job
++        self._job = None
++        if (token != self._token() or not 0 <= now-captured <= self.cfg.REID_VERIFY_RESULT_MAX_AGE
++                or frame_id <= self._last_result_frame):
++            self.metrics['stale_results'] += 1
++            latency.profiler.count('identity_stale_results')
++            latency.profiler.event('IDENTITY_RESULT_DISCARDED', frame_id=frame_id,
++                                   reason='TOKEN_AGE_OR_ORDER', session_generation=self.track_generation,
++                                   result_token=list(token), active_token=list(self._token()))
++            return
++        self._last_result_frame = frame_id
++        try:
++            scores, duration = future.result()
++            if len(scores) != len(rows) or not scores or not all(math.isfinite(s) for s in scores):
++                raise ValueError('Invalid identity score batch')
++        except Exception as exc:
++            self.transition_reason = 'REID_UNAVAILABLE'
++            latency.profiler.event('IDENTITY_REID_FAILED', error_type=type(exc).__name__, frame_id=frame_id)
++            return
++        self.metrics['reid_latency_ms'].append(duration)
++        self.metrics['reid_latency_ms'] = self.metrics['reid_latency_ms'][-512:]
++        stable = self.locked and not self.crossing_hold
++        order = sorted(range(len(scores)), key=scores.__getitem__, reverse=True)
++        index = next((i for i, row in enumerate(rows) if row['track_id'] == self.track_id), None) if stable else order[0]
++        if index is None:
++            return
++        source = rows[index]
++        self.last_raw_similarity = source.get('reference_similarity', source.get('raw_similarity'))
++        self._evidence_timestamp, self._evidence_frame_id = captured, frame_id
++        current = next((p for p in persons if p['track_id'] == source['track_id']), None)
++        others = [s for i, s in enumerate(scores) if i != index]
++        self.top1 = scores[index]
++        self.top2 = max(others) if others else None
++        self.margin = self.top1-self.top2 if others else None
++        if current is None or current.get('last_observed_timestamp') != now:
++            self.pending_count = 0
++            return
++        # Cached results verify identity, never supply a replacement bounding box.
++        # Across a gap require geometry; strong current temporal evidence accounts
++        # for camera motion instead of comparing uncompensated old coordinates.
++        if not current.get('temporal_reliable') and iou(source['bbox'], current['bbox']) < self.cfg.REID_CONFIRM_IOU:
++            self.pending_count = 0
++            return
++        ambiguous = self.margin is not None and self.margin < self.cfg.REID_MARGIN_THRESHOLD
++        if ambiguous or self._candidate_overlap(current, persons):
++            self.pending_count = 0
++            if self.locked:
++                self._hold('AMBIGUOUS_IDENTITY')
++            return
++        if stable:
++            quality = (source.get('visibility', 0) >= self.cfg.IDENTITY_GALLERY_MIN_VISIBILITY
++                       and source.get('confidence', 0) >= self.cfg.PERSON_CONF_THRESHOLD)
++            if self.top1 >= self.cfg.REID_KEEP_THRESHOLD:
++                self.last_positive_verify = captured
++                self.negative_verifications = 0
++                self.identity_status = 'VERIFIED'
++                self.transition_reason = 'IDENTITY_VERIFIED'
++                self._admit(source, captured, frame_id)
++            elif quality and self.top1 <= self.cfg.IDENTITY_CONTRADICTION_SCORE:
++                # A good crop with strongly contradictory appearance cannot be
++                # rescued by geometry alone. Roll back recent live admissions.
++                if isinstance(self.gallery, TrustedTargetGallery):
++                    self.gallery = self.gallery.rollback(max(0, frame_id-self.cfg.IDENTITY_GALLERY_ROLLBACK_FRAMES))
++                self._hold('CONTRADICTORY_APPEARANCE')
++            else:
++                self.negative_verifications += 1
++                self.identity_status = 'TEMPORAL'
++                self.transition_reason = 'APPEARANCE_DIP'
++            return
++        threshold = self.cfg.REID_REACQUIRE_THRESHOLD if self.locked or self.reacquiring else self.cfg.REID_ACQUIRE_THRESHOLD
++        if self.top1 < threshold:
++            self.pending_count = 0
++            self.transition_reason = 'BELOW_CONFIRMATION_THRESHOLD'
++            return
++        continuous = (self.pending_id == current['track_id'] and self._candidate_result_time is not None
++            and 0 < captured-self._candidate_result_time <= self.cfg.IDENTITY_CONFIRM_MAX_GAP
++            and (current.get('temporal_reliable') or (self.pending_box is not None
++                 and iou(self.pending_box, current['bbox']) >= self.cfg.REID_CONFIRM_IOU)))
++        self.pending_count = self.pending_count+1 if continuous else 1
++        self.pending_id, self.pending_box = current['track_id'], current['bbox']
++        self._candidate_result_time = captured
++        self.confirm = self.pending_count
++        required = self.cfg.REID_CONFIRM_FRAMES
++        history = self.last_reliable_observation
++        if (history is not None and self._recovery_since is not None
++                and now-self._recovery_since <= self.cfg.REID_LOST_GRACE_SEC
++                and current['track_id'] != history.track_id
++                and iou(history.bbox, current['bbox']) < self.cfg.REID_TRACK_IOU):
++            # A distant new track during local recovery needs additional evidence.
++            # This is hysteresis, not a permanent spatial exclusion: the global
++            # search remains available after the short recovery grace period.
++            required += self.cfg.IDENTITY_DISTANT_CONFIRM_EXTRA
++        if self.pending_count < required:
++            self.transition_reason = 'CONFIRMING_IDENTITY'
++            return
++        recovering = self.locked or self.reacquiring
++        previous_track = self.track_id
++        self.track_id = current['track_id']
++        self.track_generation += 1
++        self.lock_session_id = 'lock_'+uuid4().hex
++        self.verification_epoch = uuid4().hex
++        self.locked_ns = time.perf_counter_ns()
++        self.locked = self.just_locked = True
++        self.reacquiring = self.crossing_hold = False
++        self.last_positive_verify = captured
++        self.person_box = current['bbox']
++        self.face_box = None
++        self.face_missing = 0
++        self.pending_count = self.confirm = 0
++        self.negative_verifications = 0
++        self.identity_status = 'VERIFIED'
++        self.transition_reason = 'TARGET_REACQUIRED' if recovering else 'TARGET_CONFIRMED'
++        if recovering:
++            self.metrics['recoveries'] += 1
++            self.metrics['occlusion_recoveries'] += int(self._recovery_was_occlusion)
++            if self._recovery_since is not None:
++                self.metrics['recovery_latency_s'].append(now-self._recovery_since)
++                self.metrics['recovery_latency_s'] = self.metrics['recovery_latency_s'][-512:]
++            if previous_track != self.track_id:
++                self.metrics['tracker_rebindings'] += 1
++        self._recovery_since = None
++        self._recovery_was_occlusion = False
++        self.set_stage('TARGET_LOCKED')
++        latency.profiler.event('IDENTITY_BOUND', target_identity_id=self.target_uid,
++            track_id=self.track_id, previous_track_id=previous_track, frame_id=self.frame_id,
++            evidence_frame_id=frame_id, evidence_timestamp=captured,
++            similarity=self.top1, session_generation=self.track_generation, recovery=recovering,
++            lock_session_id=self.lock_session_id, track_generation=self.track_generation)
++
++    def _admit(self, source, captured, frame_id):
++        if (not isinstance(self.gallery, TrustedTargetGallery) or '_identity_embedding' not in source
++                or source.get('visibility', 0) < self.cfg.IDENTITY_GALLERY_MIN_VISIBILITY
++                or source.get('confidence', 0) < self.cfg.PERSON_CONF_THRESHOLD
++                or not source.get('temporal_reliable')
++                or source.get('track_age', 0) < self.cfg.REID_CONFIRM_FRAMES
++                or captured-self._last_gallery_time < self.cfg.IDENTITY_GALLERY_INTERVAL):
++            return
++        gallery = self.gallery.admit(source['_identity_embedding'], dict(frame_id=frame_id,
++            timestamp=captured, track_id=self.track_id, target_identity_id=self.target_uid,
++            session_generation=self.track_generation, confidence='REFERENCE_VERIFIED',
++            reference_similarity=source.get('reference_similarity'), visibility=source['visibility']),
++            reference_threshold=self.cfg.REID_ACQUIRE_THRESHOLD,
++            duplicate=self.cfg.IDENTITY_GALLERY_DUPLICATE)
++        if gallery is not self.gallery:
++            self.gallery = gallery
++            self._last_gallery_time = captured
++            latency.profiler.event('IDENTITY_GALLERY_ADMITTED', frame_id=frame_id, size=len(gallery.embeddings))
++
++    def select_person(self, frame, persons, now):
++        if (self._closed or self.frame_id <= self._last_observation_frame or not math.isfinite(now)
++                or (self.observation_time is not None and now <= self.observation_time)):
++            self.metrics['stale_results'] += 1
++            return None
++        self._last_observation_frame = self.frame_id
++        self._previous_observation_time = self.observation_time
++        self.observation_time = now
++        self._diagnostic_observation_time = now
++        self._observed_persons = persons
++        self.just_locked = False
++        if not self.valid:
++            return self._publish(None, persons, now)
++        self._prepare_gallery()
++        current = next((p for p in persons if p.get('track_id') == self.track_id), None) if self.locked else None
++        if self.locked:
++            if current is None:
++                self._hold('TRACK_MISSING', True)
++            elif self._candidate_overlap(current, persons):
++                self._hold('PERSON_OVERLAP')
++            elif not current.get('temporal_reliable', False):
++                self._hold('MOTION_AMBIGUOUS')
++            elif current.get('visibility', 0) < .5:
++                self._hold('INSUFFICIENT_VISIBILITY')
++        self._consume(persons, now)
++        current = next((p for p in persons if p.get('track_id') == self.track_id), None) if self.locked else None
++        if (self.locked and not self.crossing_hold and self.last_positive_verify is not None
++                and now-self.last_positive_verify > self.cfg.IDENTITY_TEMPORAL_MAX_AGE):
++            self._hold('IDENTITY_EVIDENCE_EXPIRED')
++        reliable = self.locked and not self.crossing_hold and current is not None
++        uncertain = (not reliable or self.identity_status == 'TEMPORAL'
++            or current.get('confidence', 0) < self.cfg.PERSON_CONF_THRESHOLD
++            or current.get('visibility', 0) < self.cfg.IDENTITY_GALLERY_MIN_VISIBILITY
++            or current.get('camera_movement', {}).get('classification') not in ('LOW_IMAGE_MOTION', None))
++        interval = (self.cfg.IDENTITY_SEARCH_INTERVAL if not reliable else
++            self.cfg.IDENTITY_VERIFY_UNCERTAIN_INTERVAL if uncertain else self.cfg.IDENTITY_VERIFY_STABLE_INTERVAL)
++        eligible = [p for p in persons if p.get('confidence', 0) >= self.cfg.PERSON_CONF_THRESHOLD
++                    or (reliable and p['track_id'] == self.track_id)]
++        if now-self._last_job_at >= interval and eligible:
++            self._launch(frame, eligible, now)
++        if reliable:
++            self.person_box = current['bbox']
++            self.tracking_status = 'TRACKED'
++            return self._publish(current, persons, now)
++        return self._publish(None, persons, now)
++
++    def _publish(self, person, persons, now):
++        observed = next((p for p in persons if p.get('track_id') == self.track_id), None) if self.locked else None
++        status = ('REACQUIRED' if person is not None and self.just_locked and self.transition_reason == 'TARGET_REACQUIRED'
++            else 'OBSERVED' if person is not None else 'UNCERTAIN' if observed is not None
++            else 'OCCLUDED' if self.locked else 'LOST' if self.reacquiring else 'SEARCHING')
++        self.observation = TargetObservation(tuple(person['bbox']) if person else None, now, self.frame_id,
++            self.target_uid, self.track_id if self.locked else None,
++            float(person.get('association_confidence', 0)) if person else 0.,
++            self.identity_status if person else 'UNCERTAIN', status, self.track_generation,
++            copy.deepcopy((person or observed or {}).get('camera_movement')), person is not None,
++            bool(person is not None and self.identity_status == 'VERIFIED'
++                and person.get('visibility', 0) >= self.cfg.IDENTITY_GALLERY_MIN_VISIBILITY
++                and person.get('confidence', 0) >= self.cfg.PERSON_CONF_THRESHOLD))
++        self.metrics['predicted_frames'] += int(observed is None and any(
++            p['track_id'] == self.track_id for p in self._predictions))
++        self.metrics['observed_frames'] += int(observed is not None)
++        self.metrics['authorized_frames'] += int(person is not None)
++        self.metrics['uncertain_frames'] += int(status == 'UNCERTAIN')
++        if self._metric_time is not None and self._previous_authorized and person is not None:
++            self.metrics['observed_target_seconds'] += min(now-self._metric_time, self.cfg.IDENTITY_MAX_OBSERVATION_GAP)
++        self._metric_time = now
++        self._previous_authorized = person is not None
++        if person is not None:
++            self.last_reliable_observation = self.observation
++        changed = status != self._previous_status
++        if changed or self.cfg.IDENTITY_DIAGNOSTICS or now-self._last_diagnostic >= self.cfg.IDENTITY_DIAGNOSTIC_INTERVAL:
++            latency.profiler.event('IDENTITY_TRACKING_DECISION', **self.observation.payload(),
++                previous_status=self._previous_status, reason=self.transition_reason,
++                raw_osnet_similarity=self.last_raw_similarity, final_similarity=self.top1, appearance_margin=self.margin,
++                evidence_frame_id=self._evidence_frame_id, evidence_timestamp=self._evidence_timestamp,
++                predicted_hypotheses=list(self._predictions),
++                candidate_track_ids=[p['track_id'] for p in persons],
++                detections=[dict(track_id=p['track_id'], bbox=p['bbox'], confidence=p.get('confidence'),
++                    visibility=p.get('visibility'), association=p.get('association_confidence'),
++                    association_margin=p.get('association_margin')) for p in persons],
++                lock_session_id=self.lock_session_id, track_generation=self.track_generation,
++                metrics=copy.deepcopy(self.metrics))
++            self._last_diagnostic = now
++        self._previous_status = status
++        return person
++
++    def finish_frame(self, person, face, face_observed=True):
++        lost = super().finish_frame(person, face, face_observed)
++        if lost:
++            self.metrics['short_recovery_failures'] += 1
++        return lost
++
++    def snapshot(self):
++        result = super().snapshot()
++        result.update(target_identity_id=self.target_uid,
++            target_observation=self.observation.payload() if self.observation else None,
++            identity_metrics=copy.deepcopy(self.metrics))
++        return result
+--- /dev/null
++++ b/ptz/ai/reid/trusted_gallery.py
+@@ -0,0 +1,55 @@
++"""Copy-on-write target gallery; the original references are immutable anchors."""
++import torch
++from .gallery import TargetEmbeddingGallery
++
++
++class TrustedTargetGallery(TargetEmbeddingGallery):
++    def __init__(self, embeddings, reference_count=None, provenance=None, max_size=12):
++        super().__init__(embeddings.clone())
++        self.reference_count = len(embeddings) if reference_count is None else reference_count
++        self.max_size = max(self.reference_count, max_size)
++        self.provenance = tuple(provenance or [dict(source='reference', index=i)
++                                              for i in range(self.reference_count)])
++
++    def reference_score(self, embeddings):
++        return (embeddings @ self.embeddings[:self.reference_count].T).max(dim=1).values
++
++    def score(self, embeddings):
++        reference = self.reference_score(embeddings)
++        live = self.embeddings[self.reference_count:]
++        if len(live) < 2:
++            return reference
++        # Two independent admitted views must agree. One lucky live match cannot
++        # authorize recovery; a minimum reference anchor is required as well.
++        support = (embeddings @ live.T).topk(2, dim=1).values[:, 1]
++        return torch.where(reference >= self.reference_floor,
++                           torch.maximum(reference, support), reference)
++
++    reference_floor = .5
++
++    def admit(self, embedding, provenance, *, reference_threshold, duplicate=.98):
++        embedding = embedding.detach().to(self.embeddings).reshape(1, -1)
++        # Validate dimensions, finite values and normalization through the base API.
++        TargetEmbeddingGallery(embedding)
++        if self.reference_score(embedding).item() < reference_threshold:
++            return self
++        if (embedding @ self.embeddings.T).max().item() >= duplicate:
++            return self
++        if self.max_size <= self.reference_count:
++            return self
++        live = self.embeddings[self.reference_count:]
++        metadata = list(self.provenance[self.reference_count:])
++        if len(live) >= self.max_size-self.reference_count:
++            live, metadata = live[1:], metadata[1:]
++        result = TrustedTargetGallery(torch.cat([self.embeddings[:self.reference_count], live, embedding]),
++            self.reference_count, list(self.provenance[:self.reference_count])+metadata+[dict(provenance)], self.max_size)
++        result.reference_floor = self.reference_floor
++        return result
++
++    def rollback(self, since_frame_id):
++        keep = list(range(self.reference_count)) + [i for i in range(self.reference_count, len(self.embeddings))
++                if self.provenance[i]['frame_id'] < since_frame_id]
++        result = TrustedTargetGallery(self.embeddings[keep], self.reference_count,
++            [self.provenance[i] for i in keep], self.max_size)
++        result.reference_floor = self.reference_floor
++        return result
+--- /dev/null
++++ b/ptz/tools/identity_replay.py
+@@ -0,0 +1,278 @@
++#!/usr/bin/env python3
++"""Offline identity replay. Imports no camera transport and never creates controls.
++
++Cache actual YOLO/OSNet observations once, then compare both selectors on identical
++frames. Cached replay waits for each submitted ReID job before the next frame;
++this tests decisions, not asynchronous GPU contention or physical PTZ stability.
++"""
++import argparse
++import copy
++import json
++from pathlib import Path
++import sys
++import time
++from types import SimpleNamespace
++import cv2
++import numpy as np
++import torch
++sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
++import config
++from ai.hybrid_reid import HybridReIDTargetSelector
++from ai.identity_manager import IdentityAwareTargetSelector
++from ai.reid_target import iou
++from ai.reid.gallery import TargetEmbeddingGallery
++from ai.reid.trusted_gallery import TrustedTargetGallery
++from runtime.byte_tracking import ByteTrackPersonTracker
++from runtime.identity_tracking import IdentityPersonTracker
++
++
++def settings():
++    cfg = SimpleNamespace(**{k: getattr(config, k) for k in dir(config) if k.isupper()})
++    cfg.CAMERA_MOTION_DIAGNOSTICS_ENABLED = cfg.CAMERA_MOTION_RECORD_ENABLED = cfg.TRACK_SNAPSHOT_ENABLED = False
++    cfg.REID_DIAGNOSTICS = False
++    return cfg
++
++
++def cache_video(args):
++    from ai.detector import PersonDetector
++    from person_search.reid import OSNetReID
++    cfg = settings()
++    detector = PersonDetector(cfg.PERSON_MODEL_PATH, conf_threshold=cfg.BYTE_TRACK_LOW_THRESHOLD,
++        device=args.device)
++    model = OSNetReID(cfg.REID_MODEL_PATH, device='cpu' if args.device == 'cpu' else 'cuda:'+str(args.device),
++        batch_size=cfg.REID_BATCH_SIZE)
++    scorer = IdentityAwareTargetSelector(cfg, model)
++    target = scorer.load_target_from_path(args.reference, detector)
++    scorer.replace_target(target)
++    scorer._prepare_gallery()
++    cap = cv2.VideoCapture(str(args.video))
++    if not cap.isOpened(): raise ValueError('Cannot open video')
++    fps = cap.get(cv2.CAP_PROP_FPS)
++    stop = args.end if args.end is not None else cap.get(cv2.CAP_PROP_FRAME_COUNT)/fps
++    if not np.isfinite(fps) or fps <= 0 or stop <= args.start or args.sample_fps <= 0:
++        raise ValueError('Invalid video time range or FPS')
++    args.cache.mkdir(parents=True, exist_ok=True)
++    np.save(args.cache/'reference.npy', scorer.gallery.embeddings.cpu().numpy())
++    meta = dict(video=str(args.video.resolve()), source_kind=args.source_kind,
++        reference=str(Path(args.reference).resolve()), start=args.start, end=stop,
++        original_fps=fps, sample_fps=args.sample_fps, roi=args.roi,
++        sensor_timestamps_available=False, ground_truth_available=False)
++    (args.cache/'metadata.json').write_text(json.dumps(meta, indent=2))
++    stride = max(1, round(fps/args.sample_fps))
++    start_frame = round(args.start*fps)
++    cap.set(cv2.CAP_PROP_POS_FRAMES, start_frame)
++    fid = start_frame
++    count = 0
++    try:
++        with (args.cache/'frames.jsonl').open('w') as stream:
++            while fid/fps < stop:
++                ok, frame = cap.read()
++                if not ok: break
++                if (fid-start_frame) % stride:
++                    fid += 1
++                    continue
++                if args.roi:
++                    x, y, w, h = args.roi
++                    if min(x,y) < 0 or min(w,h) <= 0 or x+w > frame.shape[1] or y+h > frame.shape[0]:
++                        raise ValueError('ROI outside video frame')
++                    frame = frame[y:y+h, x:x+w]
++                begin = time.perf_counter()
++                persons = detector.detect(frame)
++                if detector.last_error: raise RuntimeError(detector.last_error)
++                detection_ms = (time.perf_counter()-begin)*1000
++                begin = time.perf_counter()
++                if persons: scorer._scores(frame, persons)
++                reid_ms = (time.perf_counter()-begin)*1000
++                rows = []
++                for p in persons:
++                    rows.append(dict(bbox=p['bbox'], confidence=float(p['confidence']),
++                        embedding=p['_identity_embedding'].tolist(), raw_similarity=p['raw_similarity'],
++                        normalized_similarity=p.get('normalized_similarity'), reid_score=p['reid_score']))
++                name = f'frame_{fid:08d}.jpg'
++                if not cv2.imwrite(str(args.cache/name), frame): raise OSError('Cannot save replay frame')
++                stream.write(json.dumps(dict(frame_id=fid, timestamp=fid/fps, image=name,
++                    detections=rows, detection_ms=detection_ms, reid_ms=reid_ms))+'\n')
++                count += 1
++                if count % 50 == 0: print(f'Cached {count} observations at video {fid/fps:.1f}s', flush=True)
++                fid += 1
++    finally:
++        cap.release()
++    return count
++
++
++def evaluate(decisions, records, annotations=None):
++    allowed = [d['control_allowed'] for d in decisions]
++    elapsed = [max(0., records[i+1]['timestamp']-r['timestamp']) if i+1 < len(records) else 0.
++               for i, r in enumerate(records)]
++    losses = sum(a and not b for a, b in zip(allowed, allowed[1:]))
++    recoveries, durations = 0, []
++    lost_at = None
++    ever = False
++    for d, row in zip(decisions, records):
++        if d['control_allowed']:
++            if lost_at is not None:
++                recoveries += 1
++                durations.append(row['timestamp']-lost_at)
++                lost_at = None
++            ever = True
++        elif ever and lost_at is None:
++            lost_at = row['timestamp']
++    result = dict(selected_observation_seconds=sum(dt for dt, ok in zip(elapsed, allowed) if ok),
++        loss_count=losses, recovery_count=recoveries, recovery_durations_s=durations,
++        unresolved_recovery=lost_at is not None, correct_target_observation_seconds=None,
++        identity_switches=None, false_reacquisitions=None, annotated_frames=0,
++        ptz_stability=None, note='Selected dwell is not proof of correct identity. Predictions excluded.')
++    if annotations is None: return result
++    truth = {a['frame_id']: a for a in annotations if a.get('people') is not None}
++    if not truth: return result
++    correct = 0.
++    switches = false_reacquisitions = 0
++    previous_identity = None
++    for d, row, dt in zip(decisions, records, elapsed):
++        gt = truth.get(row['frame_id'])
++        if gt is None: continue
++        result['annotated_frames'] += 1
++        if not d['control_allowed']: continue
++        ranked = sorted(((iou(d['bbox'], p['bbox']), p['identity']) for p in gt['people']), reverse=True)
++        ident = ranked[0][1] if ranked and ranked[0][0] >= .5 else None
++        if ident == gt['target_identity']: correct += dt
++        if ident is not None and previous_identity is not None and ident != previous_identity: switches += 1
++        if d.get('just_locked') and ident != gt['target_identity']: false_reacquisitions += int(d.get('recovery', False))
++        if ident is not None: previous_identity = ident
++    result.update(correct_target_observation_seconds=correct, identity_switches=switches,
++                  false_reacquisitions=false_reacquisitions,
++                  annotation_coverage=len(truth)/max(1,len(records)),
++                  note='Identity metrics apply only to annotated observations; use dense labels for acceptance.')
++    return result
++
++
++def replay(records, frame_loader, reference, annotations=None):
++    branches = {}
++    for name, tracker_type, selector_type in [('legacy', ByteTrackPersonTracker, HybridReIDTargetSelector),
++                                               ('identity', IdentityPersonTracker, IdentityAwareTargetSelector)]:
++        cfg = settings()
++        tracker = tracker_type(cfg)
++        clock = [0.]
++        selector = selector_type(cfg, clock=lambda: clock[0]) if name == 'identity' else selector_type(cfg)
++        selector.embedding = reference[0]
++        selector.gallery = TargetEmbeddingGallery(reference)
++        selector.error = None
++        decisions, timings = [], []
++        calls = [0]
++        def scores(frame, persons):
++            calls[0] += 1
++            result = []
++            for p in persons:
++                if 'embedding' in p:
++                    embedding = torch.tensor(p['embedding'], dtype=torch.float32)
++                    p['_identity_embedding'] = embedding
++                    p['reference_similarity'] = float((embedding @ reference.T).max())
++                    value = float(selector.gallery.score(embedding[None])[0])
++                    if p.get('normalized_similarity') is not None:
++                        value = max(value, p['normalized_similarity'])
++                else:
++                    value = p['reid_score']
++                result.append(value)
++            return result
++        selector._scores = scores
++        for row in records:
++            frame = frame_loader(row)
++            clock[0] = row['timestamp']
++            selector.frame_id = row['frame_id']
++            begin = time.perf_counter()
++            persons = tracker.update(copy.deepcopy(row['detections']), row['timestamp'],
++                                      frame=frame, frame_id=row['frame_id'])
++            if name == 'identity': selector.update_predictions(tracker.hypotheses(row['timestamp']))
++            person = selector.select_person(frame, persons, row['timestamp'])
++            job = getattr(selector, '_job', None) if name == 'identity' else getattr(selector, '_verification', None)
++            if job: job[0].result(timeout=10)
++            decisions.append(dict(frame_id=row['frame_id'], timestamp=row['timestamp'],
++                bbox=list(person['bbox']) if person else None, track_id=selector.track_id if person else None,
++                target_identity_id=selector.target_uid, control_allowed=person is not None,
++                state=selector.stage, just_locked=selector.just_locked,
++                recovery=getattr(selector, 'transition_reason', '') == 'TARGET_REACQUIRED',
++                reason=getattr(selector, 'transition_reason', None), similarity=selector.top1,
++                observed_track_ids=[p['track_id'] for p in persons],
++                predicted_count=len(tracker.hypotheses(row['timestamp'])) if name == 'identity' else None))
++            lost = selector.finish_frame(person, None)
++            if lost and name == 'legacy': tracker.reset()
++            timings.append((time.perf_counter()-begin)*1000)
++        branches[name] = dict(metrics=evaluate(decisions, records, annotations),
++            reid_invocations=calls[0], association_selection_mean_ms=float(np.mean(timings)),
++            association_selection_p95_ms=float(np.percentile(timings, 95)), decisions=decisions)
++    return dict(branches=branches, physical_ptz_commands=0,
++        timing_scope='Cached evidence association/selection and optional image GMC; excludes YOLO/OSNet and real async contention',
++        production_acceptance=False)
++
++
++def synthetic():
++    records, truth = [], []
++    for i in range(100):
++        x = 100+i
++        visible = not 75 <= i < 80
++        detections = [dict(bbox=[x,50,x+70,250], confidence=.95,
++            reid_score=.4 if 20 <= i < 60 else .95)] if visible else []
++        records.append(dict(frame_id=i, timestamp=i/10, detections=detections))
++        truth.append(dict(frame_id=i, target_identity='target', people=[dict(identity='target',bbox=d['bbox']) for d in detections]))
++    result = replay(records, lambda row: np.zeros((400,600,3),np.uint8), torch.eye(512)[:1], truth)
++    result['provenance'] = 'Synthetic walking, appearance dip, temporary disappearance; scripted cosine evidence, not model accuracy'
++    return result
++
++
++def load_cache(directory):
++    records = [json.loads(line) for line in (directory/'frames.jsonl').read_text().splitlines()]
++    if not records: raise ValueError('Empty cache')
++    for a, b in zip(records, records[1:]):
++        if b['frame_id'] <= a['frame_id'] or b['timestamp'] <= a['timestamp']:
++            raise ValueError('Replay requires increasing frame IDs and timestamps')
++    def loader(row):
++        path = (directory/row['image']).resolve()
++        if directory.resolve() not in path.parents: raise ValueError('Image must be inside cache')
++        image = cv2.imread(str(path))
++        if image is None: raise ValueError('Missing replay image')
++        return image
++    return records, loader, torch.from_numpy(np.load(directory/'reference.npy', allow_pickle=False))
++
++
++def main():
++    p = argparse.ArgumentParser(description=__doc__)
++    p.add_argument('--video', type=Path)
++    p.add_argument('--cache', type=Path)
++    p.add_argument('--reference', default=config.TARGET_IMAGE_PATH)
++    p.add_argument('--device', default='cpu')
++    p.add_argument('--start', type=float, default=0.)
++    p.add_argument('--end', type=float)
++    p.add_argument('--sample-fps', type=float, default=10.)
++    p.add_argument('--roi', nargs=4, type=int, metavar=('X','Y','W','H'))
++    p.add_argument('--source-kind', choices=['raw_camera','monitor_recording','unknown'], default='unknown')
++    p.add_argument('--synthetic', action='store_true')
++    p.add_argument('--annotations', type=Path)
++    p.add_argument('--annotation-template', type=Path)
++    p.add_argument('--out', type=Path, required=True)
++    args = p.parse_args()
++    cv2.setNumThreads(1)
++    torch.set_num_threads(1)
++    if args.synthetic:
++        result = synthetic()
++    else:
++        if not args.cache: p.error('--cache is required')
++        if args.video: cache_video(args)
++        rows, loader, reference = load_cache(args.cache)
++        if args.annotation_template:
++            args.annotation_template.write_text('\n'.join(json.dumps(dict(frame_id=r['frame_id'],
++                timestamp=r['timestamp'], image=r['image'], target_identity='target', people=None)) for r in rows)+'\n')
++        annotations = [json.loads(s) for s in args.annotations.read_text().splitlines()] if args.annotations else None
++        result = replay(rows, loader, reference, annotations)
++        result['provenance'] = json.loads((args.cache/'metadata.json').read_text())
++        result['model_cache_timings'] = {key: dict(mean_ms=float(np.mean([r[key] for r in rows])),
++            p95_ms=float(np.percentile([r[key] for r in rows],95))) for key in ('detection_ms','reid_ms') if key in rows[0]}
++    args.out.parent.mkdir(parents=True, exist_ok=True)
++    for name, branch in result['branches'].items():
++        path = args.out.with_name(args.out.stem+'_'+name+'_decisions.jsonl')
++        path.write_text('\n'.join(json.dumps(d) for d in branch.pop('decisions'))+'\n')
++        branch['decisions_path'] = str(path)
++    args.out.write_text(json.dumps(result, indent=2))
++    print(json.dumps(result, indent=2))
++
++
++if __name__ == '__main__': main()
+--- /dev/null
++++ b/ptz/tools/identity_report.py
+@@ -0,0 +1,58 @@
++#!/usr/bin/env python3
++"""Summarize identity JSONL plus existing PTZ diagnostics; no camera connections."""
++import argparse
++from collections import Counter
++import json
++from pathlib import Path
++
++
++def summarize(paths):
++    rows = []
++    malformed = 0
++    for path in paths:
++        with Path(path).open() as stream:
++            for line in stream:
++                try: rows.append(json.loads(line))
++                except json.JSONDecodeError: malformed += 1
++    rows.sort(key=lambda r: r.get('timestamp_monotonic', r.get('monotonic_ns', 0)/1e9))
++    runs = {}
++    for row in rows:
++        run = runs.setdefault(row.get('run_id', 'unknown'), dict(
++            latest_metrics={}, statuses=Counter(), reasons=Counter(), stale_events=Counter(),
++            dispatches_with_uncertain_identity=0, dispatches_without_identity_context=0,
++            dispatches=0, last_decision=None, gmc_samples=0, gmc_applied=0))
++        event = row.get('event', '')
++        if event == 'IDENTITY_TRACKING_DECISION':
++            run['latest_metrics'] = row.get('metrics', {})
++            run['statuses'][row['status']] += 1
++            run['reasons'][row.get('reason')] += 1
++            run['last_decision'] = row
++            if row.get('camera_movement'):
++                run['gmc_samples'] += 1
++                run['gmc_applied'] += int(row['camera_movement'].get('applied', False))
++        elif event == 'IDENTITY_METRICS_FINAL':
++            run['latest_metrics'] = row.get('metrics', {})
++            run['unresolved_recovery'] = row.get('unresolved_recovery')
++        if 'DISCARD' in event or 'STALE' in event or 'MISMATCH' in str(row.get('reason', '')):
++            run['stale_events'][row.get('reason', event)] += 1
++        if event in ('PAN_TILT_DISPATCH', 'ZOOM_WORKER_DISPATCH'):
++            run['dispatches'] += 1
++            context = run['last_decision']
++            if context is None:
++                run['dispatches_without_identity_context'] += 1
++            elif not context['control_allowed']:
++                run['dispatches_with_uncertain_identity'] += 1
++    for run in runs.values(): run.pop('last_decision')
++    return dict(runs=runs, malformed_lines=malformed,
++        ground_truth_identity_switches=None,
++        note='Dispatch correlation uses latest logged identity state; includes bounded recovery zoom, not necessarily unsafe commands. Rotated or dropped logs limit coverage. Tracker rebindings are not ground-truth identity switches.')
++
++
++if __name__ == '__main__':
++    p = argparse.ArgumentParser(description=__doc__)
++    p.add_argument('logs', nargs='+', type=Path)
++    p.add_argument('--out', type=Path)
++    args = p.parse_args()
++    payload = json.dumps(summarize(args.logs), indent=2)
++    if args.out: args.out.write_text(payload+'\n')
++    print(payload)
+--- /dev/null
++++ b/ptz/tools/annotate_identity_replay.py
+@@ -0,0 +1,49 @@
++#!/usr/bin/env python3
++"""Annotate cached replay observations with persistent person labels using OpenCV.
++
++Space/Enter accepts an ROI, C cancels it. Enter the same person label across all
++frames. Use the label 'target' for the reference person. Empty label finishes a
++frame; 'skip' leaves it unannotated. An empty people list explicitly means nobody
++is visible. This tool requires a desktop display and never connects to a camera.
++"""
++import argparse
++import json
++from pathlib import Path
++import cv2
++
++
++def main():
++    p = argparse.ArgumentParser(description=__doc__)
++    p.add_argument('--cache', type=Path, required=True)
++    p.add_argument('--out', type=Path, required=True)
++    p.add_argument('--stride', type=int, default=1)
++    args = p.parse_args()
++    if args.stride < 1: p.error('stride must be positive')
++    rows = [json.loads(s) for s in (args.cache/'frames.jsonl').read_text().splitlines()]
++    done = {r['frame_id']:r for r in map(json.loads, args.out.read_text().splitlines())} if args.out.exists() else {}
++    try:
++        for row in rows[::args.stride]:
++            if row['frame_id'] in done and done[row['frame_id']].get('people') is not None: continue
++            image = cv2.imread(str(args.cache/row['image']))
++            if image is None: raise ValueError('Missing image: '+row['image'])
++            print(f"Frame {row['frame_id']}, video {row['timestamp']:.3f}s")
++            cv2.imshow('identity annotations', image)
++            cv2.waitKey(1)
++            people = []
++            while True:
++                label = input('Persistent person label (target/person_b/..., empty=done, skip, quit): ').strip()
++                if label == 'quit': return
++                if label == 'skip':
++                    people = None
++                    break
++                if not label: break
++                x,y,w,h = cv2.selectROI('identity annotations', image, fromCenter=False, showCrosshair=True)
++                if w and h: people.append(dict(identity=label, bbox=[int(x),int(y),int(x+w),int(y+h)]))
++            done[row['frame_id']] = dict(frame_id=row['frame_id'], target_identity='target', people=people)
++            args.out.parent.mkdir(parents=True, exist_ok=True)
++            args.out.write_text('\n'.join(json.dumps(done[k]) for k in sorted(done))+'\n')
++    finally:
++        cv2.destroyAllWindows()
++
++
++if __name__ == '__main__': main()
+--- /dev/null
++++ b/ptz/test/test_identity_tracking.py
+@@ -0,0 +1,390 @@
++"""CPU identity safety tests. No camera transport or model weights required."""
++import sys
++from pathlib import Path
++sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
++import unittest
++from unittest.mock import Mock
++from types import SimpleNamespace
++from concurrent.futures import Future
++import numpy as np
++import torch
++import config
++from ai.identity_manager import IdentityAwareTargetSelector
++from ai.reid.trusted_gallery import TrustedTargetGallery
++from runtime.identity_tracking import IdentityPersonTracker, admitted_warp
++from runtime.camera_motion import MotionEstimate
++
++
++def settings(**kw):
++    return SimpleNamespace(**dict({k: getattr(config, k) for k in dir(config) if k.isupper()}, **kw))
++
++
++def person(t=0., ident=1, x=100, **kw):
++    return dict(dict(track_id=ident, bbox=(x, 50, x+70, 250), confidence=.95,
++        last_observed_timestamp=t, temporal_reliable=True, visibility=1., track_age=10,
++        association_confidence=.9, association_margin=.9, camera_movement={}), **kw)
++
++
++class IdentityTests(unittest.TestCase):
++    def setUp(self):
++        self.now = 0.
++        self.s = IdentityAwareTargetSelector(settings(), Mock(), clock=lambda: self.now)
++        self.s.embedding = torch.eye(512)[0]
++        self.s.error = None
++        self.s._scores = Mock(return_value=[.9])
++        self.frame = np.zeros((400, 600, 3), np.uint8)
++        self.fid = 0
++
++    def step(self, t, rows=None, wait=True):
++        self.now = t
++        self.fid += 1
++        self.s.frame_id = self.fid
++        rows = [person(t)] if rows is None else [dict(p, last_observed_timestamp=t) for p in rows]
++        result = self.s.select_person(self.frame, rows, t)
++        if wait and self.s._job:
++            self.s._job[0].result(timeout=3)
++        self.s.finish_frame(result, None)
++        return result
++
++    def lock(self):
++        for t in (0., .1, .3, .4, .6, .7):
++            self.step(t)
++        self.assertTrue(self.s.locked)
++        return self.s.lock_session_id
++
++    def test_initial_lock_requires_three_distinct_result_frames(self):
++        self.step(0.)
++        self.step(.1)
++        self.assertFalse(self.s.locked)
++        self.step(.15)
++        self.assertEqual(self.s.pending_count, 1)
++        for t in (.3, .4, .6, .7): self.step(t)
++        self.assertTrue(self.s.locked)
++        self.assertEqual(self.s.observation.status, 'OBSERVED')
++
++    def test_rotation_low_similarity_keeps_observed_identity_bounded(self):
++        session = self.lock()
++        self.s._scores.return_value = [.4]
++        for t in (1.8, 1.9, 2.2, 2.3, 4., 4.1):
++            self.assertIsNotNone(self.step(t))
++        self.assertEqual(self.s.lock_session_id, session)
++        self.assertEqual(self.s.identity_status, 'TEMPORAL')
++        self.assertIsNone(self.step(14.))
++        self.assertFalse(self.s.observation.control_allowed)
++
++    def test_good_crop_contradiction_revokes_control(self):
++        self.lock()
++        self.s._scores.return_value = [.1]
++        self.step(1.8)
++        self.assertIsNone(self.step(1.9))
++        self.assertTrue(self.s.crossing_hold)
++
++    def test_crossing_does_not_follow_closest_person(self):
++        self.lock()
++        rows = [person(), person(ident=2, x=120)]
++        self.s._scores.return_value = [.95, .1]
++        self.assertIsNone(self.step(.8, rows))
++        self.assertEqual(self.s.observation.status, 'UNCERTAIN')
++        self.assertIsNone(self.step(.9, rows))
++        self.assertFalse(self.s.observation.control_allowed)
++
++    def test_new_track_requires_confirmations_and_preserves_identity(self):
++        session = self.lock()
++        uid = self.s.target_uid
++        for t in (.8, .9, 1.1, 1.2, 1.4):
++            self.assertIsNone(self.step(t, [person(ident=5)]))
++        self.assertIsNotNone(self.step(1.5, [person(ident=5)]))
++        self.assertEqual(self.s.target_uid, uid)
++        self.assertEqual(self.s.track_id, 5)
++        self.assertNotEqual(self.s.lock_session_id, session)
++        self.assertEqual(self.s.metrics['recoveries'], 1)
++
++    def test_full_loss_retains_history_and_reference(self):
++        self.lock()
++        uid, reference, history = self.s.target_uid, self.s.embedding, self.s.last_reliable_observation
++        for t in np.arange(.8, 4.2, .1): self.step(float(t), [])
++        self.assertFalse(self.s.locked)
++        self.assertEqual(uid, self.s.target_uid)
++        self.assertIs(reference, self.s.embedding)
++        self.assertIs(history, self.s.last_reliable_observation)
++        self.assertEqual(self.s.metrics['authorized_frames'], 1)
++
++    def test_stale_result_after_reference_reset_cannot_bind(self):
++        self.step(0.)
++        old_job = self.s._job
++        self.s.reset()
++        self.step(.1)
++        self.assertFalse(self.s.locked)
++        self.assertEqual(self.s.pending_count, 0)
++        self.assertEqual(self.s.metrics['stale_results'], 1)
++        self.assertIsNot(old_job, self.s._job)
++
++    def test_delayed_verification_cannot_override_newer_hold(self):
++        self.lock()
++        future = Future()
++        self.s._job = (future, self.s._token(), .7, self.fid, [person(.7)])
++        self.step(.8, [], wait=False)
++        future.set_result(([.99], 1.))
++        self.step(.9)
++        self.assertTrue(self.s.crossing_hold)
++        self.assertEqual(self.s.metrics['stale_results'], 1)
++
++    def test_unavailable_reid_is_not_negative_and_slot_is_bounded(self):
++        self.lock()
++        future = Future()
++        self.s._job = (future, self.s._token(), .7, self.fid, [person(.7)])
++        for t in (.8, 1., 2.): self.assertIsNotNone(self.step(t, wait=False))
++        self.assertEqual(self.s.negative_verifications, 0)
++        self.assertIsNone(self.step(14., wait=False))
++        self.assertIs(self.s._job[0], future)
++        future.set_exception(TimeoutError())
++
++    def test_ambiguous_similarity_does_not_acquire(self):
++        self.s._scores.return_value = [.9, .89]
++        rows = [person(), person(ident=2, x=350)]
++        for t in (0., .1, .3, .4, .6, .7): self.step(t, rows)
++        self.assertFalse(self.s.locked)
++
++    def test_face_cannot_extend_missing_person(self):
++        self.lock()
++        for t in np.arange(.8, 4.2, .1):
++            self.step(float(t), [])
++            self.s.finish_frame(None, dict(bbox=(100, 60, 120, 80)))
++        self.assertFalse(self.s.locked)
++
++    def test_out_of_order_does_not_move_target(self):
++        self.lock()
++        before = self.s.person_box
++        self.assertIsNone(self.step(.5, [person(x=400)]))
++        self.assertEqual(self.s.person_box, before)
++
++    def test_poor_crop_never_admitted(self):
++        self.lock()
++        self.s.gallery = TrustedTargetGallery(torch.eye(512)[:1])
++        before = self.s.gallery
++        row = person(visibility=.5, _identity_embedding=torch.eye(512)[0])
++        self.s._admit(row, 2., 20)
++        self.assertIs(before, self.s.gallery)
++
++
++class TrackerTests(unittest.TestCase):
++    def test_observations_and_bounded_predictions_are_separate(self):
++        tracker = IdentityPersonTracker(settings())
++        a = tracker.update([person()], 0., frame_id=1)[0]
++        b = tracker.update([person(x=102)], .1, frame_id=2)[0]
++        self.assertEqual(a['track_id'], b['track_id'])
++        self.assertTrue(b['temporal_reliable'])
++        self.assertEqual(tracker.update([], .2, frame_id=3), [])
++        self.assertFalse(tracker.hypotheses(.2)[0]['control_allowed'])
++        self.assertEqual(tracker.hypotheses(2.), [])
++        self.assertEqual(tracker.update([person()], .1, frame_id=2), [])
++
++    def test_competing_detection_is_ambiguous(self):
++        tracker = IdentityPersonTracker(settings())
++        tracker.update([person()], 0., frame_id=1)
++        rows = tracker.update([person(), person(x=102)], .1, frame_id=2)
++        self.assertFalse(rows[0]['temporal_reliable'])
++
++    def test_scale_and_translation_preserve_track(self):
++        tracker = IdentityPersonTracker(settings())
++        frame = np.zeros((400, 600, 3), np.uint8)
++        first = tracker.update([person()], 0., frame=frame, frame_id=1)[0]
++        tracker.estimator.estimate = Mock(return_value=MotionEstimate(valid=True, confidence=.9,
++            transform=[[1.1, 0, 100], [0, 1.1, 0]], reason='VALID'))
++        row = person(bbox=(210, 55, 287, 275))
++        second = tracker.update([row], .1, frame=frame, frame_id=2)[0]
++        self.assertEqual(first['track_id'], second['track_id'])
++        self.assertTrue(second['temporal_reliable'])
++        self.assertTrue(second['camera_movement']['applied'])
++
++    def test_failed_gmc_and_rotation_do_not_warp(self):
++        for e in (MotionEstimate(valid=False), MotionEstimate(valid=True, confidence=.1),
++                  MotionEstimate(valid=True, confidence=float('nan'), transform=[[1,0,10],[0,1,0]]),
++                  MotionEstimate(valid=True, confidence=.9, transform=[[1, -.2, 0], [.2, 1, 0]])):
++            self.assertIsNone(admitted_warp(e, .35))
++
++
++class GalleryTests(unittest.TestCase):
++    def vector(self, similarity, index):
++        row = torch.zeros(512)
++        row[0], row[index] = similarity, (1-similarity**2)**.5
++        return row
++
++    def test_reference_immutable_size_duplicates_rollback(self):
++        reference = torch.eye(512)[:1]
++        gallery = TrustedTargetGallery(reference, max_size=3)
++        for i in range(1, 5):
++            gallery = gallery.admit(self.vector(.75, i), dict(frame_id=i), reference_threshold=.65)
++        self.assertEqual(len(gallery.embeddings), 3)
++        self.assertTrue(torch.equal(gallery.embeddings[0], reference[0]))
++        self.assertIs(gallery.admit(self.vector(.75, 4), dict(frame_id=5), reference_threshold=.65), gallery)
++        self.assertEqual(len(gallery.rollback(3).embeddings), 1)
++
++    def test_one_live_match_cannot_confirm_and_anchor_cannot_drift(self):
++        gallery = TrustedTargetGallery(torch.eye(512)[:1])
++        row = self.vector(.65, 1)
++        gallery = gallery.admit(row, dict(frame_id=1), reference_threshold=.65)
++        self.assertAlmostEqual(gallery.score(row[None]).item(), .65, places=5)
++        before = gallery
++        gallery = gallery.admit(self.vector(.4, 2), dict(frame_id=2), reference_threshold=.65)
++        self.assertIs(gallery, before)
++        with self.assertRaises(ValueError):
++            gallery.admit(torch.ones(512), dict(frame_id=2), reference_threshold=.65)
++
++
++
++class IntegrationTests(unittest.TestCase):
++    def test_opt_in_worker_publishes_valid_observation_to_controller(self):
++        from unittest.mock import patch
++        from test_reid_target import WorkerTests
++        def complete_job(app, index):
++            if app.reid_target._job:
++                app.reid_target._job[0].result(timeout=2)
++        with patch('ai.hybrid_reid.HybridReIDTargetSelector', IdentityAwareTargetSelector), \
++             patch.object(config, 'IDENTITY_TRACKING_ENABLED', True), \
++             patch.object(config, 'IDENTITY_SEARCH_INTERVAL', 0.):
++            app, rows = WorkerTests().run_worker([.95]*15, hybrid=True, frame_hook=complete_job)
++        allowed = [r for r in rows if r.get('reid', {}).get('target_observation', {}).get('control_allowed')]
++        self.assertTrue(allowed)
++        self.assertTrue(app.auto_zoom.submit_observation.called)
++        self.assertIsInstance(app.person_tracker, IdentityPersonTracker)
++        self.assertTrue(app.reid_target._closed)
++        self.assertTrue(all(r['person_target'] is not None for r in allowed))
++
++    def test_no_target_identity_can_be_authorized_by_predictions(self):
++        tracker = IdentityPersonTracker(settings())
++        tracker.update([person()], 0., frame_id=0)
++        self.assertEqual(tracker.update([], .1, frame_id=1), [])
++        for hypothesis in tracker.hypotheses(.1):
++            self.assertFalse(hypothesis['control_allowed'])
++
++    def test_unconfirmed_weak_neighbour_remains_an_ambiguity_candidate(self):
++        tracker = IdentityPersonTracker(settings())
++        tracker.update([person()], 0., frame_id=0)
++        rows = tracker.update([person(), person(x=102, confidence=.15)], .1, frame_id=1)
++        self.assertEqual(len(rows), 2)
++        self.assertEqual(rows[1]['tracking_status'], 'TENTATIVE')
++        self.assertFalse(rows[0]['temporal_reliable'])
++
++
++class AdditionalSafetyTests(unittest.TestCase):
++    setUp = IdentityTests.setUp
++    step = IdentityTests.step
++    lock = IdentityTests.lock
++
++    def test_observed_motion_ambiguity_blocks_even_high_appearance(self):
++        self.lock()
++        self.assertIsNone(self.step(.8, [person(temporal_reliable=False)]))
++        self.assertFalse(self.s.observation.control_allowed)
++
++    def test_clipped_negative_view_is_not_strong_contradiction(self):
++        self.lock()
++        self.s._scores.return_value = [.1]
++        self.step(1.8, [person(visibility=.5)])
++        self.assertIsNotNone(self.step(1.9, [person(visibility=.5)]))
++        self.assertEqual(self.s.identity_status, 'TEMPORAL')
++
++    def test_shutdown_revokes_pending_identity_results(self):
++        self.step(0.)
++        self.s.close()
++        self.assertIsNone(self.step(.1))
++        self.assertFalse(self.s.locked)
++
++    def test_changed_track_far_away_needs_extra_short_term_confirmation(self):
++        self.lock()
++        for t in (.8, .9, 1.1, 1.2, 1.4, 1.5):
++            self.assertIsNone(self.step(t, [person(ident=7, x=400)]))
++        self.step(1.7, [person(ident=7, x=400)])
++        self.assertIsNotNone(self.step(1.8, [person(ident=7, x=400)]))
++
++    def test_approaching_person_retains_motion_observation(self):
++        tracker = IdentityPersonTracker(settings())
++        first = None
++        for i in range(10):
++            bbox = (100-i*2, 50-i*2, 170+i*2, 250+i*2)
++            row = tracker.update([person(bbox=bbox)], i*.1, frame_id=i)[0]
++            if first is None: first = row['track_id']
++            self.assertEqual(row['track_id'], first)
++            if i: self.assertTrue(row['temporal_reliable'])
++
++    def test_replay_empty_annotations_do_not_claim_zero_identity_switches(self):
++        from tools.identity_replay import evaluate
++        rows = [dict(frame_id=1, timestamp=0.)]
++        decisions = [dict(control_allowed=True, bbox=[0,0,10,10])]
++        metrics = evaluate(decisions, rows, [dict(frame_id=1, people=None)])
++        self.assertIsNone(metrics['identity_switches'])
++
++    def test_replay_counts_annotated_wrong_reacquisition(self):
++        from tools.identity_replay import evaluate
++        rows = [dict(frame_id=i, timestamp=float(i)) for i in range(2)]
++        decisions = [dict(control_allowed=True, bbox=[0,0,10,10], just_locked=False),
++                     dict(control_allowed=True, bbox=[20,0,30,10], just_locked=True, recovery=True)]
++        truth = [dict(frame_id=i,target_identity='a',people=[dict(identity='a',bbox=[0,0,10,10]),
++                 dict(identity='b',bbox=[20,0,30,10])]) for i in range(2)]
++        metrics = evaluate(decisions, rows, truth)
++        self.assertEqual(metrics['identity_switches'], 1)
++        self.assertEqual(metrics['false_reacquisitions'], 1)
++
++
++    def test_diagnostic_payload_is_json_and_metric_snapshot_is_stable(self):
++        import json
++        from unittest.mock import patch
++        from telemetry import latency
++        recorded = []
++        def event(name, **fields):
++            json.dumps(fields)
++            if name == 'IDENTITY_TRACKING_DECISION': recorded.append(fields)
++        with patch.object(latency.profiler, 'event', side_effect=event):
++            self.lock()
++            before = recorded[-1]['metrics']['authorized_frames']
++            old = recorded[-1]
++            self.step(.8)
++            self.step(.9, [])
++        self.assertEqual(old['metrics']['authorized_frames'], before)
++        self.assertIn('raw_osnet_similarity', old)
++        self.assertIn('evidence_frame_id', old)
++
++    def test_two_live_views_support_anchored_recovery_not_one_lucky_match(self):
++        gallery = TrustedTargetGallery(torch.eye(512)[:1])
++        a = torch.zeros(512); a[0] = .7; a[1] = (1-.7**2)**.5
++        b = torch.zeros(512); b[0] = .7; b[1] = .65; b[2] = (1-.7**2-.65**2)**.5
++        candidate = torch.zeros(512); candidate[0] = .6; candidate[1] = .8
++        gallery = gallery.admit(a, dict(frame_id=1), reference_threshold=.65)
++        self.assertLess(gallery.score(candidate[None]).item(), .7)
++        gallery = gallery.admit(b, dict(frame_id=2), reference_threshold=.65)
++        self.assertGreater(gallery.score(candidate[None]).item(), .7)
++        candidate[0] = .4; candidate[1] = (1-.4**2)**.5
++        self.assertLess(gallery.score(candidate[None]).item(), .5)
++
++
++    def test_temporal_identity_preserves_pan_observation_but_holds_zoom(self):
++        from unittest.mock import patch
++        from test_reid_target import WorkerTests
++        holds = []
++        def check(app, index):
++            observation = app.reid_target.observation
++            if observation is not None and observation.control_allowed and not observation.zoom_allowed:
++                holds.append(index)
++                self.assertFalse(app.auto_zoom.submit_observation.called)
++            app.auto_zoom.submit_observation.reset_mock()
++            if app.reid_target._job: app.reid_target._job[0].result(timeout=2)
++        with patch('ai.hybrid_reid.HybridReIDTargetSelector', IdentityAwareTargetSelector), \
++             patch.object(config, 'IDENTITY_TRACKING_ENABLED', True), \
++             patch.object(config, 'IDENTITY_SEARCH_INTERVAL', 0.), \
++             patch.object(config, 'IDENTITY_VERIFY_STABLE_INTERVAL', 0.), \
++             patch.object(config, 'IDENTITY_VERIFY_UNCERTAIN_INTERVAL', 0.):
++            app, rows = WorkerTests().run_worker([.95]*8+[.4]*7, hybrid=True, frame_hook=check)
++        self.assertTrue(holds)
++        self.assertTrue(app.reid_target.locked)
++
++
++    def test_control_reset_keeps_identity_but_reference_replacement_changes_it(self):
++        self.lock()
++        uid = self.s.target_uid
++        self.s.reset()
++        self.assertEqual(self.s.target_uid, uid)
++        self.s.replace_target(dict(embedding=self.s.embedding.clone()))
++        self.assertNotEqual(self.s.target_uid, uid)
++
++
++if __name__ == '__main__': unittest.main()

@@ -1,0 +1,22 @@
+{
+  "counts": {
+    "samples": 471,
+    "old_recomputed_matches_logged": 471,
+    "logged_selected": 235,
+    "new_selected": 227,
+    "baseline_hold_new_selected": 3,
+    "changed_selection": 8
+  },
+  "reasons": {
+    "LOW_REFERENCE_SIMILARITY": 65,
+    "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 30,
+    "CONFIRMED_MULTI_CUE": 227,
+    "PERSON_OVERLAP": 144,
+    "LOW_DETECTION_CONFIDENCE": 5
+  },
+  "resets": 4,
+  "source_capture_sha256": "abede7d45c4f5da838cd6b89a0b5b4d3f0f53d067d911e912df6f66213d726cd",
+  "scope": "same 471 sample times and observed reset boundaries; real OSNet recomputation; no live scheduling prediction",
+  "ground_truth": false,
+  "physical_commands": 0
+}

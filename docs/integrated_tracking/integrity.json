@@ -1,0 +1,9 @@
+{
+  "ai/hybrid_reid.py": false,
+  "runtime/inference_worker.py": false,
+  "control/auto_pan_tilt.py": false,
+  "gui/cctv_app.py": true,
+  "main.py": true,
+  "camera.json": true,
+  "config.py": true
+}

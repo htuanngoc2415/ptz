@@ -1,0 +1,6 @@
+{
+  "python": "3.10.20",
+  "platform": "Linux-7.0.0-31-generic-x86_64-with-glibc2.39",
+  "opencv": "4.13.0",
+  "cpu": "x86_64"
+}

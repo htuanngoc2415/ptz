@@ -1,0 +1,127 @@
+{
+  "exposure_seconds": {
+    "command_quiet_gt800ms": 104.31319967207764,
+    "command_active": 56.013532382998164,
+    "post_stop_0_300ms": 87.12725532898185,
+    "post_stop_300_800ms": 17.541453577009634
+  },
+  "rates": {
+    "HOLD": {
+      "command_quiet_gt800ms": {
+        "events": 6,
+        "exposure_s": 104.31319967207764,
+        "rate_per_s": 0.0575190869311055
+      },
+      "command_active": {
+        "events": 5,
+        "exposure_s": 56.013532382998164,
+        "rate_per_s": 0.08926414363250645
+      },
+      "post_stop_0_300ms": {
+        "events": 12,
+        "exposure_s": 87.12725532898185,
+        "rate_per_s": 0.13772957675172331
+      },
+      "post_stop_300_800ms": {
+        "events": 0,
+        "exposure_s": 17.541453577009634,
+        "rate_per_s": 0.0
+      }
+    },
+    "FULL_LOSS": {
+      "command_quiet_gt800ms": {
+        "events": 7,
+        "exposure_s": 104.31319967207764,
+        "rate_per_s": 0.06710560141962309
+      },
+      "command_active": {
+        "events": 0,
+        "exposure_s": 56.013532382998164,
+        "rate_per_s": 0.0
+      },
+      "post_stop_0_300ms": {
+        "events": 0,
+        "exposure_s": 87.12725532898185,
+        "rate_per_s": 0.0
+      },
+      "post_stop_300_800ms": {
+        "events": 0,
+        "exposure_s": 17.541453577009634,
+        "rate_per_s": 0.0
+      }
+    }
+  },
+  "losses": [
+    {
+      "wall_time": "2026-11-13 11:21:25.174",
+      "monotonic": 8162.206798553467,
+      "previous": "OCCLUDED_HOLD",
+      "state": "SEARCHING",
+      "preceding_hold_time": "2026-11-13 11:21:22.091",
+      "hold_to_loss_s": 3.0829999446868896,
+      "hold_onset_command_exposure": "command_active",
+      "recovery_s": 5.2809998989105225
+    },
+    {
+      "wall_time": "2026-11-13 11:21:45.336",
+      "monotonic": 8182.368798494339,
+      "previous": "OCCLUDED_HOLD",
+      "state": "SEARCHING",
+      "preceding_hold_time": "2026-11-13 11:21:42.178",
+      "hold_to_loss_s": 3.1579999923706055,
+      "hold_onset_command_exposure": "command_active",
+      "recovery_s": 0.6579999923706055
+    },
+    {
+      "wall_time": "2026-11-13 11:22:04.258",
+      "monotonic": 8201.290798425674,
+      "previous": "OCCLUDED_HOLD",
+      "state": "SEARCHING",
+      "preceding_hold_time": "2026-11-13 11:22:01.113",
+      "hold_to_loss_s": 3.1449999809265137,
+      "hold_onset_command_exposure": "command_active",
+      "recovery_s": 13.22100019454956
+    },
+    {
+      "wall_time": "2026-11-13 11:22:20.750",
+      "monotonic": 8217.782798528671,
+      "previous": "OCCLUDED_HOLD",
+      "state": "SEARCHING",
+      "preceding_hold_time": "2026-11-13 11:22:17.733",
+      "hold_to_loss_s": 3.0169999599456787,
+      "hold_onset_command_exposure": "post_stop_0_300ms",
+      "recovery_s": 0.6440000534057617
+    },
+    {
+      "wall_time": "2026-11-13 11:22:53.575",
+      "monotonic": 8250.607798576355,
+      "previous": "OCCLUDED_HOLD",
+      "state": "SEARCHING",
+      "preceding_hold_time": "2026-11-13 11:22:50.548",
+      "hold_to_loss_s": 3.0269999504089355,
+      "hold_onset_command_exposure": "post_stop_0_300ms",
+      "recovery_s": 4.016000032424927
+    },
+    {
+      "wall_time": "2026-11-13 11:24:20.427",
+      "monotonic": 8337.459798574448,
+      "previous": "OCCLUDED_HOLD",
+      "state": "SEARCHING",
+      "preceding_hold_time": "2026-11-13 11:24:17.207",
+      "hold_to_loss_s": 3.2200000286102295,
+      "hold_onset_command_exposure": "command_active",
+      "recovery_s": 0.3959999084472656
+    },
+    {
+      "wall_time": "2026-11-13 11:24:24.145",
+      "monotonic": 8341.177798509598,
+      "previous": "OCCLUDED_HOLD",
+      "state": "SEARCHING",
+      "preceding_hold_time": "2026-11-13 11:24:21.089",
+      "hold_to_loss_s": 3.055999994277954,
+      "hold_onset_command_exposure": "post_stop_0_300ms",
+      "recovery_s": null
+    }
+  ],
+  "offset_range_ms": 2.90679931640625
+}

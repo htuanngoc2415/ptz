@@ -1,0 +1,68 @@
+{
+  "off": {
+    "selected": 786,
+    "reasons": {
+      "LOW_REFERENCE_SIMILARITY": 151,
+      "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 26,
+      "CONFIRMED_MULTI_CUE": 786,
+      "LOW_DETECTION_CONFIDENCE": 6,
+      "NO_OBSERVATION_UNKNOWN": 53,
+      "PERSON_OVERLAP": 98
+    },
+    "versus_off": {
+      "same": 1120
+    },
+    "max_memory_entries": 0
+  },
+  "filter": {
+    "selected": 581,
+    "reasons": {
+      "UNCERTAIN_CROP_QUALITY": 133,
+      "LOW_REFERENCE_SIMILARITY": 208,
+      "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 41,
+      "CONFIRMED_MULTI_CUE": 581,
+      "LOW_DETECTION_CONFIDENCE": 6,
+      "NO_OBSERVATION_UNKNOWN": 53,
+      "PERSON_OVERLAP": 98
+    },
+    "versus_off": {
+      "same": 915,
+      "loss": 205
+    },
+    "max_memory_entries": 0
+  },
+  "memory": {
+    "selected": 581,
+    "reasons": {
+      "UNCERTAIN_CROP_QUALITY": 133,
+      "LOW_REFERENCE_SIMILARITY": 208,
+      "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 41,
+      "CONFIRMED_MULTI_CUE": 581,
+      "LOW_DETECTION_CONFIDENCE": 6,
+      "NO_OBSERVATION_UNKNOWN": 53,
+      "PERSON_OVERLAP": 98
+    },
+    "versus_off": {
+      "same": 915,
+      "loss": 205
+    },
+    "max_memory_entries": 2
+  },
+  "association": {
+    "selected": 581,
+    "reasons": {
+      "UNCERTAIN_CROP_QUALITY": 133,
+      "LOW_REFERENCE_SIMILARITY": 208,
+      "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 41,
+      "CONFIRMED_MULTI_CUE": 581,
+      "LOW_DETECTION_CONFIDENCE": 6,
+      "NO_OBSERVATION_UNKNOWN": 53,
+      "PERSON_OVERLAP": 98
+    },
+    "versus_off": {
+      "same": 915,
+      "loss": 205
+    },
+    "max_memory_entries": 2
+  }
+}

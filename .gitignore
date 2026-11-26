@@ -1,0 +1,48 @@
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# AI model weights
+/models/
+/person_search/models/
+*.pt
+*.pth
+*.onnx
+*.engine
+*.ckpt
+*.safetensors
+
+# Runtime data
+/data/
+/logs/
+/person_search/targets/
+
+# Video recordings
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+# Logs and generated reports
+*.log
+/telemetry/pipeline_report.html
+
+# Credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# IDE
+.vscode/
+.idea/

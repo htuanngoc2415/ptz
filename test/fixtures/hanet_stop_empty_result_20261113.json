@@ -1,0 +1,19 @@
+{
+  "provenance": {
+    "source": "logs/camera/first_failures_20261113_102030_063664.json",
+    "timestamp": "2026-11-13T10:20:44.084+07:00",
+    "operation": "STOP",
+    "code": "kCmdZoomWide",
+    "connection_generation": 1,
+    "reconstructed_from_sanitized_schema": true,
+    "raw_response_captured": false,
+    "device_command_semantics": "UNVERIFIED",
+    "physical_motor_stopped": null
+  },
+  "request_id": "7b105f63-22f1-4311-bc62-a551d8bd3f43",
+  "response": {
+    "id": "7b105f63-22f1-4311-bc62-a551d8bd3f43",
+    "jsonrpc": "2.0",
+    "result": {}
+  }
+}

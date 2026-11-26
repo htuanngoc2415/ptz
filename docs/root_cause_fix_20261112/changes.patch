@@ -1,0 +1,1040 @@
+--- a/ai/hybrid_reid.py
++++ b/ai/hybrid_reid.py
+@@ -38,6 +38,10 @@
+         if getattr(self, '_verification', None) is not None:
+             return
+         scorer = copy.copy(self)
++        scorer._score_trigger = 'TARGET_LOCKED_PERIODIC_VERIFY'
++        epoch = self.verification_epoch
++        scorer._score_valid = lambda: (self.verification_epoch == epoch
++            and time.monotonic()-now <= self.cfg.REID_VERIFY_RESULT_MAX_AGE)
+         observations = copy.deepcopy(persons)
+         image = frame.copy()
+         future = Future()
+@@ -70,6 +74,10 @@
+         if (token != (self.verification_epoch, self.lock_session_id, self.track_id)
+                 or not 0 <= now-captured <= self.cfg.REID_VERIFY_RESULT_MAX_AGE):
+             latency.profiler.count('stale_reid_results')
++            reason = ('WORKER_RESULT_SUPERSEDED' if token[0] != self.verification_epoch else
++                      'SESSION_MISMATCH' if token[1] != self.lock_session_id else
++                      'TRACK_MISMATCH' if token[2] != self.track_id else 'DEADLINE_EXPIRED')
++            latency.profiler.count('stale_reason_'+reason)
+             latency.profiler.event('REID_VERIFICATION_DISCARDED', frame_id=frame_id,
+                 transition_reason='STALE_RESULT', result_age_ms=(now-captured)*1000)
+             return
+@@ -116,12 +124,13 @@
+             unsafe |= not same and overlap >= self.cfg.REID_CROSSING_OVERLAP
+             rows.append(dict(track_id=p.get('track_id'), bbox=b, iou=iou(box,b),
+                 overlap_ratio=overlap, similarity=p.get('reid_score'), confidence=p.get('confidence')))
+-        now = self.observation_time or 0.
++        now = getattr(self, '_diagnostic_observation_time', self.observation_time) or 0.
+         if unsafe and now-getattr(self, '_last_overlap_log', float('-inf')) >= .5:
+             self._last_overlap_log = now
+             latency.profiler.event('TARGET_OVERLAP_EVIDENCE', frame_id=self.frame_id,
+                 target_uid=self.target_uid, target_track_id=candidate.get('track_id'),
+                 observation_timestamp=now, candidates=rows, similarity=self.top1,
++                last_positive_evidence_timestamp=self.last_positive_verify,
+                 margin=self.margin, threshold=self.cfg.REID_CROSSING_OVERLAP,
+                 decision_reason='PERSON_OVERLAP', identity_status=self.identity_status)
+         return bool(unsafe)
+@@ -134,9 +143,25 @@
+         return allowed
+ 
+     def select_person(self, frame, persons, now):
+-        self._observed_persons = persons
+         # Low-score detections maintain ByteTrack motion, never authorize a target.
+         eligible = [p for p in persons if p.get('confidence', 1.) >= self.cfg.PERSON_CONF_THRESHOLD]
++        if self.observation_time is not None and now <= self.observation_time:
++            latency.profiler.count('stale_reason_OUT_OF_ORDER_RESULT')
++            return None
++        self._observed_persons = persons
++        self._diagnostic_observation_time = now
++        if eligible and all(self._candidate_overlap(p, persons) for p in eligible):
++            # No candidate can pass the existing geometry gate. OSNet cannot
++            # authorize any result here; avoid repeated full-batch GPU work.
++            self.observation_time = now
++            self.just_locked = False
++            self.confirm = self.pending_count = 0
++            self.candidate_box = self.pending_box = self.pending_id = None
++            if self.locked:
++                missing = not any(p.get('track_id') == self.track_id for p in persons)
++                self._hold('TRACK_MISSING' if missing else 'PERSON_OVERLAP', missing)
++            latency.profiler.count('reid_skipped_all_candidates_overlap')
++            return None
+         if not self.locked:
+             result = super().select_person(frame, eligible, now)
+             if result is not None:
+@@ -146,6 +171,7 @@
+                 self.identity_status = 'VERIFIED'
+             return result
+         if self.observation_time is not None and now <= self.observation_time:
++            latency.profiler.count('stale_reason_OUT_OF_ORDER_RESULT')
+             return None
+         self.observation_time = now
+         self.just_locked = False
+--- a/ai/reid_target.py
++++ b/ai/reid_target.py
+@@ -246,9 +246,19 @@
+ 
+     @latency.measured('REID', 'reid_total_ms')
+     def _scores(self, frame, persons):
++        phase = getattr(self, '_score_trigger', None) or (
++            'REACQUISITION' if self.reacquiring else 'OCCLUDED_HOLD' if self.crossing_hold
++            else 'TARGET_LOCKED' if self.locked else 'ACQUIRING' if self.confirm else 'SEARCHING')
++        with latency.correlated(reid_phase=phase, candidate_count=len(persons)):
++            with latency.span('REID_PHASE', 'reid_'+phase.lower()+'_wall_ms', timing='cpu_wall'):
++                return self._score_batch(frame, persons)
++
++    def _score_batch(self, frame, persons):
+         with latency.span('REID_CROP', 'reid_crop_ms'):
+             crops = [self.crop(frame, p) for p in persons]
+-        with scheduler.use('reid'):
++        with scheduler.use('reid', valid=getattr(self, '_score_valid', None)) as granted:
++            if not granted:
++                raise TimeoutError('ReID job expired before GPU admission')
+             embeddings = self.reid.extract_embeddings(crops)
+         latency.profiler.event('REID_CANDIDATES', num_reid_candidates=len(crops),
+                                reid_batch_size=min(len(crops), self.cfg.REID_BATCH_SIZE))
+@@ -261,12 +271,19 @@
+                    (q['person_mean_luma'] < getattr(self.cfg, 'REID_NORMALIZE_LUMA', 90)
+                     or q['local_contrast'] < getattr(self.cfg, 'REID_NORMALIZE_CONTRAST', 35))]
+         if getattr(self.cfg, 'REID_NORMALIZATION_ENABLED', False) and indices:
+-            variants = [illumination_normalized(crops[i], getattr(self.cfg, 'REID_NORMALIZE_GAMMA', .75),
+-                        getattr(self.cfg, 'REID_NORMALIZE_CLAHE', 1.5)) for i in indices]
+-            with scheduler.use('reid'):
++            with latency.span('REID_NORMALIZATION', 'reid_normalization_ms', timing='cpu_wall'):
++                variants = [illumination_normalized(crops[i], getattr(self.cfg, 'REID_NORMALIZE_GAMMA', .75),
++                            getattr(self.cfg, 'REID_NORMALIZE_CLAHE', 1.5)) for i in indices]
++            with scheduler.use('reid', valid=getattr(self, '_score_valid', None)) as granted:
++                if not granted:
++                    raise TimeoutError('ReID normalization expired before GPU admission')
+                 scores = gallery.score(self.reid.extract_embeddings(variants)).detach().cpu().tolist()
+             for i,score in zip(indices,scores):
+                 normalized[i] = score
++        latency.profiler.event('REID_WORKLOAD', crop_count=len(crops),
++            normalization_count=sum(v is not None for v in normalized),
++            batch_size=min(len(crops),self.cfg.REID_BATCH_SIZE), batch_limit=self.cfg.REID_BATCH_SIZE, timing='cpu_wall',
++            gpu_timing='only_explicit_cuda_profiler_spans_are_gpu_time')
+         final = []
+         for i,(r,n) in enumerate(zip(raw,normalized)):
+             mode = getattr(self.cfg, 'REID_FUSION', 'max')
+--- a/runtime/scheduling.py
++++ b/runtime/scheduling.py
+@@ -27,6 +27,7 @@
+                 granted = valid is None or valid()
+                 if not granted:
+                     latency.profiler.count('stale_inference_jobs_skipped')
++                    latency.profiler.count('stale_reason_ADMISSION_VALIDITY_REJECTED')
+                     latency.profiler.event('INFERENCE_JOB_SKIPPED', branch=branch,
+                                            resource=resource, reason='STALE_BEFORE_INFERENCE')
+                 yield granted
+@@ -56,6 +57,7 @@
+             granted = valid is None or valid()
+             if not granted:
+                 latency.profiler.count('stale_inference_jobs_skipped')
++                latency.profiler.count('stale_reason_ADMISSION_VALIDITY_REJECTED')
+                 latency.profiler.event('INFERENCE_JOB_SKIPPED', branch=branch, reason='STALE_BEFORE_INFERENCE')
+             yield granted
+         finally:
+--- a/runtime/byte_tracking.py
++++ b/runtime/byte_tracking.py
+@@ -1,5 +1,9 @@
+ """ByteTrack motion association; native IDs are never treated as identity evidence."""
+ from types import SimpleNamespace
++import time
++from pathlib import Path
++from telemetry import latency
++from ai.reid_target import iou
+ import numpy as np
+ from ultralytics.trackers.byte_tracker import BYTETracker, STrack
+ 
+@@ -38,28 +42,87 @@
+         self.ids = {}
+         self.next_id = 0
+         self.last_received = None
++        self.last_diagnostic = float("-inf")
+ 
+     def reset(self):
+         self.tracker.reset()
+         self.ids.clear()
+         self.last_received = None
+ 
+-    def update(self, persons, received):
++    def update(self, persons, received, frame=None, frame_id=None):
+         if self.last_received is not None:
+             if received <= self.last_received:
+                 return []
+             if received-self.last_received > self.cfg.REID_LOST_GRACE_SEC:
+                 self.reset()
+         self.last_received = received
++        # Repeating the SAME dict is provably the same observation, unlike two
++        # distinct boxes with high IoU. Never merge distinct detections by geometry.
++        unique, seen = [], set()
++        for person in persons:
++            if id(person) not in seen:
++                seen.add(id(person))
++                unique.append(person)
++            else:
++                latency.profiler.count('repeated_detection_aliases')
++        persons = unique
+         rows = np.asarray([[*p['bbox'], p.get('confidence', 1.), i]
+                            for i, p in enumerate(persons)], dtype=np.float32).reshape(-1, 6)
+         output = []
+-        for track in self.tracker.update(Detections(rows)):
++        native_rows = self.tracker.update(Detections(rows))
++        for track in native_rows:
+             native, index = int(track[4]), int(track[-1])
+             if native not in self.ids:
+                 self.next_id += 1
+                 self.ids[native] = self.next_id
+-            person = persons[index]
++            if not 0 <= index < len(persons):
++                raise ValueError('ByteTrack returned invalid source detection index')
++            person = dict(persons[index])
+             person['track_id'] = self.ids[native]
+             output.append(person)
++        self._diagnose(persons, output, native_rows, received, frame_id, frame)
+         return output
++
++    def _diagnose(self, detections, output, native_rows, received, frame_id, frame):
++        pairs = []
++        for i, a in enumerate(output):
++            for b in output[i+1:]:
++                x,y = a['bbox'], b['bbox']
++                intersection = max(0,min(x[2],y[2])-max(x[0],y[0]))*max(0,min(x[3],y[3])-max(x[1],y[1]))
++                overlap = intersection/max(1,min((x[2]-x[0])*(x[3]-x[1]),(y[2]-y[0])*(y[3]-y[1])))
++                if overlap >= self.cfg.REID_CROSSING_OVERLAP:
++                    pairs.append(dict(ids=[a['track_id'],b['track_id']], iou=iou(x,y), overlap_min_area=overlap))
++        if not pairs or received-self.last_diagnostic < self.cfg.TRACK_DIAGNOSTICS_INTERVAL:
++            return
++        self.last_diagnostic = received
++        active = {t.track_id:t for t in self.tracker.tracked_stracks}
++        tracks = []
++        for row in native_rows:
++            t = active.get(int(row[4]))
++            tracks.append(dict(tracker_id=self.ids[int(row[4])], native_id=int(row[4]),
++                detection_index=int(row[-1]), predicted_updated_bbox=row[:4].tolist(),
++                observed_bbox=detections[int(row[-1])]['bbox'],
++                confidence=float(row[5]), state=str(t.state) if t else None,
++                age_updates=self.tracker.frame_id-t.start_frame+1 if t else None,
++                updates_since_observed=self.tracker.frame_id-t.frame_id if t else None,
++                last_observation_timestamp=received, reid_evidence=None))
++        latency.profiler.event('TRACKER_OVERLAP_DIAGNOSTICS', frame_id=frame_id,
++            observation_timestamp=received, detections=[dict(index=i,bbox=p['bbox'],confidence=p.get('confidence')) for i,p in enumerate(detections)],
++            tracks=tracks, pairs=pairs,
++            lost_native_ids=[t.track_id for t in self.tracker.lost_stracks],
++            removed_native_ids=[t.track_id for t in self.tracker.removed_stracks[-20:]], reason='UNRESOLVED_OVERLAP_NOT_PROVEN_DUPLICATE')
++        if getattr(self.cfg, 'TRACK_SNAPSHOT_ENABLED', False) and frame is not None:
++            try:
++                import cv2
++                directory = Path(self.cfg.TRACK_SNAPSHOT_DIRECTORY)
++                directory.mkdir(parents=True, exist_ok=True)
++                limit = max(1, min(100, self.cfg.TRACK_SNAPSHOT_MAX_FILES))
++                existing = sorted(directory.glob('overlap_*.jpg'))
++                for old in existing[:max(0,len(existing)-limit+1)]:
++                    old.unlink()
++                h,w = frame.shape[:2]
++                scale = min(1.,960/max(h,w))
++                snapshot = cv2.resize(frame, (max(1,int(w*scale)),max(1,int(h*scale))))
++                cv2.imwrite(str(directory/f'overlap_{time.monotonic_ns()}.jpg'),snapshot,[cv2.IMWRITE_JPEG_QUALITY,75])
++            except (OSError, ValueError, cv2.error) as exc:
++                latency.profiler.event('TRACKER_SNAPSHOT_FAILED', error_type=type(exc).__name__)
+--- a/runtime/inference_worker.py
++++ b/runtime/inference_worker.py
+@@ -415,7 +415,7 @@
+                 absent_since = None
+                 latency.profiler.gate('perception_gate', 'STALE_OBSERVATION')
+                 self.auto_zoom.request_stop(reason="STALE_OBSERVATION")
+-                latency.profiler.count('stale_inference_results')
++                latency.record_stale('DETECTION_FRAME_TOO_OLD')
+                 if time.monotonic()-last_stale_log >= cfg.PERF_LOG_INTERVAL_SEC:
+                     age_ms = (time.monotonic()-frame_time)*1000
+                     emit('PERSON_RESULT_STALE', frame_id=frame_sequence,
+@@ -430,7 +430,7 @@
+                 for index, detection in enumerate(persons):
+                     detection['track_id'] = -(index+1)
+             else:
+-                persons = self.person_tracker.update(persons, frame_time)
++                persons = self.person_tracker.update(persons, frame_time, frame=frame_bgr, frame_id=frame_sequence)
+             if persons and self.auto_zoom.enabled:
+                 self.acquisition_trial.start(frame_time)
+ 
+@@ -454,7 +454,7 @@
+                     self.auto_zoom.request_stop(reason='STALE_RESULT')
+                     if hasattr(self, 'auto_pan_tilt'):
+                         self.auto_pan_tilt.cancel()
+-                    latency.profiler.count('stale_inference_results')
++                    latency.record_stale('SELECTION_DEADLINE_EXPIRED')
+                     continue
+                 binding = (self.reid_target.lock_session_id, self.reid_target.track_id,
+                            self.reid_target.track_generation)
+@@ -522,7 +522,7 @@
+                                     **job.correlation())
+                         else:
+                             face_result = None
+-                            latency.profiler.count('stale_inference_results')
++                            latency.record_stale(('SESSION_MISMATCH' if job.lock_session_id != self.reid_target.lock_session_id else 'TRACK_MISMATCH' if job.track_id != self.reid_target.track_id else 'FACE_GEOMETRY_OR_AGE'))
+                     if person is not None or self.reid_target.face_box is not None:
+                         self.face_worker.lens_unstable = (self.auto_zoom.busy is True or self.auto_focus.busy is True or
+                             time.monotonic()-self.auto_zoom.last_zoom_end_time < cfg.FACE_LENS_SETTLE_TIME)
+@@ -552,7 +552,7 @@
+                 absent_since = None
+                 latency.profiler.gate('perception_gate', 'STALE_OBSERVATION')
+                 self.auto_zoom.request_stop(reason="STALE_OBSERVATION")
+-                latency.profiler.count('stale_inference_results')
++                latency.record_stale(('TRACKING_RESET' if self.tracking_reset.is_set() else 'CONTROL_DEADLINE_EXPIRED'))
+                 if time.monotonic()-last_stale_log >= cfg.PERF_LOG_INTERVAL_SEC:
+                     emit('PERCEPTION_RESULT_STALE', frame_id=frame_sequence,
+                          frame_age_ms=(time.monotonic()-frame_time)*1000,
+--- a/runtime/face_worker.py
++++ b/runtime/face_worker.py
+@@ -113,6 +113,7 @@
+             self.track_id = track_id
+             if self.pending is not None:
+                 latency.profiler.count('dropped_face_jobs')
++                latency.profiler.count('stale_reason_WORKER_RESULT_SUPERSEDED')
+                 latency.profiler.event('FACE_JOB_DROPPED', **self.pending.correlation(), reason='MAILBOX_REPLACED')
+             self.last_submitted_frame = frame_id
+             self.pending = FaceJob(frame_id, received, image, dict(person) if person else None,
+@@ -162,7 +163,7 @@
+                 return result
+             if result:
+                 latency.profiler.event('FACE_SPATIAL_RESULT_REJECTED', **result['job'].correlation(), reason='STALE_FOR_MOTOR')
+-                latency.profiler.count('stale_inference_results')
++                latency.record_stale(self.rejection_reason(result['job']) or 'FACE_SPATIAL_AGE_OR_TRACKER_QUALITY')
+         return None
+ 
+     def close(self, timeout=5.):
+@@ -461,5 +462,5 @@
+                         self.result = result
+                         self.condition.notify_all()
+                     elif result is not None and self.rejection_reason(job) is not None:
+-                        latency.profiler.count('stale_inference_results')
++                        latency.record_stale(self.rejection_reason(job) or 'FACE_RESULT_EXPIRED')
+                     self.condition.notify_all()
+--- a/control/auto_pan_tilt.py
++++ b/control/auto_pan_tilt.py
+@@ -4,6 +4,7 @@
+ import time
+ from telemetry import latency
+ from uuid import uuid4
++from .pan_policy import plan_pan
+ 
+ 
+ class AutoPanTiltController:
+@@ -54,38 +55,12 @@
+             self._condition.notify_all()
+ 
+     def _direction(self, box, shape):
+-        h, w = shape[:2]
+-        if h <= 0 or w <= 0 or len(box) != 4 or not all(math.isfinite(v) for v in box):
+-            return None
+-        x1,y1,x2,y2 = box
+-        if x2 <= x1 or y2 <= y1 or x2 <= 0 or y2 <= 0 or x1 >= w or y1 >= h:
+-            return None
+-        dx, dy = ((x1+x2)/2-w/2)/w, ((y1+y2)/2-h/2)/h
+-        errors = {'pan': dx, 'tilt': dy}
+-        eligible = {axis: error for axis, error in errors.items()
+-                    if abs(error) > (self.cfg.AUTO_PAN_TILT_RELEASE if axis == self._axis
+-                                     else self.cfg.AUTO_PAN_TILT_DEADZONE)}
+-        if not eligible:
+-            self._axis = None
+-            return None
+-        axis = max(eligible, key=lambda key: abs(eligible[key]))
+-        self._axis = axis
+-        error = eligible[axis]
+-        sign = self.cfg.AUTO_PAN_SIGN if axis == 'pan' else self.cfg.AUTO_TILT_SIGN
+-        command = ('pan_right' if error*sign > 0 else 'pan_left') if axis == 'pan' else (
+-                   'tilt_down' if error*sign > 0 else 'tilt_up')
+-        speed = min(self.cfg.AUTO_PAN_TILT_MAX_SPEED, max(1, 1+int(abs(error)*6)))
+-        return command, speed
++        plan = plan_pan(box, shape, self.cfg, previous_axis=self._axis)
++        self._axis = plan.axis
++        return (plan.direction, plan.speed) if plan.action == 'MOVE' else None
+ 
+     def _pulse(self, box, shape):
+-        if not getattr(self.cfg, 'AUTO_PAN_TILT_ADAPTIVE', False):
+-            return self.cfg.AUTO_PAN_TILT_PULSE
+-        h, w = shape[:2]
+-        error = max(abs((box[0]+box[2])/2/w-.5), abs((box[1]+box[3])/2/h-.5))
+-        fraction = min(1., max(0., (error-self.cfg.AUTO_PAN_TILT_DEADZONE) /
+-            max(.001, self.cfg.AUTO_PAN_TILT_FAR_ERROR-self.cfg.AUTO_PAN_TILT_DEADZONE)))
+-        return self.cfg.AUTO_PAN_TILT_PULSE + fraction*(
+-            self.cfg.AUTO_PAN_TILT_MAX_PULSE-self.cfg.AUTO_PAN_TILT_PULSE)
++        return plan_pan(box, shape, self.cfg, previous_axis=self._axis).duration
+ 
+     def _decision(self, reason, fields):
+         # Count every evaluation; emit at most twice a second per stable decision.
+--- a/control/auto_zoom.py
++++ b/control/auto_zoom.py
+@@ -30,7 +30,12 @@
+                  recovery_delay=1.25, recovery_pulse=.30, recovery_interval=.35,
+                  recovery_max_duration=7.0, min_zoom=1.0, min_zoom_epsilon=.15, orchestrator=None, estimator=None, absolute_timeout=8.,
+                  max_corrections=2, absolute_settle_timeout=3., control_mode="auto",
+-                 frame_edge_margin=.02, frame_edge_release_margin=.03):
++                 frame_edge_margin=.02, frame_edge_release_margin=.03,
++                 pulse_recovery_without_telemetry=False, pulse_recovery_budget=1.2):
++        self.pulse_recovery_without_telemetry = bool(pulse_recovery_without_telemetry)
++        self.pulse_recovery_budget = float(pulse_recovery_budget)
++        if not math.isfinite(self.pulse_recovery_budget) or not 0 < self.pulse_recovery_budget <= 7.:
++            raise ValueError('Invalid pulse recovery budget')
+         self.frame_edge_margin = float(frame_edge_margin)
+         self.frame_edge_release_margin = float(frame_edge_release_margin)
+         if not 0 <= self.frame_edge_margin < self.frame_edge_release_margin < .5:
+@@ -507,7 +512,7 @@
+             latency.profiler.elapsed('ZOOM_OBSERVATION_DEQUEUED', queued_ns, 'zoom_observation_queue_wait_ms')
+             session = self._correlation.get('lock_session_id')
+             if session and not self.session_valid(session):
+-                latency.profiler.count('stale_inference_results')
++                latency.record_stale('ZOOM_SESSION_MISMATCH')
+                 self.stop(reason='STALE_SESSION')
+                 with self._mail_lock:
+                     self._dispatching = False
+@@ -568,6 +573,8 @@
+         now = time.monotonic()
+         self._observe_motor_idle()
+         published = now if publish_time is None else publish_time
++        visual_recovery = self.pulse_recovery_without_telemetry and not self._has_telemetry()
++        budget = min(self.recovery_max_duration, self.pulse_recovery_budget) if visual_recovery else self.recovery_max_duration
+         timestamps = (observation_time, absent_since, published)
+         if not all(isinstance(v, (int, float)) and math.isfinite(v) for v in timestamps):
+             reason = 'RECOVERY_INVALID_TIMESTAMP'
+@@ -579,7 +586,7 @@
+             reason = 'RECOVERY_PUBLISH_TOO_OLD'
+         elif self._correlation.get('lock_session_id') and not self.session_valid(self._correlation['lock_session_id']):
+             reason = 'RECOVERY_SESSION_MISMATCH'
+-        elif not isinstance(zoom_level, (int, float)) or not math.isfinite(zoom_level):
++        elif not visual_recovery and (not isinstance(zoom_level, (int, float)) or not math.isfinite(zoom_level)):
+             reason = 'RECOVERY_INVALID_ZOOM_ESTIMATE'
+         else:
+             reason = None
+@@ -603,9 +610,9 @@
+         if self.busy and not self.recovery_active:
+             self.stop(reason='TARGET_LOST')
+             return False
+-        if (zoom_level <= self.min_zoom+self.min_zoom_epsilon
+-                or self._recovery_spent >= self.recovery_max_duration):
+-            self._recovery_hold_reason = 'RECOVERY_WIDE_LIMIT_OR_BUDGET'
++        if ((not visual_recovery and zoom_level <= self.min_zoom+self.min_zoom_epsilon)
++                or self._recovery_spent >= budget):
++            self._recovery_hold_reason = 'RECOVERY_BUDGET_EXHAUSTED' if self._recovery_spent >= budget else 'RECOVERY_WIDE_LIMIT_OR_BUDGET'
+             self.stop(reason='RECOVERY_WIDE_LIMIT')
+             return False
+         if observation_time-absent_since < self.recovery_delay or self.busy:
+@@ -644,13 +651,16 @@
+             self._recovery_blocked = True
+             return False
+         self._recovery_scope = 'TARGET'
+-        duration = min(self.recovery_pulse, self.recovery_max_duration-self._recovery_spent)
++        duration = min(self.recovery_pulse, budget-self._recovery_spent)
+         started = self._start_zoom(PTZ_ZOOM_OUT, -1, duration, speed,
+                                   'RECOVERY NO BBOX -> ZOOM OUT', mode='recovery')
+         if started:
+             self._recovery_spent += duration
++            latency.profiler.event('ZOOM_RECOVERY_BUDGET', strategy='PULSE_VISUAL' if visual_recovery else 'LENS_TELEMETRY',
++                spent_seconds=self._recovery_spent, budget_seconds=budget, pulse_seconds=duration,
++                lens_position=None if visual_recovery else zoom_level)
+             self._debug(f'[RECOVERY] no_bbox={observation_time-absent_since:.2f}s '
+-                        f'zoom_estimate={zoom_level:.2f} pulse={duration*1000:.0f}ms', force=True)
++                        f'zoom_estimate={zoom_level} pulse={duration*1000:.0f}ms', force=True)
+         return started
+ 
+     @latency.measured('ZOOM_DECISION_EVAL', 'zoom_decision_ms')
+@@ -694,9 +704,6 @@
+         if target_name == 'PERSON' and self._face_session is not None and self._face_session == self._correlation.get('lock_session_id'):
+             latency.profiler.event('ZOOM_COMMAND_REJECTED', command_rejection_reason='PERSON_FRAMING_FORBIDDEN_IN_FACE_SESSION')
+             return 'FACE_SESSION_HOLD'
+-        self._recovery_spent = 0.0
+-        self._recovery_blocked = False
+-        self._recovery_feedback = None
+         if not self.enabled:
+             return "DISABLED"
+         if self.recovery_active:
+@@ -720,6 +727,11 @@
+         if target is None or ratio is None or not math.isfinite(ratio) or ratio <= 0:
+             self.stop(reason='FACE_LOST' if target_name == 'FACE' else 'TARGET_LOST')
+             return 'WAITING FOR FRESH TARGET'
++        session = self._correlation.get('lock_session_id')
++        if session is None or self.session_valid(session):
++            self._recovery_spent = 0.0
++            self._recovery_blocked = False
++            self._recovery_feedback = None
+         if target_ratio is None or target_ratio <= 0:
+             self.stop(reason='INVALID_TARGET')
+             return 'INVALID TARGET RATIO'
+@@ -1184,7 +1196,7 @@
+                 self._idle_pending = dict(fields, stop_ack_time=ended)
+                 if self._mode == 'recovery':
+                     self._recovery_feedback = (before.get('zoom'), ended) if 'zoom' in before else None
+-                    if reason in ('MOTOR_FAULT', 'START_FAILED', 'STALE_LENS_TELEMETRY') or not self._has_telemetry():
++                    if reason in ('MOTOR_FAULT', 'START_FAILED', 'STALE_LENS_TELEMETRY') or (not self._has_telemetry() and not self.pulse_recovery_without_telemetry):
+                         self._recovery_blocked = True
+             with self._lock:
+                 if error:
+--- a/app/application.py
++++ b/app/application.py
+@@ -138,6 +138,8 @@
+         continuous_timeout=cfg.AUTO_ZOOM_CONTINUOUS_TIMEOUT,
+         feedback_timeout=cfg.AUTO_ZOOM_FEEDBACK_TIMEOUT,
+         max_observation_age=cfg.MAX_CONTROL_OBSERVATION_AGE,
++        pulse_recovery_without_telemetry=cfg.PULSE_RECOVERY_WITHOUT_TELEMETRY,
++        pulse_recovery_budget=cfg.PULSE_RECOVERY_BUDGET,
+         direction_hold=cfg.AUTO_ZOOM_DIRECTION_HOLD,
+         direction_cooldown=cfg.AUTO_ZOOM_DIRECTION_COOLDOWN,
+         reverse_error=cfg.AUTO_ZOOM_REVERSE_ERROR,
+--- a/telemetry/latency.py
++++ b/telemetry/latency.py
+@@ -348,3 +348,9 @@
+             end.synchronize()
+             profiler.event('GPU_EXECUTION', metric=metric, duration_ms=start.elapsed_time(end),
+                            timing='cuda_event', device=str(device))
++
++
++def record_stale(reason):
++    """Preserve aggregate compatibility; reasons count events, not unique frames."""
++    profiler.count('stale_inference_results')
++    profiler.count('stale_reason_'+reason)
+--- a/config.py
++++ b/config.py
+@@ -871,3 +871,11 @@
+ AUTO_PAN_TILT_ADAPTIVE = False
+ AUTO_PAN_TILT_MAX_PULSE = 0.24
+ AUTO_PAN_TILT_FAR_ERROR = 0.30
++
++# No fabricated lens position: bounded OUT only, fresh no-target evidence required.
++PULSE_RECOVERY_WITHOUT_TELEMETRY = True
++PULSE_RECOVERY_BUDGET = 1.2  # cumulative commanded seconds per loss episode
++TRACK_DIAGNOSTICS_INTERVAL = 0.5
++TRACK_SNAPSHOT_ENABLED = False
++TRACK_SNAPSHOT_MAX_FILES = 20
++TRACK_SNAPSHOT_DIRECTORY = str(PROJECT_ROOT / 'logs' / 'overlap_snapshots')
+--- /dev/null
++++ b/control/pan_policy.py
+@@ -0,0 +1,49 @@
++"""Pure pan/tilt planning. Positions and errors use image coordinates, not degrees."""
++from dataclasses import dataclass
++import math
++
++@dataclass(frozen=True)
++class PanPlan:
++    action: str
++    reason: str
++    direction: str = None
++    speed: int = 0
++    duration: float = 0.
++    axis: str = None
++
++
++def plan_pan(box, shape, cfg, *, previous_axis=None, state='TARGET_LOCKED',
++             verified=True, age=0., enabled=True, manual=False, busy=False,
++             settling=False, active=False):
++    def gate(reason):
++        return PanPlan('STOP' if active else 'HOLD', reason)
++    if not enabled: return gate('AUTO_PAN_DISABLED')
++    if manual: return gate('MANUAL_OVERRIDE')
++    if state != 'TARGET_LOCKED' or not verified: return gate('TARGET_UNCERTAIN')
++    if not math.isfinite(age) or not 0 <= age <= cfg.MAX_CONTROL_OBSERVATION_AGE:
++        return gate('STALE_OBSERVATION')
++    h,w = shape[:2]
++    if (box is None or len(box) != 4 or h <= 0 or w <= 0
++            or not all(math.isfinite(v) for v in box)):
++        return gate('NO_VALID_TARGET')
++    x1,y1,x2,y2 = box
++    if x2 <= x1 or y2 <= y1 or x2 <= 0 or y2 <= 0 or x1 >= w or y1 >= h:
++        return gate('NO_VALID_TARGET')
++    errors = {'pan': (x1+x2)/2/w-.5, 'tilt': (y1+y2)/2/h-.5}
++    eligible = {axis:error for axis,error in errors.items() if abs(error) > (
++        cfg.AUTO_PAN_TILT_RELEASE if axis == previous_axis else cfg.AUTO_PAN_TILT_DEADZONE)}
++    if not eligible: return gate('DEADZONE')
++    if busy: return gate('MOTOR_BUSY')
++    if settling: return gate('COOLDOWN')
++    axis = max(eligible, key=lambda a: abs(eligible[a]))
++    error = eligible[axis]
++    sign = cfg.AUTO_PAN_SIGN if axis == 'pan' else cfg.AUTO_TILT_SIGN
++    direction = ('pan_right' if error*sign > 0 else 'pan_left') if axis == 'pan' else (
++        'tilt_down' if error*sign > 0 else 'tilt_up')
++    speed = min(cfg.AUTO_PAN_TILT_MAX_SPEED, max(1,1+int(abs(error)*6)))
++    duration = cfg.AUTO_PAN_TILT_PULSE
++    if getattr(cfg,'AUTO_PAN_TILT_ADAPTIVE',False):
++        fraction = min(1.,max(0.,(max(map(abs,errors.values()))-cfg.AUTO_PAN_TILT_DEADZONE)/
++            max(.001,cfg.AUTO_PAN_TILT_FAR_ERROR-cfg.AUTO_PAN_TILT_DEADZONE)))
++        duration += fraction*(cfg.AUTO_PAN_TILT_MAX_PULSE-duration)
++    return PanPlan('MOVE','TARGET_LOCKED',direction,speed,duration,axis)
+--- /dev/null
++++ b/tools/pan_dynamics_benchmark.py
+@@ -0,0 +1,85 @@
++"""Deterministic angular plant; assumptions are NOT HANET calibration. No camera I/O."""
++import argparse
++import json
++from dataclasses import dataclass
++from types import SimpleNamespace
++import config
++from control.pan_policy import plan_pan
++
++@dataclass
++class Motor:
++    position: float = 0.
++    velocity: float = 0.
++    demand: float = 0.
++    pending: tuple = None
++    latency: float = .04
++    acceleration: float = 100.
++    deceleration: float = 160.
++    # Deliberately nonlinear degrees/s; replace only using measured calibration.
++    rates = {1:8., 2:19., 3:35.}
++    def command(self, now, speed, sign):
++        self.pending = (now+self.latency, self.rates[speed]*sign)
++    def stop(self, now):
++        self.pending = (now+self.latency, 0.)
++    def step(self, now, dt):
++        if self.pending and now >= self.pending[0]:
++            self.demand = self.pending[1]; self.pending = None
++        rate = self.deceleration if abs(self.demand) < abs(self.velocity) else self.acceleration
++        self.velocity += max(-rate*dt,min(rate*dt,self.demand-self.velocity))
++        self.position += self.velocity*dt
++
++
++def simulate(offset, scenario, adaptive):
++    cfg = SimpleNamespace(**{k:getattr(config,k) for k in dir(config) if k.isupper()})
++    cfg.AUTO_PAN_TILT_ADAPTIVE = adaptive
++    m = Motor(); dt=.01; horizon=12.; fov=60.; axis=None
++    active=False; deadline=0.; ready=0.; next_frame=0.; starts=stops=violations=0
++    errors=[]; intervals=[]; durations=[]; previous_start=None; centered=None; overshoot=0.
++    history=[]; measured_error=offset; missing=manual=busy=False; age=0.
++    for step in range(int(horizon/dt)):
++        t=step*dt
++        velocity = 3. if scenario=='moving' else 12. if scenario=='fast' else 6. if scenario=='sudden_stop' and t<3 else 0.
++        if not history: target=offset*fov
++        target += velocity*dt
++        error=(target-m.position)/fov; history.append(error); errors.append(abs(error))
++        missing=scenario=='missing' and t>=2
++        manual=scenario=='manual' and t>=2
++        busy=scenario=='busy' and 1<=t<4
++        if t >= next_frame:
++            next_frame=t+1/9
++            age=.5 if scenario=='delayed' and t>=2 else .04
++            measured_error=history[max(0,len(history)-1-round(age/dt))]
++            box=None if missing else (500+measured_error*1000-30,400,500+measured_error*1000+30,600)
++            p=plan_pan(box,(1000,1000),cfg,previous_axis=axis,age=age,
++                manual=manual,busy=busy,settling=t<ready,active=active)
++            if active and p.action=='STOP' and p.reason not in ('MOTOR_BUSY','COOLDOWN'):
++                m.stop(t);active=False;stops+=1;ready=t+cfg.AUTO_PAN_TILT_SETTLE
++            if not active and p.action=='MOVE':
++                if missing or manual or busy or age>cfg.MAX_CONTROL_OBSERVATION_AGE: violations+=1
++                m.command(t,p.speed,1 if p.direction=='pan_right' else -1)
++                active=True;deadline=t+p.duration;starts+=1;axis=p.axis;durations.append(p.duration)
++                if previous_start is not None: intervals.append(t-previous_start)
++                previous_start=t
++        if active and t>=deadline:
++            m.stop(t);active=False;stops+=1;ready=t+cfg.AUTO_PAN_TILT_SETTLE
++        m.step(t,dt)
++        if centered is None and abs(error)<=cfg.AUTO_PAN_TILT_RELEASE: centered=t
++        overshoot=max(overshoot,max(0.,-error))
++    if active: m.stop(horizon);stops+=1
++    return dict(offset=offset,scenario=scenario,adaptive=adaptive,centering_seconds=centered,
++        mean_abs_error=sum(errors)/len(errors),final_error=errors[-1],overshoot=overshoot,
++        command_rate=starts/horizon,starts=starts,stops=stops,safety_violations=violations,
++        requested_duty_cycle=sum(durations)/horizon,
++        mean_start_interval=sum(intervals)/len(intervals) if intervals else None,
++        assumed_command_latency=m.latency,ownership_blocked_seconds=3 if scenario=='busy' else 0)
++
++
++def main():
++    p=argparse.ArgumentParser();p.add_argument('--output',required=True);args=p.parse_args()
++    rows=[simulate(offset,scenario,adaptive) for offset in (.05,.15,.30,.50)
++          for scenario in ('stationary','moving','fast','sudden_stop','missing','delayed','busy','manual')
++          for adaptive in (False,True)]
++    with open(args.output,'w') as f: json.dump(dict(model='Synthetic, not hardware calibration',
++        parameters=dict(dt=.01,horizon=12,fov_degrees=60,frame_hz=9,latency=.04,
++        acceleration=100,deceleration=160,speed_map=Motor.rates),results=rows),f,indent=2)
++if __name__=='__main__':main()
+--- /dev/null
++++ b/tools/tracking_logic_benchmark.py
+@@ -0,0 +1,69 @@
++"""Identical scripted workload across checkpoint/current code; no neural/GPU claims."""
++import argparse
++import json
++import sys
++import time
++from types import SimpleNamespace
++from unittest.mock import Mock
++import numpy as np
++
++def main():
++    p=argparse.ArgumentParser();p.add_argument('--root',required=True);p.add_argument('--output',required=True)
++    args=p.parse_args()
++    import config  # Identical runtime settings for both source revisions; no camera I/O.
++    sys.path.insert(0,args.root)
++    from ai.hybrid_reid import HybridReIDTargetSelector
++    from runtime.byte_tracking import ByteTrackPersonTracker
++    results=[]
++    for scenario in ('single','proven_alias','ambiguous_overlap','fragmentation','missing_reacquire','camera_translation'):
++        cfg=SimpleNamespace(**{k:getattr(config,k) for k in dir(config) if k.isupper()})
++        cfg.REID_SEARCH_INTERVAL=0;cfg.REID_VERIFY_INTERVAL=100
++        tracker=ByteTrackPersonTracker(cfg);s=HybridReIDTargetSelector(cfg,Mock())
++        s.embedding=np.ones(512);s.error=None;score_calls=[]
++        def scores(frame,persons):
++            score_calls.append(len(persons));return [.95 if p['identity']=='target' else .1 for p in persons]
++        s._scores=scores
++        frame=np.zeros((500,700,3),np.uint8);selected=holds=wrong=0;ids=set();first_reacquire=None
++        elapsed=[]
++        for i in range(160):
++            x=350 if scenario=='camera_translation' and i>=20 else 100
++            d=dict(bbox=(x,50,x+70,250),confidence=.9,identity='target')
++            persons=[d]
++            if scenario=='proven_alias':persons=[d,d]
++            if scenario=='ambiguous_overlap':persons.append(dict(bbox=(101,50,171,250),confidence=.9,identity='other'))
++            if scenario=='missing_reacquire' and 20<=i<120:persons=[]
++            if scenario=='fragmentation' and i==20:tracker.reset()
++            before=time.perf_counter()
++            tracks=tracker.update(persons,(i+1)*.1)
++            chosen=s.select_person(frame,tracks,(i+1)*.1);s.finish_frame(chosen,None)
++            elapsed.append((time.perf_counter()-before)*1000)
++            ids.update(p['track_id'] for p in tracks if p['identity']=='target')
++            selected+=chosen is not None;holds+=bool(s.crossing_hold)
++            wrong+=chosen is not None and chosen['identity']!='target'
++            if scenario=='missing_reacquire' and i>=120 and chosen is not None and first_reacquire is None:first_reacquire=(i-120)*.1
++        results.append(dict(scenario=scenario,frames=160,selected=selected,hold_frames=holds,
++            incorrect_following=wrong,target_track_ids=len(ids),scripted_reid_calls=len(score_calls),
++            scripted_reid_candidates=sum(score_calls),reacquisition_seconds=first_reacquire,
++            logic_wall_ms=dict(zip(['p50','p95','p99'],map(float,np.percentile(elapsed,[50,95,99]))))))
++    from control.auto_zoom import AutoZoomController
++    import inspect
++    lens=Mock();lens.has_zoom_telemetry=False;lens.supports_absolute_zoom=False
++    lens.telemetry.return_value=None;lens.command.return_value=lens.stop.return_value=(True,'ACK')
++    options=dict(recovery_pulse=.04,recovery_interval=0,recovery_delay=0,
++        recovery_max_duration=.12,wait_after_zoom=0,direction_hold=0,direction_cooldown=0)
++    if 'pulse_recovery_without_telemetry' in inspect.signature(AutoZoomController).parameters:
++        options.update(pulse_recovery_without_telemetry=True,pulse_recovery_budget=.12)
++    z=AutoZoomController(lens,**options);z.set_enabled(True)
++    try:
++        for i in range(20):
++            now=time.monotonic();z.recover_missing(now,now-2,float('nan'))
++            deadline=now+1
++            while z.busy and time.monotonic()<deadline:time.sleep(.002)
++            if z.busy:raise RuntimeError('Mock recovery exceeded timeout')
++        recovery=dict(attempts=20,pulses=lens.command.call_count,spent_seconds=z._recovery_spent,
++            exhausted=z._recovery_spent>=.12,successful_reacquisitions=0,
++            invalid_direction_commands=sum(c.args[0]!='zoom_out' for c in lens.command.call_args_list))
++    finally:z.close()
++    with open(args.output,'w') as f:json.dump(dict(kind='Scripted scores; no YOLO/OSNet/GPU/FPS benchmark',
++        results=results,recovery=recovery),f,indent=2)
++if __name__=='__main__':main()
+--- /dev/null
++++ b/tools/calibrate_pan_manual.py
+@@ -0,0 +1,97 @@
++"""One manually confirmed bounded pulse. Default dry-run never imports a backend.
++Optional offline video displacement is pixels only, not an angular calibration.
++"""
++import argparse
++import json
++import signal
++import threading
++import time
++from pathlib import Path
++
++
++def run_pulse(camera, direction, speed, duration, emit, emergency):
++    if not 1 <= speed <= 3 or not .02 <= duration <= .24:
++        raise ValueError('Calibration limits: speed 1..3, duration .02.. .24 s')
++    if direction not in ('pan_left','pan_right','tilt_up','tilt_down'):
++        raise ValueError('Unsupported direction')
++    started=False
++    try:
++        status=camera.read_status()
++        if not status.get('connected') or emergency.is_set():
++            emit(dict(event='ABORT',reason='DISCONNECTED_OR_CANCELLED'));return False
++        started=True
++        emit(dict(event='START_REQUEST',direction=direction,speed=speed,duration=duration))
++        ok,_=camera.command(direction,speed)
++        emit(dict(event='START_ACK',ack=bool(ok)))
++        if not ok:return False
++        emergency.wait(duration)
++        return not emergency.is_set()
++    except Exception as exc:
++        emit(dict(event='ERROR',error_type=type(exc).__name__));return False
++    finally:
++        if started:
++            # STOP must be attempted even when START raises or ACK is lost.
++            emit(dict(event='STOP_REQUEST',emergency=emergency.is_set()))
++            for attempt in range(3):
++                try:ok,_=camera.stop()
++                except Exception:ok=False
++                emit(dict(event='STOP_ACK',ack=bool(ok),attempt=attempt+1))
++                if ok:break
++            if not ok:raise RuntimeError('STOP unconfirmed; inspect camera and use physical stop')
++
++
++def video_displacement(path):
++    import cv2
++    import numpy as np
++    cap=cv2.VideoCapture(str(path));previous=None;rows=[];index=0
++    try:
++        while True:
++            ok,frame=cap.read()
++            if not ok:break
++            gray=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY).astype(np.float32)
++            if previous is not None:
++                shift,response=cv2.phaseCorrelate(previous,gray)
++                rows.append(dict(frame=index,video_seconds=cap.get(cv2.CAP_PROP_POS_MSEC)/1000,
++                    dx_pixels=shift[0],dy_pixels=shift[1],correlation=response))
++            previous=gray;index+=1
++    finally:cap.release()
++    return rows
++
++
++def main():
++    p=argparse.ArgumentParser(description=__doc__)
++    p.add_argument('--execute',action='store_true')
++    p.add_argument('--direction',choices=['pan_left','pan_right','tilt_up','tilt_down'],default='pan_right')
++    p.add_argument('--speed',type=int,choices=[1,2,3],default=1)
++    p.add_argument('--duration',type=float,default=.12)
++    p.add_argument('--log',type=Path,default=Path('pan_calibration.jsonl'))
++    p.add_argument('--video',type=Path,help='Offline video only; phase correlation is approximate')
++    args=p.parse_args()
++    if not .02<=args.duration<=.24:p.error('duration must be .02.. .24 seconds')
++    def emit(row):
++        row=dict(timestamp=time.time(),monotonic=time.monotonic(),**row)
++        with args.log.open('a') as f:f.write(json.dumps(row)+'\n')
++        print(json.dumps(row))
++    if args.video:
++        rows=video_displacement(args.video)
++        output=args.log.with_suffix('.displacement.json')
++        output.write_text(json.dumps(dict(units='pixels; no angle/zoom calibration',samples=rows),indent=2))
++    if not args.execute:
++        emit(dict(event='DRY_RUN',direction=args.direction,speed=args.speed,duration=args.duration));return
++    if input('Close GUI/other motor clients. Type MOVE to authorize one physical pulse: ').strip()!='MOVE':
++        emit(dict(event='ABORT',reason='NOT_CONFIRMED'));return
++    import config
++    from camera.hanet_controller import HanetController
++    if config.PTZ_BACKEND!='hanet':raise RuntimeError('This tool supports HANET only')
++    emergency=threading.Event()
++    signal.signal(signal.SIGINT,lambda *_:emergency.set())
++    signal.signal(signal.SIGTERM,lambda *_:emergency.set())
++    def keyboard_stop():
++        try:input('Press Enter or Ctrl-C for emergency STOP.\n');emergency.set()
++        except EOFError:emergency.set()
++    threading.Thread(target=keyboard_stop,daemon=True).start()
++    camera=HanetController(config.PTZ_IP,config.PTZ_USERNAME,config.PTZ_PASSWORD,
++        port=config.PTZ_PORT,timeout=.5,autoconnect=False)
++    try:run_pulse(camera,args.direction,args.speed,args.duration,emit,emergency)
++    finally:camera.close()
++if __name__=='__main__':main()
+--- /dev/null
++++ b/test/test_root_cause_revision.py
+@@ -0,0 +1,215 @@
++"""Independent prerecorded-detection chain and pure policy; no detector weights or network."""
++import unittest
++import time
++from types import SimpleNamespace
++from unittest.mock import Mock
++import numpy as np
++import config
++from runtime.byte_tracking import ByteTrackPersonTracker
++from ai.hybrid_reid import HybridReIDTargetSelector
++from control.pan_policy import plan_pan
++from tools.pan_dynamics_benchmark import simulate
++import test_zoom_ownership as ownership
++
++
++def detection(x=100, width=70, identity='target'):
++    return dict(bbox=(x,50,x+width,250),confidence=.9,identity=identity)
++
++class DetectionReplayTests(unittest.TestCase):
++    def setUp(self):
++        self.cfg=SimpleNamespace(**{k:getattr(config,k) for k in dir(config) if k.isupper()})
++        self.cfg.REID_SEARCH_INTERVAL=0
++        self.cfg.REID_VERIFY_INTERVAL=100
++        self.tracker=ByteTrackPersonTracker(self.cfg)
++        self.selector=HybridReIDTargetSelector(self.cfg,Mock())
++        self.selector.embedding=np.ones(512);self.selector.error=None
++        self.selector._scores=Mock(side_effect=lambda frame,persons,*a,**kw:
++            [.95 if p['identity']=='target' else .1 for p in persons])
++        self.frame=np.zeros((500,700,3),np.uint8);self.t=0
++    def feed(self,persons):
++        self.t+=.1
++        tracks=self.tracker.update(persons,self.t)
++        chosen=self.selector.select_person(self.frame,tracks,self.t)
++        self.selector.finish_frame(chosen,None)
++        if chosen is not None:self.assertEqual(chosen['identity'],'target')
++        return chosen,tracks
++    def acquire(self):
++        for _ in range(4):chosen,_=self.feed([detection()])
++        self.assertIsNotNone(chosen)
++    def test_a_proven_same_observation_alias(self):
++        for _ in range(4):
++            d=detection();chosen,tracks=self.feed([d,d]);self.assertEqual(len(tracks),1)
++            self.assertNotIn('track_id',d)
++        self.assertIsNotNone(chosen);self.assertFalse(self.selector.crossing_hold)
++    def test_b_distinct_overlap_is_not_merged(self):
++        for _ in range(4):chosen,tracks=self.feed([detection(),detection(101,identity='other')])
++        self.assertEqual(len(tracks),2);self.assertIsNone(chosen)
++        self.assertEqual(self.selector._scores.call_count,0)
++    def test_c_fragmentation_reverified(self):
++        self.acquire();uid=self.selector.target_uid;old=self.selector.track_id
++        self.tracker.reset()
++        for _ in range(5):chosen,_=self.feed([detection()])
++        self.assertIsNotNone(chosen);self.assertNotEqual(old,self.selector.track_id)
++        self.assertEqual(uid,self.selector.target_uid)
++    def test_c_fragmentation_wrong_identity_rejected(self):
++        self.acquire();self.tracker.reset()
++        for _ in range(5):chosen,_=self.feed([detection(identity='other')])
++        self.assertIsNone(chosen)
++    def test_d_full_loss_reacquisition(self):
++        self.acquire()
++        for _ in range(100):self.feed([])
++        self.assertFalse(self.selector.locked)
++        for _ in range(6):chosen,_=self.feed([detection()])
++        self.assertIsNotNone(chosen)
++    def test_e_global_translation_requires_identity(self):
++        self.acquire()
++        for _ in range(5):chosen,_=self.feed([detection(350),detection(500,identity='other')])
++        self.assertIsNotNone(chosen)
++    def test_f_missing_never_returns_old_box(self):
++        self.acquire()
++        for _ in range(8):chosen,_=self.feed([]);self.assertIsNone(chosen)
++    def test_out_of_order(self):
++        self.acquire();box=self.selector.person_box
++        self.assertEqual(self.tracker.update([detection(300)],self.t-.1),[])
++        self.assertIsNone(self.selector.select_person(self.frame,[detection(300)],self.t-.1))
++        self.assertEqual(box,self.selector.person_box)
++    def test_turning_back_without_face(self):
++        self.acquire()
++        for _ in range(6):chosen,_=self.feed([detection()]);self.assertIsNotNone(chosen)
++    def test_far_to_near(self):
++        self.acquire()
++        for width in (75,80,90,100):chosen,_=self.feed([detection(width=width)])
++        self.assertIsNotNone(chosen)
++
++class PanPolicyTests(unittest.TestCase):
++    def test_gates(self):
++        for options,reason in [({'manual':True},'MANUAL_OVERRIDE'),({'verified':False},'TARGET_UNCERTAIN'),
++            ({'age':10},'STALE_OBSERVATION'),({'busy':True},'MOTOR_BUSY'),
++            ({'settling':True},'COOLDOWN'),({'enabled':False},'AUTO_PAN_DISABLED')]:
++            with self.subTest(reason=reason):
++                p=plan_pan((750,400,850,600),(1000,1000),config,active=True,**options)
++                self.assertEqual((p.action,p.reason),('STOP',reason))
++    def test_all_dynamics_scenarios(self):
++        for offset in (.05,.15,.3,.5):
++            for scenario in ('stationary','moving','fast','sudden_stop','missing','delayed','busy','manual'):
++                for adaptive in (False,True):
++                    with self.subTest(offset=offset,scenario=scenario,adaptive=adaptive):
++                        r=simulate(offset,scenario,adaptive)
++                        self.assertEqual(r['safety_violations'],0)
++                        self.assertEqual(r['starts'],r['stops'])
++    def test_hysteresis_and_invalid_geometry(self):
++        self.assertEqual(plan_pan((520,400,600,600),(1000,1000),config).action,'HOLD')
++        self.assertEqual(plan_pan((520,400,600,600),(1000,1000),config,previous_axis='pan').action,'MOVE')
++        for box in (None,(0,0,0,0),(0,0,float('nan'),10)):
++            self.assertEqual(plan_pan(box,(1000,1000),config,active=True).action,'STOP')
++
++class PulseRecoveryTests(unittest.TestCase):
++    # Reuse only mock setup helpers, not inherited test methods.
++    make=ownership.ZoomOwnershipTests.make
++    wait=ownership.ZoomOwnershipTests.wait
++    def setup_recovery(self,**kwargs):
++        z,lens=self.make(telemetry=False,pulse_recovery_without_telemetry=True,
++            pulse_recovery_budget=.12,recovery_pulse=.04,recovery_interval=0,**kwargs)
++        lens.telemetry.side_effect=None;lens.telemetry.return_value=None
++        return z,lens
++    def recover(self,z):
++        now=time.monotonic();return z.recover_missing(now,now-2,float('nan'))
++    def test_none_telemetry_nan_position_and_bounded_repeats(self):
++        z,lens=self.setup_recovery()
++        for n in range(3):
++            self.assertTrue(self.recover(z));self.wait(lambda:not z.busy)
++        for _ in range(10):self.assertFalse(self.recover(z))
++        self.assertEqual(lens.command.call_count,3);self.assertLessEqual(z._recovery_spent,.12)
++    def test_stale_stream_and_session_block(self):
++        z,lens=self.setup_recovery();now=time.monotonic()
++        self.assertFalse(z.recover_missing(now-10,now-20,float('nan')))
++        z._correlation={'lock_session_id':'expired'};z.session_valid=lambda s:False
++        self.assertFalse(self.recover(z));lens.command.assert_not_called()
++    def test_manual_busy_and_reacquired(self):
++        from control.orchestrator import ControlOrchestrator
++        owner=ControlOrchestrator();z,lens=self.setup_recovery(orchestrator=owner)
++        owner.manual=True;self.assertFalse(self.recover(z))
++        owner.manual=False;owner.acquire('pan_tilt');self.assertFalse(self.recover(z))
++        owner.release('pan_tilt');self.assertTrue(self.recover(z));self.wait(lambda:lens.command.called)
++        z.motion_feedback(dict(bbox=(300,100,600,800),track_id=7),(1000,1000),time.monotonic(),'s',7)
++        self.wait(lambda:not z.busy);self.assertEqual(z.last_stop_reason,'BBOX_FOUND')
++    def test_disconnect_request_stops_recovery(self):
++        z,lens=self.setup_recovery();self.recover(z);self.wait(lambda:lens.command.called)
++        z.request_stop('CAMERA_DISCONNECTED');self.wait(lambda:not z.busy)
++        self.assertEqual(z.last_stop_reason,'CAMERA_DISCONNECTED')
++    def test_shutdown_stops_recovery(self):
++        z,lens=self.setup_recovery();self.recover(z);self.wait(lambda:lens.command.called)
++        z.close();self.assertFalse(z.busy);self.assertTrue(lens.stop.called)
++
++
++class CalibrationSafetyTests(unittest.TestCase):
++    def test_dry_adapter_limits_disconnect_emergency_stop_retry(self):
++        import threading
++        from tools.calibrate_pan_manual import run_pulse
++        for connected,cancel,ack in ((False,False,True),(True,True,True),(True,False,False),(True,False,True)):
++            with self.subTest(connected=connected,cancel=cancel,ack=ack):
++                camera=Mock();camera.read_status.return_value={'connected':connected}
++                camera.command.return_value=(ack,'ACK');camera.stop.side_effect=[(False,'lost'),(True,'ACK')]
++                emergency=threading.Event()
++                if cancel:emergency.set()
++                rows=[];run_pulse(camera,'pan_right',1,.02,rows.append,emergency)
++                if not connected or cancel:camera.command.assert_not_called()
++                else:self.assertEqual(camera.stop.call_count,2)
++        with self.assertRaises(ValueError):run_pulse(Mock(),'pan_right',4,.12,lambda _:None,threading.Event())
++    def test_start_exception_still_stops(self):
++        import threading
++        from tools.calibrate_pan_manual import run_pulse
++        camera=Mock();camera.read_status.return_value={'connected':True}
++        camera.command.side_effect=TimeoutError;camera.stop.return_value=(True,'ACK')
++        self.assertFalse(run_pulse(camera,'pan_right',1,.02,lambda _:None,threading.Event()))
++        camera.stop.assert_called_once()
++
++class CombinedOwnershipTests(unittest.TestCase):
++    make=ownership.ZoomOwnershipTests.make
++    wait=ownership.ZoomOwnershipTests.wait
++    def test_pan_zoom_exclusive_then_manual_and_shutdown(self):
++        from control.auto_pan_tilt import AutoPanTiltController
++        from control.orchestrator import ControlOrchestrator
++        owner=ControlOrchestrator();z,lens=self.make(orchestrator=owner,telemetry=False,
++            pulse_recovery_without_telemetry=True,recovery_pulse=.15)
++        lens.supports_pan_tilt=True
++        cfg=SimpleNamespace(**{k:getattr(config,k) for k in dir(config) if k.isupper()})
++        pan=AutoPanTiltController(lens,owner,cfg);self.addCleanup(pan.close)
++        pan.set_enabled(True);pan.session_valid=lambda *_:True
++        now=time.monotonic();self.assertTrue(z.recover_missing(now,now-2,float('nan')))
++        self.wait(lambda:lens.command.called)
++        pan.submit({'bbox':(600,100,690,300)},(500,700),time.monotonic(),'s',1)
++        time.sleep(.03)
++        self.assertEqual(lens.command.call_count,1)
++        owner.manual=True;self.wait(lambda:not z.busy)
++        self.assertFalse(pan.submit({'bbox':(600,100,690,300)},(500,700),time.monotonic(),'s',1))
++        pan.close();z.close();self.assertFalse(pan.busy);self.assertFalse(z.busy)
++
++class PulseRecoveryFaultTests(unittest.TestCase):
++    make=ownership.ZoomOwnershipTests.make
++    wait=ownership.ZoomOwnershipTests.wait
++    def test_optical_loss_stops_before_recovery(self):
++        z,lens=self.make(telemetry=False,pulse_recovery_without_telemetry=True)
++        z.update((1000,1000),dict(bbox=(300,100,600,300)),.5,.04,
++                 target_name='PERSON',observation_time=time.monotonic())
++        self.wait(lambda:lens.command.called)
++        now=time.monotonic();self.assertFalse(z.recover_missing(now,now-2,float('nan')))
++        self.wait(lambda:not z.busy);self.assertTrue(lens.stop.called)
++    def test_stop_failure_disables_recovery(self):
++        z,lens=self.make(telemetry=False,pulse_recovery_without_telemetry=True,recovery_pulse=.04)
++        lens.stop.return_value=(False,'FAIL')
++        now=time.monotonic();z.recover_missing(now,now-2,float('nan'))
++        self.wait(lambda:not z.enabled)
++        now=time.monotonic();self.assertFalse(z.recover_missing(now,now-2,float('nan')))
++        lens.stop.return_value=(True,'ACK')
++
++class PerformanceAdmissionTests(unittest.TestCase):
++    def test_expired_periodic_job_does_not_enter_model(self):
++        cfg=SimpleNamespace(**{k:getattr(config,k) for k in dir(config) if k.isupper()})
++        model=Mock();s=HybridReIDTargetSelector(cfg,model)
++        s._score_valid=lambda:False
++        with self.assertRaises(TimeoutError):
++            s._scores(np.zeros((500,700,3),np.uint8),[detection()])
++        model.extract_embeddings.assert_not_called()
++
++if __name__=='__main__':unittest.main()

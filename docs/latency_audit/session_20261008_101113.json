@@ -1,0 +1,159 @@
+{
+  "sources": [
+    "logs/latency/latency_trace_20261008_101113_289179.jsonl.1",
+    "logs/latency/latency_trace_20261008_101113_289179.jsonl"
+  ],
+  "sessions": [
+    {
+      "lock_time": "2026-10-08T10:11:35.869+07:00",
+      "session": "lock_a8998faf798f465e83f53990fb8989a2",
+      "candidate_frame_to_lock_s": 0.516,
+      "lock_to_zoom_s": null,
+      "lock_to_face_s": 2.111,
+      "lock_to_recognition_compute_end_s": null,
+      "lock_to_identity_confirmed_s": null
+    },
+    {
+      "lock_time": "2026-10-08T10:11:40.061+07:00",
+      "session": "lock_c36b137b8f3c48c8a8b8d66d7adaec8f",
+      "candidate_frame_to_lock_s": 0.474,
+      "lock_to_zoom_s": 1.803,
+      "lock_to_face_s": 1.0,
+      "lock_to_recognition_compute_end_s": null,
+      "lock_to_identity_confirmed_s": null
+    },
+    {
+      "lock_time": "2026-10-08T10:12:00.109+07:00",
+      "session": "lock_3ee17a81b2f0479fb80d4af9a1832c59",
+      "candidate_frame_to_lock_s": 0.643,
+      "lock_to_zoom_s": null,
+      "lock_to_face_s": 0.248,
+      "lock_to_recognition_compute_end_s": 6.011,
+      "lock_to_identity_confirmed_s": null
+    },
+    {
+      "lock_time": "2026-10-08T10:12:23.656+07:00",
+      "session": "lock_31fdb339e44e46a4b856598abaa7e46c",
+      "candidate_frame_to_lock_s": 0.506,
+      "lock_to_zoom_s": 1.299,
+      "lock_to_face_s": 0.253,
+      "lock_to_recognition_compute_end_s": null,
+      "lock_to_identity_confirmed_s": null
+    },
+    {
+      "lock_time": "2026-10-08T10:12:29.278+07:00",
+      "session": "lock_1b0276254e724bfe8f95500cba23272d",
+      "candidate_frame_to_lock_s": 0.53,
+      "lock_to_zoom_s": 1.095,
+      "lock_to_face_s": 0.232,
+      "lock_to_recognition_compute_end_s": null,
+      "lock_to_identity_confirmed_s": null
+    },
+    {
+      "lock_time": "2026-10-08T10:12:43.034+07:00",
+      "session": "lock_a58a04d5652445c28f68a5204413340f",
+      "candidate_frame_to_lock_s": 0.839,
+      "lock_to_zoom_s": 0.986,
+      "lock_to_face_s": 0.563,
+      "lock_to_recognition_compute_end_s": 1.378,
+      "lock_to_identity_confirmed_s": null
+    },
+    {
+      "lock_time": "2026-10-08T10:12:46.083+07:00",
+      "session": "lock_7a5a43f40e5c41fe9934cf4d66be9f27",
+      "candidate_frame_to_lock_s": 0.496,
+      "lock_to_zoom_s": 1.074,
+      "lock_to_face_s": 0.269,
+      "lock_to_recognition_compute_end_s": 8.515,
+      "lock_to_identity_confirmed_s": null
+    }
+  ],
+  "recognition_attempts": [
+    {
+      "timestamp": "2026-10-08T10:12:06.120+07:00",
+      "frame_id": 768,
+      "compute_ms": 402.402253,
+      "frame_age_at_end_ms": 971.313939
+    },
+    {
+      "timestamp": "2026-10-08T10:12:44.412+07:00",
+      "frame_id": 1341,
+      "compute_ms": 408.057691,
+      "frame_age_at_end_ms": 1062.098028
+    },
+    {
+      "timestamp": "2026-10-08T10:12:54.598+07:00",
+      "frame_id": 1494,
+      "compute_ms": 394.086583,
+      "frame_age_at_end_ms": 1060.199009
+    },
+    {
+      "timestamp": "2026-10-08T10:12:55.678+07:00",
+      "frame_id": 1511,
+      "compute_ms": 385.631562,
+      "frame_age_at_end_ms": 1008.038891
+    },
+    {
+      "timestamp": "2026-10-08T10:12:56.720+07:00",
+      "frame_id": 1527,
+      "compute_ms": 357.857534,
+      "frame_age_at_end_ms": 970.984859
+    },
+    {
+      "timestamp": "2026-10-08T10:12:57.820+07:00",
+      "frame_id": 1543,
+      "compute_ms": 410.634921,
+      "frame_age_at_end_ms": 1038.382528
+    },
+    {
+      "timestamp": "2026-10-08T10:12:58.661+07:00",
+      "frame_id": 1553,
+      "compute_ms": 415.922494,
+      "frame_age_at_end_ms": 1190.799512
+    },
+    {
+      "timestamp": "2026-10-08T10:12:59.352+07:00",
+      "frame_id": 1565,
+      "compute_ms": 334.194279,
+      "frame_age_at_end_ms": 1088.203065
+    },
+    {
+      "timestamp": "2026-10-08T10:13:00.445+07:00",
+      "frame_id": 1582,
+      "compute_ms": 405.778049,
+      "frame_age_at_end_ms": 1059.506868
+    },
+    {
+      "timestamp": "2026-10-08T10:13:01.527+07:00",
+      "frame_id": 1598,
+      "compute_ms": 421.445082,
+      "frame_age_at_end_ms": 1061.33268
+    },
+    {
+      "timestamp": "2026-10-08T10:13:02.685+07:00",
+      "frame_id": 1615,
+      "compute_ms": 374.869214,
+      "frame_age_at_end_ms": 1085.15079
+    },
+    {
+      "timestamp": "2026-10-08T10:13:03.391+07:00",
+      "frame_id": 1626,
+      "compute_ms": 337.681706,
+      "frame_age_at_end_ms": 1045.169668
+    },
+    {
+      "timestamp": "2026-10-08T10:13:04.511+07:00",
+      "frame_id": 1643,
+      "compute_ms": 414.691485,
+      "frame_age_at_end_ms": 1036.335597
+    },
+    {
+      "timestamp": "2026-10-08T10:13:05.593+07:00",
+      "frame_id": 1660,
+      "compute_ms": 375.263435,
+      "frame_age_at_end_ms": 988.369483
+    }
+  ],
+  "identity_confirmed_count": 0,
+  "recognition_validity_limit_ms": 800
+}

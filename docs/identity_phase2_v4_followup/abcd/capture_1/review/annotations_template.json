@@ -1,0 +1,523 @@
+{
+  "source": "UNREVIEWED_TEMPLATE",
+  "target_identity": null,
+  "observations_sha256": "a5c61f5d0e288016c9b03f885cd28d066fe1a4e37ceb788eb9c3a60e7754fe25",
+  "frames": [
+    {
+      "frame_id": 977,
+      "timestamp": 30960.199080731,
+      "target_visible": null,
+      "candidate_identities": {
+        "977:0": null,
+        "977:1": null,
+        "977:2": null
+      },
+      "strata": [
+        "low_similarity",
+        "representative"
+      ]
+    },
+    {
+      "frame_id": 1049,
+      "timestamp": 30962.598647955,
+      "target_visible": null,
+      "candidate_identities": {
+        "1049:0": null,
+        "1049:1": null,
+        "1049:2": null
+      },
+      "strata": [
+        "easy_selection"
+      ]
+    },
+    {
+      "frame_id": 1104,
+      "timestamp": 30964.432732781,
+      "target_visible": null,
+      "candidate_identities": {
+        "1104:0": null,
+        "1104:1": null,
+        "1104:2": null
+      },
+      "strata": [
+        "disagreement"
+      ]
+    },
+    {
+      "frame_id": 1220,
+      "timestamp": 30968.299052534,
+      "target_visible": null,
+      "candidate_identities": {
+        "1220:0": null
+      },
+      "strata": [
+        "representative"
+      ]
+    },
+    {
+      "frame_id": 1373,
+      "timestamp": 30973.399031158,
+      "target_visible": null,
+      "candidate_identities": {
+        "1373:0": null
+      },
+      "strata": [
+        "easy_selection"
+      ]
+    },
+    {
+      "frame_id": 1498,
+      "timestamp": 30977.570546846,
+      "target_visible": null,
+      "candidate_identities": {
+        "1498:0": null
+      },
+      "strata": [
+        "representative"
+      ]
+    },
+    {
+      "frame_id": 1584,
+      "timestamp": 30980.434744131,
+      "target_visible": null,
+      "candidate_identities": {
+        "1584:0": null
+      },
+      "strata": [
+        "disagreement",
+        "low_similarity"
+      ]
+    },
+    {
+      "frame_id": 1704,
+      "timestamp": 30984.447510598,
+      "target_visible": null,
+      "candidate_identities": {},
+      "strata": [
+        "representative"
+      ]
+    },
+    {
+      "frame_id": 1841,
+      "timestamp": 30989.000232259,
+      "target_visible": null,
+      "candidate_identities": {
+        "1841:0": null,
+        "1841:1": null
+      },
+      "strata": [
+        "low_similarity"
+      ]
+    },
+    {
+      "frame_id": 1891,
+      "timestamp": 30990.668832827,
+      "target_visible": null,
+      "candidate_identities": {
+        "1891:0": null,
+        "1891:1": null
+      },
+      "strata": [
+        "overlap"
+      ]
+    },
+    {
+      "frame_id": 1921,
+      "timestamp": 30991.667222011,
+      "target_visible": null,
+      "candidate_identities": {
+        "1921:0": null,
+        "1921:1": null
+      },
+      "strata": [
+        "overlap"
+      ]
+    },
+    {
+      "frame_id": 2001,
+      "timestamp": 30994.334416807,
+      "target_visible": null,
+      "candidate_identities": {
+        "2001:0": null,
+        "2001:1": null
+      },
+      "strata": [
+        "representative"
+      ]
+    },
+    {
+      "frame_id": 2183,
+      "timestamp": 31000.404094239,
+      "target_visible": null,
+      "candidate_identities": {
+        "2183:0": null,
+        "2183:1": null
+      },
+      "strata": [
+        "overlap"
+      ]
+    },
+    {
+      "frame_id": 2224,
+      "timestamp": 31001.764115573,
+      "target_visible": null,
+      "candidate_identities": {
+        "2224:0": null,
+        "2224:1": null
+      },
+      "strata": [
+        "overlap"
+      ]
+    },
+    {
+      "frame_id": 2256,
+      "timestamp": 31002.832218344,
+      "target_visible": null,
+      "candidate_identities": {
+        "2256:0": null,
+        "2256:1": null
+      },
+      "strata": [
+        "overlap"
+      ]
+    },
+    {
+      "frame_id": 2260,
+      "timestamp": 31002.967570126,
+      "target_visible": null,
+      "candidate_identities": {
+        "2260:0": null,
+        "2260:1": null
+      },
+      "strata": [
+        "representative"
+      ]
+    },
+    {
+      "frame_id": 2286,
+      "timestamp": 31003.833543481,
+      "target_visible": null,
+      "candidate_identities": {
+        "2286:0": null,
+        "2286:1": null
+      },
+      "strata": [
+        "overlap"
+      ]
+    },
+    {
+      "frame_id": 2404,
+      "timestamp": 31007.766662301,
+      "target_visible": null,
+      "candidate_identities": {
+        "2404:0": null,
+        "2404:1": null,
+        "2404:2": null
+      },
+      "strata": [
+        "low_similarity"
+      ]
+    },
+    {
+      "frame_id": 2587,
+      "timestamp": 31013.864471928,
+      "target_visible": null,
+      "candidate_identities": {
+        "2587:0": null,
+        "2587:1": null
+      },
+      "strata": [
+        "representative"
+      ]
+    },
+    {
+      "frame_id": 2730,
+      "timestamp": 31018.636211103,
+      "target_visible": null,
+      "candidate_identities": {
+        "2730:0": null,
+        "2730:1": null,
+        "2730:2": null
+      },
+      "strata": [
+        "disagreement",
+        "easy_selection"
+      ]
+    },
+    {
+      "frame_id": 2861,
+      "timestamp": 31023.000553367,
+      "target_visible": null,
+      "candidate_identities": {
+        "2861:0": null,
+        "2861:1": null,
+        "2861:2": null
+      },
+      "strata": [
+        "representative"
+      ]
+    },
+    {
+      "frame_id": 2986,
+      "timestamp": 31027.165826003,
+      "target_visible": null,
+      "candidate_identities": {
+        "2986:0": null,
+        "2986:1": null
+      },
+      "strata": [
+        "disagreement"
+      ]
+    },
+    {
+      "frame_id": 3144,
+      "timestamp": 31032.432954901,
+      "target_visible": null,
+      "candidate_identities": {
+        "3144:0": null,
+        "3144:1": null
+      },
+      "strata": [
+        "representative"
+      ]
+    },
+    {
+      "frame_id": 3161,
+      "timestamp": 31033.001624272,
+      "target_visible": null,
+      "candidate_identities": {
+        "3161:0": null,
+        "3161:1": null
+      },
+      "strata": [
+        "low_similarity"
+      ]
+    },
+    {
+      "frame_id": 3249,
+      "timestamp": 31035.935078124,
+      "target_visible": null,
+      "candidate_identities": {
+        "3249:0": null,
+        "3249:1": null
+      },
+      "strata": [
+        "low_similarity"
+      ]
+    },
+    {
+      "frame_id": 3386,
+      "timestamp": 31040.499610396,
+      "target_visible": null,
+      "candidate_identities": {
+        "3386:0": null,
+        "3386:1": null
+      },
+      "strata": [
+        "easy_selection"
+      ]
+    },
+    {
+      "frame_id": 3411,
+      "timestamp": 31041.333868196,
+      "target_visible": null,
+      "candidate_identities": {
+        "3411:0": null,
+        "3411:1": null
+      },
+      "strata": [
+        "representative"
+      ]
+    },
+    {
+      "frame_id": 3558,
+      "timestamp": 31046.231102527,
+      "target_visible": null,
+      "candidate_identities": {
+        "3558:0": null
+      },
+      "strata": [
+        "disagreement"
+      ]
+    },
+    {
+      "frame_id": 3676,
+      "timestamp": 31050.166416414,
+      "target_visible": null,
+      "candidate_identities": {
+        "3676:0": null
+      },
+      "strata": [
+        "representative"
+      ]
+    },
+    {
+      "frame_id": 3791,
+      "timestamp": 31053.998083852,
+      "target_visible": null,
+      "candidate_identities": {
+        "3791:0": null,
+        "3791:1": null
+      },
+      "strata": [
+        "overlap"
+      ]
+    },
+    {
+      "frame_id": 3844,
+      "timestamp": 31055.772077629,
+      "target_visible": null,
+      "candidate_identities": {
+        "3844:0": null,
+        "3844:1": null
+      },
+      "strata": [
+        "overlap"
+      ]
+    },
+    {
+      "frame_id": 3910,
+      "timestamp": 31057.967155453,
+      "target_visible": null,
+      "candidate_identities": {
+        "3910:0": null,
+        "3910:1": null
+      },
+      "strata": [
+        "disagreement"
+      ]
+    },
+    {
+      "frame_id": 3917,
+      "timestamp": 31058.199939497,
+      "target_visible": null,
+      "candidate_identities": {
+        "3917:0": null,
+        "3917:1": null
+      },
+      "strata": [
+        "low_similarity"
+      ]
+    },
+    {
+      "frame_id": 3942,
+      "timestamp": 31059.033324638,
+      "target_visible": null,
+      "candidate_identities": {
+        "3942:0": null,
+        "3942:1": null
+      },
+      "strata": [
+        "representative"
+      ]
+    },
+    {
+      "frame_id": 4088,
+      "timestamp": 31063.899617992,
+      "target_visible": null,
+      "candidate_identities": {
+        "4088:0": null,
+        "4088:1": null
+      },
+      "strata": [
+        "easy_selection"
+      ]
+    },
+    {
+      "frame_id": 4232,
+      "timestamp": 31068.69854605,
+      "target_visible": null,
+      "candidate_identities": {
+        "4232:0": null,
+        "4232:1": null,
+        "4232:2": null
+      },
+      "strata": [
+        "representative"
+      ]
+    },
+    {
+      "frame_id": 4392,
+      "timestamp": 31074.03325166,
+      "target_visible": null,
+      "candidate_identities": {
+        "4392:0": null
+      },
+      "strata": [
+        "easy_selection"
+      ]
+    },
+    {
+      "frame_id": 4493,
+      "timestamp": 31077.399690785,
+      "target_visible": null,
+      "candidate_identities": {
+        "4493:0": null
+      },
+      "strata": [
+        "disagreement"
+      ]
+    },
+    {
+      "frame_id": 4499,
+      "timestamp": 31077.602581807,
+      "target_visible": null,
+      "candidate_identities": {
+        "4499:0": null
+      },
+      "strata": [
+        "representative"
+      ]
+    },
+    {
+      "frame_id": 4735,
+      "timestamp": 31085.464907295,
+      "target_visible": null,
+      "candidate_identities": {
+        "4735:0": null
+      },
+      "strata": [
+        "easy_selection"
+      ]
+    },
+    {
+      "frame_id": 4809,
+      "timestamp": 31087.935396686,
+      "target_visible": null,
+      "candidate_identities": {
+        "4809:0": null
+      },
+      "strata": [
+        "representative"
+      ]
+    },
+    {
+      "frame_id": 5063,
+      "timestamp": 31096.39956902,
+      "target_visible": null,
+      "candidate_identities": {
+        "5063:0": null,
+        "5063:1": null
+      },
+      "strata": [
+        "disagreement",
+        "easy_selection"
+      ]
+    },
+    {
+      "frame_id": 5100,
+      "timestamp": 31097.631492341,
+      "target_visible": null,
+      "candidate_identities": {
+        "5100:0": null,
+        "5100:1": null
+      },
+      "strata": [
+        "low_similarity",
+        "representative"
+      ]
+    }
+  ],
+  "review_status": "AWAITING_INDEPENDENT_REVIEW",
+  "sampling_bias": "stratified, not population accuracy sample"
+}

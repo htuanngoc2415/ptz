@@ -1,0 +1,378 @@
+[
+  {
+    "split": "development",
+    "frame_id": 1223,
+    "localization_candidate": "1223:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.18422920599914505,
+    "human_gt": null
+  },
+  {
+    "split": "development",
+    "frame_id": 1315,
+    "localization_candidate": "1315:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.21769125199716655,
+    "human_gt": null
+  },
+  {
+    "split": "development",
+    "frame_id": 1319,
+    "localization_candidate": "1319:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.32448579099946073,
+    "human_gt": null
+  },
+  {
+    "split": "development",
+    "frame_id": 1354,
+    "localization_candidate": "1354:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.17721225800050888,
+    "human_gt": null
+  },
+  {
+    "split": "development",
+    "frame_id": 1424,
+    "localization_candidate": "1424:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.33862324800065835,
+    "human_gt": null
+  },
+  {
+    "split": "development",
+    "frame_id": 1451,
+    "localization_candidate": "1451:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.18879578699852573,
+    "human_gt": null
+  },
+  {
+    "split": "development",
+    "frame_id": 1462,
+    "localization_candidate": "1462:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.5410784050000075,
+    "human_gt": null
+  },
+  {
+    "split": "development",
+    "frame_id": 2912,
+    "localization_candidate": "2912:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.182003727000847,
+    "human_gt": null
+  },
+  {
+    "split": "development",
+    "frame_id": 2937,
+    "localization_candidate": "2937:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.2585326240005088,
+    "human_gt": null
+  },
+  {
+    "split": "development",
+    "frame_id": 2941,
+    "localization_candidate": "2941:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.370430839000619,
+    "human_gt": null
+  },
+  {
+    "split": "development",
+    "frame_id": 2946,
+    "localization_candidate": "2946:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.5200536580014159,
+    "human_gt": null
+  },
+  {
+    "split": "development",
+    "frame_id": 3560,
+    "localization_candidate": "3560:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.11880710699915653,
+    "human_gt": null
+  },
+  {
+    "split": "development",
+    "frame_id": 3562,
+    "localization_candidate": "3562:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.2978155050004716,
+    "human_gt": null
+  },
+  {
+    "split": "development",
+    "frame_id": 3564,
+    "localization_candidate": "3564:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.3066093320012442,
+    "human_gt": null
+  },
+  {
+    "split": "development",
+    "frame_id": 3567,
+    "localization_candidate": "3567:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.49998705699908896,
+    "human_gt": null
+  },
+  {
+    "split": "development",
+    "frame_id": 3570,
+    "localization_candidate": "3570:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.4844702949994826,
+    "human_gt": null
+  },
+  {
+    "split": "development",
+    "frame_id": 3573,
+    "localization_candidate": "3573:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.5737925569992512,
+    "human_gt": null
+  },
+  {
+    "split": "development",
+    "frame_id": 3575,
+    "localization_candidate": "3575:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.7428023520005809,
+    "human_gt": null
+  },
+  {
+    "split": "development",
+    "frame_id": 4109,
+    "localization_candidate": "4109:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.1779250569998112,
+    "human_gt": null
+  },
+  {
+    "split": "development",
+    "frame_id": 5068,
+    "localization_candidate": "5068:0",
+    "reason": "BOUNDED_SIMILARITY_CONTINUATION",
+    "anchor_age_s": 0.2246904400017229,
+    "human_gt": null
+  },
+  {
+    "split": "development",
+    "frame_id": 5072,
+    "localization_candidate": "5072:0",
+    "reason": "BOUNDED_SIMILARITY_CONTINUATION",
+    "anchor_age_s": 0.3505610610009171,
+    "human_gt": null
+  },
+  {
+    "split": "development",
+    "frame_id": 5074,
+    "localization_candidate": "5074:0",
+    "reason": "BOUNDED_SIMILARITY_CONTINUATION",
+    "anchor_age_s": 0.44853928399970755,
+    "human_gt": null
+  },
+  {
+    "split": "development",
+    "frame_id": 5084,
+    "localization_candidate": "5084:0",
+    "reason": "BOUNDED_SIMILARITY_CONTINUATION",
+    "anchor_age_s": 0.7732983280002372,
+    "human_gt": null
+  },
+  {
+    "split": "retrospective_holdout",
+    "frame_id": 1737,
+    "localization_candidate": "1737:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.12267903899919474,
+    "human_gt": null
+  },
+  {
+    "split": "retrospective_holdout",
+    "frame_id": 1742,
+    "localization_candidate": "1742:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.277189725999051,
+    "human_gt": null
+  },
+  {
+    "split": "retrospective_holdout",
+    "frame_id": 1746,
+    "localization_candidate": "1746:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.4499472070019692,
+    "human_gt": null
+  },
+  {
+    "split": "retrospective_holdout",
+    "frame_id": 1750,
+    "localization_candidate": "1750:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.5479365889987093,
+    "human_gt": null
+  },
+  {
+    "split": "retrospective_holdout",
+    "frame_id": 1754,
+    "localization_candidate": "1754:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.6853919310015044,
+    "human_gt": null
+  },
+  {
+    "split": "retrospective_holdout",
+    "frame_id": 1783,
+    "localization_candidate": "1783:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.25840570099899196,
+    "human_gt": null
+  },
+  {
+    "split": "retrospective_holdout",
+    "frame_id": 1789,
+    "localization_candidate": "1789:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.44922251800016966,
+    "human_gt": null
+  },
+  {
+    "split": "retrospective_holdout",
+    "frame_id": 1794,
+    "localization_candidate": "1794:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.5762832180007535,
+    "human_gt": null
+  },
+  {
+    "split": "retrospective_holdout",
+    "frame_id": 1796,
+    "localization_candidate": "1796:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.6668908380015637,
+    "human_gt": null
+  },
+  {
+    "split": "retrospective_holdout",
+    "frame_id": 2926,
+    "localization_candidate": "2926:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.36737472000095295,
+    "human_gt": null
+  },
+  {
+    "split": "retrospective_holdout",
+    "frame_id": 2994,
+    "localization_candidate": "2994:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.23732614500113414,
+    "human_gt": null
+  },
+  {
+    "split": "retrospective_holdout",
+    "frame_id": 2996,
+    "localization_candidate": "2996:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.3249182990002737,
+    "human_gt": null
+  },
+  {
+    "split": "retrospective_holdout",
+    "frame_id": 2999,
+    "localization_candidate": "2999:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.41297504699832643,
+    "human_gt": null
+  },
+  {
+    "split": "retrospective_holdout",
+    "frame_id": 3002,
+    "localization_candidate": "3002:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.5151322979982069,
+    "human_gt": null
+  },
+  {
+    "split": "retrospective_holdout",
+    "frame_id": 3007,
+    "localization_candidate": "3007:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.6701070179988164,
+    "human_gt": null
+  },
+  {
+    "split": "retrospective_holdout",
+    "frame_id": 3011,
+    "localization_candidate": "3011:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.784850928997912,
+    "human_gt": null
+  },
+  {
+    "split": "retrospective_holdout",
+    "frame_id": 3708,
+    "localization_candidate": "3708:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.2705357880004158,
+    "human_gt": null
+  },
+  {
+    "split": "retrospective_holdout",
+    "frame_id": 3710,
+    "localization_candidate": "3710:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.2988852809976379,
+    "human_gt": null
+  },
+  {
+    "split": "retrospective_holdout",
+    "frame_id": 3713,
+    "localization_candidate": "3713:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.375248869000643,
+    "human_gt": null
+  },
+  {
+    "split": "retrospective_holdout",
+    "frame_id": 3716,
+    "localization_candidate": "3716:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.5232623490010155,
+    "human_gt": null
+  },
+  {
+    "split": "retrospective_holdout",
+    "frame_id": 3738,
+    "localization_candidate": "3738:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.11386018799748854,
+    "human_gt": null
+  },
+  {
+    "split": "retrospective_holdout",
+    "frame_id": 3747,
+    "localization_candidate": "3747:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.4227350910005043,
+    "human_gt": null
+  },
+  {
+    "split": "retrospective_holdout",
+    "frame_id": 3751,
+    "localization_candidate": "3751:0",
+    "reason": "BOUNDED_QUALITY_CONTINUATION",
+    "anchor_age_s": 0.5548467519984115,
+    "human_gt": null
+  },
+  {
+    "split": "retrospective_holdout",
+    "frame_id": 4744,
+    "localization_candidate": "4744:0",
+    "reason": "BOUNDED_SIMILARITY_CONTINUATION",
+    "anchor_age_s": 0.2903460109992011,
+    "human_gt": null
+  }
+]

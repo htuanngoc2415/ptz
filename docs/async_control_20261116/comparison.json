@@ -1,0 +1,279 @@
+[
+  {
+    "mode": "legacy",
+    "rpc_delay_ms": 20.0,
+    "observations": 100,
+    "capture_fps": 30.198667236183827,
+    "observation_replay_fps": 19.999117374956178,
+    "observations_during_start_rpc": 7,
+    "submit_ms": {
+      "n": 100,
+      "mean": 0.14694170997245237,
+      "p50": 0.14924100105417892,
+      "p95": 0.22819399964646436,
+      "p99": 0.2863970003090799
+    },
+    "frame_to_dispatch_ms": {
+      "n": 17,
+      "mean": 17.679082235939433,
+      "p50": 0.44597799933399074,
+      "p95": 47.04004399900441,
+      "p99": 47.04004399900441
+    },
+    "dispatch_to_rpc_ms": {
+      "n": 17,
+      "mean": 20.211279058404376,
+      "p50": 20.20770099989022,
+      "p95": 20.26130599915632,
+      "p99": 20.26130599915632
+    },
+    "frame_to_rpc_ms": {
+      "n": 17,
+      "mean": 37.90383394088541,
+      "p50": 20.660789999965345,
+      "p95": 67.26444399828324,
+      "p99": 67.26444399828324
+    },
+    "frame_to_decision_ms": {
+      "n": 0
+    },
+    "decision_to_publish_ms": {
+      "n": 0
+    },
+    "publish_to_consume_ms": {
+      "n": 0
+    },
+    "consume_to_dispatch_ms": {
+      "n": 0
+    },
+    "starts": 17,
+    "stops": 17,
+    "cpu_seconds": 0.500458923,
+    "start_hz": 3.39984995374255,
+    "closed": true,
+    "counters": {
+      "pan_tilt_decisions_TARGET_LOCKED": 10,
+      "pan_tilt_command_count": 17,
+      "pan_tilt_decisions_MOTOR_BUSY": 33,
+      "pan_tilt_decisions_COOLDOWN": 42,
+      "pan_tilt_decisions_NO_VALID_TARGET": 11,
+      "pan_tilt_decisions_DEADZONE": 4
+    }
+  },
+  {
+    "mode": "asynchronous",
+    "rpc_delay_ms": 20.0,
+    "observations": 100,
+    "capture_fps": 30.199021376561518,
+    "observation_replay_fps": 19.99935190500763,
+    "observations_during_start_rpc": 7,
+    "submit_ms": {
+      "n": 100,
+      "mean": 0.12603743987710914,
+      "p50": 0.13030799891566858,
+      "p95": 0.16517299809493124,
+      "p99": 0.20332300118752755
+    },
+    "frame_to_dispatch_ms": {
+      "n": 17,
+      "mean": 17.9619508827968,
+      "p50": 0.7903039986558724,
+      "p95": 47.24033900129143,
+      "p99": 47.24033900129143
+    },
+    "dispatch_to_rpc_ms": {
+      "n": 17,
+      "mean": 20.24384629433317,
+      "p50": 20.243381997715915,
+      "p95": 20.319636998465285,
+      "p99": 20.319636998465285
+    },
+    "frame_to_rpc_ms": {
+      "n": 17,
+      "mean": 38.218961647704845,
+      "p50": 21.052369000244653,
+      "p95": 67.53436900180532,
+      "p99": 67.53436900180532
+    },
+    "frame_to_decision_ms": {
+      "n": 100,
+      "mean": 9.771164909871004,
+      "p50": 16.615204000117956,
+      "p95": 17.06460999776027,
+      "p99": 33.53315700223902
+    },
+    "decision_to_publish_ms": {
+      "n": 100,
+      "mean": 0.014280100185715128,
+      "p50": 0.014394001482287422,
+      "p95": 0.017678001313470304,
+      "p99": 0.02424499689368531
+    },
+    "publish_to_consume_ms": {
+      "n": 100,
+      "mean": 0.24411617017904064,
+      "p50": 0.17774899970390834,
+      "p95": 0.8954570002970286,
+      "p99": 1.211199996760115
+    },
+    "consume_to_dispatch_ms": {
+      "n": 17,
+      "mean": 12.708567587704987,
+      "p50": 0.30295800024759956,
+      "p95": 30.493202997604385,
+      "p99": 30.493202997604385
+    },
+    "starts": 17,
+    "stops": 17,
+    "cpu_seconds": 0.09101036899999992,
+    "start_hz": 3.399889823851297,
+    "closed": true,
+    "counters": {
+      "pan_tilt_decisions_TARGET_LOCKED": 10,
+      "pan_tilt_command_count": 17,
+      "pan_tilt_decisions_MOTOR_BUSY": 33,
+      "pan_tilt_decisions_COOLDOWN": 42,
+      "pan_tilt_decisions_NO_VALID_TARGET": 11,
+      "pan_tilt_decisions_DEADZONE": 4
+    }
+  },
+  {
+    "mode": "legacy",
+    "rpc_delay_ms": 200.0,
+    "observations": 100,
+    "capture_fps": 30.198578081829147,
+    "observation_replay_fps": 19.99905833233718,
+    "observations_during_start_rpc": 44,
+    "submit_ms": {
+      "n": 100,
+      "mean": 0.17722963984851958,
+      "p50": 0.17719199968269095,
+      "p95": 0.27081900043413043,
+      "p99": 0.344043000950478
+    },
+    "frame_to_dispatch_ms": {
+      "n": 11,
+      "mean": 34.50159418141332,
+      "p50": 47.11318699992262,
+      "p95": 47.24016599720926,
+      "p99": 47.24016599720926
+    },
+    "dispatch_to_rpc_ms": {
+      "n": 11,
+      "mean": 200.37213427250126,
+      "p50": 200.3673390026961,
+      "p95": 200.41471699732938,
+      "p99": 200.41471699732938
+    },
+    "frame_to_rpc_ms": {
+      "n": 11,
+      "mean": 234.89163418211817,
+      "p50": 247.51791600283468,
+      "p95": 247.6269990002038,
+      "p99": 247.6269990002038
+    },
+    "frame_to_decision_ms": {
+      "n": 0
+    },
+    "decision_to_publish_ms": {
+      "n": 0
+    },
+    "publish_to_consume_ms": {
+      "n": 0
+    },
+    "consume_to_dispatch_ms": {
+      "n": 0
+    },
+    "starts": 11,
+    "stops": 11,
+    "cpu_seconds": 0.06543768699999997,
+    "start_hz": 2.19989641655709,
+    "closed": true,
+    "counters": {
+      "pan_tilt_decisions_TARGET_LOCKED": 3,
+      "pan_tilt_command_count": 11,
+      "pan_tilt_decisions_MOTOR_BUSY": 57,
+      "pan_tilt_decisions_COOLDOWN": 25,
+      "pan_tilt_decisions_NO_VALID_TARGET": 11,
+      "pan_tilt_decisions_DEADZONE": 4
+    }
+  },
+  {
+    "mode": "asynchronous",
+    "rpc_delay_ms": 200.0,
+    "observations": 100,
+    "capture_fps": 29.99953359125079,
+    "observation_replay_fps": 19.99968906083386,
+    "observations_during_start_rpc": 44,
+    "submit_ms": {
+      "n": 100,
+      "mean": 0.14092641013121465,
+      "p50": 0.13295199823915027,
+      "p95": 0.21217100220383145,
+      "p99": 0.3051860003324691
+    },
+    "frame_to_dispatch_ms": {
+      "n": 11,
+      "mean": 34.41637672718075,
+      "p50": 47.26526400190778,
+      "p95": 47.47992000193335,
+      "p99": 47.47992000193335
+    },
+    "dispatch_to_rpc_ms": {
+      "n": 11,
+      "mean": 200.42016118234395,
+      "p50": 200.4112159993383,
+      "p95": 200.4819480025617,
+      "p99": 200.4819480025617
+    },
+    "frame_to_rpc_ms": {
+      "n": 11,
+      "mean": 234.8520948190443,
+      "p50": 247.6864000018395,
+      "p95": 248.03163000251516,
+      "p99": 248.03163000251516
+    },
+    "frame_to_decision_ms": {
+      "n": 100,
+      "mean": 10.437643670047692,
+      "p50": 16.70423299947288,
+      "p95": 33.30149999965215,
+      "p99": 33.54743599993526
+    },
+    "decision_to_publish_ms": {
+      "n": 100,
+      "mean": 0.015743470285087824,
+      "p50": 0.015213998267427087,
+      "p95": 0.02275199949508533,
+      "p99": 0.031894000130705535
+    },
+    "publish_to_consume_ms": {
+      "n": 67,
+      "mean": 3.9485954774461978,
+      "p50": 0.18389300021226518,
+      "p95": 30.957621002016822,
+      "p99": 31.165413001872366
+    },
+    "consume_to_dispatch_ms": {
+      "n": 11,
+      "mean": 22.17815772647472,
+      "p50": 30.359917000168934,
+      "p95": 30.422259998886148,
+      "p99": 30.422259998886148
+    },
+    "starts": 11,
+    "stops": 11,
+    "cpu_seconds": 0.07414795900000004,
+    "start_hz": 2.1999657966917243,
+    "closed": true,
+    "counters": {
+      "pan_tilt_decisions_TARGET_LOCKED": 3,
+      "pan_tilt_command_count": 11,
+      "pan_observation_superseded": 33,
+      "pan_tilt_decisions_MOTOR_BUSY": 28,
+      "pan_tilt_decisions_COOLDOWN": 25,
+      "pan_tilt_decisions_NO_VALID_TARGET": 7,
+      "pan_tilt_decisions_DEADZONE": 4
+    }
+  }
+]

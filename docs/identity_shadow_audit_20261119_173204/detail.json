@@ -1,0 +1,95 @@
+{
+  "source_hash_matches": {
+    "ai/target_identity.py": true,
+    "runtime/identity_shadow.py": true,
+    "runtime/scheduling.py": true
+  },
+  "reset_count": 5,
+  "reset_sessions": [
+    "c79d9af53630479bb3212c6b4d24595a"
+  ],
+  "reset_thresholds": [
+    0.7
+  ],
+  "completed_jobs": 259,
+  "rejected_jobs": 84,
+  "completion_fraction": 0.7551020408163265,
+  "sample_hz": 1.6447752740418085,
+  "gap_over_1s": 44,
+  "pass_discard_fraction": 0.10619469026548672,
+  "gui_full_session": {
+    "stage": "receive_to_gui_submit_ms",
+    "count": "2617",
+    "mean": "58.08034981543764",
+    "min": "31.057375",
+    "max": "133.764436",
+    "percentile_window_count": "2617",
+    "p50": "59.110822",
+    "p90": "72.0007856",
+    "p95": "74.46785159999999",
+    "p99": "82.57214332000018"
+  },
+  "trace_windows": {
+    "retained_on": {
+      "start": 24968.198977636,
+      "end": 25010.37070278,
+      "duration_s": 42.17172514400227,
+      "gui_samples": 538,
+      "gui_submit_hz": 12.757362857765738,
+      "detection_results": 398,
+      "detection_hz": 9.437603006302535,
+      "gui_latency_ms": {
+        "n": 538,
+        "median": 58.843686000000005,
+        "p95": 74.24762614999999,
+        "max": 113.226608
+      }
+    },
+    "retained_off_after": {
+      "start": 25010.37070278,
+      "end": 25027.319355273,
+      "duration_s": 16.948652492999827,
+      "gui_samples": 216,
+      "gui_submit_hz": 12.744375996216386,
+      "detection_results": 191,
+      "detection_hz": 11.269332478135786,
+      "gui_latency_ms": {
+        "n": 216,
+        "median": 56.451341,
+        "p95": 72.9811515,
+        "max": 108.89785
+      }
+    },
+    "last_15s_on": {
+      "start": 24995.37070278,
+      "end": 25010.37070278,
+      "duration_s": 15.0,
+      "gui_samples": 189,
+      "gui_submit_hz": 12.6,
+      "detection_results": 139,
+      "detection_hz": 9.266666666666667,
+      "gui_latency_ms": {
+        "n": 189,
+        "median": 58.980438,
+        "p95": 73.3087466,
+        "max": 81.090935
+      }
+    },
+    "first_15s_off": {
+      "start": 25010.37070278,
+      "end": 25025.37070278,
+      "duration_s": 15.0,
+      "gui_samples": 193,
+      "gui_submit_hz": 12.866666666666667,
+      "detection_results": 168,
+      "detection_hz": 11.2,
+      "gui_latency_ms": {
+        "n": 193,
+        "median": 55.247922,
+        "p95": 72.4827914,
+        "max": 108.89785
+      }
+    }
+  },
+  "caveat": "Trace retains only end of ON and OFF-after. Scene and workload differ; rates are observed event rates, not a causal FPS benchmark."
+}

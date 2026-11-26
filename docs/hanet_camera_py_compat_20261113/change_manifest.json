@@ -1,0 +1,19 @@
+{
+  "modified": [
+    "camera/hanet_controller.py",
+    "camera/hanet_ack.py",
+    "camera/hanet_rpc.py"
+  ],
+  "added": [
+    "test/test_hanet_camera_py_compat.py"
+  ],
+  "sha256": {
+    "camera/hanet_controller.py": "3afbf109a3fd53c4cd6e1f88db23736d8582722eaa7825503aade710fe142a1b",
+    "camera/hanet_ack.py": "d48a43d284e8b9830e2674ad60b0ca29ddbca565e63f46a309bd1a66984ea01d",
+    "camera/hanet_rpc.py": "031bb65828eb78cdbb4c8ffab3817c914f3f601def36d200fd5b039a99ccb65e",
+    "test/test_hanet_camera_py_compat.py": "034e676c522d7d19b4402740131e77be23dc80c2986ffa8e181507527af6033d"
+  },
+  "reference_sha256": "bf1cc9ae2232d46116451cb392d3901e9ac768ae05ca95d07f05ffdaafaf9850",
+  "unchanged_existing_files": 193,
+  "production_motor_checkpoint_unchanged": true
+}

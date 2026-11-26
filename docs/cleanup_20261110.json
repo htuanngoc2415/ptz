@@ -1,0 +1,718 @@
+{
+  "removed_camera_config_keys": [
+    "transport",
+    "latency_ms",
+    "sync",
+    "min_zoom",
+    "max_zoom",
+    "full_zoom_time",
+    "backlight",
+    "ptz_channel",
+    "ptz_port",
+    "pipeline",
+    "profiling",
+    "video_hwdec",
+    "video_fps",
+    "video_max_width",
+    "video_max_height"
+  ],
+  "removed_files": [
+    {
+      "path": "logs/ptz_20261001_125019.log",
+      "bytes": 4751
+    },
+    {
+      "path": "logs/ptz_20261009_101810.jsonl",
+      "bytes": 70057
+    },
+    {
+      "path": "logs/ptz_20261022_093228.log",
+      "bytes": 2305
+    },
+    {
+      "path": "logs/ptz_20260928_100653.log",
+      "bytes": 7513
+    },
+    {
+      "path": "logs/ptz_20261019_082222.log",
+      "bytes": 35160
+    },
+    {
+      "path": "logs/ptz_20261020_134322.jsonl",
+      "bytes": 95702
+    },
+    {
+      "path": "logs/ptz_20261002_112323.log",
+      "bytes": 11206
+    },
+    {
+      "path": "logs/ptz_20261022_085600.jsonl",
+      "bytes": 453
+    },
+    {
+      "path": "logs/ptz_20261019_134716.log",
+      "bytes": 2300
+    },
+    {
+      "path": "logs/ptz_20261022_133416.log",
+      "bytes": 2305
+    },
+    {
+      "path": "logs/ptz_20261019_135107.log",
+      "bytes": 3501
+    },
+    {
+      "path": "logs/ptz_20261022_093651.log",
+      "bytes": 7241
+    },
+    {
+      "path": "logs/ptz_20261002_103826.log",
+      "bytes": 3605
+    },
+    {
+      "path": "logs/ptz_20261020_084425.jsonl",
+      "bytes": 3348
+    },
+    {
+      "path": "logs/ptz_20260928_100856.log",
+      "bytes": 54741
+    },
+    {
+      "path": "logs/ptz_20261001_123110.log",
+      "bytes": 6405
+    },
+    {
+      "path": "logs/ptz_20261020_124131.jsonl",
+      "bytes": 453
+    },
+    {
+      "path": "logs/ptz_20261002_103236.log",
+      "bytes": 4103
+    },
+    {
+      "path": "logs/ptz_20261007_185627.log",
+      "bytes": 2492351
+    },
+    {
+      "path": "logs/ptz_20261002_093749.log",
+      "bytes": 55996
+    },
+    {
+      "path": "logs/ptz_20261019_104029.log",
+      "bytes": 3683
+    },
+    {
+      "path": "logs/ptz_20260928_125724.log",
+      "bytes": 12093640
+    },
+    {
+      "path": "logs/ptz_20261022_093651.jsonl",
+      "bytes": 1149
+    },
+    {
+      "path": "logs/ptz_20261014_104557.jsonl",
+      "bytes": 206678
+    },
+    {
+      "path": "logs/ptz_20261001_130157.log",
+      "bytes": 4864
+    },
+    {
+      "path": "logs/ptz_20261022_133516.log",
+      "bytes": 3440
+    },
+    {
+      "path": "logs/ptz_20261020_133159.jsonl",
+      "bytes": 224010
+    },
+    {
+      "path": "logs/ptz_20261022_094744.jsonl",
+      "bytes": 70543
+    },
+    {
+      "path": "logs/ptz_20261020_084333.jsonl",
+      "bytes": 45451
+    },
+    {
+      "path": "logs/ptz_20261022_133509.jsonl",
+      "bytes": 0
+    },
+    {
+      "path": "logs/ptz_20261007_091625.jsonl",
+      "bytes": 3300
+    },
+    {
+      "path": "logs/ptz_20260930_101527.log",
+      "bytes": 4054
+    },
+    {
+      "path": "logs/ptz_20260930_130923.log",
+      "bytes": 4280
+    },
+    {
+      "path": "logs/ptz_20261007_092006.log",
+      "bytes": 62881
+    },
+    {
+      "path": "logs/ptz_20261019_155614.jsonl",
+      "bytes": 0
+    },
+    {
+      "path": "logs/ptz_20261006_211538.jsonl",
+      "bytes": 0
+    },
+    {
+      "path": "logs/ptz_20261009_101810.log",
+      "bytes": 30694
+    },
+    {
+      "path": "logs/ptz_20261019_160303.log",
+      "bytes": 3741
+    },
+    {
+      "path": "logs/ptz_20261019_135234.jsonl",
+      "bytes": 0
+    },
+    {
+      "path": "logs/ptz_20260930_131103.log",
+      "bytes": 5892
+    },
+    {
+      "path": "logs/ptz_20261019_134741.jsonl",
+      "bytes": 1148
+    },
+    {
+      "path": "logs/ptz_20261019_134932.jsonl",
+      "bytes": 0
+    },
+    {
+      "path": "logs/ptz_20261007_092006.jsonl",
+      "bytes": 375536
+    },
+    {
+      "path": "logs/ptz_20261022_085600.log",
+      "bytes": 3730
+    },
+    {
+      "path": "logs/ptz_20261002_103101.log",
+      "bytes": 4323
+    },
+    {
+      "path": "logs/ptz_20261006_211400.jsonl",
+      "bytes": 0
+    },
+    {
+      "path": "logs/ptz_20261019_083323.jsonl",
+      "bytes": 238707
+    },
+    {
+      "path": "logs/ptz_20261019_083323.log",
+      "bytes": 28776
+    },
+    {
+      "path": "logs/ptz_20260930_131628.log",
+      "bytes": 9982
+    },
+    {
+      "path": "logs/ptz_20261020_124131.log",
+      "bytes": 3383
+    },
+    {
+      "path": "logs/ptz_20261002_112323.jsonl",
+      "bytes": 52820
+    },
+    {
+      "path": "logs/ptz_20261019_160303.jsonl",
+      "bytes": 0
+    },
+    {
+      "path": "logs/ptz_20261007_081956.jsonl",
+      "bytes": 429786
+    },
+    {
+      "path": "logs/ptz_20261002_102838.log",
+      "bytes": 3605
+    },
+    {
+      "path": "logs/ptz_20261007_133918.jsonl",
+      "bytes": 0
+    },
+    {
+      "path": "logs/ptz_20261008_120801.log",
+      "bytes": 92585
+    },
+    {
+      "path": "logs/ptz_20261020_123150.jsonl",
+      "bytes": 452
+    },
+    {
+      "path": "logs/ptz_20261022_171535.jsonl",
+      "bytes": 1148
+    },
+    {
+      "path": "logs/ptz_20260930_081156.log",
+      "bytes": 89059
+    },
+    {
+      "path": "logs/ptz_20261019_134716.jsonl",
+      "bytes": 0
+    },
+    {
+      "path": "logs/ptz_20261020_131423.log",
+      "bytes": 59313
+    },
+    {
+      "path": "logs/ptz_20261020_133159.log",
+      "bytes": 55923
+    },
+    {
+      "path": "logs/ptz_20260930_132205.log",
+      "bytes": 10047
+    },
+    {
+      "path": "logs/ptz_20261008_120801.jsonl",
+      "bytes": 390638
+    },
+    {
+      "path": "logs/ptz_20261007_092950.jsonl",
+      "bytes": 1298701
+    },
+    {
+      "path": "logs/ptz_20261022_121311.log",
+      "bytes": 52181
+    },
+    {
+      "path": "logs/ptz_20261008_101107.jsonl",
+      "bytes": 100809
+    },
+    {
+      "path": "logs/ptz_20261002_113945.log",
+      "bytes": 50054
+    },
+    {
+      "path": "logs/ptz_20260929_135507.log",
+      "bytes": 1306624
+    },
+    {
+      "path": "logs/ptz_20261006_211400.log",
+      "bytes": 1954
+    },
+    {
+      "path": "logs/ptz_20261020_130644.log",
+      "bytes": 1909
+    },
+    {
+      "path": "logs/ptz_20261019_160550.jsonl",
+      "bytes": 451
+    },
+    {
+      "path": "logs/ptz_20261022_093228.jsonl",
+      "bytes": 0
+    },
+    {
+      "path": "logs/ptz_20260930_084051.log",
+      "bytes": 111556
+    },
+    {
+      "path": "logs/ptz_20261019_134741.log",
+      "bytes": 4262
+    },
+    {
+      "path": "logs/ptz_20260928_100635.log",
+      "bytes": 191
+    },
+    {
+      "path": "logs/ptz_20261007_112611.log",
+      "bytes": 20219
+    },
+    {
+      "path": "logs/ptz_20261002_113115.jsonl",
+      "bytes": 0
+    },
+    {
+      "path": "logs/ptz_20261007_102603.jsonl",
+      "bytes": 109460
+    },
+    {
+      "path": "logs/ptz_20261002_115801.jsonl",
+      "bytes": 2439762
+    },
+    {
+      "path": "logs/ptz_20261007_081956.log",
+      "bytes": 14344
+    },
+    {
+      "path": "logs/ptz_20261014_103314.log",
+      "bytes": 5750
+    },
+    {
+      "path": "logs/ptz_20261019_161126.jsonl",
+      "bytes": 1147
+    },
+    {
+      "path": "logs/ptz_20261020_130644.jsonl",
+      "bytes": 0
+    },
+    {
+      "path": "logs/ptz_20260930_083106.log",
+      "bytes": 18931
+    },
+    {
+      "path": "logs/ptz_20261019_082222.jsonl",
+      "bytes": 362910
+    },
+    {
+      "path": "logs/ptz_20261001_131724.log",
+      "bytes": 6212
+    },
+    {
+      "path": "logs/ptz_20260928_112448.log",
+      "bytes": 6460
+    },
+    {
+      "path": "logs/ptz_20261019_081645.log",
+      "bytes": 26116
+    },
+    {
+      "path": "logs/ptz_20261007_185627.jsonl",
+      "bytes": 21315207
+    },
+    {
+      "path": "logs/ptz_20261022_085740.jsonl",
+      "bytes": 453
+    },
+    {
+      "path": "logs/ptz_20261014_104557.log",
+      "bytes": 103187
+    },
+    {
+      "path": "logs/ptz_20261007_105908.log",
+      "bytes": 50085
+    },
+    {
+      "path": "logs/ptz_20261019_155614.log",
+      "bytes": 2300
+    },
+    {
+      "path": "logs/ptz_20261006_211538.log",
+      "bytes": 3991
+    },
+    {
+      "path": "logs/ptz_20261022_171535.log",
+      "bytes": 4571
+    },
+    {
+      "path": "logs/ptz_20260930_184221.log",
+      "bytes": 110709
+    },
+    {
+      "path": "logs/ptz_20261007_073919.jsonl",
+      "bytes": 13819302
+    },
+    {
+      "path": "logs/ptz_20261006_211636.jsonl",
+      "bytes": 1330111
+    },
+    {
+      "path": "logs/ptz_20260928_112857.log",
+      "bytes": 83813
+    },
+    {
+      "path": "logs/ptz_20260930_131423.log",
+      "bytes": 5332
+    },
+    {
+      "path": "logs/ptz_20261019_135107.jsonl",
+      "bytes": 0
+    },
+    {
+      "path": "logs/ptz_20261019_155716.log",
+      "bytes": 4628
+    },
+    {
+      "path": "logs/ptz_20261022_121311.jsonl",
+      "bytes": 117959
+    },
+    {
+      "path": "logs/ptz_20261020_124737.jsonl",
+      "bytes": 451
+    },
+    {
+      "path": "logs/ptz_20261019_081645.jsonl",
+      "bytes": 81577
+    },
+    {
+      "path": "logs/ptz_20261001_160855.log",
+      "bytes": 5307
+    },
+    {
+      "path": "logs/ptz_20261022_133509.log",
+      "bytes": 2305
+    },
+    {
+      "path": "logs/ptz_20261007_092950.log",
+      "bytes": 202058
+    },
+    {
+      "path": "logs/ptz_20261022_162452.jsonl",
+      "bytes": 43880
+    },
+    {
+      "path": "logs/ptz_20261002_104428.jsonl",
+      "bytes": 3322
+    },
+    {
+      "path": "logs/ptz_20260930_131553.log",
+      "bytes": 4280
+    },
+    {
+      "path": "logs/ptz_20260928_124512.log",
+      "bytes": 7323
+    },
+    {
+      "path": "logs/ptz_20261020_131423.jsonl",
+      "bytes": 496389
+    },
+    {
+      "path": "logs/ptz_20261022_114207.jsonl",
+      "bytes": 26975
+    },
+    {
+      "path": "logs/ptz_20261020_084425.log",
+      "bytes": 4084
+    },
+    {
+      "path": "logs/ptz_20261002_102440.log",
+      "bytes": 5766
+    },
+    {
+      "path": "logs/ptz_20261019_135234.log",
+      "bytes": 3391
+    },
+    {
+      "path": "logs/ptz_20261022_085740.log",
+      "bytes": 3631
+    },
+    {
+      "path": "logs/ptz_20261007_135436.jsonl",
+      "bytes": 67485
+    },
+    {
+      "path": "logs/ptz_20261019_104029.jsonl",
+      "bytes": 0
+    },
+    {
+      "path": "logs/ptz_20260928_112620.log",
+      "bytes": 40587
+    },
+    {
+      "path": "logs/ptz_20261001_123346.log",
+      "bytes": 4687
+    },
+    {
+      "path": "logs/ptz_20261007_135436.log",
+      "bytes": 24315
+    },
+    {
+      "path": "logs/ptz_20261022_094744.log",
+      "bytes": 25375
+    },
+    {
+      "path": "logs/ptz_20261007_073919.log",
+      "bytes": 10295329
+    },
+    {
+      "path": "logs/ptz_20261002_113945.jsonl",
+      "bytes": 649240
+    },
+    {
+      "path": "logs/ptz_20261007_105908.jsonl",
+      "bytes": 332809
+    },
+    {
+      "path": "logs/ptz_20261022_094957.jsonl",
+      "bytes": 36395
+    },
+    {
+      "path": "logs/ptz_20261007_102603.log",
+      "bytes": 30387
+    },
+    {
+      "path": "logs/ptz_20261002_113115.log",
+      "bytes": 3629
+    },
+    {
+      "path": "logs/ptz_20261007_112611.jsonl",
+      "bytes": 53936
+    },
+    {
+      "path": "logs/ptz_20261002_104428.log",
+      "bytes": 4249
+    },
+    {
+      "path": "logs/ptz_20261020_084333.log",
+      "bytes": 8209
+    },
+    {
+      "path": "logs/ptz_20261020_134322.log",
+      "bytes": 31987
+    },
+    {
+      "path": "logs/ptz_20261006_211636.log",
+      "bytes": 994680
+    },
+    {
+      "path": "logs/ptz_20261022_094957.log",
+      "bytes": 12913
+    },
+    {
+      "path": "logs/ptz_20261006_211438.log",
+      "bytes": 1954
+    },
+    {
+      "path": "logs/ptz_20261020_123150.log",
+      "bytes": 3187
+    },
+    {
+      "path": "logs/ptz_20261006_211438.jsonl",
+      "bytes": 0
+    },
+    {
+      "path": "logs/ptz_20261008_110548.jsonl",
+      "bytes": 55489
+    },
+    {
+      "path": "logs/ptz_20261020_124737.log",
+      "bytes": 3380
+    },
+    {
+      "path": "logs/ptz_20261008_101107.log",
+      "bytes": 37576
+    },
+    {
+      "path": "logs/ptz_20261019_134846.log",
+      "bytes": 2300
+    },
+    {
+      "path": "logs/ptz_20261014_103314.jsonl",
+      "bytes": 4715
+    },
+    {
+      "path": "logs/ptz_20261002_111326.log",
+      "bytes": 4557
+    },
+    {
+      "path": "logs/ptz_20261002_115801.log",
+      "bytes": 428372
+    },
+    {
+      "path": "logs/ptz_20261007_133918.log",
+      "bytes": 4427
+    },
+    {
+      "path": "logs/ptz_20261022_162452.log",
+      "bytes": 6996
+    },
+    {
+      "path": "logs/ptz_20261022_133416.jsonl",
+      "bytes": 0
+    },
+    {
+      "path": "logs/ptz_20261002_111326.jsonl",
+      "bytes": 6743
+    },
+    {
+      "path": "logs/ptz_20261019_134846.jsonl",
+      "bytes": 0
+    },
+    {
+      "path": "logs/ptz_20261023_205108.jsonl",
+      "bytes": 452
+    },
+    {
+      "path": "logs/ptz_20261002_113149.jsonl",
+      "bytes": 165249
+    },
+    {
+      "path": "logs/ptz_20261019_155716.jsonl",
+      "bytes": 1144
+    },
+    {
+      "path": "logs/ptz_20261002_102939.log",
+      "bytes": 4323
+    },
+    {
+      "path": "logs/ptz_20261001_131246.log",
+      "bytes": 16476
+    },
+    {
+      "path": "logs/ptz_20261019_160550.log",
+      "bytes": 2876
+    },
+    {
+      "path": "logs/ptz_20261008_110548.log",
+      "bytes": 23451
+    },
+    {
+      "path": "logs/ptz_20261023_205108.log",
+      "bytes": 3491
+    },
+    {
+      "path": "logs/ptz_20261007_091625.log",
+      "bytes": 3690
+    },
+    {
+      "path": "logs/ptz_20261022_133516.jsonl",
+      "bytes": 452
+    },
+    {
+      "path": "logs/ptz_20261019_134932.log",
+      "bytes": 2300
+    },
+    {
+      "path": "logs/ptz_20261019_161126.log",
+      "bytes": 4753
+    },
+    {
+      "path": "logs/ptz_20260930_151820.log",
+      "bytes": 106354
+    },
+    {
+      "path": "logs/ptz_20261022_114207.log",
+      "bytes": 6309
+    },
+    {
+      "path": "logs/ptz_20261002_113149.log",
+      "bytes": 17976
+    },
+    {
+      "path": "logs/zoom/zoom_summary_20261022_124646_278261.tmp",
+      "bytes": 0
+    },
+    {
+      "path": "runtime/__pycache__/frame_manager.cpython-313.pyc",
+      "bytes": 5502
+    },
+    {
+      "path": "runtime/__pycache__/__init__.cpython-313.pyc",
+      "bytes": 184
+    },
+    {
+      "path": "runtime/__pycache__/camera_worker.cpython-313.pyc",
+      "bytes": 6452
+    },
+    {
+      "path": "telemetry/__pycache__/__init__.cpython-313.pyc",
+      "bytes": 225
+    },
+    {
+      "path": "telemetry/__pycache__/zoom_trace.cpython-313.pyc",
+      "bytes": 14500
+    },
+    {
+      "path": "telemetry/__pycache__/latency.cpython-313.pyc",
+      "bytes": 25490
+    }
+  ],
+  "total_bytes": 74852704
+}

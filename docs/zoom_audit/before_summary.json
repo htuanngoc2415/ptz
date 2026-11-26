@@ -1,0 +1,21 @@
+{
+  "evidence_source": "existing_runtime_logs",
+  "camera_log": "logs/camera/camera_control_20261008_091528_174507.log",
+  "app_log": "logs/ptz_20261008_091522.log",
+  "zoom_requests": 52,
+  "requests_with_absolute_target": 0,
+  "acknowledged_ptz_start": 52,
+  "acknowledged_ptz_stop": 56,
+  "stop_reasons": {
+    "FACE_LOST": 8,
+    "PULSE_COMPLETE": 35,
+    "FACE_EDGE": 1,
+    "ZOOM_LIMIT": 3,
+    "SLOW_APPROACH": 1,
+    "STALE_SESSION": 2,
+    "BBOX_FOUND": 1,
+    "STALE_OBSERVATION": 1
+  },
+  "interpretation": "Pulse path inferred by joining null target requests with the audited controller branch; old RPC logs omit code.",
+  "autofocus_interruption": "UNVERIFIED: old logs do not establish autonomous firmware AF causality"
+}

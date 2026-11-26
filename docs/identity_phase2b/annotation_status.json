@@ -1,0 +1,8 @@
+{
+  "reviewed": 0,
+  "unreviewed": 2201,
+  "status": "AWAITING_INDEPENDENT_REVIEW",
+  "ground_truth": false,
+  "identity_accuracy_eligible": false,
+  "split_limitation": "Separate captures, but both previously inspected in research; retrospective holdout is NOT unseen confirmatory evidence. No annotation-derived tuning."
+}

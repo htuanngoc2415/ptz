@@ -1,0 +1,44 @@
+{
+  "modified": [
+    "camera/hanet_rpc.py",
+    "camera/hanet_controller.py",
+    "runtime/camera_worker.py",
+    "control/auto_pan_tilt.py",
+    "control/orchestrator.py",
+    "control/manual.py",
+    "control/auto_zoom.py",
+    "gui/cctv_app.py",
+    "telemetry/latency.py",
+    "test/test_hanet_controller.py",
+    "test/test_auto_pan_tilt.py",
+    "test/test_pan_follow_revision.py"
+  ],
+  "added": [
+    "runtime/stop_retry.py",
+    "runtime/shutdown.py",
+    "test/test_hanet_fault_injection.py",
+    "test/test_hanet_shutdown.py",
+    "tools/run_hanet_fault_tests.py"
+  ],
+  "sha256": {
+    "camera/hanet_rpc.py": "29adb024ac6b1eaf027a1d414b70e17dbdddddb5d1453edd916ae23d6235ac83",
+    "camera/hanet_controller.py": "06147e6e74abe805a6826dbe2712eee7724e5c404888107062a2076fa6f2e4dd",
+    "runtime/camera_worker.py": "abd981c80434402959419e99b5bd1c6c4edc3c4797b8b54d3a8d396fc5b422d0",
+    "control/auto_pan_tilt.py": "23be103d6c26a2b46b1884177ac50ddf8134900f3483a5204c4b8f006b4dd3c5",
+    "control/orchestrator.py": "fc9bf1ac190db1a1867f990635751b6b065b73854866bfcd0cf9b6a21f9b5a03",
+    "control/manual.py": "b82c9ecdfb5e0271960f7e7de4695a353740e49625e6ad2880e10ffc3f9f7079",
+    "control/auto_zoom.py": "81f462385a420f2bc9cf1789ffce36f757a74a29d53a316d3e4973e0f2b4c11e",
+    "gui/cctv_app.py": "6ba12e45b3d6eb8d769f7639a373e5059ffc5925873fbb186d42092fb921f5d8",
+    "telemetry/latency.py": "2e0a0cb6e9a9fef9b18d9a5c65f13cffd4034b1b38d72a2756be4c70470f9456",
+    "test/test_hanet_controller.py": "fbb6d379a507d66dac5cff3896eec18a5064a9e244e60bec23f2aefa9b0a1fb2",
+    "test/test_auto_pan_tilt.py": "bba7075cd6bb4aacc39b80c1396b584693eb3af9943f75b9371788d2cdbda62c",
+    "test/test_pan_follow_revision.py": "8876068a2a47af18d8adb39149e45ed1031b7c2f492f611229e967decebe60a7",
+    "runtime/stop_retry.py": "c659da0cb908193e79aeb709ed70626acaa1668fedcaa6523432c43ecd51150e",
+    "runtime/shutdown.py": "0cb43f4bd19dbd8eb449381144811331cfe6d20c543178556feb1c4b27c41e68",
+    "test/test_hanet_fault_injection.py": "0bf6dc5faad7f4b4d135eaee314db1ddf7b0593ef0497ec0c5fafa8b88ae443c",
+    "test/test_hanet_shutdown.py": "a4e9f5350953d67da51d862ee2a68c277f1c296c1ef7852f120899190c4390ea",
+    "tools/run_hanet_fault_tests.py": "82d3ac6b4a576f0a456249b614fcf10dd709280d91b9a5cda24fde656cb58dc2"
+  },
+  "checkpoint": "8887d4dc92bcf63fea78e1e90abb212d20ce242b",
+  "checkpoint_path": "/mnt/files/Project/ptz/.hotfix_checkpoints/hanet_20261113"
+}

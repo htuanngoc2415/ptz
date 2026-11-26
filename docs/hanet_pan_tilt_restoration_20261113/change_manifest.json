@@ -1,0 +1,22 @@
+{
+  "checkpoint_path": "/mnt/files/Project/ptz/.hotfix_checkpoints/hanet_pan_restore_20261113",
+  "checkpoint": "02bdc0e59017d72c5e2ac74b38f583a52b94d1ca",
+  "modified": [
+    "camera/hanet_controller.py",
+    "camera/hanet_ack.py",
+    "camera/hanet_rpc.py",
+    "tools/run_hanet_fault_tests.py"
+  ],
+  "added": [
+    "test/test_hanet_persisted_recovery.py",
+    "test/fixtures/hanet_stop_empty_result_20261113.json"
+  ],
+  "sha256": {
+    "camera/hanet_controller.py": "74c7d88aa764c98dcaa66dddfcd15e37f024b48d8d7575a457eeac194e47e891",
+    "camera/hanet_ack.py": "03fa9c1e71560f5e57d77eb6333abd958d1fc54dd550bed49d288778db7e9b5d",
+    "camera/hanet_rpc.py": "be90be1c230daac4592015f338b5463cd0facf30c4bea69131d60d28d3fd1889",
+    "tools/run_hanet_fault_tests.py": "321acbc85eca94f73675c620fc3ea8cf8402108ec2a2dce986248720b7894ef7",
+    "test/test_hanet_persisted_recovery.py": "d27fd92a8e1bd5feab9e5ebe5437a4a1859385d372f37bf734aab8801be6c9fd",
+    "test/fixtures/hanet_stop_empty_result_20261113.json": "02efb77dcdb2378683478ec179f49836ba56b2075b00d1d1d00c6005ae466649"
+  }
+}

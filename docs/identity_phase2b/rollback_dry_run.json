@@ -1,0 +1,13 @@
+{
+  "mode": "dry_run",
+  "files": [
+    "tools/identity_continuity.py",
+    "tools/phase2b_audit.py",
+    "tools/phase2b_review.py",
+    "tools/phase2b_review_template.html",
+    "tools/phase2b_evaluate.py",
+    "tools/benchmark_identity_phase2b.py",
+    "test/test_identity_continuity.py"
+  ],
+  "runtime_changes": 0
+}

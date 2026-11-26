@@ -1,0 +1,14 @@
+{
+  "archive": "/mnt/files/Project/ptz/validation/retired_prototype_20261120_084758.tar.gz",
+  "removed": [
+    "prototype_v1",
+    "tests/prototype_v1",
+    "docs/prototype_v1",
+    "prototype.py",
+    "tools/prototype_v1_benchmark.py",
+    "tools/prototype_v1_metrics.py",
+    "tools/prototype_v1_run.py",
+    "tools/prototype_v1_calibrate.py"
+  ],
+  "logs_and_user_images_preserved": true
+}

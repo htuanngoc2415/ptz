@@ -1,0 +1,11 @@
+{
+  "logs/ptz_20261119_173204.log": "ba77d390ba4b4aed51c1010461e2d4742603fa8eb2775a47d936f9026b1571fd",
+  "logs/ptz_20261119_173204.jsonl": "f5a8bb00272a576c5f07aba30ec92ca8a5880302dcd2196211a11cc312a7386f",
+  "logs/identity_shadow/shadow_d3b836c5ae5c492ba7ddb95282250359.jsonl": "7c7a1a665d6e310eb2fdb106e86459ccbad7e9b7522e27949d7f318ae6e448f7",
+  "logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f/summary.json": "41b8482706348736831d13e1fcc2ed5deb003addf6c725c630a972f019d41ca1",
+  "logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f/manifest.json": "40f66592afc66d00a4ccdf492081a14c9b97e04b3ade79c66e7bcb0ba940fb22",
+  "logs/latency/latency_summary_20261119_173207_536257.csv": "162e88f866595691f762c15f9ab893609b3cd6249b33e86c29c6239e5cb62380",
+  "runtime/identity_shadow.py": "fd2c2168d6fd7802aeb851d04db9924b8b5be313cbb0b4119e642cde3b87e2e1",
+  "runtime/scheduling.py": "24a40a059934a81ea2cd94fa99d7a6a1603ee16c790b0d698d9e4a6db4e50be7",
+  "ai/target_identity.py": "d80813f00fab13b863a21d64c53c784e99672b04ac0a25ade5454e0d3c717e39"
+}

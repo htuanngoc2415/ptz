@@ -1,0 +1,103 @@
+{
+  "capture": "logs/identity_capture/capture_18e5ba0fa26d492cbb7c19839cccb4b2",
+  "summary": {
+    "complete": true,
+    "frames": 1120,
+    "dropped": 0,
+    "errors": 0,
+    "recorded_bytes": 565431206,
+    "frames_sha256": "a6dbb84e5968e29dae4c4883fccc81d4f87df3c5fd7b42a2e3caf05f799b87a7",
+    "max_frames": 3000,
+    "max_bytes": 1000000000,
+    "ground_truth": false
+  },
+  "duration_s": 137.4324116099997,
+  "frame_bounds": [
+    977,
+    5100
+  ],
+  "source_matches": {
+    "ai/target_identity.py": true,
+    "runtime/identity_shadow.py": true,
+    "runtime/identity_shadow_batch.py": true,
+    "runtime/scheduling.py": true,
+    "person_search/reid.py": true,
+    "ai/hybrid_reid.py": true,
+    "ai/reid_target.py": true,
+    "ai/overlap_policy.py": true,
+    "runtime/byte_tracking.py": true,
+    "control/pan_policy.py": true
+  },
+  "model_matches": {
+    "/mnt/files/Project/ptz/ptz/models/person/person.pt": true,
+    "/mnt/files/Project/ptz/ptz/person_search/models/osnet_ain_x1_0_msmt17.pth": true
+  },
+  "categories": {
+    "baseline_only": 167,
+    "same": 32,
+    "both_hold": 77
+  },
+  "reasons": {
+    "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 48,
+    "LOW_REFERENCE_SIMILARITY": 150,
+    "CONFIRMED_MULTI_CUE": 32,
+    "NO_OBSERVATION_UNKNOWN": 18,
+    "LOW_DETECTION_CONFIDENCE": 1,
+    "PERSON_OVERLAP": 27
+  },
+  "baseline_only_reasons": {
+    "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 47,
+    "LOW_REFERENCE_SIMILARITY": 117,
+    "PERSON_OVERLAP": 3
+  },
+  "matched": 276,
+  "missing_frames": [],
+  "metadata_mismatches": [],
+  "sessions": [
+    {
+      "event": "SHADOW_SESSION",
+      "session_id": "ef00001a79b74de4bcd379dc756c84cc",
+      "target_uid": "target_52675f80663145fbb6d94ea5e98a5f80",
+      "monotonic_ts": 30960.939717097,
+      "initial_threshold": 0.65,
+      "baseline_reacquiring": false,
+      "reference_sha256": "c4f3b2408f4fd80995cbab21f7943f5d068f166ba847b255d5eefc3cb0007daf"
+    }
+  ],
+  "resets": [
+    {
+      "event": "SHADOW_RESET",
+      "session_id": "ef00001a79b74de4bcd379dc756c84cc",
+      "target_uid": "target_52675f80663145fbb6d94ea5e98a5f80",
+      "monotonic_ts": 30984.553551775,
+      "reset_serial": 1,
+      "history_retained": true,
+      "threshold": 0.7
+    },
+    {
+      "event": "SHADOW_RESET",
+      "session_id": "ef00001a79b74de4bcd379dc756c84cc",
+      "target_uid": "target_52675f80663145fbb6d94ea5e98a5f80",
+      "monotonic_ts": 31004.083259984,
+      "reset_serial": 2,
+      "history_retained": true,
+      "threshold": 0.7
+    }
+  ],
+  "record_flags": {
+    "IDENTITY_CANDIDATE_FILTERING_ENABLED": false,
+    "IDENTITY_DISTRACTOR_MEMORY_ENABLED": false,
+    "IDENTITY_EVENT_REID_ENABLED": false,
+    "IDENTITY_MEMORY_ENABLED": false,
+    "IDENTITY_MEMORY_GALLERY_ENABLED": false,
+    "IDENTITY_MULTI_CUE_ENABLED": false,
+    "IDENTITY_RECORD_DIRECTORY": "/mnt/files/Project/ptz/ptz/logs/identity_capture",
+    "IDENTITY_RECORD_MAX_BYTES": 1000000000,
+    "IDENTITY_RECORD_MAX_FRAMES": 3000,
+    "IDENTITY_SHADOW_BATCHED": true,
+    "IDENTITY_SHADOW_DIRECTORY": "/mnt/files/Project/ptz/ptz/logs/identity_shadow",
+    "IDENTITY_SHADOW_INTERVAL": 0.2,
+    "IDENTITY_SHADOW_MAX_RECORDS": 10000
+  },
+  "ground_truth": false
+}

@@ -1,0 +1,15 @@
+{
+  "baseline_sha": "ede31989fe6a39b04d7cd4d31675ebd811a28397",
+  "baseline_branch": "baseline/verified-pre-async-20261116",
+  "work_branch": "work/identity-phase01-20261119",
+  "config_before_sha256": "b87663f165c9cf3a891f557ad10baac8b2be90bc798154d17dbf7291555e4bde",
+  "source_after_sha256": {
+    "config.py": "c124a51a36f504a00b2b6856d6879adb2d7a5426bb3d8c5e2154e6af3b20746f",
+    "ai/target_identity.py": "3dcc6c3be214d5b5311e571c1a893b4d55dc972c6d75ee75d147ace7dc9b8c95",
+    "tools/identity_metrics.py": "cf80f5fc240e1b963d711190d3b8babe06cad1e58fe1697ed8929b66cc141c39",
+    "tools/identity_replay.py": "c8542bd920dd5ac67a7d48a4fa141006c893e7b5a919a972e2f916d2f816687a",
+    "tools/rollback_identity_phase01.py": "6348d1582b6ab8a63ffdf7e520fad7a28e78a594478f75a39fe5c6e2014d1bd5",
+    "test/test_target_identity.py": "b8f99db8a6744aba32f017440fed297621a232289b069a3d7679f7c04a099399",
+    "test/test_identity_replay.py": "585bbf2a89a5cf78eaa00af736b13bdd07ebba18e08a07cb8a8cf959ea9d09d0"
+  }
+}

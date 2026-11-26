@@ -1,0 +1,2210 @@
+diff --git a/camera/hanet_controller.py b/camera/hanet_controller.py
+index 6994e53..e5136f9 100644
+--- a/camera/hanet_controller.py
++++ b/camera/hanet_controller.py
+@@ -3,13 +3,19 @@
+ Lens coordinates and CNN focus calibrated for Dahua are deliberately unavailable.
+ """
+ import threading
++from concurrent.futures import TimeoutError as FutureTimeoutError
+ import time
++import hashlib
++import json
++import os
++from pathlib import Path
+ 
+ from .hanet_rpc import HanetPTZClient
+ from .ptz_controller import PTZController, PTZ_STOP
+ from .zoom_capability import ZoomCapability
+ from runtime.camera_worker import camera_operation
+ from runtime.reconnect import ReconnectBackoff
++from runtime.stop_retry import StopRetryBudget
+ from telemetry import latency
+ 
+ 
+@@ -23,9 +29,33 @@ class HanetController(PTZController):
+              'pan_left': 'kCmdLeft', 'pan_right': 'kCmdRight',
+              'tilt_up': 'kCmdUp', 'tilt_down': 'kCmdDown'}
+ 
+-    def __init__(self, *args, autoconnect=True, rpc_factory=HanetPTZClient, **kwargs):
++    def __init__(self, *args, autoconnect=True, rpc_factory=HanetPTZClient, safety_state_path=None, **kwargs):
+         super().__init__(*args, autoconnect=False, rpc_factory=rpc_factory, **kwargs)
++        self.command_wait_timeout = self.timeout*3+2
+         self._active_codes = set()
++        self.motor_state = 'READY'
++        self._stop_budget = StopRetryBudget()
++        self._close_lock = threading.Lock()
++        self.shutdown_unconfirmed = False
++        self.cleanup_failed = False
++        self._shutdown_deadline = None
++        self._shutdown_timer = None
++        identity = hashlib.sha256(f'{self.ip}:{self.port}'.encode()).hexdigest()[:20]
++        self._safety_state_path = Path(safety_state_path) if safety_state_path else Path(__file__).resolve().parents[1]/'logs/camera/motor_state'/(identity+'.json')
++        try:
++            if self._safety_state_path.exists():
++                saved = json.loads(self._safety_state_path.read_text())
++                codes = saved['active_codes']
++                if not isinstance(codes, list) or not set(codes) <= set(self.CODES.values()):
++                    raise ValueError('Invalid motor state checkpoint')
++                self._active_codes = set(codes)
++        except Exception:
++            # An unreadable checkpoint is uncertainty, not a clean restart.
++            self._active_codes = set(self.CODES.values())
++        if self._active_codes:
++            self._motor_fault = True
++            self.motor_state = 'FAULT_LATCHED'
++            self._fault_event('MOTOR_FAULT_LATCHED', reason='UNCONFIRMED_PREVIOUS_RUN')
+         self._absolute_capability = ZoomCapability(False, 'HANET_POSITION_UNVERIFIED')
+         if autoconnect:
+             self._poller = threading.Thread(target=self._poll, name='hanet-heartbeat', daemon=True)
+@@ -35,13 +65,16 @@ class HanetController(PTZController):
+     def _clamp_speed(speed):
+         return max(1, min(8, int(speed)))
+ 
+-    def _connect(self):
++    def _connect(self, allow_shutdown=False):
+         # Called only from the command lane; HTTP and WebSocket never overlap.
+-        if self._closed.is_set():
++        if self._closed.is_set() and not allow_shutdown:
+             raise RuntimeError('Camera controller is closed')
++        if self._shutdown_deadline is not None and time.monotonic() >= self._shutdown_deadline:
++            raise TimeoutError('Camera shutdown deadline reached')
+         if self._rpc is None:
++            timeout = self.timeout if self._shutdown_deadline is None else min(self.timeout, self._shutdown_deadline-time.monotonic())
+             self._rpc = self._rpc_factory(self.ip, self.port, self.username,
+-                                          self.password, timeout=self.timeout)
++                                          self.password, timeout=max(.001, timeout))
+         return self._rpc
+ 
+     def _poll(self):
+@@ -81,6 +114,8 @@ class HanetController(PTZController):
+     def command(self, ptz_cmd, speed=None):
+         if ptz_cmd == PTZ_STOP:
+             return self.stop()
++        if self._closed.is_set():
++            return False, 'Camera controller is shutting down'
+         if ptz_cmd not in self.CODES:
+             return False, 'Command unsupported by verified HANET adapter'
+         if self._motor_fault:
+@@ -91,6 +126,8 @@ class HanetController(PTZController):
+                 return ok, message
+         try:
+             rpc = self._connect()
++            if self._closed.is_set():
++                return False, 'Camera controller is shutting down'
+             # Frigate checks movement freshness after dequeue; do the same at I/O.
+             fields = latency.context.get()
+             if fields.get('lock_session_id') is not None:
+@@ -105,7 +142,9 @@ class HanetController(PTZController):
+                 if not valid:
+                     return False, 'Stale camera movement rejected'
+             code = self.CODES[ptz_cmd]
++            self.motor_state = 'COMMAND_IN_FLIGHT'
+             self._active_codes.add(code)  # lost ACK may still mean physical motion
++            self._save_motor_state()  # persist uncertainty BEFORE transmission
+             speed_value = self._clamp_speed(self.speed if speed is None else speed)
+             is_zoom = ptz_cmd in ('zoom_in', 'zoom_out')
+             sent = time.perf_counter_ns()
+@@ -119,7 +158,11 @@ class HanetController(PTZController):
+                     observation_age_ms=(time.monotonic()-fields['observation_time'])*1000
+                         if 'observation_time' in fields else None)
+             try:
+-                rpc.motion(code, True, speed_value)
++                if self._closed.is_set():
++                    raise RuntimeError('START cancelled by shutdown')
++                if rpc.motion(code, True, speed_value) is not True:
++                    raise RuntimeError('HANET START has no explicit ACK')
++                self.motor_state = 'MOTOR_ACTIVE'
+             except Exception as exc:
+                 latency.profiler.event('ZOOM_RPC_ERROR' if is_zoom else 'PAN_TILT_WIRE_ERROR',
+                     backend='hanet', exception=type(exc).__name__)
+@@ -129,21 +172,105 @@ class HanetController(PTZController):
+                 backend='hanet', acknowledged=True)
+             return True, 'HANET acknowledged; physical motion unverified'
+         except Exception as exc:
+-            self.stop()
++            self._motor_fault = bool(self._active_codes)
++            if self._motor_fault:
++                self.motor_state = 'STOP_UNCONFIRMED'
++                self._fault_event('MOTOR_FAULT_LATCHED', exception_type=type(exc).__name__)
++                self.stop()
+             return self._failure('HANET command', exc)
+ 
++    def _save_motor_state(self):
++        path = self._safety_state_path
++        path.parent.mkdir(parents=True, exist_ok=True)
++        temp = path.with_suffix('.tmp')
++        with temp.open('w') as stream:
++            json.dump({'version': 1, 'active_codes': sorted(self._active_codes)}, stream)
++            stream.flush()
++            os.fsync(stream.fileno())
++        temp.replace(path)
++        directory = os.open(path.parent, os.O_RDONLY)
++        try:
++            os.fsync(directory)
++        finally:
++            os.close(directory)
++
++    def _fault_event(self, event, **fields):
++        generation = getattr(self._rpc, 'generation', None)
++        latency.profiler.event(event, backend='hanet', fault_state=self.motor_state,
++            motor_owner=latency.context.get().get('motor_owner'),
++            connection_generation=generation if isinstance(generation, int) else None,
++            retry_attempt=self._stop_budget.attempts, **fields)
++
+     @camera_operation
+-    def stop(self):
++    def stop(self, emergency=False):
+         self.cancel_focus()
++        if getattr(self, '_resources_closed', False):
++            return not self.shutdown_unconfirmed, 'Camera resources closed; no new STOP sent'
++        if self._active_codes and not emergency and not self._stop_budget.ready():
++            return False, 'HANET STOP unconfirmed; retry budget/backoff active'
+         failed = False
++        previous_fault = self._motor_fault
++        self.motor_state = 'STOP_PENDING'
+         for code in tuple(self._active_codes):
+             try:
+-                self._rpc.motion(code, False, 1)
++                # After failed START/connect, _rpc may be absent. Establishing
++                # transport here is allowed ONLY to STOP the remembered direction.
++                rpc = self._rpc or self._connect(allow_shutdown=True)
++                if rpc.motion(code, False, 1) is not True:
++                    raise RuntimeError('HANET STOP has no explicit ACK')
+                 self._active_codes.remove(code)
+-            except Exception:
++                try:
++                    self._save_motor_state()
++                except Exception:
++                    self._active_codes.add(code)
++                    raise
++            except Exception as exc:
+                 failed = True
+-        self._motor_fault = failed
+-        return (False, 'HANET STOP unconfirmed') if failed else (True, 'HANET STOP complete')
++                self._fault_event('PAN_TILT_STOP_UNCONFIRMED', rpc_code=code,
++                    operation='STOP', acknowledged=False, exception_type=type(exc).__name__,
++                    exception_message='STOP acknowledgement unavailable')
++        self._motor_fault = failed or bool(self._active_codes)
++        if self._motor_fault:
++            self._stop_budget.failed()
++            self.motor_state = 'FAULT_LATCHED' if self._stop_budget.exhausted else 'STOP_UNCONFIRMED'
++            if not previous_fault or self._stop_budget.attempts == self._stop_budget.limit:
++                self._fault_event('MOTOR_FAULT_LATCHED')
++            return False, 'HANET STOP unconfirmed'
++        self.motor_state = 'READY'
++        self._stop_budget.reset()
++        if previous_fault:
++            self._fault_event('MOTOR_FAULT_RECOVERED', evidence='STOP_RPC_ACK', physical_motor_stopped=None)
++        return True, 'HANET STOP acknowledged; physical motion unverified'
++
++    def emergency_stop(self):
++        # One operator-requested attempt even after automatic retry exhaustion.
++        return self.stop(emergency=True)
++
++    def begin_shutdown(self):
++        self._closed.set()  # invalidates every queued/new START at the I/O boundary
++        self.cancel_focus()
++
++    def arm_shutdown_deadline(self, deadline):
++        # One watchdog interrupts socket I/O even while a supervisor is joining.
++        # Resource destruction still runs exclusively on the command lane.
++        self._shutdown_deadline = deadline
++        if self._shutdown_timer is None:
++            def abort_io():
++                self._abort_transport()
++                self._fault_event('SHUTDOWN_STOP_TIMEOUT', shutdown_phase='transport_deadline')
++            self._shutdown_timer = threading.Timer(max(0., deadline-time.monotonic()), abort_io)
++            self._shutdown_timer.daemon = True
++            self._shutdown_timer.start()
++
++    def _abort_transport(self):
++        rpc = self._rpc
++        if rpc is not None and hasattr(rpc, 'abort'):
++            try:
++                rpc.abort()
++            except Exception as exc:
++                self.cleanup_failed = True
++                self._fault_event('HANET_CLEANUP_ERROR', shutdown_phase='abort_io',
++                    exception_type=type(exc).__name__, exception_message='Transport abort failed')
+ 
+     def autofocus(self, **kwargs):
+         return False, 'HANET autofocus protocol is unverified'
+@@ -157,25 +284,56 @@ class HanetController(PTZController):
+     start_zoom_target = move_zoom
+     move_to_zoom_position = move_zoom
+ 
+-    def close(self):
+-        if getattr(self, '_resources_closed', False):
+-            return
+-        # Join the heartbeat before closing the command lane, outside that lane.
+-        self._closed.set()
+-        if self._poller is not None:
+-            self._poller.join(self.timeout * 3 + 1)
+-        def finish():
+-            ok, message = self.stop()
+-            if not ok:
+-                raise RuntimeError(message)
+-            if self._rpc is not None:
+-                self._rpc.close()
+-                self._rpc = None
++    def close(self, timeout=None):
++        timeout = self.timeout*3+2 if timeout is None else max(0., timeout)
++        deadline = time.monotonic()+timeout
++        if not self._close_lock.acquire(timeout=timeout):
++            return False
+         try:
+-            self._command_worker.call(finish)
+-        except Exception:
+-            # Keep the lane available for an explicit STOP/close retry.
+-            raise
+-        else:
+-            self._command_worker.close(self.timeout + 1)
+-            self._resources_closed = True
++            if getattr(self, '_resources_closed', False):
++                return not self._command_worker.thread.is_alive() and not self.cleanup_failed
++            self.begin_shutdown()
++            self._fault_event('SHUTDOWN_REQUESTED', shutdown_phase='camera')
++            if self._poller is not None:
++                self._poller.join(max(0., deadline-time.monotonic()))
++
++            def finish():
++                try:
++                    ok, _ = self.stop(emergency=True)
++                    self.shutdown_unconfirmed = not ok
++                except Exception as exc:
++                    self.shutdown_unconfirmed = True
++                    self._fault_event('HANET_CLEANUP_ERROR', exception_type=type(exc).__name__,
++                                      exception_message='Final STOP failed', shutdown_phase='final_stop')
++                finally:
++                    if self.shutdown_unconfirmed:
++                        self._fault_event('SHUTDOWN_COMPLETED_WITH_UNCONFIRMED_MOTOR',
++                            shutdown_phase='rpc_close', physical_motor_stopped=None)
++                    try:
++                        if self._rpc is not None:
++                            self.cleanup_failed = (self._rpc.close() is False) or self.cleanup_failed
++                    except Exception as exc:
++                        self.cleanup_failed = True
++                        self._fault_event('HANET_CLEANUP_ERROR', exception_type=type(exc).__name__,
++                                          exception_message='RPC cleanup failed', shutdown_phase='rpc_close')
++                    finally:
++                        self._rpc = None
++                        self.motor_state = 'CLOSED'
++                        self._resources_closed = True
++                        if self._shutdown_timer is not None:
++                            self._shutdown_timer.cancel()
++                            self._shutdown_timer.join(timeout=.1)
++                        self._command_worker.close(timeout=0., cancel_pending=True)
++            try:
++                self._command_worker.call(finish, _priority=True, _cancel_on_timeout=False,
++                    _wait_timeout=max(0., deadline-time.monotonic()))
++            except FutureTimeoutError:
++                self.shutdown_unconfirmed = bool(self._active_codes)
++                self._fault_event('SHUTDOWN_STOP_TIMEOUT', shutdown_phase='camera_lane')
++                # Interrupt only I/O, leaving cleanup ordered on the camera lane.
++                self._abort_transport()
++                return False
++            exited = self._command_worker.close(max(0., deadline-time.monotonic()))
++            return exited and not self.cleanup_failed
++        finally:
++            self._close_lock.release()
+diff --git a/camera/hanet_rpc.py b/camera/hanet_rpc.py
+index 024d581..06c7ff7 100644
+--- a/camera/hanet_rpc.py
++++ b/camera/hanet_rpc.py
+@@ -6,22 +6,40 @@ from __future__ import annotations
+ import base64
+ import hashlib
+ import json
++import math
+ import os
+ import socket
+ import struct
+ import time
++import threading
++from telemetry import latency
++from event_logging import redact
+ from uuid import uuid4
+ import requests
+ 
++class HanetRPCRejected(RuntimeError):
++    """Explicit rejection; its vendor code is not assumed to mean auth expiry."""
++
++
+ class HanetPTZClient:
+     """Client toi thieu cho JSON-RPC/WebSocket cua firmware HANET."""
+ 
+     def __init__(self, host: str, port: int, username: str, password: str, timeout=5.0):
++        self._lock = threading.RLock()
++        self._closed = False
++        self._io_deadline = None
++        self.generation = 0
++        self.transport_state = 'DISCONNECTED'
++        self._reconnect_attempt = 0
++        self._next_reconnect = 0.
++        self._needs_login = False
+         self.host = host
+         self.port = int(port)
+         self.username = username
+         self.password = password
+         self.timeout = float(timeout)
++        if not math.isfinite(self.timeout) or self.timeout <= 0:
++            raise ValueError('HANET timeout must be finite and positive')
+         self.http_url = f"http://{host}:{port}/mtrpc"
+         self.session = requests.Session()
+         self.session.headers.update({"Content-Type": "application/json"})
+@@ -49,11 +67,11 @@ class HanetPTZClient:
+             "method": method,
+             "params": params or {},
+         }
+-        response = self.session.post(self.http_url, json=payload, timeout=self.timeout)
++        response = self.session.post(self.http_url, json=payload, timeout=self._remaining())
+         response.raise_for_status()
+         message = response.json()
+         if message.get("error"):
+-            raise RuntimeError(f"HANET RPC rejected {method}")
++            raise HanetRPCRejected(f"HANET RPC rejected {method}")
+         result = message.get("result")
+         if not isinstance(result, dict):
+             raise RuntimeError(f"HANET RPC returned invalid {method} response")
+@@ -117,16 +135,67 @@ class HanetPTZClient:
+         self.heartbeat_interval = interval
+         self.next_heartbeat = time.monotonic() + interval
+ 
++    def _event(self, event, **fields):
++        latency.profiler.event(event, backend='hanet', connection_generation=self.generation,
++                               timeout=self.timeout, transport_state=self.transport_state, **fields)
++
++    def _safe_error(self, exc):
++        message = redact(str(exc))
++        for secret in (self.password, self.session_id):
++            if secret:
++                message = message.replace(str(secret), '[REDACTED]')
++        return message[:512]
++
++    def _remaining(self):
++        deadline = getattr(self, '_io_deadline', None)
++        remaining = self.timeout if deadline is None else deadline-time.monotonic()
++        if remaining <= 0:
++            raise TimeoutError('HANET operation deadline exceeded')
++        return remaining
++
++    def _invalidate(self):
++        connection, self._ws = self._ws, None
++        self._ws_buffer = b''
++        self.session_id = None
++        self._needs_login = True
++        self.transport_state = 'CLOSED' if self._closed else 'DISCONNECTED'
++        clean = True
++        if connection is not None:
++            try:
++                connection.close()
++            except Exception as exc:
++                clean = False
++                self._event('HANET_CLEANUP_ERROR', exception_type=type(exc).__name__,
++                            exception_message='Socket close failed')
++            self._event('HANET_CONNECTION_CLOSED')
++        return clean
++
+     def heartbeat(self) -> None:
+-        if time.monotonic() < self.next_heartbeat:
+-            return
+-        self._call("Auth.Heartbeat", {"session_id": self.session_id})
+-        self.next_heartbeat = time.monotonic() + self.heartbeat_interval
++        with self._lock:
++            if self._closed:
++                raise RuntimeError('HANET client closed')
++            # Recovery belongs to STOP or a later explicitly requested command.
++            if self._needs_login:
++                raise RuntimeError('HANET session requires recovery')
++            if time.monotonic() < self.next_heartbeat:
++                return
++            self._io_deadline = time.monotonic()+self.timeout
++            try:
++                self._call('Auth.Heartbeat', {'session_id': self.session_id})
++                self.next_heartbeat = time.monotonic()+self.heartbeat_interval
++            except Exception as exc:
++                self._event('HANET_TRANSPORT_ERROR', operation='heartbeat',
++                            exception_type=type(exc).__name__, exception_message=self._safe_error(exc))
++                self._invalidate()
++                raise
++            finally:
++                self._io_deadline = None
+ 
+     def _recv_exact(self, size: int) -> bytes:
+         while len(self._ws_buffer) < size:
+             if self._ws is None:
+                 raise RuntimeError("WebSocket is closed")
++            self._ws.settimeout(self._remaining())
+             chunk = self._ws.recv(max(4096, size - len(self._ws_buffer)))
+             if not chunk:
+                 raise RuntimeError("WebSocket connection closed")
+@@ -137,35 +206,45 @@ class HanetPTZClient:
+     def _connect_websocket(self) -> None:
+         if self._ws is not None:
+             return
+-        connection = socket.create_connection((self.host, self.port), timeout=self.timeout)
+-        key = base64.b64encode(os.urandom(16)).decode("ascii")
+-        request = (
+-            "GET /mtrpcoverwebsocket HTTP/1.1\r\n"
+-            f"Host: {self.host}:{self.port}\r\n"
+-            "Upgrade: websocket\r\n"
+-            "Connection: Upgrade\r\n"
+-            f"Sec-WebSocket-Key: {key}\r\n"
+-            "Sec-WebSocket-Version: 13\r\n"
+-            f"Origin: http://{self.host}:{self.port}\r\n\r\n"
+-        )
+-        connection.sendall(request.encode("ascii"))
+-        response = b""
+-        while b"\r\n\r\n" not in response:
+-            chunk = connection.recv(4096)
+-            if not chunk:
+-                connection.close()
+-                raise RuntimeError("WebSocket handshake closed")
+-            response += chunk
+-            if len(response) > 65536:
++        connection = socket.create_connection((self.host, self.port), timeout=self._remaining())
++        try:
++            key = base64.b64encode(os.urandom(16)).decode("ascii")
++            request = (
++                "GET /mtrpcoverwebsocket HTTP/1.1\r\n"
++                f"Host: {self.host}:{self.port}\r\n"
++                "Upgrade: websocket\r\n"
++                "Connection: Upgrade\r\n"
++                f"Sec-WebSocket-Key: {key}\r\n"
++                "Sec-WebSocket-Version: 13\r\n"
++                f"Origin: http://{self.host}:{self.port}\r\n\r\n"
++            )
++            connection.settimeout(self._remaining())
++            connection.sendall(request.encode("ascii"))
++            response = b""
++            while b"\r\n\r\n" not in response:
++                connection.settimeout(self._remaining())
++                chunk = connection.recv(4096)
++                if not chunk:
++                    raise RuntimeError("WebSocket handshake closed")
++                response += chunk
++                if len(response) > 65536:
++                    raise RuntimeError("WebSocket handshake is too large")
++            headers, remainder = response.split(b"\r\n\r\n", 1)
++            if not headers.startswith(b"HTTP/1.1 101"):
++                raise RuntimeError("WebSocket handshake rejected")
++            connection.settimeout(self._remaining())
++            self._ws = connection
++            self._ws_buffer = remainder
++        except Exception:
++            try:
+                 connection.close()
+-                raise RuntimeError("WebSocket handshake is too large")
+-        headers, remainder = response.split(b"\r\n\r\n", 1)
+-        if not headers.startswith(b"HTTP/1.1 101"):
+-            connection.close()
+-            raise RuntimeError("WebSocket handshake rejected")
+-        connection.settimeout(0.5)
+-        self._ws = connection
+-        self._ws_buffer = remainder
++            except Exception as exc:
++                self._event('HANET_CLEANUP_ERROR', exception_type=type(exc).__name__,
++                            exception_message='Handshake socket close failed')
++            raise
++        self.generation += 1
++        self.transport_state = 'CONNECTED'
++        self._event('HANET_CONNECTION_OPEN')
+ 
+     def _send_frame(self, payload: bytes, opcode=0x1) -> None:
+         if self._ws is None:
+@@ -183,6 +262,7 @@ class HanetPTZClient:
+             header.extend(struct.pack("!Q", length))
+         header.extend(mask)
+         masked = bytes(value ^ mask[index % 4] for index, value in enumerate(payload))
++        self._ws.settimeout(self._remaining())
+         self._ws.sendall(bytes(header) + masked)
+ 
+     def _recv_frame(self) -> tuple[int, bytes]:
+@@ -194,13 +274,17 @@ class HanetPTZClient:
+             length = struct.unpack("!H", self._recv_exact(2))[0]
+         elif length == 127:
+             length = struct.unpack("!Q", self._recv_exact(8))[0]
++        if length > 1024*1024:
++            raise RuntimeError('HANET WebSocket frame exceeds limit')
++        if not first & 0x80:
++            raise RuntimeError('Fragmented HANET response unsupported')
+         mask = self._recv_exact(4) if masked else None
+         payload = self._recv_exact(length)
+         if mask:
+             payload = bytes(value ^ mask[index % 4] for index, value in enumerate(payload))
+         return opcode, payload
+ 
+-    def _receive_response(self, request_id) -> None:
++    def _receive_response(self, request_id) -> bool:
+         deadline = time.monotonic() + self.timeout
+         try:
+             while time.monotonic() < deadline:
+@@ -213,21 +297,84 @@ class HanetPTZClient:
+                 if opcode != 0x1:
+                     continue
+                 message = json.loads(payload.decode("utf-8"))
++                if not isinstance(message, dict):
++                    raise RuntimeError("Invalid HANET response")
+                 if str(message.get("id")) != str(request_id):
+                     continue
+                 if message.get("error") or message.get("result") is False:
+-                    raise RuntimeError("Camera rejected PTZ command")
+-                return
++                    raise HanetRPCRejected("Camera rejected PTZ command")
++                # A matching ID alone is not evidence of successful execution.
++                result = message.get('result')
++                if result is not True:
++                    raise RuntimeError('HANET response has no verified success result')
++                return True
+             raise TimeoutError("HANET PTZ acknowledgement timed out")
+         except socket.timeout:
+             raise TimeoutError("HANET PTZ acknowledgement timed out") from None
+ 
+-    def motion(self, code: str, start: bool, speed: int) -> None:
+-        if not self.session_id:
+-            raise RuntimeError("HANET session is unavailable")
+-        self._connect_websocket()
++    def motion(self, code: str, start: bool, speed: int) -> bool:
++        # One transaction owns the socket and session through ACK validation.
++        # Never replay a START (or any command) within this call.
++        with self._lock:
++            if self._closed:
++                raise RuntimeError('HANET client closed')
++            if time.monotonic() < self._next_reconnect:
++                raise RuntimeError('HANET reconnect backoff')
++            self._io_deadline = time.monotonic()+self.timeout
++            reconnect = self._needs_login
++            request_id = str(uuid4())
++            operation = 'START' if start else 'STOP'
++            transmission = 'not_attempted'
++            try:
++                if reconnect:
++                    self.transport_state = 'TRANSPORT_RECOVERING'
++                    self._reconnect_attempt += 1
++                    self._event('HANET_RECONNECT_ATTEMPT', retry_attempt=self._reconnect_attempt)
++                    self._login()
++                if not self.session_id:
++                    raise RuntimeError('HANET session is unavailable')
++                self._connect_websocket()
++                if reconnect:
++                    self._needs_login = False
++                    self._event('HANET_RECONNECT_SUCCESS', retry_attempt=self._reconnect_attempt,
++                                motor_safe=False)
++                generation = self.generation
++                payload = self._motion_payload(request_id, code, start, speed)
++                transmission = 'attempted_unknown'
++                self._send_frame(json.dumps(payload, separators=(',', ':')).encode('utf-8'))
++                transmission = 'sent'
++                self._event('PAN_TILT_'+operation+'_SENT', rpc_command_id=request_id,
++                            operation=operation, rpc_code=code)
++                ack = self._receive_response(request_id)
++                if generation != self.generation or self._closed:
++                    raise RuntimeError('Stale HANET connection response')
++                self._event('PAN_TILT_'+operation+'_ACK', rpc_command_id=request_id,
++                            operation=operation, rpc_code=code, acknowledged=ack)
++                self._reconnect_attempt = 0
++                self._next_reconnect = 0.
++                return ack
++            except Exception as exc:
++                self._event('PAN_TILT_'+operation+'_UNCONFIRMED', rpc_command_id=request_id,
++                            operation=operation, rpc_code=code, acknowledged=False,
++                            transmission=transmission,
++                            exception_type=type(exc).__name__, exception_message=self._safe_error(exc),
++                            exception_errno=getattr(exc, 'errno', None))
++                self._event('HANET_TRANSPORT_ERROR', rpc_command_id=request_id, operation=operation,
++                            exception_type=type(exc).__name__, exception_message='Connection invalidated',
++                            failure_kind='explicit_rejection' if isinstance(exc, HanetRPCRejected) else 'transport_or_protocol')
++                self._invalidate()
++                if reconnect:
++                    self._event('HANET_RECONNECT_FAILED', retry_attempt=self._reconnect_attempt,
++                                exception_type=type(exc).__name__, exception_message='Recovery did not confirm command')
++                # No sleeps in the execution lane, and no retry loop here.
++                self._next_reconnect = time.monotonic()+min(8., .5*2**min(self._reconnect_attempt, 4))
++                raise
++            finally:
++                self._io_deadline = None
++
++    def _motion_payload(self, request_id, code, start, speed):
+         payload = {
+-            "id": str(uuid4()),
++            "id": request_id,
+             "jsonrpc": "2.0",
+             "method": "Control.DoPtz",
+             "params": {
+@@ -243,23 +390,35 @@ class HanetPTZClient:
+                 },
+             },
+         }
+-        self._send_frame(json.dumps(payload, separators=(",", ":")).encode("utf-8"))
+-        self._receive_response(payload["id"])
++        return payload
+ 
+-    def close(self) -> None:
++    def abort(self):
++        """Wake blocked socket I/O during shutdown; never grants motor safety."""
++        self._closed = True
+         connection = self._ws
+         if connection is not None:
+             try:
+-                self._send_frame(b"", opcode=0x8)
+-            except Exception:
+-                pass
+-            self._ws = None
+-            connection.close()
+-        if self.session_id:
+-            try:
+-                self._call("Auth.Logout", {"session_id": self.session_id})
+-            except Exception:
+-                pass
+-        self.session_id = None
+-        self.session.close()
++                connection.shutdown(socket.SHUT_RDWR)
++            except Exception as exc:
++                self._event('HANET_CLEANUP_ERROR', exception_type=type(exc).__name__,
++                            exception_message='Socket shutdown failed')
+ 
++    def close(self) -> bool:
++        self.abort()
++        if not self._lock.acquire(timeout=self.timeout):
++            self._event('HANET_CLEANUP_ERROR', exception_type='TimeoutError',
++                        exception_message='RPC transaction did not exit before close deadline')
++            return False
++        try:
++            clean = self._invalidate()
++            # No logout round trip on shutdown: local session is invalidated and
++            # the camera expires its lease. Closing is not a motor STOP proof.
++            try:
++                self.session.close()
++            except Exception as exc:
++                clean = False
++                self._event('HANET_CLEANUP_ERROR', exception_type=type(exc).__name__,
++                            exception_message='HTTP session close failed')
++            return clean
++        finally:
++            self._lock.release()
+diff --git a/control/auto_pan_tilt.py b/control/auto_pan_tilt.py
+index d0fefe2..0884ad0 100644
+--- a/control/auto_pan_tilt.py
++++ b/control/auto_pan_tilt.py
+@@ -5,6 +5,7 @@ import time
+ from telemetry import latency
+ from uuid import uuid4
+ from .pan_policy import plan_pan
++from runtime.stop_retry import StopRetryBudget
+ 
+ 
+ class AutoPanTiltController:
+@@ -22,6 +23,8 @@ class AutoPanTiltController:
+         self._axis = None
+         self._ready_after = 0.
+         self._fault = False
++        self._stop_budget = StopRetryBudget()
++        self.shutdown_unconfirmed = False
+         self.busy = False
+         self._active_fields = {}
+         self._last_stop = 0.
+@@ -148,11 +151,21 @@ class AutoPanTiltController:
+         latency.profiler.event('PAN_TILT_STOP', **dict(fields or {},
+             stop_reason=reason, acknowledged=bool(ok), rpc_result=str(message)))
+         if not ok:
++            first = not self._fault
+             self._fault = True
+             self.enabled = False
+-            self.status(f'Auto Pan/Tilt STOP failed: {message}; retrying STOP')
++            self._stop_budget.failed()
++            if first or self._stop_budget.attempts == self._stop_budget.limit:
++                latency.profiler.event('MOTOR_FAULT_LATCHED', motor_owner=self.orchestrator.owner,
++                    fault_state='FAULT_LATCHED' if self._stop_budget.exhausted else 'STOP_UNCONFIRMED',
++                    retry_attempt=self._stop_budget.attempts)
++                self.status(f'Auto Pan/Tilt STOP unconfirmed: {message}; movement blocked')
+             return False
++        if self._fault:
++            latency.profiler.event('MOTOR_FAULT_RECOVERED', motor_owner=self.orchestrator.owner,
++                                   evidence='STOP_RPC_ACK', physical_motor_stopped=None)
+         self._fault = False
++        self._stop_budget.reset()
+         self.busy = False
+         self._last_stop = time.monotonic()
+         self._ready_after = self._last_stop+self.cfg.AUTO_PAN_TILT_SETTLE
+@@ -162,15 +175,23 @@ class AutoPanTiltController:
+     def _run(self):
+         while True:
+             with self._condition:
+-                if not self._fault:
+-                    if self._closed:
+-                        return
++                if self._closed:
++                    break
++                if self._fault:
++                    # Sleep interruptibly without retrying after budget exhaustion.
++                    externally_confirmed = getattr(self.ptz, 'motor_state', None) == 'READY'
++                    if not externally_confirmed and not self._stop_budget.ready():
++                        delay = .5 if self._stop_budget.exhausted else max(.01, self._stop_budget.next_at-time.monotonic())
++                        self._condition.wait(timeout=delay)
++                        continue
++                else:
+                     self._condition.wait(timeout=.03)
++                    if self._closed:
++                        break
+                 item = self._latest
+             if self._fault:
+-                # Retain exclusive ownership until STOP is acknowledged.
+-                if not self._stop("STOP_RETRY", self._active_fields):
+-                    time.sleep(.25)
++                # Ownership survives retry exhaustion and reconnect success.
++                self._stop('STOP_RETRY', self._active_fields)
+                 continue
+             if (not item or not self.enabled or time.monotonic() < self._ready_after
+                     or item[0] <= self._last_stop
+@@ -233,11 +254,26 @@ class AutoPanTiltController:
+                         displacement_evidence='target_image_motion_not_motor_telemetry',
+                         command_active_duration_ms=(time.monotonic()-dispatched)*1000 if dispatched else None))
+ 
++        # Exactly one final attempt, with fault retained if it is unconfirmed.
++        if self.busy or self._fault:
++            self._stop('APPLICATION_CLOSE', self._active_fields)
++        self.shutdown_unconfirmed = self._fault
++        if self.shutdown_unconfirmed:
++            latency.profiler.event('SHUTDOWN_COMPLETED_WITH_UNCONFIRMED_MOTOR',
++                shutdown_phase='auto_pan_tilt', motor_owner=self.orchestrator.owner,
++                fault_state='STOP_UNCONFIRMED', physical_motor_stopped=None)
++            self.status('STOP chưa được xác nhận. Cần kiểm tra camera trực tiếp hoặc dùng cơ chế dừng độc lập.')
++
+     def close(self, timeout=None):
++        # Legacy callers passing None also get a finite join.
++        timeout = 6. if timeout is None else max(0., timeout)
+         with self._condition:
+             self._closed = True
+             self.enabled = False
+             self._latest = None
+             self._condition.notify_all()
+         self._thread.join(timeout)
++        if self._thread.is_alive():
++            latency.profiler.event('SHUTDOWN_STOP_TIMEOUT', shutdown_phase='auto_pan_tilt',
++                                   motor_owner=self.orchestrator.owner)
+         return not self._thread.is_alive()
+diff --git a/control/auto_zoom.py b/control/auto_zoom.py
+index 588058d..5f1430e 100644
+--- a/control/auto_zoom.py
++++ b/control/auto_zoom.py
+@@ -10,6 +10,7 @@ import math
+ import copy
+ from collections import deque
+ from runtime.zoom_intent import ZoomIntent
++from runtime.stop_retry import StopRetryBudget
+ import threading
+ import time
+ from typing import Optional
+@@ -61,6 +62,7 @@ class AutoZoomController:
+         self._focus_wait_started = None
+         self.orchestrator = orchestrator
+         self._closed = threading.Event()
++        self._stop_budget = StopRetryBudget()
+         self._motor_thread = None
+         self.session_valid = lambda session: True
+         self.track_valid = lambda session, track: True
+@@ -1137,8 +1139,10 @@ class AutoZoomController:
+             with self._lock:
+                 if generation != self._generation or not self.busy:
+                     return
+-            if self._closed.wait(0.1):
+-                return  # shutdown performs a final STOP
++            delay = (.5 if self._stop_budget.exhausted else
++                     max(.1, self._stop_budget.next_at-time.monotonic()))
++            if self._closed.wait(delay):
++                return  # shutdown performs a final bounded STOP attempt
+             self.stop(generation)
+ 
+     def stop(self, generation=None, reason="REQUESTED"):
+@@ -1159,6 +1163,9 @@ class AutoZoomController:
+                 self.last_stop_reason = reason
+                 initiator = self._cancel_initiator or threading.current_thread().name
+                 active = self.zoom_motor_active
++                if (active and reason != 'APPLICATION_CLOSE' and not self._stop_budget.ready()
++                        and getattr(self.ptz, 'motor_state', None) != 'READY'):
++                    return  # retry exhaustion retains busy/ownership without log spam
+                 was_absolute = self._mode == 'absolute'
+                 started, direction = self._started, self.zoom_direction
+             if was_absolute and active and reason != 'POSITION_REACHED':
+@@ -1177,8 +1184,10 @@ class AutoZoomController:
+                     success, response = False, str(exc)
+                 self.last_ptz_ms = (time.perf_counter()-begin)*1000
+                 if not success:
++                    self._stop_budget.failed()
+                     error = f'STOP FAILED; AUTO ZOOM DISABLED: {response}'
+                 else:
++                    self._stop_budget.reset()
+                     estimate = (direction, time.monotonic()-started)
+             before = self._motor_before or {}
+             after = self.ptz.telemetry() if self._has_telemetry() else None
+@@ -1236,6 +1245,8 @@ class AutoZoomController:
+                                 "LOST TARGET -> ZOOM OUT")
+ 
+     def close(self, timeout=5.):
++        timeout = 5. if timeout is None else max(0., timeout)
++        deadline = time.monotonic()+timeout
+         self.observe_focus_wait(False)
+         self.enabled = False
+         self._closed.set()
+@@ -1244,7 +1255,7 @@ class AutoZoomController:
+         self.stop(reason='APPLICATION_CLOSE')
+         for worker in (self._dispatcher, self._motor_thread):
+             if worker is not None and worker is not threading.current_thread():
+-                worker.join(timeout)
++                worker.join(max(0., deadline-time.monotonic()))
+         return not any(w is not None and w.is_alive() for w in (self._dispatcher, self._motor_thread))
+ 
+     def observe_stability(self, ratio, frame_id, received, target_kind=None):
+diff --git a/control/manual.py b/control/manual.py
+index 72e6b2a..52f8e84 100644
+--- a/control/manual.py
++++ b/control/manual.py
+@@ -11,6 +11,7 @@ class ManualController:
+         self._condition = threading.Condition()
+         self._operation_cancel = threading.Event()
+         self._pending = None
++        self._pending_stop = None
+         self._version = 0
+         self._closed = False
+         self._fault = False
+@@ -21,7 +22,8 @@ class ManualController:
+         with self._condition:
+             if self._closed:
+                 return
+-            if self._fault and command is not None:
++            if command is not None and (self._fault or self._pending_stop is not None
++                                        or self.orchestrator.closing):
+                 self.status("Motor blocked after STOP failure; request STOP again")
+                 return
+             self.orchestrator.manual = True  # deny new automatic leases immediately
+@@ -32,7 +34,12 @@ class ManualController:
+             self._version += 1
+             requested = latency.profiler.event('MANUAL_REQUEST', manual_request_id=self._version,
+                                                manual_command=command)
+-            self._pending = (self._version, command, speed, duration, completed, self._operation_cancel, requested)
++            request = (self._version, command, speed, duration, completed, self._operation_cancel, requested)
++            if command is None:
++                self._pending_stop = request  # sticky; ordinary START cannot overwrite STOP
++                self._pending = None
++            else:
++                self._pending = request
+             self._condition.notify_all()
+ 
+     def close(self):
+@@ -44,21 +51,43 @@ class ManualController:
+     def _run(self):
+         while True:
+             with self._condition:
+-                self._condition.wait_for(lambda: self._pending is not None or self._closed)
+-                if self._pending is None:
++                self._condition.wait_for(lambda: self._pending_stop is not None or self._pending is not None or self._closed)
++                if self._pending_stop is not None:
++                    item, self._pending_stop = self._pending_stop, None
++                elif self._pending is not None:
++                    item, self._pending = self._pending, None
++                else:
+                     return
+-                version, command, speed, duration, completed, cancel, requested = self._pending
+-                self._pending = None
++                version, command, speed, duration, completed, cancel, requested = item
+             latency.profiler.elapsed('MANUAL_WORKER_BEGIN', requested, 'manual_queue_wait_ms',
+                                      manual_request_id=version, manual_command=command)
+             self.zoom.set_enabled(False)
+             self.focus.set_enabled(False)
++            if command is None:
++                # Emergency STOP must not wait for the owner it is trying to stop.
++                try:
++                    stop = getattr(type(self.ptz), 'emergency_stop', None)
++                    ok, message = stop(self.ptz) if stop else self.ptz.stop()
++                except Exception as exc:
++                    ok, message = False, type(exc).__name__
++                self._fault = not ok
++                if ok:
++                    self.orchestrator.release('manual', self.settle)
++                    if version == self._version and not self._closed:
++                        self.orchestrator.manual = False
++                else:
++                    self.status(f'Emergency STOP unconfirmed: {message}; movement blocked')
++                continue
++            if self._fault or self._closed or self.orchestrator.closing:
++                # A START may have been queued while emergency STOP was in flight.
++                self.status('Manual movement blocked by STOP fault or shutdown')
++                continue
+             # An outstanding camera HTTP transaction cannot safely be cancelled.
+             deadline = time.monotonic()+20.
+             acquired = self._fault and self.orchestrator.owner == "manual"
+             while not acquired:
+                 with self._condition:
+-                    if version != self._version:
++                    if version != self._version or self._closed:
+                         break
+                 acquired = self.orchestrator.acquire('manual')
+                 if acquired:
+diff --git a/control/orchestrator.py b/control/orchestrator.py
+index ac7e7f9..26cdf03 100644
+--- a/control/orchestrator.py
++++ b/control/orchestrator.py
+@@ -10,9 +10,12 @@ class ControlOrchestrator:
+         self.owner = None
+         self.until = 0.
+         self.manual = False
++        self.closing = False
+     def acquire(self, owner, now=None):
+         now = time.monotonic() if now is None else now
+         with self._lock:
++            if self.closing:
++                return False
+             if self.manual and owner != 'manual':
+                 latency.profiler.event('CONTROL_RESOURCE_REJECTED', requester=owner, reason='MANUAL_OWNER')
+                 return False
+@@ -34,5 +37,10 @@ class ControlOrchestrator:
+     def blocked(self, now=None):
+         now = time.monotonic() if now is None else now
+         with self._lock:
+-            return self.manual or self.owner is not None or now < self.until
++            return self.closing or self.manual or self.owner is not None or now < self.until
++
+ 
++    def begin_shutdown(self):
++        with self._lock:
++            self.closing = True
++            self.manual = True
+diff --git a/gui/cctv_app.py b/gui/cctv_app.py
+index 94dd35e..9f063b2 100644
+--- a/gui/cctv_app.py
++++ b/gui/cctv_app.py
+@@ -1854,6 +1854,10 @@ class CCTVApp:
+             return
+         self._closing = True
+         self.running = False
++        self.orchestrator.begin_shutdown()
++        begin = getattr(type(self.ptz), 'begin_shutdown', None)
++        if begin:
++            begin(self.ptz)
+         self.root.title('AI PTZ Camera — Đang dừng camera…')
+         self.image_settings_stop.set()
+         self.auto_pan_tilt.set_enabled(False)
+@@ -1863,26 +1867,32 @@ class CCTVApp:
+         motor_done = threading.Event()
+         stream_done = threading.Event()
+ 
++        latency.profiler.event('SHUTDOWN_REQUESTED', shutdown_phase='gui')
++        shutdown_result = {}
++
+         def close_motor():
++            from runtime.shutdown import close_controls
+             try:
+-                # Do not let a blocked GStreamer teardown delay motor STOP.
+-                self.ptz.cancel_focus()
+-                self.auto_pan_tilt.close(timeout=None)
+-                self.auto_zoom.close(timeout=None)
+-                self.auto_focus.close(timeout=None)
+-                self.ptz.stop()
+-                self.manual_controller._thread.join()
+-                self.ptz.close()
++                shutdown_result.update(close_controls(self.auto_pan_tilt, self.auto_zoom,
++                    self.auto_focus, self.manual_controller, self.ptz, self.orchestrator,
++                    timeout=12., status=self.set_status))
+             except Exception as exc:
+-                print(f'[CLOSE] Camera cleanup failed: {type(exc).__name__}')
++                shutdown_result['unconfirmed_motor'] = True
++                latency.profiler.event('SHUTDOWN_CLEANUP_ERROR', shutdown_phase='controls',
++                    exception_type=type(exc).__name__, exception_message='Control teardown failed')
+             finally:
+-                if self._ai_started:
+-                    self.ai_thread.join()
+-                if hasattr(self, 'face_worker'):
+-                    self.face_worker.close(timeout=None)
+-                latency.profiler.close(timeout=None)
+-                from telemetry import zoom_trace
+-                zoom_trace.recorder.close(timeout=None)
++                try:
++                    if self._ai_started:
++                        self.ai_thread.join(timeout=1.)
++                        if self.ai_thread.is_alive():
++                            latency.profiler.event('SHUTDOWN_CLEANUP_ERROR', shutdown_phase='ai_worker',
++                                                   exception_message='Worker join timed out')
++                    if hasattr(self, 'face_worker') and self.face_worker.close(timeout=1.) is False:
++                        latency.profiler.event('SHUTDOWN_CLEANUP_ERROR', shutdown_phase='face_worker',
++                                               exception_message='Worker join timed out')
++                except Exception as exc:
++                    latency.profiler.event('SHUTDOWN_CLEANUP_ERROR', shutdown_phase='inference',
++                                           exception_type=type(exc).__name__)
+                 motor_done.set()
+ 
+         def close_stream():
+@@ -1895,14 +1905,40 @@ class CCTVApp:
+ 
+         threading.Thread(target=close_motor, name='close-camera', daemon=True).start()
+         threading.Thread(target=close_stream, name='close-rtsp', daemon=True).start()
+-        deadline = time.monotonic() + 8.
++        deadline = time.monotonic() + 15.
+ 
+         def finish_close():
+-            if motor_done.is_set() and stream_done.is_set():
+-                self.root.destroy()
+-            elif time.monotonic() >= deadline:
+-                self.root.title('AI PTZ Camera — waiting for worker shutdown')
+-                self.root.after(250, finish_close)
++            expired = time.monotonic() >= deadline
++            if (motor_done.is_set() and stream_done.is_set()) or expired:
++                if expired or shutdown_result.get('unconfirmed_motor', False):
++                    from runtime.shutdown import UNCONFIRMED_WARNING
++                    # Warning is also written to the application log, which
++                    # survives Tk teardown. Do not claim physical motor STOP.
++                    print('[CLOSE] '+UNCONFIRMED_WARNING)
++                    self.root.title('AI PTZ — STOP CHƯA XÁC NHẬN')
++                    latency.profiler.event('SHUTDOWN_COMPLETED_WITH_UNCONFIRMED_MOTOR',
++                        shutdown_phase='gui', physical_motor_stopped=None,
++                        controls_finished=motor_done.is_set(), stream_finished=stream_done.is_set())
++                logs_done = threading.Event()
++                log_deadline = time.monotonic()+2.
++                def close_logs():
++                    try:
++                        if latency.profiler.close(timeout=1.) is False:
++                            print('[CLOSE] Latency writer shutdown timed out')
++                        from telemetry import zoom_trace
++                        if zoom_trace.recorder.close(timeout=1.) is False:
++                            print('[CLOSE] Zoom writer shutdown timed out')
++                    except Exception as exc:
++                        print(f'[CLOSE] Log cleanup failed: {type(exc).__name__}')
++                    finally:
++                        logs_done.set()
++                def finish_logs():
++                    if logs_done.is_set() or time.monotonic() >= log_deadline:
++                        self.root.destroy()
++                    else:
++                        self.root.after(50, finish_logs)
++                threading.Thread(target=close_logs, name='close-logs', daemon=True).start()
++                finish_logs()
+             else:
+                 self.root.after(50, finish_close)
+ 
+diff --git a/runtime/camera_worker.py b/runtime/camera_worker.py
+index 13e0949..e9c05a4 100644
+--- a/runtime/camera_worker.py
++++ b/runtime/camera_worker.py
+@@ -3,7 +3,7 @@
+ Supervisors may wait here; inference and Tk only submit to their mailboxes.
+ Nested operations run inline on the owner thread, avoiding executor deadlocks.
+ """
+-from concurrent.futures import Future
++from concurrent.futures import Future, TimeoutError as FutureTimeoutError
+ from contextvars import copy_context
+ from functools import wraps
+ import queue
+@@ -15,61 +15,126 @@ from telemetry import latency
+ class CameraCommandWorker:
+     def __init__(self):
+         self.queue = queue.Queue(maxsize=16)
++        self.priority = queue.Queue(maxsize=16)
++        self._urgent = {}
+         self.lock = threading.Lock()
+         self.closed = False
+         self._stop = threading.Event()
++        self._ready = threading.Event()
+         self.thread = threading.Thread(target=self._run, name='camera-command', daemon=True)
+         self.thread.start()
+ 
+-    def call(self, function, *args, **kwargs):
++    def call(self, function, *args, _wait_timeout=None, _priority=False, _cancel_on_timeout=True, **kwargs):
+         if threading.current_thread() is self.thread:
+             return function(*args, **kwargs)
+         future = Future()
+         with self.lock:
+             if self.closed:
+                 raise RuntimeError('Camera command worker closed')
+-            try:
+-                fields = latency.context.get()
+-                with latency.correlated(command_id=fields.get('command_id') or 'cmd_'+uuid4().hex):
+-                    name = function.__name__
+-                    if name == 'command' and len(args) > 1:
+-                        name = str(args[1])
+-                    axis = 'ZOOM' if 'zoom' in name else 'FOCUS' if 'focus' in name else None
+-                    if axis is not None and 'command_id' not in fields:
+-                        latency.profiler.event(axis+'_REQUEST_CREATED', source='manual_or_diagnostic')
+-                    queued = latency.profiler.event('CAMERA_COMMAND_QUEUE_ENTER')
+-                    self.queue.put_nowait((future, copy_context(), queued, function, args, kwargs))
+-            except queue.Full:
+-                latency.profiler.count('dropped_camera_jobs')
+-                latency.profiler.event('CAMERA_JOB_DROPPED', reason='QUEUE_FULL')
+-                raise RuntimeError('Camera command queue full') from None
+-        return future.result()
++            safety_stop = function.__name__ in ('stop', 'emergency_stop') or (
++                function.__name__ == 'command' and len(args) > 1 and args[1] == 'stop')
++            urgent = _priority or safety_stop
++            if safety_stop:
++                retained = []
++                while True:
++                    try:
++                        pending = self.queue.get_nowait()
++                    except queue.Empty:
++                        break
++                    if pending[3].__name__ in ('command', 'move_zoom', 'move_focus', 'autofocus'):
++                        if not pending[0].done():
++                            pending[0].set_exception(RuntimeError('Movement superseded by STOP'))
++                    else:
++                        retained.append(pending)
++                for pending in retained:
++                    self.queue.put_nowait(pending)
++            key = (function, id(args[0]) if args else None, bool(kwargs.get('emergency')))
++            if urgent and key in self._urgent:
++                future = self._urgent[key]
++            else:
++                if urgent:
++                    self._urgent[key] = future
++                try:
++                    fields = latency.context.get()
++                    with latency.correlated(command_id=fields.get('command_id') or 'cmd_'+uuid4().hex):
++                        name = function.__name__
++                        if name == 'command' and len(args) > 1:
++                            name = str(args[1])
++                        axis = 'ZOOM' if 'zoom' in name else 'FOCUS' if 'focus' in name else None
++                        if axis is not None and 'command_id' not in fields:
++                            latency.profiler.event(axis+'_REQUEST_CREATED', source='manual_or_diagnostic')
++                        queued = latency.profiler.event('CAMERA_COMMAND_QUEUE_ENTER')
++                        (self.priority if urgent else self.queue).put_nowait((future, copy_context(), queued, function, args, kwargs))
++                        self._ready.set()
++                except queue.Full:
++                    self._urgent.pop(key, None)
++                    latency.profiler.count('dropped_camera_jobs')
++                    latency.profiler.event('CAMERA_JOB_DROPPED', reason='QUEUE_FULL')
++                    raise RuntimeError('Camera command queue full') from None
++        try:
++            return future.result(timeout=_wait_timeout)
++        except FutureTimeoutError:
++            # A timed-out queued START must never execute later. A running RPC
++            # remains uncertain and its controller is responsible for STOP.
++            if _cancel_on_timeout and not urgent:
++                future.cancel()
++            raise
+ 
+     def _run(self):
+         while True:
+-            try:
+-                item = self.queue.get(timeout=0.1)
+-            except queue.Empty:
+-                if self._stop.is_set():
++            with self.lock:
++                try:
++                    item = self.priority.get_nowait()
++                except queue.Empty:
++                    try:
++                        item = self.queue.get_nowait()
++                    except queue.Empty:
++                        item = None
++                        self._ready.clear()
++                if item is None and self._stop.is_set():
+                     return
++            if item is None:
++                self._ready.wait(.1)
+                 continue
+             future, context, queued, function, args, kwargs = item
++            if not future.set_running_or_notify_cancel():
++                with self.lock:
++                    self._urgent = {key: value for key, value in self._urgent.items() if value is not future}
++                continue
+             def invoke():
+                 latency.profiler.elapsed('CAMERA_COMMAND_QUEUE_EXIT', queued, 'camera_command_queue_wait_ms')
+                 with latency.span('CAMERA_TRANSACTION', 'camera_transaction_ms', operation=function.__name__):
+                     return function(*args, **kwargs)
+             try:
+-                future.set_result(context.run(invoke))
++                result = context.run(invoke)
+             except BaseException as exc:
++                with self.lock:
++                    self._urgent = {key: value for key, value in self._urgent.items() if value is not future}
+                 future.set_exception(exc)
++            else:
++                with self.lock:
++                    self._urgent = {key: value for key, value in self._urgent.items() if value is not future}
++                future.set_result(result)
+ 
+-    def close(self, timeout=5.):
++    def close(self, timeout=5., cancel_pending=False):
++        timeout = 5. if timeout is None else max(0., timeout)
+         with self.lock:
+             if not self.closed:
+                 self.closed = True
+                 # A full queue must never block shutdown while holding the lock.
+                 # The worker drains accepted transactions before exiting.
+                 self._stop.set()
++                self._ready.set()
++            if cancel_pending:
++                for pending in (self.priority, self.queue):
++                    while True:
++                        try:
++                            item = pending.get_nowait()
++                        except queue.Empty:
++                            break
++                        if not item[0].done():
++                            item[0].set_exception(RuntimeError('Camera worker shutting down'))
++                self._urgent.clear()
+         if threading.current_thread() is not self.thread:
+             self.thread.join(timeout)
+         return not self.thread.is_alive()
+@@ -82,5 +147,6 @@ def camera_operation(function):
+         if function.__name__ == 'stop':
+             self.cancel_focus()  # interrupt a long focus task before waiting in its queue
+         worker = self._command_worker
+-        return worker.call(function, self, *args, **kwargs)
++        return worker.call(function, self, *args,
++            _wait_timeout=getattr(self, 'command_wait_timeout', None), **kwargs)
+     return run
+diff --git a/runtime/shutdown.py b/runtime/shutdown.py
+new file mode 100644
+index 0000000..8be7bb9
+--- /dev/null
++++ b/runtime/shutdown.py
+@@ -0,0 +1,60 @@
++"""Ordered control teardown, called off Tk. Expiry never grants a motor lease."""
++import time
++from telemetry import latency
++
++UNCONFIRMED_WARNING = ('STOP chưa được xác nhận; camera có thể còn chuyển động. '
++                       'Cần kiểm tra trực tiếp hoặc dùng cơ chế dừng độc lập của thiết bị.')
++
++
++def close_controls(pan, zoom, focus, manual, ptz, orchestrator, timeout=12., status=lambda _: None):
++    deadline = time.monotonic()+max(0., timeout)
++    remaining = lambda: max(0., deadline-time.monotonic())
++    orchestrator.begin_shutdown()
++    # HANET rejects all new STARTs at dequeue, including manual requests.
++    begin = getattr(type(ptz), 'begin_shutdown', None)
++    if begin:
++        begin(ptz)
++    arm = getattr(type(ptz), 'arm_shutdown_deadline', None)
++    if arm:
++        arm(ptz, deadline)
++    pan.set_enabled(False)
++    manual.close()  # sticky emergency STOP, does not wait for ownership
++    zoom.request_stop(reason='APPLICATION_CLOSE')
++    focus.set_enabled(False)
++    ptz.cancel_focus()
++    failures = []
++    for name, controller in (('auto_pan_tilt', pan), ('auto_zoom', zoom), ('auto_focus', focus)):
++        try:
++            if controller.close(timeout=remaining()) is False:
++                failures.append(name)
++                latency.profiler.event('SHUTDOWN_STOP_TIMEOUT', shutdown_phase=name)
++        except Exception as exc:
++            failures.append(name)
++            latency.profiler.event('SHUTDOWN_CLEANUP_ERROR', shutdown_phase=name,
++                exception_type=type(exc).__name__, exception_message='Controller cleanup failed')
++    manual._thread.join(remaining())
++    if manual._thread.is_alive():
++        failures.append('manual')
++    # Even if a supervisor timed out, closing the command lane rejects its later
++    # calls and cancels queued transactions before RPC resources are destroyed.
++    try:
++        if begin:
++            closed = ptz.close(timeout=remaining())
++        else:
++            closed = ptz.close()
++        if closed is False:
++            failures.append('camera')
++    except Exception as exc:
++        failures.append('camera')
++        latency.profiler.event('SHUTDOWN_CLEANUP_ERROR', shutdown_phase='camera',
++            exception_type=type(exc).__name__, exception_message='Camera cleanup failed')
++    unconfirmed = (getattr(ptz, 'shutdown_unconfirmed', False) is True
++                   or getattr(ptz, '_motor_fault', False) is True
++                   or bool(failures))
++    if unconfirmed:
++        status(UNCONFIRMED_WARNING)
++    latency.profiler.event('SHUTDOWN_COMPLETED_WITH_UNCONFIRMED_MOTOR' if unconfirmed else 'SHUTDOWN_COMPLETED',
++        shutdown_phase='controls', motor_owner=orchestrator.owner,
++        unconfirmed_motor=unconfirmed, cleanup_failures=failures, physical_motor_stopped=None)
++    return {'unconfirmed_motor': unconfirmed, 'cleanup_failures': failures,
++            'elapsed_seconds': time.monotonic()-(deadline-timeout)}
+diff --git a/runtime/stop_retry.py b/runtime/stop_retry.py
+new file mode 100644
+index 0000000..7f73903
+--- /dev/null
++++ b/runtime/stop_retry.py
+@@ -0,0 +1,24 @@
++"""Finite STOP attempts; exhaustion retains the caller's motor fault latch."""
++import time
++
++
++class StopRetryBudget:
++    def __init__(self, attempts=5, initial=.5, maximum=4., clock=time.monotonic):
++        self.limit = max(1, int(attempts))
++        self.initial, self.maximum, self.clock = initial, maximum, clock
++        self.reset()
++
++    def reset(self):
++        self.attempts = 0
++        self.next_at = 0.
++
++    @property
++    def exhausted(self):
++        return self.attempts >= self.limit
++
++    def ready(self):
++        return not self.exhausted and self.clock() >= self.next_at
++
++    def failed(self):
++        self.attempts += 1
++        self.next_at = self.clock()+min(self.maximum, self.initial*2**min(self.attempts-1, 20))
+diff --git a/telemetry/latency.py b/telemetry/latency.py
+index cf993a1..a5cc6ba 100644
+--- a/telemetry/latency.py
++++ b/telemetry/latency.py
+@@ -53,6 +53,8 @@ class LatencyProfiler:
+         self._overhead_sequence = 0
+         self._resource_previous = None
+         self._gates = {}
++        self.first_failures = {}
++        self._failure_dirty = threading.Event()
+         if enabled:
+             self.start()
+ 
+@@ -95,6 +97,16 @@ class LatencyProfiler:
+                    monotonic_ns=now, event=event, thread=threading.current_thread().name)
+         if metric is not None:
+             row.update(metric=metric, duration_ms=duration_ms)
++        if event in ('HANET_TRANSPORT_ERROR', 'PAN_TILT_START_UNCONFIRMED',
++                     'PAN_TILT_STOP_UNCONFIRMED', 'MOTOR_FAULT_LATCHED',
++                     'HANET_RECONNECT_FAILED', 'HANET_CLEANUP_ERROR',
++                     'SHUTDOWN_STOP_TIMEOUT', 'SHUTDOWN_COMPLETED_WITH_UNCONFIRMED_MOTOR'):
++            with self.lock:
++                if event not in self.first_failures:
++                    # One small summary per failure kind, independent of rotation
++                    # and of the possibly full per-frame log queue.
++                    self.first_failures[event] = row.copy()
++                    self._failure_dirty.set()
+         try:
+             self.queue.put_nowait(row)
+         except queue.Full:
+@@ -190,14 +202,26 @@ class LatencyProfiler:
+                         path.unlink()
+                 handlers.append(RotatingFileHandler(directory/f'{name}_{self.stamp}.{suffix}',
+                                 maxBytes=self.max_bytes, backupCount=self.backups, encoding='utf-8'))
++            fault_dir = self.directory/'camera'
++            for path in sorted(fault_dir.glob('first_failures_*.json'))[:-19]:
++                path.unlink()
+             self.handlers = handlers
+             deadline = time.monotonic()+self.interval
+             resource_deadline = time.monotonic()+self.resource_interval
+-            while not self.closed.is_set() or not self.queue.empty():
++            while not self.closed.is_set() or not self.queue.empty() or self._failure_dirty.is_set():
+                 try:
+                     row = self.queue.get(timeout=.1)
+                 except queue.Empty:
+                     row = None
++                if self._failure_dirty.is_set():
++                    from telemetry.events import _sanitize
++                    with self.lock:
++                        failures = list(self.first_failures.values())
++                        self._failure_dirty.clear()
++                    path = fault_dir/f'first_failures_{self.stamp}.json'
++                    temp = path.with_suffix('.tmp')
++                    temp.write_text(json.dumps(_sanitize(failures), allow_nan=False), encoding='utf-8')
++                    temp.replace(path)
+                 if row is not None:
+                     from telemetry.events import _sanitize
+                     text = json.dumps(_sanitize(row), allow_nan=False)
+@@ -206,7 +230,7 @@ class LatencyProfiler:
+                     suffix = '' if duration is None else f' {duration:.3f} ms'
+                     readable = f"[{row['timestamp']}] [FRAME {row.get('frame_id', 'N/A')}] [{row['event']}]{suffix}"
+                     handlers[2].emit(logging.LogRecord('latency', 20, '', 0, readable, (), None))
+-                    if self.camera and row['event'].startswith(('ZOOM_', 'FOCUS_', 'CAMERA_')):
++                    if self.camera and row['event'].startswith(('ZOOM_', 'FOCUS_', 'CAMERA_', 'HANET_', 'PAN_TILT_', 'MOTOR_', 'SHUTDOWN_')):
+                         readable = f"[{row['timestamp']}] [{row['event']}] {text}"
+                         handlers[1].emit(logging.LogRecord('camera', 20, '', 0, readable, (), None))
+                 if time.monotonic() >= deadline:
+diff --git a/test/test_auto_pan_tilt.py b/test/test_auto_pan_tilt.py
+index 8fe2c3a..9ba208c 100644
+--- a/test/test_auto_pan_tilt.py
++++ b/test/test_auto_pan_tilt.py
+@@ -126,6 +126,7 @@ class PanTiltTests(unittest.TestCase):
+ class WireValidationTests(unittest.TestCase):
+     def test_pan_uses_own_guard_and_rechecks_before_rpc(self):
+         rpc = Mock()
++        rpc.motion.return_value = True
+         ptz = HanetController(ip='test', username='u', password='p',
+             autoconnect=False, rpc_factory=lambda *a, **k: rpc)
+         try:
+diff --git a/test/test_hanet_controller.py b/test/test_hanet_controller.py
+index 53bae34..aaa49e1 100644
+--- a/test/test_hanet_controller.py
++++ b/test/test_hanet_controller.py
+@@ -13,6 +13,7 @@ from telemetry import latency
+ class HanetTests(unittest.TestCase):
+     def setUp(self):
+         self.rpc = Mock()
++        self.rpc.motion.return_value = True
+         self.controller = HanetController(ip='test', username='u', password='p',
+             autoconnect=False, rpc_factory=lambda *a, **k: self.rpc)
+ 
+@@ -34,7 +35,7 @@ class HanetTests(unittest.TestCase):
+             ('kCmdZoomWide', True, 2)])
+ 
+     def test_lost_start_ack_attempts_stop(self):
+-        self.rpc.motion.side_effect = [TimeoutError(), None]
++        self.rpc.motion.side_effect = [TimeoutError(), True]
+         self.assertFalse(self.controller.command('zoom_in', 1)[0])
+         self.assertEqual(self.rpc.motion.call_args_list[-1].args, ('kCmdZoomTele', False, 1))
+ 
+@@ -44,7 +45,7 @@ class HanetTests(unittest.TestCase):
+         self.assertFalse(self.controller.stop()[0])
+         self.assertFalse(self.controller.command('zoom_out')[0])
+         self.rpc.motion.side_effect = None
+-        self.assertTrue(self.controller.stop()[0])
++        self.assertTrue(self.controller.emergency_stop()[0])
+         self.assertTrue(self.controller.command('zoom_out')[0])
+ 
+     def test_stale_session_is_rejected_before_io(self):
+diff --git a/test/test_hanet_fault_injection.py b/test/test_hanet_fault_injection.py
+new file mode 100644
+index 0000000..994d280
+--- /dev/null
++++ b/test/test_hanet_fault_injection.py
+@@ -0,0 +1,445 @@
++"""Offline fault injection. No real transport or camera construction is allowed."""
++import sys
++from pathlib import Path
++sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
++import json
++import threading
++import time
++import unittest
++from types import SimpleNamespace
++from unittest.mock import Mock, patch
++
++from camera.hanet_rpc import HanetPTZClient
++from control.auto_pan_tilt import AutoPanTiltController
++from control.orchestrator import ControlOrchestrator
++import config
++
++
++class BaselineFaultTests(unittest.TestCase):
++    def test_broken_socket_invalidated(self):
++        with patch.object(HanetPTZClient, '_login'):
++            client = HanetPTZClient('offline.invalid', 80, 'u', 'p', timeout=.05)
++        client.session_id = 'test-session'
++        old = Mock()
++        old.sendall.side_effect = OSError('offline')
++        client._ws = old
++        try:
++            with self.assertRaises(OSError):
++                client.motion('kCmdLeft', False, 1)
++            self.assertIsNone(client._ws)
++        finally:
++            client.session_id = None
++            client.close()
++
++    def test_missing_result_is_not_ack(self):
++        client = HanetPTZClient.__new__(HanetPTZClient)
++        client.timeout = .05
++        client._recv_frame = Mock(return_value=(1, b'{"id":"matching"}'))
++        with self.assertRaises(RuntimeError):
++            client._receive_response('matching')
++
++    def test_shutdown_fault_worker_exits(self):
++        cfg = SimpleNamespace(**{k:getattr(config,k) for k in dir(config) if k.isupper()})
++        ptz = Mock(supports_pan_tilt=True)
++        ptz.stop.return_value = (False, 'unconfirmed')
++        owner = ControlOrchestrator()
++        owner.acquire('pan_tilt')
++        pan = AutoPanTiltController(ptz, owner, cfg)
++        with pan._condition:
++            pan._fault = True
++            pan._condition.notify_all()
++        try:
++            self.assertTrue(pan.close(timeout=.15))
++            self.assertEqual(owner.owner, 'pan_tilt')
++        finally:
++            ptz.stop.return_value = (True, 'ack')
++            pan.close(timeout=1)
++
++
++from collections import deque
++from contextlib import ExitStack
++from pathlib import Path
++import tempfile
++import struct
++from camera.hanet_controller import HanetController
++from camera.hanet_rpc import HanetRPCRejected
++from control.manual import ManualController
++from runtime.camera_worker import CameraCommandWorker
++from runtime.stop_retry import StopRetryBudget
++from runtime.shutdown import close_controls
++from telemetry import latency
++
++
++class Clock:
++    def __init__(self): self.now = 100.
++    def __call__(self): return self.now
++    def advance(self, seconds): self.now += seconds
++
++
++class FakeSocket:
++    """Real frame encoder/decoder exercises the production WebSocket path."""
++    def __init__(self, outcomes=()):
++        self.outcomes = deque(outcomes)
++        self.responses = deque()
++        self.commands = []
++        self.closed = False
++        self.timeout = None
++        self.late = None
++
++    def settimeout(self, timeout): self.timeout = timeout
++    def shutdown(self, how): pass
++    def close(self): self.closed = True
++
++    def sendall(self, frame):
++        if self.closed: raise OSError('closed')
++        if frame.startswith(b'GET '):
++            self.responses.append(b'HTTP/1.1 101 Switching Protocols\r\n\r\n')
++            return
++        length = frame[1] & 127
++        offset = 2
++        if length == 126:
++            length = struct.unpack('!H', frame[2:4])[0]; offset = 4
++        elif length == 127:
++            length = struct.unpack('!Q', frame[2:10])[0]; offset = 10
++        mask = frame[offset:offset+4]
++        payload = bytes(v ^ mask[i%4] for i,v in enumerate(frame[offset+4:]))
++        if not payload: return
++        request = json.loads(payload)
++        self.commands.append(request)
++        outcome = self.outcomes.popleft() if self.outcomes else True
++        if outcome == 'send_error': raise OSError('send failed')
++        if outcome == 'closed': self.responses.append(b''); return
++        if isinstance(outcome, BaseException): self.responses.append(outcome); return
++        if self.late:
++            self.responses.append(self.frame(self.late)); self.late = None
++        response = {'id': request['id'], 'result': outcome}
++        if outcome == 'expired': response = {'id': request['id'], 'error': {'code': 401}}
++        self.responses.append(self.frame(response))
++
++    @staticmethod
++    def frame(response):
++        data = json.dumps(response).encode()
++        return bytes([0x81, len(data)])+data if len(data)<126 else b'\x81\x7e'+struct.pack('!H',len(data))+data
++
++    def recv(self, size):
++        if not self.responses: raise TimeoutError('no ACK')
++        reply = self.responses.popleft()
++        if isinstance(reply, BaseException): raise reply
++        if len(reply)>size:
++            self.responses.appendleft(reply[size:]); return reply[:size]
++        return reply
++
++
++class FaultInjectionTests(unittest.TestCase):
++    def setUp(self):
++        self.stack = ExitStack(); self.addCleanup(self.stack.close)
++        self.tmp = self.stack.enter_context(tempfile.TemporaryDirectory())
++        # Fail closed even if a test accidentally reaches an unmocked network path.
++        self.stack.enter_context(patch('requests.sessions.Session.request', side_effect=AssertionError('REAL HTTP FORBIDDEN')))
++        self.socket_factory = self.stack.enter_context(patch('camera.hanet_rpc.socket.create_connection', side_effect=AssertionError('REAL SOCKET FORBIDDEN')))
++        self.clock = Clock()
++
++    def client(self, sockets):
++        self.sockets = list(sockets)
++        self.socket_factory.side_effect = self.sockets
++        def login(client):
++            client.session_id = 'private-test-session'
++            client.next_heartbeat = float('inf')
++        self.stack.enter_context(patch.object(HanetPTZClient, '_login', login))
++        client = HanetPTZClient('offline.invalid', 80, 'u', 'private-password', timeout=.1)
++        self.addCleanup(client.close)
++        self.stack.enter_context(patch('camera.hanet_rpc.time.monotonic', self.clock))
++        return client
++
++    def controller(self, rpc=None, name='state.json'):
++        rpc = rpc or Mock()
++        if isinstance(rpc, Mock): rpc.motion.return_value = True
++        controller = HanetController(ip='offline.invalid', username='u', password='p',
++            timeout=.1, autoconnect=False, rpc_factory=lambda *a, **k: rpc,
++            safety_state_path=Path(self.tmp)/name)
++        controller._stop_budget = StopRetryBudget(clock=self.clock)
++        self.addCleanup(controller.close)
++        return controller, rpc
++
++    def test01_normal_start_stop_and_ownership(self):
++        wire = FakeSocket()
++        client = self.client([wire])
++        camera, _ = self.controller(client)
++        owner = ControlOrchestrator(); owner.acquire('pan_tilt')
++        pan = AutoPanTiltController.__new__(AutoPanTiltController)
++        pan.ptz, pan.orchestrator = camera, owner
++        pan.cfg = SimpleNamespace(AUTO_PAN_TILT_SETTLE=0)
++        pan._fault = False; pan._stop_budget = StopRetryBudget(clock=self.clock)
++        self.assertTrue(camera.command('pan_left')[0])
++        self.assertEqual(camera.motor_state, 'MOTOR_ACTIVE')
++        self.assertTrue(pan._stop())
++        self.assertEqual(camera.motor_state, 'READY')
++        self.assertIsNone(owner.owner)
++        self.assertEqual(len(wire.commands), 2)
++
++    def test02_start_timeout_never_replayed_then_safe_stop(self):
++        first, second = FakeSocket([TimeoutError()]), FakeSocket()
++        camera, _ = self.controller(self.client([first, second]))
++        self.assertFalse(camera.command('pan_left')[0])
++        self.assertTrue(camera._motor_fault)
++        self.clock.advance(1)
++        self.assertTrue(camera.stop()[0])
++        operations = [r['params']['data']['operate'] for w in (first,second) for r in w.commands]
++        self.assertEqual(operations, ['kOperateStart', 'kOperateStop'])
++
++    def test03_stop_timeout_blocks_manual_and_zoom_start(self):
++        wire = FakeSocket([True, TimeoutError()])
++        camera, _ = self.controller(self.client([wire]))
++        camera.command('pan_left')
++        self.assertFalse(camera.stop()[0])
++        for command in ('pan_right', 'zoom_in', 'zoom_out'):
++            self.assertFalse(camera.command(command)[0])
++        self.assertEqual(len(wire.commands), 2)
++        self.assertIn('kCmdLeft', camera._active_codes)
++
++    def test04_websocket_closed_during_stop_reconnects_once(self):
++        first, second = FakeSocket([True, 'closed']), FakeSocket()
++        client = self.client([first, second]); camera, _ = self.controller(client)
++        camera.command('pan_left'); camera.stop()
++        self.assertTrue(first.closed); self.assertIsNone(client._ws)
++        self.clock.advance(1)
++        self.assertTrue(camera.stop()[0])
++        self.assertEqual(client.generation, 2)
++        self.assertEqual(self.socket_factory.call_count, 2)
++
++    def test05_stale_socket_not_reused_and_backoff_enforced(self):
++        first, second = FakeSocket(['send_error']), FakeSocket()
++        client = self.client([first, second])
++        with self.assertRaises(OSError): client.motion('kCmdLeft', False, 1)
++        for _ in range(50):
++            with self.assertRaises(RuntimeError): client.motion('kCmdLeft', False, 1)
++        self.assertEqual(len(first.commands), 1)
++        self.clock.advance(1)
++        self.assertTrue(client.motion('kCmdLeft', False, 1))
++        self.assertTrue(first.closed)
++
++    def test06_expired_session_reauth_without_start_replay(self):
++        first, second = FakeSocket(['expired']), FakeSocket()
++        client = self.client([first,second]); camera, _ = self.controller(client)
++        with patch.object(client, '_login', wraps=client._login) as login:
++            camera.command('pan_left')
++            self.assertIsNone(client.session_id)
++            self.clock.advance(1)
++            self.assertTrue(camera.stop()[0])
++            login.assert_called_once()
++        self.assertEqual(second.commands[0]['params']['data']['operate'], 'kOperateStop')
++
++    def test07_late_ack_old_connection_cannot_confirm_new_stop(self):
++        first, second = FakeSocket([TimeoutError()]), FakeSocket([False])
++        client = self.client([first,second])
++        with self.assertRaises(TimeoutError): client.motion('kCmdLeft', True, 1)
++        second.late = {'id': first.commands[0]['id'], 'result': True}
++        self.clock.advance(1)
++        with self.assertRaises(HanetRPCRejected): client.motion('kCmdLeft', False, 1)
++        self.assertIsNone(client._ws)
++        self.assertEqual(client.generation, 2)
++
++    def test08_false_stop_ack_retry_budget_keeps_fault(self):
++        camera, rpc = self.controller(); camera.command('pan_left')
++        rpc.motion.return_value = False
++        for _ in range(100):
++            camera.stop(); self.clock.advance(5)
++        self.assertEqual(rpc.motion.call_count, 6)  # one START + five STOPs
++        self.assertEqual(camera.motor_state, 'FAULT_LATCHED')
++        self.assertFalse(camera.command('zoom_in')[0])
++
++    def test09_reconnect_success_is_not_motor_safe(self):
++        camera, _ = self.controller(self.client([FakeSocket([TimeoutError()]), FakeSocket([False])]))
++        camera.command('pan_left'); self.clock.advance(1)
++        self.assertFalse(camera.stop()[0])
++        self.assertTrue(camera._motor_fault)
++        self.assertEqual(camera._rpc.generation, 2)
++        self.assertFalse(camera.command('pan_right')[0])
++
++    def test10_operator_stop_after_budget_exhaustion_recovers(self):
++        camera, rpc = self.controller(); camera.command('pan_left'); rpc.motion.return_value = False
++        for _ in range(5): camera.stop(); self.clock.advance(5)
++        rpc.motion.return_value = True
++        self.assertTrue(camera.emergency_stop()[0])
++        self.assertFalse(camera._motor_fault)
++        self.assertEqual(camera.motor_state, 'READY')
++        self.assertTrue(camera.command('zoom_in')[0])
++
++    def test11_shutdown_fault_is_bounded_and_no_camera_threads_leak(self):
++        camera, rpc = self.controller(); camera.command('pan_left'); rpc.motion.return_value = False
++        cfg = SimpleNamespace(**{k:getattr(config,k) for k in dir(config) if k.isupper()})
++        owner = ControlOrchestrator(); owner.acquire('pan_tilt')
++        pan = AutoPanTiltController(camera, owner, cfg)
++        with pan._condition: pan._fault=True; pan._condition.notify_all()
++        manual = ManualController(camera, Mock(), Mock(), owner, Mock())
++        zoom, focus = Mock(), Mock()
++        zoom.close.return_value = focus.close.return_value = True
++        begin = time.perf_counter()
++        result = close_controls(pan,zoom,focus,manual,camera,owner,timeout=1.)
++        elapsed = time.perf_counter()-begin
++        self.assertLess(elapsed, 1.)
++        self.assertTrue(result['unconfirmed_motor'])
++        self.assertTrue(owner.closing); self.assertEqual(owner.owner, 'pan_tilt')
++        self.assertFalse(owner.acquire('manual'))
++        self.assertFalse(any(t.is_alive() for t in (pan._thread,manual._thread,camera._command_worker.thread)))
++        print('SHUTDOWN_MEASUREMENT', json.dumps({'seconds':elapsed,'unconfirmed_motor':True,'threads_alive':0}))
++
++    def test12_concurrent_zoom_cannot_acquire_pan_fault(self):
++        owner=ControlOrchestrator(); owner.acquire('pan_tilt')
++        camera,rpc=self.controller(); camera.command('pan_left'); rpc.motion.return_value=False; camera.stop()
++        results=[]
++        threads=[threading.Thread(target=lambda:results.append(owner.acquire('zoom'))) for _ in range(8)]
++        for thread in threads: thread.start()
++        for thread in threads: thread.join(1)
++        self.assertEqual(results,[False]*8)
++        self.assertFalse(camera.command('zoom_in')[0])
++        self.assertEqual(rpc.motion.call_count,2)
++
++    def test13_manual_emergency_stop_bypasses_owner_and_is_sticky(self):
++        owner=ControlOrchestrator(); owner.acquire('pan_tilt')
++        camera,rpc=self.controller(); camera.command('pan_left')
++        stopped=threading.Event()
++        rpc.motion.side_effect=lambda *a: stopped.set() or True
++        manual=ManualController(camera,Mock(),Mock(),owner,Mock())
++        try:
++            with manual._condition:
++                manual.request()
++                manual.request('zoom_in')  # cannot replace pending STOP
++            self.assertTrue(stopped.wait(.5))
++            self.assertEqual(rpc.motion.call_args.args[1],False)
++            self.assertEqual(owner.owner,'pan_tilt')  # foreign owner is not blindly released
++        finally:
++            manual.close(); manual._thread.join(1)
++        self.assertFalse(manual._thread.is_alive())
++
++    def test14_rpc_cleanup_failure_recorded_and_lane_exits(self):
++        camera,rpc=self.controller(); camera.read_status()
++        rpc.close.side_effect=RuntimeError('private-password')
++        with patch.object(latency.profiler,'event',wraps=latency.profiler.event) as log:
++            self.assertFalse(camera.close(timeout=1))
++        self.assertTrue(camera.cleanup_failed)
++        self.assertFalse(camera._command_worker.thread.is_alive())
++        events=[c for c in log.call_args_list if c.args[0]=='HANET_CLEANUP_ERROR']
++        self.assertTrue(events)
++        self.assertNotIn('private-password',str(events))
++
++    def test15_repeated_reconnect_failures_bounded_and_shutdown_supported(self):
++        first=FakeSocket([TimeoutError()])
++        client=self.client([first]); camera,_=self.controller(client)
++        camera.command('pan_left')
++        self.socket_factory.side_effect=OSError('offline')
++        for _ in range(100):
++            self.clock.advance(10); camera.stop()
++        self.assertLessEqual(self.socket_factory.call_count,5)
++        self.assertEqual(camera.motor_state,'FAULT_LATCHED')
++        self.assertTrue(camera.close(timeout=1))
++        self.assertTrue(camera.shutdown_unconfirmed)
++
++    def test16_concurrent_stop_serializes_and_uses_one_connection(self):
++        wire=FakeSocket(); client=self.client([wire]); camera,_=self.controller(client)
++        camera.command('pan_left')
++        results=[]
++        threads=[threading.Thread(target=lambda:results.append(camera.stop()[0])) for _ in range(12)]
++        for thread in threads:thread.start()
++        for thread in threads:thread.join(1)
++        self.assertEqual(results,[True]*12)
++        self.assertEqual(self.socket_factory.call_count,1)
++        self.assertEqual(len(wire.commands),2)
++        self.assertFalse(camera._active_codes)
++
++    def test_restart_retains_uncertainty_until_explicit_stop(self):
++        camera,rpc=self.controller(); camera.command('pan_left'); rpc.motion.return_value=False
++        camera.close()
++        restarted,new_rpc=self.controller()
++        self.assertEqual(restarted.motor_state,'FAULT_LATCHED')
++        self.assertFalse(restarted.command('zoom_in')[0]); new_rpc.motion.assert_not_called()
++        self.assertTrue(restarted.emergency_stop()[0])
++        self.assertTrue(restarted.command('zoom_in')[0])
++
++    def test_handshake_failure_closes_unpublished_socket(self):
++        wire=FakeSocket(); wire.sendall=Mock(side_effect=TimeoutError())
++        client=self.client([wire])
++        with self.assertRaises(TimeoutError):client.motion('kCmdLeft',True,1)
++        self.assertTrue(wire.closed);self.assertIsNone(client._ws)
++
++    def test_first_failure_preserved_after_rotation(self):
++        profiler=latency.LatencyProfiler(directory=self.tmp,enabled=True,max_bytes=500,backups=1)
++        profiler.event('HANET_TRANSPORT_ERROR',exception_message='first',connection_generation=1)
++        for i in range(500):profiler.event('PAN_TILT_STOP_UNCONFIRMED',exception_message=str(i))
++        self.assertTrue(profiler.close())
++        data=json.loads(next((Path(self.tmp)/'camera').glob('first_failures_*.json')).read_text())
++        self.assertEqual(data[0]['exception_message'],'first')
++        self.assertEqual(len(data),2)
++
++    def test_backoff_fake_clock_schedule_and_exhaustion(self):
++        budget=StopRetryBudget(clock=self.clock)
++        for delay in (.5,1,2,4,4):
++            self.assertTrue(budget.ready());budget.failed()
++            self.assertFalse(budget.ready());self.clock.advance(delay)
++        self.assertTrue(budget.exhausted);self.assertFalse(budget.ready())
++
++    def test_stop_queue_priority_when_normal_queue_full(self):
++        worker=CameraCommandWorker(); entered=threading.Event();release=threading.Event();order=[]
++        from concurrent.futures import Future
++        from contextvars import copy_context
++        def blocking():entered.set();release.wait(1)
++        caller=threading.Thread(target=lambda:worker.call(blocking));caller.start()
++        self.assertTrue(entered.wait(1))
++        futures=[]
++        for i in range(16):
++            future=Future();futures.append(future)
++            worker.queue.put_nowait((future,copy_context(),None,lambda:order.append('normal'),(),{}))
++        def stop():order.append('STOP')
++        admitted = threading.Event()
++        enqueue = worker.priority.put_nowait
++        def admit(item):
++            enqueue(item); admitted.set()
++        with patch.object(worker.priority, 'put_nowait', admit):
++            urgent=threading.Thread(target=lambda:worker.call(stop));urgent.start()
++            self.assertTrue(admitted.wait(1))
++        release.set();caller.join(1);urgent.join(1);worker.close(1)
++        self.assertEqual(order[0],'STOP');self.assertEqual(len(order),17)
++
++    def test_pan_worker_exhaustion_waits_without_rpc_or_log_spin(self):
++        cfg = SimpleNamespace(**{k:getattr(config,k) for k in dir(config) if k.isupper()})
++        ptz = Mock(supports_pan_tilt=True)
++        ptz.stop.return_value = (False, 'unconfirmed')
++        owner = ControlOrchestrator(); owner.acquire('pan_tilt')
++        with patch('control.auto_pan_tilt.threading.Thread'):
++            pan = AutoPanTiltController(ptz, owner, cfg)
++        pan._fault = True
++        pan._stop_budget = StopRetryBudget(clock=self.clock)
++        waits = []
++        exhausted_counts = []
++        class Condition:
++            def __enter__(inner): return inner
++            def __exit__(inner, *args): pass
++            def wait(inner, timeout):
++                waits.append(timeout)
++                self.clock.advance(timeout)
++                if pan._stop_budget.exhausted:
++                    exhausted_counts.append(ptz.stop.call_count)
++                    if len(exhausted_counts) == 10:
++                        pan._closed = True
++        pan._condition = Condition()
++        with patch('control.auto_pan_tilt.time.monotonic', self.clock):
++            pan._run()
++        self.assertEqual(exhausted_counts, [5]*10)
++        self.assertEqual(ptz.stop.call_count, 6)  # five automatic + final close attempt
++        self.assertTrue(all(delay > 0 for delay in waits))
++        self.assertTrue(pan.shutdown_unconfirmed)
++        self.assertEqual(owner.owner, 'pan_tilt')
++
++    def test_client_lock_serializes_direct_multithreaded_stop(self):
++        wire = FakeSocket(); client = self.client([wire])
++        results = []
++        threads = [threading.Thread(target=lambda: results.append(client.motion('kCmdLeft', False, 1))) for _ in range(12)]
++        for thread in threads: thread.start()
++        for thread in threads: thread.join(1)
++        self.assertEqual(results, [True]*12)
++        self.assertEqual(self.socket_factory.call_count, 1)
++        self.assertEqual(client.generation, 1)
++
++
++if __name__ == '__main__':
++    unittest.main()
+diff --git a/test/test_hanet_shutdown.py b/test/test_hanet_shutdown.py
+new file mode 100644
+index 0000000..9c7f6d8
+--- /dev/null
++++ b/test/test_hanet_shutdown.py
+@@ -0,0 +1,210 @@
++"""Offline concurrency, GUI deadline and shutdown ordering regressions."""
++import sys
++from pathlib import Path
++sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
++import threading
++import time
++import tempfile
++import unittest
++from concurrent.futures import Future, TimeoutError as FutureTimeoutError
++from contextvars import copy_context
++from types import SimpleNamespace
++from unittest.mock import Mock, patch
++
++from camera.hanet_controller import HanetController
++from runtime.camera_worker import CameraCommandWorker
++from runtime.stop_retry import StopRetryBudget
++from runtime.shutdown import close_controls
++from control.auto_zoom import AutoZoomController
++from control.orchestrator import ControlOrchestrator
++from telemetry import latency
++
++
++class ShutdownTests(unittest.TestCase):
++    def camera(self):
++        temporary=tempfile.TemporaryDirectory();self.addCleanup(temporary.cleanup)
++        rpc=Mock();rpc.motion.return_value=True
++        camera=HanetController(ip='offline.invalid',username='u',password='p',autoconnect=False,
++            timeout=.1,rpc_factory=lambda *a,**k:rpc,safety_state_path=Path(temporary.name)/'state.json')
++        self.addCleanup(camera.close)
++        return camera,rpc
++
++    def test_pending_start_cancelled_by_priority_stop(self):
++        worker=CameraCommandWorker();entered=threading.Event();release=threading.Event()
++        def block():entered.set();release.wait(1)
++        running=threading.Thread(target=lambda:worker.call(block));running.start()
++        self.assertTrue(entered.wait(1))
++        started=[]
++        def command():started.append(True)
++        future=Future();worker.queue.put_nowait((future,copy_context(),None,command,(),{}))
++        admitted=threading.Event();enqueue=worker.priority.put_nowait
++        def admit(item):enqueue(item);admitted.set()
++        def stop():return True
++        with patch.object(worker.priority,'put_nowait',admit):
++            stopper=threading.Thread(target=lambda:worker.call(stop));stopper.start()
++            self.assertTrue(admitted.wait(1))
++        release.set();running.join(1);stopper.join(1)
++        self.assertTrue(worker.close(1));self.assertFalse(started)
++        self.assertIn('superseded',str(future.exception()))
++
++    def test_timed_out_queued_start_never_executes(self):
++        worker=CameraCommandWorker();entered=threading.Event();release=threading.Event()
++        def block():entered.set();release.wait(1)
++        running=threading.Thread(target=lambda:worker.call(block));running.start();self.assertTrue(entered.wait(1))
++        starts=[]
++        def command():starts.append(True)
++        with self.assertRaises(FutureTimeoutError):worker.call(command,_wait_timeout=.01)
++        release.set();running.join(1);worker.close(1)
++        self.assertFalse(starts)
++
++    def test_close_timeout_retains_ordered_cleanup_and_no_late_start(self):
++        camera,rpc=self.camera();entered=threading.Event();release=threading.Event()
++        def motion(*args):
++            if args[1]:entered.set();release.wait(1)
++            return True
++        rpc.motion.side_effect=motion
++        # A fake blocking network call wakes on abort, as socket.shutdown does.
++        rpc.abort.side_effect=release.set
++        result=[]
++        running=threading.Thread(target=lambda:result.append(camera.command('pan_left')));running.start()
++        self.assertTrue(entered.wait(1))
++        start=time.perf_counter()
++        self.assertFalse(camera.close(timeout=.02))
++        self.assertLess(time.perf_counter()-start,.3)
++        running.join(1);camera._command_worker.thread.join(1)
++        self.assertFalse(camera._command_worker.thread.is_alive())
++        rpc.close.assert_called_once()
++        with self.assertRaises(RuntimeError):camera.command('zoom_in')
++        operations=[call.args[1] for call in rpc.motion.call_args_list]
++        self.assertEqual(operations,[True,False])
++
++    def test_shutdown_during_login_does_not_transmit_start(self):
++        camera,rpc=self.camera()
++        def connect(*args,**kwargs):camera.begin_shutdown();return rpc
++        camera._rpc_factory=connect
++        self.assertFalse(camera.command('pan_left')[0])
++        rpc.motion.assert_not_called()
++
++    def test_no_ack_return_is_unconfirmed(self):
++        camera,rpc=self.camera();rpc.motion.return_value=None
++        self.assertFalse(camera.command('pan_left')[0])
++        self.assertTrue(camera._motor_fault)
++        self.assertFalse(camera.command('zoom_in')[0])
++
++    def test_zoom_stop_retry_is_bounded_without_releasing_ownership(self):
++        camera=Mock();camera.has_zoom_telemetry=False;camera.stop.return_value=(False,'lost ACK')
++        zoom=AutoZoomController(camera,wait_after_zoom=0)
++        self.addCleanup(zoom.close)
++        owner=ControlOrchestrator();owner.acquire('zoom');zoom.orchestrator=owner
++        zoom.busy=zoom.zoom_motor_active=True;zoom._started=time.monotonic();zoom.zoom_direction=1
++        now=[100.];zoom._stop_budget=StopRetryBudget(clock=lambda:now[0])
++        for _ in range(100):zoom.stop();now[0]+=5
++        self.assertEqual(camera.stop.call_count,5)
++        self.assertTrue(zoom.busy);self.assertEqual(owner.owner,'zoom')
++        camera.motor_state='READY';camera.stop.return_value=(True,'ACK')
++        zoom.stop();self.assertFalse(zoom.busy);self.assertIsNone(owner.owner)
++
++    def test_cleanup_order_and_errors_are_reported(self):
++        order=[]
++        class Backend:
++            _motor_fault=False;shutdown_unconfirmed=False
++            def begin_shutdown(self):order.append('deny_start')
++            def cancel_focus(self):pass
++            def close(self,timeout):order.append('camera');return True
++        pan,zoom,focus,manual=Mock(),Mock(),Mock(),Mock()
++        pan.close.side_effect=lambda **k:order.append('pan') or (_ for _ in ()).throw(RuntimeError('cleanup'))
++        zoom.close.side_effect=lambda **k:order.append('zoom') or True
++        focus.close.side_effect=lambda **k:order.append('focus') or True
++        manual._thread.join.side_effect=lambda timeout:order.append('manual')
++        manual._thread.is_alive.return_value=False
++        result=close_controls(pan,zoom,focus,manual,Backend(),ControlOrchestrator(),timeout=1)
++        self.assertEqual(order,['deny_start','pan','zoom','focus','manual','camera'])
++        self.assertEqual(result['cleanup_failures'],['auto_pan_tilt'])
++        self.assertTrue(result['unconfirmed_motor'])
++
++    def test_gui_deadline_exits_even_if_stream_and_controls_never_finish(self):
++        from gui.cctv_app import CCTVApp
++        now=[0.]
++        class Root:
++            def __init__(self):self.pending=[];self.destroyed=False
++            def title(self,title):pass
++            def after(self,ms,callback):self.pending.append((ms,callback))
++            def destroy(self):self.destroyed=True
++        class DeferredThread:
++            def __init__(self,*args,**kwargs):pass
++            def start(self):pass
++        root=Root()
++        app=SimpleNamespace(root=root,running=True,image_settings_stop=threading.Event(),
++            auto_pan_tilt=Mock(),manual_controller=Mock(),auto_zoom=Mock(),auto_focus=Mock(),
++            ptz=Mock(),orchestrator=ControlOrchestrator(),rtsp=Mock(),_ai_started=False,set_status=Mock())
++        with patch('gui.cctv_app.threading.Thread',DeferredThread),patch('gui.cctv_app.time.monotonic',lambda:now[0]), \
++             patch.object(latency.profiler,'event',wraps=latency.profiler.event) as events:
++            CCTVApp.on_close(app)
++            self.assertFalse(root.destroyed)
++            while root.pending and not root.destroyed:
++                ms,callback=root.pending.pop(0);now[0]+=ms/1000;callback()
++            self.assertTrue(root.destroyed);self.assertLessEqual(now[0],17.1)
++            self.assertTrue(app.orchestrator.closing)
++            self.assertTrue(any(c.args[0]=='SHUTDOWN_COMPLETED_WITH_UNCONFIRMED_MOTOR' for c in events.call_args_list))
++
++    def test_manual_start_queued_during_failed_stop_cannot_bypass_fault(self):
++        from control.manual import ManualController
++        entered, release = threading.Event(), threading.Event()
++        camera = Mock()
++        def stop():
++            entered.set(); release.wait(1)
++            return False, 'unconfirmed'
++        camera.stop.side_effect = stop
++        status = Mock()
++        handled = threading.Event()
++        status.side_effect = lambda message: handled.set() if message.startswith('Manual movement blocked') else None
++        manual = ManualController(camera, Mock(), Mock(), ControlOrchestrator(), status)
++        try:
++            manual.request()
++            self.assertTrue(entered.wait(1))
++            manual.request('pan_left')
++            release.set()
++            self.assertTrue(handled.wait(1))
++            camera.command.assert_not_called()
++        finally:
++            release.set(); manual.close(); manual._thread.join(1)
++        self.assertFalse(manual._thread.is_alive())
++
++    def test_shutdown_watchdog_interrupts_inflight_rpc_before_resource_close(self):
++        camera, rpc = self.camera()
++        entered, release = threading.Event(), threading.Event()
++        order = []
++        def motion(code, start, speed):
++            if start:
++                entered.set(); release.wait(1)
++            order.append('START' if start else 'STOP')
++            return True
++        rpc.motion.side_effect = motion
++        rpc.abort.side_effect = lambda: (order.append('ABORT'), release.set())
++        rpc.close.side_effect = lambda: order.append('CLOSE')
++        running = threading.Thread(target=lambda: camera.command('pan_left'))
++        running.start(); self.assertTrue(entered.wait(1))
++        pan, zoom, focus, manual = Mock(), Mock(), Mock(), Mock()
++        pan.close.return_value = zoom.close.return_value = focus.close.return_value = True
++        manual._thread.is_alive.return_value = False
++        result = close_controls(pan, zoom, focus, manual, camera, ControlOrchestrator(), timeout=.05)
++        running.join(1); camera._command_worker.thread.join(1)
++        self.assertFalse(camera._command_worker.thread.is_alive())
++        self.assertIn('ABORT', order)
++        self.assertLess(order.index('ABORT'), order.index('CLOSE'))
++        self.assertFalse(camera._shutdown_timer.is_alive())
++        self.assertLess(result['elapsed_seconds'], .5)
++
++    def test_abort_failure_is_logged_without_masking_cleanup(self):
++        camera, rpc = self.camera(); camera.read_status()
++        rpc.abort.side_effect = RuntimeError('private-password')
++        with patch.object(latency.profiler, 'event', wraps=latency.profiler.event) as events:
++            camera._abort_transport()
++            self.assertFalse(camera.close(timeout=1))
++        self.assertTrue(camera.cleanup_failed)
++        self.assertFalse(camera._command_worker.thread.is_alive())
++        self.assertTrue(any(c.args[0] == 'HANET_CLEANUP_ERROR' for c in events.call_args_list))
++        self.assertNotIn('private-password', str(events.call_args_list))
++
++
++if __name__=='__main__':unittest.main()
+diff --git a/test/test_pan_follow_revision.py b/test/test_pan_follow_revision.py
+index f818544..27ad861 100644
+--- a/test/test_pan_follow_revision.py
++++ b/test/test_pan_follow_revision.py
+@@ -124,6 +124,7 @@ class RecoveryTests(unittest.TestCase):
+ class HanetTraceTests(unittest.TestCase):
+     def test_four_zoom_pulses_count_once_each_and_pan_is_excluded(self):
+         rpc = Mock()
++        rpc.motion.return_value = True
+         ptz = HanetController(ip='mock',username='u',password='p',autoconnect=False,
+             rpc_factory=lambda *a,**k:rpc)
+         try:
+diff --git a/tools/run_hanet_fault_tests.py b/tools/run_hanet_fault_tests.py
+new file mode 100644
+index 0000000..7f2be85
+--- /dev/null
++++ b/tools/run_hanet_fault_tests.py
+@@ -0,0 +1,66 @@
++#!/usr/bin/env python3
++"""Offline HANET safety harness. Network and live video are denied by default."""
++import argparse
++from contextlib import ExitStack
++import importlib.util
++import json
++from pathlib import Path
++import sys
++import time
++import unittest
++from unittest.mock import patch
++
++ROOT = Path(__file__).resolve().parents[1]
++sys.path[:0] = [str(ROOT), str(ROOT/'test')]
++
++
++def cases(suite):
++    for item in suite:
++        if isinstance(item, unittest.TestSuite):
++            yield from cases(item)
++        else:
++            yield item
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--regression', action='store_true')
++    parser.add_argument('--json', type=Path)
++    args = parser.parse_args()
++    modules = ['test_hanet_fault_injection', 'test_hanet_shutdown']
++    if args.regression:
++        modules += ['test_hanet_rpc', 'test_hanet_controller', 'test_auto_pan_tilt',
++            'test_pan_follow_revision', 'test_auto_zoom', 'test_zoom_ownership',
++            'test_zoom_latency_safety', 'test_runtime_waiting', 'test_control_regression',
++            'test_runtime_architecture', 'test_target_tracking_p0', 'test_root_cause_revision',
++            'test_opencv_player', 'test_startup_logging']
++    suite = unittest.defaultTestLoader.loadTestsFromNames(modules)
++    # Report the unavailable optional backend explicitly; OpenCV (the deployed
++    # HANET receiver) still runs all its lifecycle tests in this environment.
++    if args.regression and importlib.util.find_spec('gi') is None:
++        for case in cases(suite):
++            if case.id().endswith('test_rtsp_unavailable_schedules_backoff_without_raising'):
++                name = case._testMethodName
++                setattr(case, name, unittest.skip('GI unavailable for this Python ABI')(getattr(case, name)))
++    test_ids = [case.id() for case in cases(suite)]
++    began = time.perf_counter()
++    with ExitStack() as stack:
++        stack.enter_context(patch('socket.create_connection', side_effect=AssertionError('Live socket forbidden in offline tests')))
++        stack.enter_context(patch('requests.sessions.Session.request', side_effect=AssertionError('Live HTTP forbidden in offline tests')))
++        if importlib.util.find_spec('cv2') is not None:
++            stack.enter_context(patch('cv2.VideoCapture', side_effect=AssertionError('Live capture forbidden in offline tests')))
++        result = unittest.TextTestRunner(verbosity=2).run(suite)
++    failed = {test.id() for test, _ in result.failures+result.errors}
++    skipped = {test.id(): reason for test, reason in result.skipped}
++    summary = {'tests_run': result.testsRun, 'passed': [name for name in test_ids if name not in failed and name not in skipped],
++               'failed': sorted(failed), 'skipped': skipped,
++               'elapsed_seconds': time.perf_counter()-began, 'network_guard': True,
++               'python': sys.executable}
++    if args.json:
++        args.json.parent.mkdir(parents=True, exist_ok=True)
++        args.json.write_text(json.dumps(summary, indent=2)+'\n')
++    return not result.wasSuccessful()
++
++
++if __name__ == '__main__':
++    raise SystemExit(main())

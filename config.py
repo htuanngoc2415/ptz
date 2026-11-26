@@ -907,3 +907,37 @@ REID_CANDIDATE_AWARE = True
 REID_HOLD_SCAN_INTERVAL = 0.5  # ambiguous geometry: bounded global retry, no spatial exclusion
 TRACK_SNAPSHOT_COOLDOWN = 1.0
 TRACK_SNAPSHOT_MAX_BYTES = 64_000_000  # raw+annotated JPEG+JSON bundles; OFF by default
+
+# Only small intersections in BOTH crops bypass the overlap ambiguity gate.
+# Appearance thresholds, motion continuity, freshness and 3-frame confirmation
+# still apply. Set PTZ_MINOR_OVERLAP=0 for the historical geometry policy.
+REID_MINOR_OVERLAP_ENABLED = os.environ.get('PTZ_MINOR_OVERLAP', '1') == '1'
+REID_MINOR_TARGET_COVER = 0.05
+REID_MINOR_COMPETITOR_COVER = 0.25
+REID_MINOR_IOU = 0.05
+REID_OVERLAP_DIAGNOSTICS = os.environ.get('PTZ_OVERLAP_DIAGNOSTICS', '0') == '1'
+REID_CONFIRM_MAX_GAP = 1.0  # same-candidate confirmation cannot span long gaps
+
+# Phase 1 offline replay only. No runtime/motor consumer reads these switches.
+IDENTITY_MEMORY_ENABLED = False
+IDENTITY_MEMORY_GALLERY_ENABLED = False  # requires explicit crop quality review
+
+# Explicit GUI opt-in only; raw detector-frame dataset, no changes to control.
+IDENTITY_RECORD_DIRECTORY = str(PROJECT_ROOT / 'logs' / 'identity_capture')
+IDENTITY_RECORD_MAX_BYTES = 1_000_000_000
+IDENTITY_RECORD_MAX_FRAMES = 3000
+
+# GUI opt-in shadow only; never authorizes motor control.
+IDENTITY_SHADOW_DIRECTORY = str(PROJECT_ROOT / 'logs' / 'identity_shadow')
+IDENTITY_SHADOW_INTERVAL = 0.2  # at most 5 sampled jobs/s, one job in flight
+IDENTITY_SHADOW_MAX_RECORDS = 10000
+
+# Default v4 scorer for GUI-started shadow; live validation remains pending.
+# Set PTZ_SHADOW_BATCHED=0 only for v3 comparison or rollback.
+IDENTITY_SHADOW_BATCHED = os.environ.get('PTZ_SHADOW_BATCHED', '1') == '1'
+
+# Phase 2 offline PoC only. These flags never grant camera/motor authority.
+IDENTITY_CANDIDATE_FILTERING_ENABLED = False
+IDENTITY_DISTRACTOR_MEMORY_ENABLED = False
+IDENTITY_EVENT_REID_ENABLED = False
+IDENTITY_MULTI_CUE_ENABLED = False

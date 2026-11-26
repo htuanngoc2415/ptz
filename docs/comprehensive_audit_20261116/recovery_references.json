@@ -1,0 +1,8 @@
+{
+  "baseline_A": "/mnt/files/Project/AI_PTZ_BASELINE_0838_BACKUP_20261116_114845",
+  "baseline_B": "/mnt/files/Project/ptz_before_async_control_20261116_162242/project",
+  "pre_audit": "/mnt/files/Project/ptz_async_before_comprehensive_audit_20261116_170604/project",
+  "policy": "Recovery snapshots are read-only references; run experiments only in separate working directories",
+  "baseline_B_manifest_sha256": "343ced2adcd9699b9f86751744ae7ed91866aff4d316f36fd09f706a38682d47",
+  "pre_audit_manifest_sha256": "fe3b2b340979ceb5046532f9f2625de4aa562e3f98337fd5827a4e5781c7f7cb"
+}

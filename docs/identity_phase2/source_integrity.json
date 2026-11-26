@@ -1,0 +1,15 @@
+{
+  "existing_sources": 188,
+  "changed_existing": [
+    "ai/target_identity.py",
+    "config.py"
+  ],
+  "new_sources": [
+    "runtime/identity_events.py",
+    "tools/analyze_identity_live.py",
+    "tools/benchmark_identity_phase2.py",
+    "test/test_identity_phase2.py",
+    "test/test_identity_live_analysis.py"
+  ],
+  "all_other_existing_sources_unchanged": true
+}

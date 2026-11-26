@@ -1,0 +1,127 @@
+{
+  "events": {
+    "CAMERA_COMMAND_QUEUE_ENTER": 39,
+    "ZOOM_TOGGLE": 3,
+    "CAMERA_COMMAND_QUEUE_EXIT": 39,
+    "CAMERA_TRANSACTION_START": 39,
+    "PAN_TILT_CONFIG": 1,
+    "CAMERA_TRANSACTION_END": 29,
+    "PAN_TILT_DECISION": 319,
+    "ZOOM_POLICY_DECISION": 1504,
+    "ZOOM_OBSERVATION_DEQUEUED": 3419,
+    "ZOOM_RECOVERY_DECISION_START": 1,
+    "ZOOM_REQUEST_CREATED": 1,
+    "ZOOM_ACTION_ACCEPTED": 1,
+    "ZOOM_STATE": 1,
+    "ZOOM_RECOVERY_BUDGET": 1,
+    "ZOOM_CONTROL_DECISION": 2,
+    "ZOOM_RECOVERY_DECISION_END": 1,
+    "ZOOM_WORKER_DISPATCH": 1,
+    "ZOOM_STARTED": 1,
+    "ZOOM_POSITION_BEFORE": 1,
+    "ZOOM_COMMAND_SENT": 1,
+    "HANET_CONNECTION_OPEN": 6,
+    "PAN_TILT_START_SENT": 1,
+    "PAN_TILT_START_UNCONFIRMED": 1,
+    "HANET_TRANSPORT_ERROR": 6,
+    "HANET_CONNECTION_CLOSED": 6,
+    "ZOOM_RPC_ERROR": 1,
+    "MOTOR_FAULT_LATCHED": 2,
+    "PAN_TILT_STOP_UNCONFIRMED": 12,
+    "ZOOM_STOP_REQUESTED": 7,
+    "ZOOM_ACTION_ENDED": 7,
+    "HANET_RECONNECT_ATTEMPT": 5,
+    "HANET_RECONNECT_SUCCESS": 5,
+    "PAN_TILT_STOP_SENT": 5,
+    "HANET_RECONNECT_FAILED": 5,
+    "CAMERA_TRANSACTION_ERROR": 10,
+    "ZOOM_STOP_SUPPRESSED": 1,
+    "PAN_TILT_TOGGLE": 2,
+    "SHUTDOWN_REQUESTED": 2,
+    "ZOOM_DECISION": 1,
+    "SHUTDOWN_COMPLETED_WITH_UNCONFIRMED_MOTOR": 3
+  },
+  "sent": [
+    {
+      "event": "PAN_TILT_START_SENT",
+      "timestamp": "2026-11-13T09:36:49.614+07:00",
+      "code": "kCmdZoomWide",
+      "generation": 1
+    },
+    {
+      "event": "PAN_TILT_STOP_SENT",
+      "timestamp": "2026-11-13T09:36:50.162+07:00",
+      "code": "kCmdZoomWide",
+      "generation": 2
+    },
+    {
+      "event": "PAN_TILT_STOP_SENT",
+      "timestamp": "2026-11-13T09:36:51.198+07:00",
+      "code": "kCmdZoomWide",
+      "generation": 3
+    },
+    {
+      "event": "PAN_TILT_STOP_SENT",
+      "timestamp": "2026-11-13T09:36:53.233+07:00",
+      "code": "kCmdZoomWide",
+      "generation": 4
+    },
+    {
+      "event": "PAN_TILT_STOP_SENT",
+      "timestamp": "2026-11-13T09:36:57.274+07:00",
+      "code": "kCmdZoomWide",
+      "generation": 5
+    },
+    {
+      "event": "PAN_TILT_STOP_SENT",
+      "timestamp": "2026-11-13T09:39:27.235+07:00",
+      "code": "kCmdZoomWide",
+      "generation": 6
+    }
+  ],
+  "rpc_failures": [
+    {
+      "event": "PAN_TILT_START_UNCONFIRMED",
+      "timestamp": "2026-11-13T09:36:49.625+07:00",
+      "exception_type": "RuntimeError",
+      "exception_message": "HANET response has no verified success result",
+      "transmission": "sent"
+    },
+    {
+      "event": "PAN_TILT_STOP_UNCONFIRMED",
+      "timestamp": "2026-11-13T09:36:50.174+07:00",
+      "exception_type": "RuntimeError",
+      "exception_message": "HANET response has no verified success result",
+      "transmission": "sent"
+    },
+    {
+      "event": "PAN_TILT_STOP_UNCONFIRMED",
+      "timestamp": "2026-11-13T09:36:51.205+07:00",
+      "exception_type": "RuntimeError",
+      "exception_message": "HANET response has no verified success result",
+      "transmission": "sent"
+    },
+    {
+      "event": "PAN_TILT_STOP_UNCONFIRMED",
+      "timestamp": "2026-11-13T09:36:53.239+07:00",
+      "exception_type": "RuntimeError",
+      "exception_message": "HANET response has no verified success result",
+      "transmission": "sent"
+    },
+    {
+      "event": "PAN_TILT_STOP_UNCONFIRMED",
+      "timestamp": "2026-11-13T09:36:57.276+07:00",
+      "exception_type": "RuntimeError",
+      "exception_message": "HANET response has no verified success result",
+      "transmission": "sent"
+    },
+    {
+      "event": "PAN_TILT_STOP_UNCONFIRMED",
+      "timestamp": "2026-11-13T09:39:27.242+07:00",
+      "exception_type": "RuntimeError",
+      "exception_message": "HANET response has no verified success result",
+      "transmission": "sent"
+    }
+  ],
+  "schema_event_count": 0
+}

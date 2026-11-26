@@ -1,0 +1,5 @@
+{
+  "candidates": 375,
+  "max_absolute_error": 1.270635886507776e-07,
+  "meaning": "cached winning raw/normalized embedding vs baseline max reference-view score"
+}

@@ -1,0 +1,108 @@
+{
+  "scope": "real CUDA OSNet, cached evidence from five captures; paired sequential benchmark, not live FPS",
+  "parity": [
+    {
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "frames": 1505,
+      "candidates": 2661,
+      "max_vector_abs_diff": 6.556510925292969e-07,
+      "max_score_abs_diff": 2.980232238769531e-07,
+      "decision_mismatches": []
+    },
+    {
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "frames": 1502,
+      "candidates": 4627,
+      "max_vector_abs_diff": 7.82310962677002e-07,
+      "max_score_abs_diff": 2.980232238769531e-07,
+      "decision_mismatches": []
+    },
+    {
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_706c13123cb84c2294eecf5fa4c3850f",
+      "frames": 1667,
+      "candidates": 2612,
+      "max_vector_abs_diff": 4.6193599700927734e-07,
+      "max_score_abs_diff": 3.2782554626464844e-07,
+      "decision_mismatches": []
+    },
+    {
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_eb68f45a3a914ba897f811ba3c0129b5",
+      "frames": 114,
+      "candidates": 228,
+      "max_vector_abs_diff": 3.5762786865234375e-07,
+      "max_score_abs_diff": 1.7881393432617188e-07,
+      "decision_mismatches": []
+    },
+    {
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_9b6f72b28e284599a83a2ca918947993",
+      "frames": 26,
+      "candidates": 52,
+      "max_vector_abs_diff": 3.5762786865234375e-07,
+      "max_score_abs_diff": 1.1920928955078125e-07,
+      "decision_mismatches": []
+    }
+  ],
+  "benchmark": {
+    "old": {
+      "wall_ms": {
+        "n": 60,
+        "median": 34.27113600082521,
+        "p95": 49.845675149845185,
+        "mean": 35.046314649662236,
+        "max": 68.85389699891675
+      },
+      "held_ms": {
+        "n": 60,
+        "median": 32.07962150190724,
+        "p95": 48.19560540090606,
+        "mean": 32.76657291686812,
+        "max": 63.999310001236154
+      },
+      "longest_hold_ms": {
+        "n": 60,
+        "median": 16.498421500728,
+        "p95": 28.381057400838472,
+        "mean": 17.582402533359225,
+        "max": 37.15578199989977
+      },
+      "passes": {
+        "n": 60,
+        "median": 2.0,
+        "p95": 2.0,
+        "mean": 1.95,
+        "max": 2.0
+      }
+    },
+    "batched": {
+      "wall_ms": {
+        "n": 60,
+        "median": 22.582501500437502,
+        "p95": 53.45205829999031,
+        "mean": 28.766919517026206,
+        "max": 93.72616299879155
+      },
+      "held_ms": {
+        "n": 60,
+        "median": 15.901490000032936,
+        "p95": 39.577935854867974,
+        "mean": 22.07035463319092,
+        "max": 85.33014199565514
+      },
+      "longest_hold_ms": {
+        "n": 60,
+        "median": 13.602040498881252,
+        "p95": 21.237053002369066,
+        "mean": 15.258414316546501,
+        "max": 70.90799799698289
+      },
+      "passes": {
+        "n": 60,
+        "median": 1.0,
+        "p95": 2.0,
+        "mean": 1.4833333333333334,
+        "max": 2.0
+      }
+    }
+  },
+  "physical_commands": 0
+}

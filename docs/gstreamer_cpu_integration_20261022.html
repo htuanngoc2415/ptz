@@ -1,0 +1,737 @@
+<!doctype html><html lang="vi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GStreamer CPU integration</title><style>body{font:16px/1.6 system-ui;color:#172434;background:#f5f7fb;margin:0;padding:32px}main{max-width:1400px;margin:auto;background:white;padding:32px;border-radius:12px}table{display:block;overflow:auto;border-collapse:collapse;font-size:14px;margin:18px 0}td,th{border:1px solid #dce2e9;padding:9px;text-align:left}th{background:#eef3f8}pre{background:#152536;color:#f0f6ff;padding:18px;overflow:auto}a{color:#176bb3}img{max-width:100%;height:auto}h1,h2,h3{line-height:1.25}</style><main><h1>GStreamer CPU — tích hợp và A/B desktop (22/10/2026)</h1>
+<p><strong>Kết luận: giữ <code>gstreamer_cpu</code> ở trạng thái opt-in; chưa đạt acceptance để đổi backend mặc định.</strong> Capture/GUI cải thiện rõ, nhưng workload live giữa các lượt khác nhau, một số model không chạy ở nhiều lượt và latency host của YOLO có regression. Chưa có ground truth accuracy hoặc glass-to-glass. Không suy diễn PASS toàn bộ AI từ FPS capture.</p>
+<h2>Thay đổi và cách sử dụng</h2>
+<p><code>camera.json</code> vẫn giữ <code>video_backend="gstreamer"</code> theo yêu cầu chuyển về GStreamer ngay trước task này. Đây là <strong>playbin cũ</strong>, khác backend thử nghiệm <code>gstreamer_cpu</code>. Audit trước đó mô tả MPV; không sửa lại các số đo lịch sử. Factory default khi thiếu key vẫn là <code>gstreamer</code>. MPV và các tùy chọn decoder/scale/screenshot được giữ để rollback.</p>
+<pre><code class="language-bash"># Opt-in cho một tiến trình (desktop bình thường, có camera controls)
+PTZ_VIDEO_BACKEND=gstreamer_cpu bash run_camera.sh
+
+# Rollback MPV cho một tiến trình
+PTZ_VIDEO_BACKEND=mpv bash run_camera.sh
+
+# Full desktop benchmark: chặn camera writes/motor, kể cả startup/shutdown
+python3 tools/desktop_capture_benchmark.py --backend gstreamer_cpu \
+  --display :1 --warmup 20 --seconds 60 --output logs/desktop_capture_ab/new_cpu
+python3 tools/desktop_capture_benchmark.py --backend mpv \
+  --display :1 --warmup 20 --seconds 60 --output logs/desktop_capture_ab/new_mpv
+
+# Tái tạo thống kê đúng cửa sổ đo, không gộp warmup
+python3 tools/summarize_desktop_capture.py logs/desktop_capture_ab
+
+# Lỗi receiver có kiểm soát, reconnect và create/close cycles (chỉ đọc RTSP)
+python3 tools/check_cpu_stream_lifecycle.py --output logs/desktop_capture_ab/lifecycle_new.json
+</code></pre>
+<p>Các thư mục benchmark phải chưa tồn tại. <code>:1</code> là desktop thật 1920×1080 đã kiểm tra trên máy này; dùng DISPLAY của phiên đang chạy trên máy khác. Không dùng Xvfb thay thế desktop thật. Harness ép <code>PTZ_BENCHMARK_READ_ONLY=1</code>; mọi ZoomRPC instance đều áp dụng allowlist chỉ đọc, không thể bỏ chặn bằng <code>read_only=False</code> ở caller. Chỉ cho phép login, tạo handle PTZ, keepalive, đọc trạng thái/capabilities/config. Mọi start/stop/PositionABS/focus/config writes bị từ chối trước HTTP. Backlight initialization bị bỏ qua; lớp backlight hiện có thực ra cũng chỉ trả unsupported.</p>
+<h2>Đường xử lý và ownership</h2>
+<pre><code class="language-text">RTSP main H.264 3840×2160 @25, TCP, latency=200, drop-on-latency=true
+ → rtph264depay → h264parse → H.264 alignment=au → avdec_h264
+ → raw queue: leaky=downstream, max-buffers=2, bytes=0, time=0
+ → videoscale 1280×720 PAR1 → videoconvert RGB
+ → appsink: max-buffers=1, drop=true, sync=false, emit-signals=false
+ → dedicated pull worker → stride/offset-aware owned NumPy RGB copy
+ → CCTVApp.on_frame → existing FrameManager latest-only mailbox
+      ├─ InferenceWorker → production scheduler → YOLO/OSNet/tracking
+      │    └─ FaceWorker spatial + identity → SCRFD/ArcFace
+      └─ Tk update → BGR overlay/digital PTZ → RGB/PIL/Tk configure
+</code></pre>
+<p><code>CPUStreamPlayer</code> đặt trong <code>camera/rtsp_player.py</code>, dùng lại auth/status/backoff của receiver hiện có. Không có playbin/decodebin/NVDEC trong pipeline mới; runtime xác nhận factory <code>avdec_h264</code>. Consumer pull thread không phải GStreamer streaming thread; callback production chỉ publish/đổi tham chiếu, không chạy model hoặc render. Consumer chậm bị giới hạn bởi appsink một slot. Frame được copy đúng <code>GstVideoMeta</code> offset/stride (fallback <code>GstVideoInfo</code>), RGB giữ nguyên thứ tự kênh, độc lập buffer trước unmap; consumers không được sửa array trong mailbox.</p>
+<p>PTS chỉ dùng cho tiến triển media và thống kê receiver. FrameManager tiếp tục gán receive timestamp tại decoded-app boundary sau copy; capture timestamp vẫn unknown. Không biến PTS hoặc appsink time thành sensor time. Mỗi reconnect có generation mới; không tính drift xuyên reset. Gst bus được polling ở worker, không phụ thuộc GLib main loop trên Tk. Stall 12 giây mặc định và bus ERROR/EOS dẫn tới teardown NULL + backoff reconnect; stop đánh thức backoff và join worker có kiểm tra.</p>
+<p>Tài liệu API: <a href="https://gstreamer.freedesktop.org/documentation/app/appsink.html">appsink</a>, <a href="https://gstreamer.freedesktop.org/documentation/video/video-info.html">GstVideoInfo</a>. Dùng API có trên GStreamer 1.20.3 của máy; không giả định các counter appsink mới ở GStreamer 1.28 đã tồn tại.</p>
+<h2>Protocol và giới hạn so sánh</h2>
+<p><code>video_fps=15</code> vẫn là trần lấy screenshot của MPV; backend CPU mới không thêm videorate hay giới hạn giả còn 15 FPS. Output giữ đúng 1280×720; scheduler và AI_MAX_FPS giữ nguyên. Số frame thực tế được xử lý khác nhau là kết quả của backend/latest-only policy.</p>
+<p>Chạy tuần tự MPV1 → CPU1 → CPU2 → MPV2 → MPV3 → CPU3. Mỗi process mở GUI thật, CUDA, model/target/gallery thật, InferenceWorker/FaceWorker/scheduler thật. Đợi target + detection ready, bật Auto Zoom qua cùng UI action để các nhánh chọn target được phép chạy; mọi tác động vật lý bị RPC từ chối. Warmup 20 giây sau ready, đo ≥60 giây. Auto Focus/model/threshold/Tracking/ZoomPolicy không chỉnh sửa. Không đổi allocator, clocks/power, stream URI, resolution hoặc model workload để cải thiện số.</p>
+<p>User chọn tiếp tục với cảnh hiện tại. <strong>Cùng cấu hình, target và nguồn camera, nhưng không phải cùng chuỗi ảnh cố định:</strong> người/mặt vào-ra khác nhau, số inference OSNet/SCRFD/ArcFace không bằng nhau. Auto Zoom không thể thực sự đưa mặt vào ROI vì camera writes bị chặn; các fault/gates do deny actuation có thể thay đổi đường perception. Đây là production software pipeline trong chế độ không tác động camera, không phải acceptance vòng điều khiển vật lý. Model/target/config hashes nằm trong result của các lượt có manifest; MPV1 chạy trước khi bổ sung manifest nhưng không có đổi model/config giữa các lượt.</p>
+<h2>Kết quả full production desktop</h2>
+<p>FPS capture đếm RGB frame được chuyển tới app; GUI unique FPS đếm frame ID mới được Tk submit, không phải tốc độ màn hình vật lý. Drift = Δhost − ΔPTS trong cùng connection. MPV dùng <code>time_pos</code> có sẵn trong capture loop, chưa phải timestamp của chính screenshot; GStreamer dùng PTS của buffer. Drift âm là tiến triển media nhanh hơn wall trong cửa sổ, <strong>không phải độ trễ âm</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th style="text-align: right;">s đo</th>
+<th style="text-align: right;">Capture FPS</th>
+<th style="text-align: right;">Drift s</th>
+<th style="text-align: right;">GUI unique FPS</th>
+<th style="text-align: right;">Detection/s</th>
+<th style="text-align: right;">CPU p50 %</th>
+<th style="text-align: right;">RSS p50 MiB</th>
+<th style="text-align: right;">GPU p50 %</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../logs/desktop_capture_ab/gstreamer_cpu_1/measured.json">gstreamer_cpu_1</a></td>
+<td style="text-align: right;">60.108</td>
+<td style="text-align: right;">25.005</td>
+<td style="text-align: right;">-0.047</td>
+<td style="text-align: right;">14.308</td>
+<td style="text-align: right;">10.814</td>
+<td style="text-align: right;">268.873</td>
+<td style="text-align: right;">1865.773</td>
+<td style="text-align: right;">51.000</td>
+</tr>
+<tr>
+<td><a href="../logs/desktop_capture_ab/gstreamer_cpu_2/measured.json">gstreamer_cpu_2</a></td>
+<td style="text-align: right;">60.086</td>
+<td style="text-align: right;">24.998</td>
+<td style="text-align: right;">-0.013</td>
+<td style="text-align: right;">14.213</td>
+<td style="text-align: right;">7.722</td>
+<td style="text-align: right;">273.297</td>
+<td style="text-align: right;">2488.590</td>
+<td style="text-align: right;">58.900</td>
+</tr>
+<tr>
+<td><a href="../logs/desktop_capture_ab/gstreamer_cpu_3/measured.json">gstreamer_cpu_3</a></td>
+<td style="text-align: right;">60.077</td>
+<td style="text-align: right;">24.885</td>
+<td style="text-align: right;">-0.088</td>
+<td style="text-align: right;">13.832</td>
+<td style="text-align: right;">9.438</td>
+<td style="text-align: right;">264.179</td>
+<td style="text-align: right;">1858.133</td>
+<td style="text-align: right;">44.600</td>
+</tr>
+<tr>
+<td><a href="../logs/desktop_capture_ab/mpv_1/measured.json">mpv_1</a></td>
+<td style="text-align: right;">60.104</td>
+<td style="text-align: right;">8.103</td>
+<td style="text-align: right;">-0.895</td>
+<td style="text-align: right;">8.086</td>
+<td style="text-align: right;">8.103</td>
+<td style="text-align: right;">212.897</td>
+<td style="text-align: right;">1860.953</td>
+<td style="text-align: right;">50.800</td>
+</tr>
+<tr>
+<td><a href="../logs/desktop_capture_ab/mpv_2/measured.json">mpv_2</a></td>
+<td style="text-align: right;">60.104</td>
+<td style="text-align: right;">8.202</td>
+<td style="text-align: right;">-1.903</td>
+<td style="text-align: right;">8.186</td>
+<td style="text-align: right;">5.507</td>
+<td style="text-align: right;">242.949</td>
+<td style="text-align: right;">2109.984</td>
+<td style="text-align: right;">45.800</td>
+</tr>
+<tr>
+<td><a href="../logs/desktop_capture_ab/mpv_3/measured.json">mpv_3</a></td>
+<td style="text-align: right;">60.076</td>
+<td style="text-align: right;">7.491</td>
+<td style="text-align: right;">-1.093</td>
+<td style="text-align: right;">7.507</td>
+<td style="text-align: right;">7.341</td>
+<td style="text-align: right;">204.988</td>
+<td style="text-align: right;">993.781</td>
+<td style="text-align: right;">45.400</td>
+</tr>
+</tbody>
+</table>
+<p>CPU: 100%=một core, tối đa khoảng 600% trên sáu cores. GPU là sensor utilization toàn máy, không phải thời gian NVDEC hoặc CUDA kernel. RSS là process, khác RAM toàn máy. Không chạy benchmark capture khác đồng thời trong cửa sổ đo.</p>
+<h3>Model latency và số lượt gọi</h3>
+<p>Host wall latency p50 / p90 / p99, ms; số mẫu theo đúng cửa sổ đo. N/A nghĩa là không có inference tương ứng, không có nghĩa là 0 ms. Không dùng số lần model đã nạp làm số lần inference.</p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>YOLO n; p50/p90/p99</th>
+<th>OSNet n; p50/p90/p99</th>
+<th>SCRFD n; p50/p90/p99</th>
+<th>ArcFace n; p50/p90/p99</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../logs/desktop_capture_ab/gstreamer_cpu_1/measured.json">gstreamer_cpu_1</a></td>
+<td>650; 55.997 / 72.335 / 98.033</td>
+<td>N/A (0)</td>
+<td>N/A (0)</td>
+<td>N/A (0)</td>
+</tr>
+<tr>
+<td><a href="../logs/desktop_capture_ab/gstreamer_cpu_2/measured.json">gstreamer_cpu_2</a></td>
+<td>464; 56.863 / 71.830 / 106.789</td>
+<td>115; 86.704 / 108.891 / 161.209</td>
+<td>81; 44.456 / 52.904 / 57.158</td>
+<td>7; 31.270 / 39.393 / 40.080</td>
+</tr>
+<tr>
+<td><a href="../logs/desktop_capture_ab/gstreamer_cpu_3/measured.json">gstreamer_cpu_3</a></td>
+<td>567; 64.197 / 87.470 / 116.713</td>
+<td>8; 84.635 / 115.845 / 133.767</td>
+<td>N/A (0)</td>
+<td>N/A (0)</td>
+</tr>
+<tr>
+<td><a href="../logs/desktop_capture_ab/mpv_1/measured.json">mpv_1</a></td>
+<td>487; 46.784 / 60.485 / 73.208</td>
+<td>N/A (0)</td>
+<td>N/A (0)</td>
+<td>N/A (0)</td>
+</tr>
+<tr>
+<td><a href="../logs/desktop_capture_ab/mpv_2/measured.json">mpv_2</a></td>
+<td>332; 46.812 / 58.416 / 69.376</td>
+<td>312; 71.638 / 82.814 / 95.079</td>
+<td>N/A (0)</td>
+<td>N/A (0)</td>
+</tr>
+<tr>
+<td><a href="../logs/desktop_capture_ab/mpv_3/measured.json">mpv_3</a></td>
+<td>442; 52.760 / 87.289 / 167.757</td>
+<td>N/A (0)</td>
+<td>N/A (0)</td>
+<td>N/A (0)</td>
+</tr>
+</tbody>
+</table>
+<h3>Latency timeline và freshness</h3>
+<p>Các percentile là từng stage độc lập; <strong>không cộng p50/p90 của các stage thành end-to-end</strong>. Decoder residence bao gồm buffering/scheduling, không phải CPU execution của decoder. Receive→GUI kết thúc ở Tk image configure, chưa đo scanout.</p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Parser→RGB p50/p90/p99 ms</th>
+<th style="text-align: right;">Decode residence p50 ms</th>
+<th style="text-align: right;">RGB copy p50 ms</th>
+<th>Frame age khi AI lấy p50/p90/p99 ms</th>
+<th>Receive→GUI p50/p90/p99 ms</th>
+<th>Detection scheduler wait p50/p90/p99 ms</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../logs/desktop_capture_ab/gstreamer_cpu_1/measured.json">gstreamer_cpu_1</a></td>
+<td>84.856 / 106.692 / 289.155</td>
+<td style="text-align: right;">58.199</td>
+<td style="text-align: right;">1.867</td>
+<td>16.512 / 34.426 / 67.249</td>
+<td>43.305 / 148.306 / 241.910</td>
+<td>0.064 / 0.134 / 0.258</td>
+</tr>
+<tr>
+<td><a href="../logs/desktop_capture_ab/gstreamer_cpu_2/measured.json">gstreamer_cpu_2</a></td>
+<td>87.256 / 107.125 / 282.922</td>
+<td style="text-align: right;">60.388</td>
+<td style="text-align: right;">1.887</td>
+<td>16.550 / 40.725 / 140.160</td>
+<td>44.574 / 137.033 / 237.287</td>
+<td>0.065 / 0.172 / 41.433</td>
+</tr>
+<tr>
+<td><a href="../logs/desktop_capture_ab/gstreamer_cpu_3/measured.json">gstreamer_cpu_3</a></td>
+<td>88.105 / 115.315 / 280.629</td>
+<td style="text-align: right;">60.006</td>
+<td style="text-align: right;">1.964</td>
+<td>17.015 / 37.175 / 78.749</td>
+<td>45.679 / 140.540 / 226.081</td>
+<td>0.066 / 0.144 / 0.301</td>
+</tr>
+<tr>
+<td><a href="../logs/desktop_capture_ab/mpv_1/measured.json">mpv_1</a></td>
+<td>N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td>9.933 / 20.327 / 26.028</td>
+<td>84.885 / 156.083 / 304.151</td>
+<td>0.068 / 0.130 / 0.238</td>
+</tr>
+<tr>
+<td><a href="../logs/desktop_capture_ab/mpv_2/measured.json">mpv_2</a></td>
+<td>N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td>25.702 / 89.447 / 138.258</td>
+<td>82.671 / 142.028 / 257.722</td>
+<td>0.063 / 0.119 / 0.259</td>
+</tr>
+<tr>
+<td><a href="../logs/desktop_capture_ab/mpv_3/measured.json">mpv_3</a></td>
+<td>N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td>12.705 / 29.890 / 114.784</td>
+<td>91.354 / 179.814 / 305.309</td>
+<td>0.069 / 0.154 / 0.288</td>
+</tr>
+</tbody>
+</table>
+<p>Mốc sensor/encoder/network trước parser = N/A; queue wait của face/recognition/reid có trong <code>measured.json</code> nếu nhánh chạy. Freshness ở FrameManager chỉ tính từ frame decode/copy ra app. MPV có thể có frame cũ trước boundary này; số age thấp không chứng minh hình camera mới.</p>
+<h3>Dropped frames / latest-only</h3>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th style="text-align: right;">Mailbox skipped</th>
+<th style="text-align: right;">Superseded sau scheduler grant</th>
+<th style="text-align: right;">Stale AI results</th>
+<th style="text-align: right;">Raw decoder−queue boundary</th>
+<th style="text-align: right;">Queue−appsink boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../logs/desktop_capture_ab/gstreamer_cpu_1/measured.json">gstreamer_cpu_1</a></td>
+<td style="text-align: right;">821</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td><a href="../logs/desktop_capture_ab/gstreamer_cpu_2/measured.json">gstreamer_cpu_2</a></td>
+<td style="text-align: right;">983</td>
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td><a href="../logs/desktop_capture_ab/gstreamer_cpu_3/measured.json">gstreamer_cpu_3</a></td>
+<td style="text-align: right;">898</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-1</td>
+<td style="text-align: right;">-1</td>
+</tr>
+<tr>
+<td><a href="../logs/desktop_capture_ab/mpv_1/measured.json">mpv_1</a></td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+</tr>
+<tr>
+<td><a href="../logs/desktop_capture_ab/mpv_2/measured.json">mpv_2</a></td>
+<td style="text-align: right;">160</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+</tr>
+<tr>
+<td><a href="../logs/desktop_capture_ab/mpv_3/measured.json">mpv_3</a></td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+</tr>
+</tbody>
+</table>
+<p><code>dropped_frames</code> là frame ID bị inference mailbox bỏ qua khi lấy frame mới nhất; không phải RTP loss. <code>superseded</code> có thể đồng thời góp vào mailbox skipped, không cộng hai counter như các tập rời. Hai cột boundary không phải exact drop counter: có buffer đang xử lý ở hai đầu cửa sổ. Appsink1.20 không cung cấp exact dropped count ở giao diện đang dùng. Không drop chủ động compressed H.264 trong queue; raw leaky queue nằm sau decoder. <code>drop-on-latency</code> vẫn có thể bỏ RTP ở jitterbuffer, không bảo đảm không bao giờ mất reference packet.</p>
+<h2>Regression và bottleneck còn lại</h2>
+<ol>
+<li>CPU capture duy trì gần 25 FPS; GUI vẫn chỉ submit khoảng 17 FPS và unique thấp hơn capture. Tk timer + resize/overlay/PIL/ImageTk vẫn là bottleneck hiển thị.</li>
+<li>Lượt đầu hai bên chủ yếu YOLO: GStreamer tăng throughput detection nhưng YOLO host inference p50 tăng. Scheduler detection wait rất nhỏ, nên không có bằng chứng scheduler wait là nguyên nhân chính của chênh lệch này. CPU process cũng cao hơn do capture/render/AI xử lý nhiều frame hơn. Không đồng nhất host timing với CUDA kernel; CPU/GIL, băng thông RAM chung và DVFS vẫn là các giả thuyết cần phép đo đối chứng.</li>
+<li>Các lượt sau có số người/crop/face khác nhau: không thể gán mọi thay đổi throughput cho backend. Các stage preprocess/postprocess/resource_hold và queue waits giữ trong JSON để tách workload/CPU/GPU. Không giảm resolution hay tắt model để che regression.</li>
+<li>MPV trong các cửa sổ full desktop sau warmup lần này không tái hiện +7,6 s/60 s của audit capture cũ. Các phép đo khác cửa sổ, tải và cảnh; giữ nguyên cả hai evidence, không kết luận audit sai hoặc MPV đã hết trễ tuyệt đối.</li>
+<li>Lệnh motor bị deny có chủ ý làm một số controller ở trạng thái chờ/fault; shutdown GUI mất khoảng 20 giây do manual worker đợi ownership. Đây là đường điều khiển read-only, không phải Gst teardown. Các lượt đầu báo lỗi cleanup vì cố STOP ở session read-only; đã sửa close bỏ qua writes, không sửa chính sách zoom hoặc giả lập ACK motor.</li>
+</ol>
+<p><strong>Chưa cô lập được nguyên nhân duy nhất của regression per-inference.</strong> Cần lặp production trên cùng clip RTSP có đủ người/mặt + target, cùng frame windows, ghi clocks và timeline CPU/CUDA; so sánh per-model lẫn throughput toàn hệ. Không có CUDA kernel trace trong đợt này. Không tự khóa clocks, đổi allocator hoặc chuyển NVDEC.</p>
+<h2>Phép đo bổ sung để định vị regression</h2>
+<p><img alt="Full desktop comparison" src="../logs/desktop_capture_ab/comparison.png" /></p>
+<p>CUDA timing là <strong>hai lượt diagnostic riêng</strong>, mỗi lượt 60 giây sau warmup, bật <code>--cuda-timing</code>. Sử dụng CUDA events có sẵn trong telemetry, đồng bộ ở cuối stage; overhead này thay đổi execution nên không trộn vào sáu lượt A/B chính. Không đổi allocator hoặc model. CUDA-event elapsed bao gồm khoảng trên CUDA stream, có thể gồm launch gaps; không phải tổng thời gian từng kernel như Nsight.</p>
+<table>
+<thead>
+<tr>
+<th>Diagnostic</th>
+<th>YOLO host p50/p90/p99 ms</th>
+<th>CUDA-event p50/p90/p99 ms</th>
+<th style="text-align: right;">Detection wait p50 ms</th>
+<th style="text-align: right;">Calls GPU</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../logs/desktop_capture_ab/gstreamer_cpu_cuda_timing/measured.json">gstreamer_cpu_cuda_timing</a></td>
+<td>68.495 / 94.651 / 130.568</td>
+<td>67.477 / 92.827 / 129.793</td>
+<td style="text-align: right;">0.068</td>
+<td style="text-align: right;">532</td>
+</tr>
+<tr>
+<td><a href="../logs/desktop_capture_ab/mpv_cuda_timing/measured.json">mpv_cuda_timing</a></td>
+<td>52.072 / 68.129 / 92.321</td>
+<td>50.669 / 66.150 / 90.331</td>
+<td style="text-align: right;">0.070</td>
+<td style="text-align: right;">471</td>
+</tr>
+</tbody>
+</table>
+<p>Diagnostic ghi nhận MPV YOLO host/CUDA-event median khoảng 52,1/50,7 ms, CPU-GStreamer khoảng 68,5/67,5 ms. Phần chênh lệch nằm trong đoạn forward trên timeline CUDA, không chủ yếu ở scheduler wait (~0,07 ms) hoặc wrapper host bên ngoài. Đây là định vị regression, <strong>chưa tách được GPU kernel slowdown với khoảng chờ launch/CPU/GIL và băng thông RAM chung</strong>. GPU-event timing không thay thế kernel trace. GPU clocks không bị khóa; không có clock samples cùng cửa sổ diagnostic, nên không gán nguyên nhân duy nhất.</p>
+<p><a href="../logs/desktop_capture_ab/resources_context.json">Resource context</a> giữ clocks/RAM/swap/thermal theo các cửa sổ có collector. Collector bắt đầu giữa CPU2 nên CPU2 chỉ có 10 GPU-clock samples; MPV1/CPU1 N/A. MPV2 clock median 408 MHz; MPV3 và CPU3 median 306 MHz. CPU3 clock mean cao hơn MPV3 nhưng YOLO vẫn chậm hơn, nên không thể giải thích toàn bộ chênh lệch chỉ bằng median clock. Có biến thiên DVFS và workload; không có bằng chứng throttle hay zero-throttle.</p>
+<p>ArcFace chỉ có 7 lần gọi ở CPU2 trong bảng A/B chính. Các percentile được giữ như mẫu quan sát; không dùng p99 của 7 mẫu để kết luận ổn định hay accuracy.</p>
+<h2>Reconnect, shutdown, memory và test</h2>
+<p><a href="../logs/desktop_capture_ab/lifecycle.json">Lifecycle evidence</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Kiểm tra</th>
+<th>Kết quả</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>connection_failure_detected</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>connection_recovered</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>eos_injected</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>eos_recovered</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>stall_recovered</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>worker_stopped</td>
+<td>PASS</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Cycle</th>
+<th style="text-align: right;">Active RSS MiB</th>
+<th style="text-align: right;">Stopped RSS MiB</th>
+<th style="text-align: right;">Stop s</th>
+<th>Capture thread alive</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td style="text-align: right;">191.441</td>
+<td style="text-align: right;">127.148</td>
+<td style="text-align: right;">0.068</td>
+<td>False</td>
+</tr>
+<tr>
+<td>2</td>
+<td style="text-align: right;">202.379</td>
+<td style="text-align: right;">190.355</td>
+<td style="text-align: right;">0.027</td>
+<td>False</td>
+</tr>
+<tr>
+<td>3</td>
+<td style="text-align: right;">255.711</td>
+<td style="text-align: right;">227.902</td>
+<td style="text-align: right;">0.038</td>
+<td>False</td>
+</tr>
+<tr>
+<td>4</td>
+<td style="text-align: right;">288.016</td>
+<td style="text-align: right;">219.750</td>
+<td style="text-align: right;">0.041</td>
+<td>False</td>
+</tr>
+</tbody>
+</table>
+<p>Ở lượt đầu, stopped RSS tăng từ 127 lên khoảng 220 MiB qua bốn cycles; không xem đây là bằng chứng không leak. Đã bổ sung teardown gỡ từng pad probe để giải phóng bound callbacks rõ ràng. Lỗi kết nối được tạo ở URI local không tồn tại, sau đó trả receiver về URI thật trong bộ nhớ; EOS và stall được tạo trên pipeline receiver. Không rút cáp, tắt camera hay sửa camera.json. Bốn create/close cycles và RSS trong từng benchmark chỉ là kiểm tra ngắn; <strong>chưa chứng minh không có memory leak dài hạn</strong>. Cần soak nhiều giờ với reconnect lặp.</p>
+<p>Focused suite: <strong>35 tests PASS</strong> (số cuối cùng xem log). Tests: <a href="../logs/desktop_capture_ab/focused_tests.txt">focused suite</a>, <a href="../logs/desktop_capture_ab/tests.txt">expanded suite</a>. Các test mới kiểm tra RGB channel/padded stride/GstVideoMeta offset/lifetime, truncated buffer, factory decoder, bounded queues, slow consumer, failure/backoff/shutdown và RPC deny/cleanup. Bộ mở rộng có bốn lỗi ở <code>AbsoluteZoomIntegrationTests</code>: fixture bbox <code>(0,0,100,200)</code> chạm biên, bị guard <code>BBOX FRAME EDGE</code> hiện có chặn trước những trạng thái test muốn kiểm tra. Không thay AutoZoom/ZoomPolicy/threshold để làm test pass.</p>
+<h3>Kiểm tra giải phóng mở rộng</h3>
+<p><a href="../logs/desktop_capture_ab/lifecycle_extended.json">20-cycle evidence</a>. Chạy sau khi teardown gỡ từng pad probe. Không thay CUDA/host allocator và không gọi gc.collect trong lượt này.</p>
+<table>
+<thead>
+<tr>
+<th>Cycle</th>
+<th style="text-align: right;">Active RSS MiB</th>
+<th style="text-align: right;">Stopped RSS MiB</th>
+<th style="text-align: right;">Receiver objects còn sống</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td style="text-align: right;">245.250</td>
+<td style="text-align: right;">182.773</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>2</td>
+<td style="text-align: right;">195.922</td>
+<td style="text-align: right;">195.988</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>3</td>
+<td style="text-align: right;">264.418</td>
+<td style="text-align: right;">250.672</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>4</td>
+<td style="text-align: right;">250.680</td>
+<td style="text-align: right;">250.793</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>5</td>
+<td style="text-align: right;">265.094</td>
+<td style="text-align: right;">251.219</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>6</td>
+<td style="text-align: right;">310.840</td>
+<td style="text-align: right;">283.020</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>7</td>
+<td style="text-align: right;">301.168</td>
+<td style="text-align: right;">287.305</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>8</td>
+<td style="text-align: right;">331.574</td>
+<td style="text-align: right;">295.816</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>9</td>
+<td style="text-align: right;">309.840</td>
+<td style="text-align: right;">295.949</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>10</td>
+<td style="text-align: right;">331.750</td>
+<td style="text-align: right;">295.836</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>11</td>
+<td style="text-align: right;">309.613</td>
+<td style="text-align: right;">295.871</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>12</td>
+<td style="text-align: right;">331.676</td>
+<td style="text-align: right;">295.941</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>13</td>
+<td style="text-align: right;">309.719</td>
+<td style="text-align: right;">295.879</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>14</td>
+<td style="text-align: right;">331.680</td>
+<td style="text-align: right;">295.781</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>15</td>
+<td style="text-align: right;">305.832</td>
+<td style="text-align: right;">305.934</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>16</td>
+<td style="text-align: right;">341.734</td>
+<td style="text-align: right;">305.930</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>17</td>
+<td style="text-align: right;">305.953</td>
+<td style="text-align: right;">306.027</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>18</td>
+<td style="text-align: right;">341.828</td>
+<td style="text-align: right;">306.098</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>19</td>
+<td style="text-align: right;">319.875</td>
+<td style="text-align: right;">306.016</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>20</td>
+<td style="text-align: right;">306.016</td>
+<td style="text-align: right;">306.180</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+<p>Sau teardown có quản lý, cả 20 cycles có <strong>0 receiver objects còn sống</strong> sau bỏ tham chiếu và không còn capture thread, không gọi gc.collect. RSS có bước tăng ban đầu rồi giữ khoảng 296 MiB ở cycles 8–14 và khoảng 306 MiB ở cycles 15–20 (cuối 306,2 MiB). Điều này phù hợp native/allocator retention hơn là giữ lại receiver Python; chưa cô lập từng native allocation. Không suy ra an toàn dài hạn từ 20 cycles ngắn.</p>
+<h2>Acceptance theo yêu cầu</h2>
+<table>
+<thead>
+<tr>
+<th>Tiêu chí</th>
+<th>Kết quả</th>
+<th>Evidence / giới hạn</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tái sử dụng receiver/factory/FrameManager/runtime</td>
+<td>PASS</td>
+<td>CPUStreamPlayer trong rtsp_player; production workers giữ nguyên</td>
+</tr>
+<tr>
+<td>Pipeline CPU tường minh, đúng avdec_h264</td>
+<td>PASS</td>
+<td>Factory check và negotiated caps mỗi run</td>
+</tr>
+<tr>
+<td>TCP200, raw bounded/leaky sau decoder, latest-only</td>
+<td>PASS</td>
+<td>Runtime properties + slow-consumer test</td>
+</tr>
+<tr>
+<td>Main 4K25, output RGB1280×720</td>
+<td>PASS</td>
+<td>CPU negotiated caps; URI/config không đổi</td>
+</tr>
+<tr>
+<td>Model/target/threshold/tracking/focus không đổi</td>
+<td>PASS về code/config</td>
+<td>Không đồng nghĩa accuracy đã xác minh</td>
+</tr>
+<tr>
+<td>Buffer lifetime/stride/color/thread safety</td>
+<td>PASS kiểm tra hiện có</td>
+<td>Owned RGB copy + pull worker + mailbox locks</td>
+</tr>
+<tr>
+<td>Opt-in và rollback MPV</td>
+<td>PASS</td>
+<td>Environment override; default không đổi</td>
+</tr>
+<tr>
+<td>Desktop thật, production scheduler/FaceWorker, không camera writes</td>
+<td>PASS</td>
+<td>Read-only guard tests + blocked counters; motor behavior N/A</td>
+</tr>
+<tr>
+<td>≥60 s sau warmup, ba lần mỗi backend</td>
+<td>PASS — 6/6</td>
+<td>Chỉ tính các run có đủ window; không tính smoke</td>
+</tr>
+<tr>
+<td>Cùng workload AI đầy đủ để so sánh</td>
+<td>NOT_MET</td>
+<td>Cảnh live thay đổi; số calls/gates không tương đương</td>
+</tr>
+<tr>
+<td>CPU capture không tích lũy drift nhiều giây</td>
+<td>PASS các cửa sổ đã đo</td>
+<td>Không chứng minh glass-to-glass</td>
+</tr>
+<tr>
+<td>AI accuracy và mọi model không regression</td>
+<td>NOT_ACCEPTED</td>
+<td>YOLO host latency tăng; workload/ground truth chưa đủ</td>
+</tr>
+<tr>
+<td>Đầy đủ FPS/freshness/model/queue/resources/drops</td>
+<td>PARTIAL</td>
+<td>Exact RTP/appsink drops và vài model không có mẫu</td>
+</tr>
+<tr>
+<td>Glass-to-glass</td>
+<td>NOT_TESTED</td>
+<td>Không có thiết bị/quan sát đo quang học; không suy diễn appsink time</td>
+</tr>
+<tr>
+<td>Reconnect/failure/shutdown</td>
+<td>PASS receiver lifecycle</td>
+<td>Fault injection receiver; shutdown read-only có ownership wait</td>
+</tr>
+<tr>
+<td>Giải phóng receiver / memory dài hạn</td>
+<td>PASS object/thread; dài hạn NOT_TESTED</td>
+<td>20 cycles không còn receiver objects; RSS có warmup/retention, cần soak</td>
+</tr>
+<tr>
+<td>Không tự NVDEC/allocator thay đổi</td>
+<td>PASS</td>
+<td>Chỉ avdec_h264; CUDA config giữ nguyên</td>
+</tr>
+</tbody>
+</table>
+<h2>Quyết định và bước tiếp theo</h2>
+<p><strong>Không chuyển <code>gstreamer_cpu</code> thành mặc định ở bước này.</strong> Cho phép tiếp tục opt-in vì capture/GUI có lợi rõ ràng. Acceptance còn thiếu: workload production lặp lại có đủ bốn model và target, accuracy ground truth, xác minh per-model regression, soak memory/reconnect, và glass-to-glass nếu có thiết bị.</p>
+<p>Bước triển khai tiếp theo: ghi một clip 4K25 có target/người/mặt đầy đủ, phát RTSP cùng clip theo thời gian thực cho hai backend, giữ nguyên các worker/gates và so khung thời gian tương ứng; bổ sung controlled live session để đánh giá ảnh→motor khi được người vận hành cho phép. Đo quang học bằng quay đồng thời đồng hồ/LED ở hiện trường và màn hình; báo phân bố qua nhiều mẫu, không lấy PTS thay cho capture time. Chỉ sau acceptance PASS mới đề xuất đổi <code>camera.json</code>, giữ lệnh rollback MPV và theo dõi một phiên canary trước rollout.</p>
+<h2>File thay đổi</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Vai trò</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>camera/rtsp_player.py</td>
+<td>CPUStreamPlayer opt-in, pipeline cố định, pull worker, stride/copy, bus/reconnect/stop, diagnostics</td>
+</tr>
+<tr>
+<td>camera/stream.py, config.py</td>
+<td>Factory gstreamer_cpu, process-local PTZ_VIDEO_BACKEND, benchmark flag</td>
+</tr>
+<tr>
+<td>camera/mpv_player.py</td>
+<td>Optional observer dùng time_pos đã đọc; không thêm screenshot/query</td>
+</tr>
+<tr>
+<td>camera/dahua_rpc.py</td>
+<td>Benchmark ép read-only và đếm write attempts bị chặn</td>
+</tr>
+<tr>
+<td>camera/ptz_controller.py</td>
+<td>Read-only close giải phóng RPC/worker mà không gửi STOP/restore</td>
+</tr>
+<tr>
+<td>gui/cctv_app.py</td>
+<td>Benchmark bỏ qua startup image settings</td>
+</tr>
+<tr>
+<td>main.py, runtime/desktop_benchmark.py</td>
+<td>Gắn harness vào CCTVApp thật; readiness/warmup/window/shutdown/results</td>
+</tr>
+<tr>
+<td>tools/desktop_capture_benchmark.py</td>
+<td>Launcher A/B với environment và camera guard, timeout, output</td>
+</tr>
+<tr>
+<td>tools/summarize_desktop_capture.py</td>
+<td>Rebuild model/window stats từ trace gốc</td>
+</tr>
+<tr>
+<td>tools/check_cpu_stream_lifecycle.py</td>
+<td>RTSP read-only lifecycle + cycles</td>
+</tr>
+<tr>
+<td>test/test_gstreamer_cpu.py</td>
+<td>Contract, stride/lifetime, slow consumer, failure, no-writes tests</td>
+</tr>
+<tr>
+<td>README.md, docs/gstreamer_cpu_integration_20261022.*</td>
+<td>Hướng dẫn và báo cáo</td>
+</tr>
+</tbody>
+</table>
+<p>Không sửa camera.json trong task tích hợp; không sửa YOLO/OSNet/SCRFD/ArcFace, FrameManager, scheduler, tracking, ZoomPolicy hoặc Auto Focus. Các trace/resource JSON là evidence thật; không sinh số liệu thiếu.</p></main></html>

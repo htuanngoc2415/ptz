@@ -1,0 +1,18 @@
+{
+  "source_sha256": "12b3a673cc0a04d9421bb74c07a9f3a732abac15f940cb62e36977db2b89ff56",
+  "pairs": 99,
+  "valid": 99,
+  "reasons": {
+    "VALID": 99
+  },
+  "classifications": {
+    "LOW_IMAGE_MOTION": 99
+  },
+  "latency_p95_ms": 15.707717398618112,
+  "residual_median_px": 0.0031187012658369577,
+  "inlier_ratio_median": 1.0,
+  "pose_ground_truth": false,
+  "target_localization_accuracy": null,
+  "ptz_validation": false,
+  "note": "Static/reencoded excerpt diagnostic only; low background residual is not evidence of better target localization."
+}

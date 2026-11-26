@@ -1,12 +1,13 @@
 """Bounded opt-in raw decoded frame recorder. Never opens a camera or motor."""
-import atexit,json,queue,threading,time
+import atexit,json,queue,threading,time,hashlib
 from pathlib import Path
 from uuid import uuid4
 import cv2
 
 
 class MotionRecorder:
-    def __init__(self,cfg):
+    def __init__(self,cfg, *, stop_on_limit=False):
+        self.stop_on_limit = stop_on_limit
         self.root=Path(cfg.CAMERA_MOTION_RECORD_DIRECTORY)/('capture_'+uuid4().hex)
         self.max_bytes=int(getattr(cfg,'CAMERA_MOTION_RECORD_MAX_BYTES',256_000_000))
         self.max_frames=int(getattr(cfg,'CAMERA_MOTION_RECORD_MAX_FRAMES',600))
@@ -37,8 +38,13 @@ class MotionRecorder:
                 # Lossless decoded image, not raw sensor/encoded RTSP or capture PTS.
                 meta.update(source_kind='decoded_rtsp_frame',image=f'{self.written:06d}.png',color='BGR',
                             recording_gaps_possible=True,dropped_before=self.dropped)
+                if getattr(self, 'include_image_hash', False):
+                    meta['image_sha256'] = hashlib.sha256(buf).hexdigest()
                 encoded=(json.dumps(meta)+'\n').encode()
-                if self.written>=self.max_frames or self.bytes+len(buf)+len(encoded)>self.max_bytes:self.dropped+=1;continue
+                if self.written>=self.max_frames or self.bytes+len(buf)+len(encoded)>self.max_bytes:
+                    self.dropped+=1
+                    if self.stop_on_limit:self.stop.set()
+                    continue
                 self.root.mkdir(parents=True,exist_ok=True)
                 (self.root/meta['image']).write_bytes(buf.tobytes())
                 with (self.root/'frames.jsonl').open('ab') as f:f.write(encoded)

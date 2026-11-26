@@ -1,0 +1,437 @@
+{
+  "captures": [
+    {
+      "capture": 1,
+      "frames": 1505,
+      "duration_s": 155.93576441000187,
+      "selected": {
+        "A": 1116,
+        "B": 1055,
+        "C": 884,
+        "D": 144
+      },
+      "C_lost_B_selection_reasons": {
+        "UNCERTAIN_CROP_QUALITY": 100,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 50,
+        "APPEARANCE_HISTORY_CONFLICT": 1,
+        "LOW_REFERENCE_SIMILARITY": 20
+      },
+      "C_classifications": {
+        "IDENTITY_UNCERTAIN": 1640,
+        "TARGET_CANDIDATE": 924,
+        "CONFIRMED_DISTRACTOR": 97
+      },
+      "examples": [
+        {
+          "frame_id": 1344,
+          "reason": "UNCERTAIN_CROP_QUALITY",
+          "baseline_B": "1344:0",
+          "C": null
+        },
+        {
+          "frame_id": 1346,
+          "reason": "UNCERTAIN_CROP_QUALITY",
+          "baseline_B": "1346:0",
+          "C": null
+        },
+        {
+          "frame_id": 1348,
+          "reason": "UNCERTAIN_CROP_QUALITY",
+          "baseline_B": "1348:0",
+          "C": null
+        },
+        {
+          "frame_id": 1351,
+          "reason": "AWAITING_MULTI_OBSERVATION_CONFIRMATION",
+          "baseline_B": "1351:0",
+          "C": null
+        },
+        {
+          "frame_id": 1354,
+          "reason": "APPEARANCE_HISTORY_CONFLICT",
+          "baseline_B": "1354:0",
+          "C": null
+        },
+        {
+          "frame_id": 1358,
+          "reason": "LOW_REFERENCE_SIMILARITY",
+          "baseline_B": "1358:0",
+          "C": null
+        },
+        {
+          "frame_id": 1361,
+          "reason": "AWAITING_MULTI_OBSERVATION_CONFIRMATION",
+          "baseline_B": "1361:0",
+          "C": null
+        },
+        {
+          "frame_id": 1363,
+          "reason": "LOW_REFERENCE_SIMILARITY",
+          "baseline_B": "1363:0",
+          "C": null
+        },
+        {
+          "frame_id": 1366,
+          "reason": "LOW_REFERENCE_SIMILARITY",
+          "baseline_B": "1366:0",
+          "C": null
+        },
+        {
+          "frame_id": 1368,
+          "reason": "AWAITING_MULTI_OBSERVATION_CONFIRMATION",
+          "baseline_B": "1368:0",
+          "C": null
+        },
+        {
+          "frame_id": 1370,
+          "reason": "LOW_REFERENCE_SIMILARITY",
+          "baseline_B": "1370:0",
+          "C": null
+        },
+        {
+          "frame_id": 1373,
+          "reason": "LOW_REFERENCE_SIMILARITY",
+          "baseline_B": "1373:0",
+          "C": null
+        }
+      ],
+      "D_processed_frames": 431,
+      "D_coverage": 0.28637873754152826,
+      "D_comparisons_per_media_second": 2.7639586186705176,
+      "D_age_ms": {
+        "n": 431,
+        "p50": 96.22018300069612,
+        "p95": 240.6755295014591,
+        "max": 389.26715400157264
+      },
+      "C_D_same_sample": {
+        "same": 311,
+        "C_only": 107,
+        "D_only": 13
+      },
+      "full_nonempty_jobs": 1505,
+      "full_hold_s": 25.15766879412695,
+      "D_hold_s": 7.385920525004622,
+      "dry_planner_only_ms": {
+        "A": {
+          "n": 1505,
+          "p50": 0.020045001292601228,
+          "p95": 0.023467797291232273,
+          "max": 108.62655000164523
+        },
+        "B": {
+          "n": 1505,
+          "p50": 0.019415998394833878,
+          "p95": 0.02109300039592199,
+          "max": 0.07906199971330352
+        },
+        "C": {
+          "n": 1505,
+          "p50": 0.013759003195445985,
+          "p95": 0.019906001398339868,
+          "max": 0.03429299977142364
+        },
+        "D": {
+          "n": 1505,
+          "p50": 0.010964999091811478,
+          "p95": 0.01501680162618868,
+          "max": 0.02856599894585088
+        }
+      },
+      "ground_truth": false
+    },
+    {
+      "capture": 2,
+      "frames": 1502,
+      "duration_s": 170.0710616239994,
+      "selected": {
+        "A": 1117,
+        "B": 894,
+        "C": 563,
+        "D": 113
+      },
+      "C_lost_B_selection_reasons": {
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 20,
+        "UNCERTAIN_CROP_QUALITY": 154,
+        "LOW_REFERENCE_SIMILARITY": 157
+      },
+      "C_classifications": {
+        "IDENTITY_UNCERTAIN": 3062,
+        "TARGET_CANDIDATE": 895,
+        "CONFIRMED_DISTRACTOR": 670
+      },
+      "examples": [
+        {
+          "frame_id": 1806,
+          "reason": "AWAITING_MULTI_OBSERVATION_CONFIRMATION",
+          "baseline_B": "1806:0",
+          "C": null
+        },
+        {
+          "frame_id": 2342,
+          "reason": "AWAITING_MULTI_OBSERVATION_CONFIRMATION",
+          "baseline_B": "2342:0",
+          "C": null
+        },
+        {
+          "frame_id": 2639,
+          "reason": "UNCERTAIN_CROP_QUALITY",
+          "baseline_B": "2639:0",
+          "C": null
+        },
+        {
+          "frame_id": 2643,
+          "reason": "UNCERTAIN_CROP_QUALITY",
+          "baseline_B": "2643:0",
+          "C": null
+        },
+        {
+          "frame_id": 2645,
+          "reason": "UNCERTAIN_CROP_QUALITY",
+          "baseline_B": "2645:0",
+          "C": null
+        },
+        {
+          "frame_id": 2648,
+          "reason": "UNCERTAIN_CROP_QUALITY",
+          "baseline_B": "2648:0",
+          "C": null
+        },
+        {
+          "frame_id": 2650,
+          "reason": "UNCERTAIN_CROP_QUALITY",
+          "baseline_B": "2650:0",
+          "C": null
+        },
+        {
+          "frame_id": 2653,
+          "reason": "UNCERTAIN_CROP_QUALITY",
+          "baseline_B": "2653:0",
+          "C": null
+        },
+        {
+          "frame_id": 2655,
+          "reason": "UNCERTAIN_CROP_QUALITY",
+          "baseline_B": "2655:0",
+          "C": null
+        },
+        {
+          "frame_id": 2658,
+          "reason": "UNCERTAIN_CROP_QUALITY",
+          "baseline_B": "2658:0",
+          "C": null
+        },
+        {
+          "frame_id": 2662,
+          "reason": "UNCERTAIN_CROP_QUALITY",
+          "baseline_B": "2662:0",
+          "C": null
+        },
+        {
+          "frame_id": 2665,
+          "reason": "AWAITING_MULTI_OBSERVATION_CONFIRMATION",
+          "baseline_B": "2665:0",
+          "C": null
+        },
+        {
+          "frame_id": 2674,
+          "reason": "LOW_REFERENCE_SIMILARITY",
+          "baseline_B": "2674:0",
+          "C": null
+        }
+      ],
+      "D_processed_frames": 561,
+      "D_coverage": 0.37350199733688416,
+      "D_comparisons_per_media_second": 3.2986211448499305,
+      "D_age_ms": {
+        "n": 561,
+        "p50": 120.72942899976624,
+        "p95": 262.75865600018733,
+        "max": 454.38843500232906
+      },
+      "C_D_same_sample": {
+        "same": 458,
+        "C_only": 100,
+        "D_only": 3
+      },
+      "full_nonempty_jobs": 1502,
+      "full_hold_s": 36.20920584196938,
+      "D_hold_s": 13.709336839034222,
+      "dry_planner_only_ms": {
+        "A": {
+          "n": 1502,
+          "p50": 0.014317000022856519,
+          "p95": 0.016269549450953495,
+          "max": 0.062369999795919284
+        },
+        "B": {
+          "n": 1502,
+          "p50": 0.013270000636111945,
+          "p95": 0.017938601558853417,
+          "max": 0.03247700078645721
+        },
+        "C": {
+          "n": 1502,
+          "p50": 0.011104999430244789,
+          "p95": 0.015364999853773043,
+          "max": 0.030031998903723434
+        },
+        "D": {
+          "n": 1502,
+          "p50": 0.010895000741584226,
+          "p95": 0.01522154962003697,
+          "max": 0.027657999453367665
+        }
+      },
+      "ground_truth": false
+    },
+    {
+      "capture": 3,
+      "frames": 1667,
+      "duration_s": 149.8997722070003,
+      "selected": {
+        "A": 1513,
+        "B": 1443,
+        "C": 798,
+        "D": 117
+      },
+      "C_lost_B_selection_reasons": {
+        "UNCERTAIN_CROP_QUALITY": 216,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 44,
+        "LOW_REFERENCE_SIMILARITY": 385
+      },
+      "C_classifications": {
+        "IDENTITY_UNCERTAIN": 1495,
+        "TARGET_CANDIDATE": 935,
+        "CONFIRMED_DISTRACTOR": 182
+      },
+      "examples": [
+        {
+          "frame_id": 1439,
+          "reason": "UNCERTAIN_CROP_QUALITY",
+          "baseline_B": "1439:0",
+          "C": null
+        },
+        {
+          "frame_id": 1442,
+          "reason": "UNCERTAIN_CROP_QUALITY",
+          "baseline_B": "1442:0",
+          "C": null
+        },
+        {
+          "frame_id": 1446,
+          "reason": "AWAITING_MULTI_OBSERVATION_CONFIRMATION",
+          "baseline_B": "1446:0",
+          "C": null
+        },
+        {
+          "frame_id": 1449,
+          "reason": "UNCERTAIN_CROP_QUALITY",
+          "baseline_B": "1449:0",
+          "C": null
+        },
+        {
+          "frame_id": 1451,
+          "reason": "AWAITING_MULTI_OBSERVATION_CONFIRMATION",
+          "baseline_B": "1451:0",
+          "C": null
+        },
+        {
+          "frame_id": 1453,
+          "reason": "UNCERTAIN_CROP_QUALITY",
+          "baseline_B": "1453:0",
+          "C": null
+        },
+        {
+          "frame_id": 1456,
+          "reason": "AWAITING_MULTI_OBSERVATION_CONFIRMATION",
+          "baseline_B": "1456:0",
+          "C": null
+        },
+        {
+          "frame_id": 1459,
+          "reason": "AWAITING_MULTI_OBSERVATION_CONFIRMATION",
+          "baseline_B": "1459:0",
+          "C": null
+        },
+        {
+          "frame_id": 1461,
+          "reason": "UNCERTAIN_CROP_QUALITY",
+          "baseline_B": "1461:0",
+          "C": null
+        },
+        {
+          "frame_id": 1465,
+          "reason": "AWAITING_MULTI_OBSERVATION_CONFIRMATION",
+          "baseline_B": "1465:0",
+          "C": null
+        },
+        {
+          "frame_id": 1467,
+          "reason": "UNCERTAIN_CROP_QUALITY",
+          "baseline_B": "1467:0",
+          "C": null
+        },
+        {
+          "frame_id": 1469,
+          "reason": "UNCERTAIN_CROP_QUALITY",
+          "baseline_B": "1469:0",
+          "C": null
+        },
+        {
+          "frame_id": 1620,
+          "reason": "LOW_REFERENCE_SIMILARITY",
+          "baseline_B": "1620:0",
+          "C": null
+        }
+      ],
+      "D_processed_frames": 410,
+      "D_coverage": 0.24595080983803239,
+      "D_comparisons_per_media_second": 2.7351609276218305,
+      "D_age_ms": {
+        "n": 410,
+        "p50": 76.18016149990581,
+        "p95": 210.74905555008155,
+        "max": 349.00841300168395
+      },
+      "C_D_same_sample": {
+        "same": 321,
+        "C_only": 80,
+        "D_only": 9
+      },
+      "full_nonempty_jobs": 1667,
+      "full_hold_s": 24.223491498960357,
+      "D_hold_s": 5.8873828160176345,
+      "dry_planner_only_ms": {
+        "A": {
+          "n": 1667,
+          "p50": 0.013897999451728538,
+          "p95": 0.018647999240783975,
+          "max": 0.0802489994384814
+        },
+        "B": {
+          "n": 1667,
+          "p50": 0.013758999557467178,
+          "p95": 0.020512300397967906,
+          "max": 0.04379199890536256
+        },
+        "C": {
+          "n": 1667,
+          "p50": 0.01201300256070681,
+          "p95": 0.015854999219300225,
+          "max": 0.03729599848156795
+        },
+        "D": {
+          "n": 1667,
+          "p50": 0.010685998859116808,
+          "p95": 0.014925299910828459,
+          "max": 0.036458000977290794
+        }
+      },
+      "ground_truth": false
+    }
+  ],
+  "ground_truth": false,
+  "physical_commands": 0,
+  "planner_timing_scope": "pure plan_pan after replay, excludes inference/queue/physical response"
+}

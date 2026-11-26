@@ -1,0 +1,375 @@
+--- pre-hotfix/camera/hanet_rpc.py
++++ hotfix/camera/hanet_rpc.py
+@@ -6,22 +6,40 @@
+ import base64
+ import hashlib
+ import json
++import math
+ import os
+ import socket
+ import struct
+ import time
++import threading
++from telemetry import latency
++from event_logging import redact
+ from uuid import uuid4
+ import requests
+ 
++class HanetRPCRejected(RuntimeError):
++    """Explicit rejection; its vendor code is not assumed to mean auth expiry."""
++
++
+ class HanetPTZClient:
+     """Client toi thieu cho JSON-RPC/WebSocket cua firmware HANET."""
+ 
+     def __init__(self, host: str, port: int, username: str, password: str, timeout=5.0):
++        self._lock = threading.RLock()
++        self._closed = False
++        self._io_deadline = None
++        self.generation = 0
++        self.transport_state = 'DISCONNECTED'
++        self._reconnect_attempt = 0
++        self._next_reconnect = 0.
++        self._needs_login = False
+         self.host = host
+         self.port = int(port)
+         self.username = username
+         self.password = password
+         self.timeout = float(timeout)
++        if not math.isfinite(self.timeout) or self.timeout <= 0:
++            raise ValueError('HANET timeout must be finite and positive')
+         self.http_url = f"http://{host}:{port}/mtrpc"
+         self.session = requests.Session()
+         self.session.headers.update({"Content-Type": "application/json"})
+@@ -49,11 +67,11 @@
+             "method": method,
+             "params": params or {},
+         }
+-        response = self.session.post(self.http_url, json=payload, timeout=self.timeout)
++        response = self.session.post(self.http_url, json=payload, timeout=self._remaining())
+         response.raise_for_status()
+         message = response.json()
+         if message.get("error"):
+-            raise RuntimeError(f"HANET RPC rejected {method}")
++            raise HanetRPCRejected(f"HANET RPC rejected {method}")
+         result = message.get("result")
+         if not isinstance(result, dict):
+             raise RuntimeError(f"HANET RPC returned invalid {method} response")
+@@ -117,16 +135,67 @@
+         self.heartbeat_interval = interval
+         self.next_heartbeat = time.monotonic() + interval
+ 
++    def _event(self, event, **fields):
++        latency.profiler.event(event, backend='hanet', connection_generation=self.generation,
++                               timeout=self.timeout, transport_state=self.transport_state, **fields)
++
++    def _safe_error(self, exc):
++        message = redact(str(exc))
++        for secret in (self.password, self.session_id):
++            if secret:
++                message = message.replace(str(secret), '[REDACTED]')
++        return message[:512]
++
++    def _remaining(self):
++        deadline = getattr(self, '_io_deadline', None)
++        remaining = self.timeout if deadline is None else deadline-time.monotonic()
++        if remaining <= 0:
++            raise TimeoutError('HANET operation deadline exceeded')
++        return remaining
++
++    def _invalidate(self):
++        connection, self._ws = self._ws, None
++        self._ws_buffer = b''
++        self.session_id = None
++        self._needs_login = True
++        self.transport_state = 'CLOSED' if self._closed else 'DISCONNECTED'
++        clean = True
++        if connection is not None:
++            try:
++                connection.close()
++            except Exception as exc:
++                clean = False
++                self._event('HANET_CLEANUP_ERROR', exception_type=type(exc).__name__,
++                            exception_message='Socket close failed')
++            self._event('HANET_CONNECTION_CLOSED')
++        return clean
++
+     def heartbeat(self) -> None:
+-        if time.monotonic() < self.next_heartbeat:
+-            return
+-        self._call("Auth.Heartbeat", {"session_id": self.session_id})
+-        self.next_heartbeat = time.monotonic() + self.heartbeat_interval
++        with self._lock:
++            if self._closed:
++                raise RuntimeError('HANET client closed')
++            # Recovery belongs to STOP or a later explicitly requested command.
++            if self._needs_login:
++                raise RuntimeError('HANET session requires recovery')
++            if time.monotonic() < self.next_heartbeat:
++                return
++            self._io_deadline = time.monotonic()+self.timeout
++            try:
++                self._call('Auth.Heartbeat', {'session_id': self.session_id})
++                self.next_heartbeat = time.monotonic()+self.heartbeat_interval
++            except Exception as exc:
++                self._event('HANET_TRANSPORT_ERROR', operation='heartbeat',
++                            exception_type=type(exc).__name__, exception_message=self._safe_error(exc))
++                self._invalidate()
++                raise
++            finally:
++                self._io_deadline = None
+ 
+     def _recv_exact(self, size: int) -> bytes:
+         while len(self._ws_buffer) < size:
+             if self._ws is None:
+                 raise RuntimeError("WebSocket is closed")
++            self._ws.settimeout(self._remaining())
+             chunk = self._ws.recv(max(4096, size - len(self._ws_buffer)))
+             if not chunk:
+                 raise RuntimeError("WebSocket connection closed")
+@@ -137,35 +206,45 @@
+     def _connect_websocket(self) -> None:
+         if self._ws is not None:
+             return
+-        connection = socket.create_connection((self.host, self.port), timeout=self.timeout)
+-        key = base64.b64encode(os.urandom(16)).decode("ascii")
+-        request = (
+-            "GET /mtrpcoverwebsocket HTTP/1.1\r\n"
+-            f"Host: {self.host}:{self.port}\r\n"
+-            "Upgrade: websocket\r\n"
+-            "Connection: Upgrade\r\n"
+-            f"Sec-WebSocket-Key: {key}\r\n"
+-            "Sec-WebSocket-Version: 13\r\n"
+-            f"Origin: http://{self.host}:{self.port}\r\n\r\n"
+-        )
+-        connection.sendall(request.encode("ascii"))
+-        response = b""
+-        while b"\r\n\r\n" not in response:
+-            chunk = connection.recv(4096)
+-            if not chunk:
++        connection = socket.create_connection((self.host, self.port), timeout=self._remaining())
++        try:
++            key = base64.b64encode(os.urandom(16)).decode("ascii")
++            request = (
++                "GET /mtrpcoverwebsocket HTTP/1.1\r\n"
++                f"Host: {self.host}:{self.port}\r\n"
++                "Upgrade: websocket\r\n"
++                "Connection: Upgrade\r\n"
++                f"Sec-WebSocket-Key: {key}\r\n"
++                "Sec-WebSocket-Version: 13\r\n"
++                f"Origin: http://{self.host}:{self.port}\r\n\r\n"
++            )
++            connection.settimeout(self._remaining())
++            connection.sendall(request.encode("ascii"))
++            response = b""
++            while b"\r\n\r\n" not in response:
++                connection.settimeout(self._remaining())
++                chunk = connection.recv(4096)
++                if not chunk:
++                    raise RuntimeError("WebSocket handshake closed")
++                response += chunk
++                if len(response) > 65536:
++                    raise RuntimeError("WebSocket handshake is too large")
++            headers, remainder = response.split(b"\r\n\r\n", 1)
++            if not headers.startswith(b"HTTP/1.1 101"):
++                raise RuntimeError("WebSocket handshake rejected")
++            connection.settimeout(self._remaining())
++            self._ws = connection
++            self._ws_buffer = remainder
++        except Exception:
++            try:
+                 connection.close()
+-                raise RuntimeError("WebSocket handshake closed")
+-            response += chunk
+-            if len(response) > 65536:
+-                connection.close()
+-                raise RuntimeError("WebSocket handshake is too large")
+-        headers, remainder = response.split(b"\r\n\r\n", 1)
+-        if not headers.startswith(b"HTTP/1.1 101"):
+-            connection.close()
+-            raise RuntimeError("WebSocket handshake rejected")
+-        connection.settimeout(0.5)
+-        self._ws = connection
+-        self._ws_buffer = remainder
++            except Exception as exc:
++                self._event('HANET_CLEANUP_ERROR', exception_type=type(exc).__name__,
++                            exception_message='Handshake socket close failed')
++            raise
++        self.generation += 1
++        self.transport_state = 'CONNECTED'
++        self._event('HANET_CONNECTION_OPEN')
+ 
+     def _send_frame(self, payload: bytes, opcode=0x1) -> None:
+         if self._ws is None:
+@@ -183,6 +262,7 @@
+             header.extend(struct.pack("!Q", length))
+         header.extend(mask)
+         masked = bytes(value ^ mask[index % 4] for index, value in enumerate(payload))
++        self._ws.settimeout(self._remaining())
+         self._ws.sendall(bytes(header) + masked)
+ 
+     def _recv_frame(self) -> tuple[int, bytes]:
+@@ -194,13 +274,17 @@
+             length = struct.unpack("!H", self._recv_exact(2))[0]
+         elif length == 127:
+             length = struct.unpack("!Q", self._recv_exact(8))[0]
++        if length > 1024*1024:
++            raise RuntimeError('HANET WebSocket frame exceeds limit')
++        if not first & 0x80:
++            raise RuntimeError('Fragmented HANET response unsupported')
+         mask = self._recv_exact(4) if masked else None
+         payload = self._recv_exact(length)
+         if mask:
+             payload = bytes(value ^ mask[index % 4] for index, value in enumerate(payload))
+         return opcode, payload
+ 
+-    def _receive_response(self, request_id) -> None:
++    def _receive_response(self, request_id) -> bool:
+         deadline = time.monotonic() + self.timeout
+         try:
+             while time.monotonic() < deadline:
+@@ -213,21 +297,84 @@
+                 if opcode != 0x1:
+                     continue
+                 message = json.loads(payload.decode("utf-8"))
++                if not isinstance(message, dict):
++                    raise RuntimeError("Invalid HANET response")
+                 if str(message.get("id")) != str(request_id):
+                     continue
+                 if message.get("error") or message.get("result") is False:
+-                    raise RuntimeError("Camera rejected PTZ command")
+-                return
++                    raise HanetRPCRejected("Camera rejected PTZ command")
++                # A matching ID alone is not evidence of successful execution.
++                result = message.get('result')
++                if result is not True:
++                    raise RuntimeError('HANET response has no verified success result')
++                return True
+             raise TimeoutError("HANET PTZ acknowledgement timed out")
+         except socket.timeout:
+             raise TimeoutError("HANET PTZ acknowledgement timed out") from None
+ 
+-    def motion(self, code: str, start: bool, speed: int) -> None:
+-        if not self.session_id:
+-            raise RuntimeError("HANET session is unavailable")
+-        self._connect_websocket()
++    def motion(self, code: str, start: bool, speed: int) -> bool:
++        # One transaction owns the socket and session through ACK validation.
++        # Never replay a START (or any command) within this call.
++        with self._lock:
++            if self._closed:
++                raise RuntimeError('HANET client closed')
++            if time.monotonic() < self._next_reconnect:
++                raise RuntimeError('HANET reconnect backoff')
++            self._io_deadline = time.monotonic()+self.timeout
++            reconnect = self._needs_login
++            request_id = str(uuid4())
++            operation = 'START' if start else 'STOP'
++            transmission = 'not_attempted'
++            try:
++                if reconnect:
++                    self.transport_state = 'TRANSPORT_RECOVERING'
++                    self._reconnect_attempt += 1
++                    self._event('HANET_RECONNECT_ATTEMPT', retry_attempt=self._reconnect_attempt)
++                    self._login()
++                if not self.session_id:
++                    raise RuntimeError('HANET session is unavailable')
++                self._connect_websocket()
++                if reconnect:
++                    self._needs_login = False
++                    self._event('HANET_RECONNECT_SUCCESS', retry_attempt=self._reconnect_attempt,
++                                motor_safe=False)
++                generation = self.generation
++                payload = self._motion_payload(request_id, code, start, speed)
++                transmission = 'attempted_unknown'
++                self._send_frame(json.dumps(payload, separators=(',', ':')).encode('utf-8'))
++                transmission = 'sent'
++                self._event('PAN_TILT_'+operation+'_SENT', rpc_command_id=request_id,
++                            operation=operation, rpc_code=code)
++                ack = self._receive_response(request_id)
++                if generation != self.generation or self._closed:
++                    raise RuntimeError('Stale HANET connection response')
++                self._event('PAN_TILT_'+operation+'_ACK', rpc_command_id=request_id,
++                            operation=operation, rpc_code=code, acknowledged=ack)
++                self._reconnect_attempt = 0
++                self._next_reconnect = 0.
++                return ack
++            except Exception as exc:
++                self._event('PAN_TILT_'+operation+'_UNCONFIRMED', rpc_command_id=request_id,
++                            operation=operation, rpc_code=code, acknowledged=False,
++                            transmission=transmission,
++                            exception_type=type(exc).__name__, exception_message=self._safe_error(exc),
++                            exception_errno=getattr(exc, 'errno', None))
++                self._event('HANET_TRANSPORT_ERROR', rpc_command_id=request_id, operation=operation,
++                            exception_type=type(exc).__name__, exception_message='Connection invalidated',
++                            failure_kind='explicit_rejection' if isinstance(exc, HanetRPCRejected) else 'transport_or_protocol')
++                self._invalidate()
++                if reconnect:
++                    self._event('HANET_RECONNECT_FAILED', retry_attempt=self._reconnect_attempt,
++                                exception_type=type(exc).__name__, exception_message='Recovery did not confirm command')
++                # No sleeps in the execution lane, and no retry loop here.
++                self._next_reconnect = time.monotonic()+min(8., .5*2**min(self._reconnect_attempt, 4))
++                raise
++            finally:
++                self._io_deadline = None
++
++    def _motion_payload(self, request_id, code, start, speed):
+         payload = {
+-            "id": str(uuid4()),
++            "id": request_id,
+             "jsonrpc": "2.0",
+             "method": "Control.DoPtz",
+             "params": {
+@@ -243,23 +390,35 @@
+                 },
+             },
+         }
+-        self._send_frame(json.dumps(payload, separators=(",", ":")).encode("utf-8"))
+-        self._receive_response(payload["id"])
+-
+-    def close(self) -> None:
++        return payload
++
++    def abort(self):
++        """Wake blocked socket I/O during shutdown; never grants motor safety."""
++        self._closed = True
+         connection = self._ws
+         if connection is not None:
+             try:
+-                self._send_frame(b"", opcode=0x8)
+-            except Exception:
+-                pass
+-            self._ws = None
+-            connection.close()
+-        if self.session_id:
+-            try:
+-                self._call("Auth.Logout", {"session_id": self.session_id})
+-            except Exception:
+-                pass
+-        self.session_id = None
+-        self.session.close()
+-
++                connection.shutdown(socket.SHUT_RDWR)
++            except Exception as exc:
++                self._event('HANET_CLEANUP_ERROR', exception_type=type(exc).__name__,
++                            exception_message='Socket shutdown failed')
++
++    def close(self) -> bool:
++        self.abort()
++        if not self._lock.acquire(timeout=self.timeout):
++            self._event('HANET_CLEANUP_ERROR', exception_type='TimeoutError',
++                        exception_message='RPC transaction did not exit before close deadline')
++            return False
++        try:
++            clean = self._invalidate()
++            # No logout round trip on shutdown: local session is invalidated and
++            # the camera expires its lease. Closing is not a motor STOP proof.
++            try:
++                self.session.close()
++            except Exception as exc:
++                clean = False
++                self._event('HANET_CLEANUP_ERROR', exception_type=type(exc).__name__,
++                            exception_message='HTTP session close failed')
++            return clean
++        finally:
++            self._lock.release()

@@ -1,0 +1,143 @@
+{
+  "stationary": {
+    "frames": 16,
+    "valid_pairs": 15,
+    "translation_dx_absolute_error_mean_px": 0.0318647996811932,
+    "inlier_ratio_mean": 1.0,
+    "reprojection_error_mean_px": 0.010927280895206242,
+    "gmc_mean_ms": 11.266038000030676,
+    "gmc_p95_ms": 13.03751400009787,
+    "branches": {
+      "baseline": {
+        "tracker_mean_ms": 0.4045734999635897,
+        "tracker_p95_ms": 0.5221627502578485,
+        "metrics": {
+          "id_switches": 0,
+          "track_fragmentations": 0,
+          "missing_visible_observations": 0,
+          "visible_observations": 16,
+          "unique_track_ids": {
+            "synthetic_person_A": 1
+          },
+          "wrong_target_follow_rate": null,
+          "false_hold": null,
+          "full_loss": null,
+          "target_selected_dwell": null,
+          "note": "Spatial tracker metrics only; no selector/identity-follow inference in shadow branch"
+        }
+      },
+      "gmc": {
+        "tracker_mean_ms": 0.365967999869099,
+        "tracker_p95_ms": 0.4266349992576579,
+        "metrics": {
+          "id_switches": 0,
+          "track_fragmentations": 0,
+          "missing_visible_observations": 0,
+          "visible_observations": 16,
+          "unique_track_ids": {
+            "synthetic_person_A": 1
+          },
+          "wrong_target_follow_rate": null,
+          "false_hold": null,
+          "full_loss": null,
+          "target_selected_dwell": null,
+          "note": "Spatial tracker metrics only; no selector/identity-follow inference in shadow branch"
+        }
+      }
+    }
+  },
+  "pan": {
+    "frames": 16,
+    "valid_pairs": 15,
+    "translation_dx_absolute_error_mean_px": 0.013212208236617565,
+    "inlier_ratio_mean": 1.0,
+    "reprojection_error_mean_px": 0.020887621653452947,
+    "gmc_mean_ms": 18.771237399657064,
+    "gmc_p95_ms": 22.312878699267458,
+    "branches": {
+      "baseline": {
+        "tracker_mean_ms": 0.35457056242194085,
+        "tracker_p95_ms": 0.3894612500516814,
+        "metrics": {
+          "id_switches": 0,
+          "track_fragmentations": 0,
+          "missing_visible_observations": 15,
+          "visible_observations": 16,
+          "unique_track_ids": {
+            "synthetic_person_A": 1
+          },
+          "wrong_target_follow_rate": null,
+          "false_hold": null,
+          "full_loss": null,
+          "target_selected_dwell": null,
+          "note": "Spatial tracker metrics only; no selector/identity-follow inference in shadow branch"
+        }
+      },
+      "gmc": {
+        "tracker_mean_ms": 0.5089843125460902,
+        "tracker_p95_ms": 1.10290650081879,
+        "metrics": {
+          "id_switches": 0,
+          "track_fragmentations": 0,
+          "missing_visible_observations": 0,
+          "visible_observations": 16,
+          "unique_track_ids": {
+            "synthetic_person_A": 1
+          },
+          "wrong_target_follow_rate": null,
+          "false_hold": null,
+          "full_loss": null,
+          "target_selected_dwell": null,
+          "note": "Spatial tracker metrics only; no selector/identity-follow inference in shadow branch"
+        }
+      }
+    }
+  },
+  "pan_and_walking": {
+    "frames": 16,
+    "valid_pairs": 15,
+    "translation_dx_absolute_error_mean_px": 0.03663073386858571,
+    "inlier_ratio_mean": 1.0,
+    "reprojection_error_mean_px": 0.02461045531745766,
+    "gmc_mean_ms": 17.38175526637254,
+    "gmc_p95_ms": 18.717472499520227,
+    "branches": {
+      "baseline": {
+        "tracker_mean_ms": 0.3474945000334628,
+        "tracker_p95_ms": 0.37737849925179034,
+        "metrics": {
+          "id_switches": 0,
+          "track_fragmentations": 0,
+          "missing_visible_observations": 15,
+          "visible_observations": 16,
+          "unique_track_ids": {
+            "synthetic_person_A": 1
+          },
+          "wrong_target_follow_rate": null,
+          "false_hold": null,
+          "full_loss": null,
+          "target_selected_dwell": null,
+          "note": "Spatial tracker metrics only; no selector/identity-follow inference in shadow branch"
+        }
+      },
+      "gmc": {
+        "tracker_mean_ms": 0.558778062327292,
+        "tracker_p95_ms": 0.8757952505220601,
+        "metrics": {
+          "id_switches": 0,
+          "track_fragmentations": 0,
+          "missing_visible_observations": 0,
+          "visible_observations": 16,
+          "unique_track_ids": {
+            "synthetic_person_A": 1
+          },
+          "wrong_target_follow_rate": null,
+          "false_hold": null,
+          "full_loss": null,
+          "target_selected_dwell": null,
+          "note": "Spatial tracker metrics only; no selector/identity-follow inference in shadow branch"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "ai/target_identity.py": {
+    "before": "d80813f00fab13b863a21d64c53c784e99672b04ac0a25ade5454e0d3c717e39",
+    "after": "8376b7da84d5617154231da1518af3334714c305d87be5ac35a4bc1fc686ac2a",
+    "backup": "target_identity.py"
+  },
+  "config.py": {
+    "before": "b8dddaff9439c040e9493442655137148bed7ea43c34728755c7481b1134436d",
+    "after": "cd4caaf59476b2b941e0e54754573e08ef1f9e76f78b5793fbc84b4bc0826ad3",
+    "backup": "config.py"
+  },
+  "runtime/identity_events.py": {
+    "before": null,
+    "after": "f9e043117fb720f700aab8b71caa8fbef93aeec3ddb02798b9d6fb40e1e1e9e8",
+    "backup": null
+  },
+  "tools/analyze_identity_live.py": {
+    "before": null,
+    "after": "b0b8c6bf12ab826c6415d855f15d8b327e7d479a15e03a4475fea1ec439c17b9",
+    "backup": null
+  },
+  "tools/benchmark_identity_phase2.py": {
+    "before": null,
+    "after": "433c293fc53ef0f94fbcab151e8eb4f0a55cfd18912919151db8662432961ff2",
+    "backup": null
+  },
+  "test/test_identity_phase2.py": {
+    "before": null,
+    "after": "5cfba488653528fa929068376f27fcc78dc83a6d5f97de9e3c7cc6531f9d0ddc",
+    "backup": null
+  },
+  "test/test_identity_live_analysis.py": {
+    "before": null,
+    "after": "40edf1ad57c0a30da3dae801450c3c5856481a32e20eb2ffa5b6aab1bb4d7573",
+    "backup": null
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "baseline_source_files": 201,
+  "unchanged_existing_files": 200,
+  "changed_existing_files": [
+    "config.py"
+  ],
+  "config_original_bytes_preserved_as_prefix": true,
+  "production_controller_changes": 0,
+  "hybrid_selector_changes_by_this_task": 0,
+  "byte_tracker_changes": 0
+}

@@ -1,0 +1,14 @@
+{
+  "backup": "/mnt/files/Project/ptz_before_latency_ptz_20261116_133521",
+  "verified_backup_entries": 8827,
+  "exclusions": [],
+  "existing_source_config_checked": 211,
+  "existing_source_config_changed": [],
+  "new_source_files": [
+    "tools/benchmark_ptz_motor.py",
+    "tools/evaluate_local_tracking.py",
+    "tools/compare_ptz_policies.py",
+    "test/test_ptz_latency_tools.py"
+  ],
+  "branch": "dev/ptz-latency-calibration-20261116"
+}

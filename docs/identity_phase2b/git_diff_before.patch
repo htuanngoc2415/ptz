@@ -1,0 +1,495 @@
+diff --git a/ai/hybrid_reid.py b/ai/hybrid_reid.py
+index 654d7d4..6e6efdd 100644
+--- a/ai/hybrid_reid.py
++++ b/ai/hybrid_reid.py
+@@ -5,10 +5,11 @@ from concurrent.futures import Future
+ import threading
+ import math
+ import time
++import traceback
+ from uuid import uuid4
+ from ai.reid_target import ReIDTargetSelector, iou
+ from telemetry import latency
+-from ai.overlap_policy import OverlapMemory, overlap_geometry
++from ai.overlap_policy import OverlapMemory, overlap_geometry, minor_contact
+ 
+ 
+ class HybridReIDTargetSelector(ReIDTargetSelector):
+@@ -25,6 +26,9 @@ class HybridReIDTargetSelector(ReIDTargetSelector):
+         self.pending_id = None
+         self.pending_box = None
+         self.pending_count = 0
++        self._confirmation_track = None
++        self._confirmation_time = None
++        self._pending_time = None
+         self._overlap_memory = OverlapMemory()
+         self._hold_scan_at = float("-inf")
+         self._weak_overlap_active = False
+@@ -74,6 +78,13 @@ class HybridReIDTargetSelector(ReIDTargetSelector):
+                     inference_timestamp=time.monotonic())
+                 future.set_result(scores)
+             except Exception as exc:
++                # Log at the producer, even if a later session rejects the future.
++                latency.profiler.event('REID_VERIFICATION_EXCEPTION',
++                    frame_id=scorer.frame_id, lock_session_id=token[1],
++                    target_track_id=token[2], reid_phase='TARGET_LOCKED_PERIODIC_VERIFY',
++                    error_type=type(exc).__name__, error_message=str(exc),
++                    traceback=traceback.format_exc(),
++                    superseded=self.verification_epoch != token[0])
+                 future.set_exception(exc)
+         context = copy_context()
+         threading.Thread(target=lambda: context.run(run), name='reid-verification', daemon=True).start()
+@@ -137,7 +148,8 @@ class HybridReIDTargetSelector(ReIDTargetSelector):
+             # Only identical copies of one tracker observation are redundant.
+             same = p is candidate or (p.get('track_id') == candidate.get('track_id')
+                                      and tuple(b) == tuple(box))
+-            unsafe |= not same and overlap >= self.cfg.REID_CROSSING_OVERLAP
++            unsafe |= (not same and overlap >= self.cfg.REID_CROSSING_OVERLAP
++                       and not minor_contact(overlap_geometry(box, b), self.cfg))
+             rows.append(dict(track_id=p.get('track_id'), bbox=b, iou=iou(box,b),
+                 overlap_ratio=overlap, similarity=p.get('reid_score'), confidence=p.get('confidence')))
+         now = getattr(self, '_diagnostic_observation_time', self.observation_time) or 0.
+@@ -157,16 +169,59 @@ class HybridReIDTargetSelector(ReIDTargetSelector):
+             if unsafe:
+                 latency.profiler.count('overlap_policy_'+reason)
+             return blocked
++        self.overlap_reason = 'GEOMETRY_OVERLAP' if unsafe else 'NO_AMBIGUOUS_OVERLAP'
+         return bool(unsafe)
+ 
+     def acquisition_allowed(self, candidate, persons):
+         # Same geometry gate before confirmation as during continuity/recovery.
+         allowed = not self._candidate_overlap(candidate, self._observed_persons)
++        if allowed:
++            now = self._diagnostic_observation_time
++            if (candidate.get('track_id') != self._confirmation_track
++                    or self._confirmation_time is None
++                    or not 0 <= now-self._confirmation_time <= self.cfg.REID_CONFIRM_MAX_GAP):
++                self.confirm = 0
++                self.candidate_box = None
++            self._confirmation_track = candidate.get('track_id')
++            self._confirmation_time = now
+         if not allowed:
+             self.transition_reason = 'ACQUISITION_OVERLAP'
+         return allowed
+ 
+     def select_person(self, frame, persons, now):
++        before = self.stage
++        counts = dict(acquire=self.confirm, recovery=self.pending_count)
++        result = self._select_person(frame, persons, now)
++        if getattr(self.cfg, 'REID_OVERLAP_DIAGNOSTICS', False):
++            # Bounded sampling; decisions remain independent of diagnostics.
++            if now-getattr(self, '_last_decision_log', float('-inf')) >= .5:
++                self._last_decision_log = now
++                target = result or next((p for p in persons if p.get('track_id') == self.track_id), None)
++                if target is None and persons:
++                    target = max(persons, key=lambda p: p.get('reid_score', float('-inf')))
++                pairs = [] if target is None else [dict(track_id=p.get('track_id'), bbox=p['bbox'],
++                    **overlap_geometry(target['bbox'], p['bbox'])) for p in persons if p is not target]
++                latency.profiler.event('OVERLAP_DECISION', frame_id=self.frame_id,
++                    observation_timestamp=now, target_track_id=self.track_id,
++                    candidate_track_id=target.get('track_id') if target else None,
++                    target_bbox=target['bbox'] if target else None, competitors=pairs,
++                    continuity_confidence='trusted' if result is not None and self.locked else 'unconfirmed',
++                    previous_observation_timestamp=self._previous_observation_time,
++                    last_positive_verify=self.last_positive_verify,
++                    negative_verifications=self.negative_verifications,
++                    confirmation_admitted=(self.confirm > counts['acquire'] or self.pending_count > counts['recovery']),
++                    similarity=self.top1, margin=self.margin,
++                    confirmation_before=counts,
++                    confirmation_after=dict(acquire=self.confirm, recovery=self.pending_count),
++                    candidate_accepted=result is not None, overlap_reason=getattr(self, 'overlap_reason', None),
++                    decision_reason=self.transition_reason, previous_state=before, new_state=self.stage,
++                    detection_exists=bool(persons), target_track_exists=any(p.get('track_id')==self.track_id for p in persons),
++                    identity_confirmed=self.locked and not self.crossing_hold,
++                    predicted_only=False, genuinely_lost=not self.locked and self.reacquiring,
++                    ptz_control_allowed=result is not None and self.locked and not self.crossing_hold)
++        return result
++
++    def _select_person(self, frame, persons, now):
+         # Low-score detections maintain ByteTrack motion, never authorize a target.
+         eligible = [p for p in persons if p.get('confidence', 1.) >= self.cfg.PERSON_CONF_THRESHOLD]
+         if self.observation_time is not None and now <= self.observation_time:
+@@ -256,9 +311,12 @@ class HybridReIDTargetSelector(ReIDTargetSelector):
+         changed = candidate.get('track_id') != self.track_id
+         if recovering or changed:
+             continuous = (self.pending_id == candidate.get('track_id') and self.pending_box is not None
+-                          and iou(self.pending_box, candidate['bbox']) >= self.cfg.REID_CONFIRM_IOU)
++                          and iou(self.pending_box, candidate['bbox']) >= self.cfg.REID_CONFIRM_IOU
++                          and self._pending_time is not None
++                          and 0 <= now-self._pending_time <= self.cfg.REID_CONFIRM_MAX_GAP)
+             self.pending_count = self.pending_count+1 if continuous else 1
+             self.pending_id, self.pending_box = candidate.get('track_id'), candidate['bbox']
++            self._pending_time = now
+             if self.pending_count < self.cfg.REID_CONFIRM_FRAMES:
+                 return None
+             # Rotate authorization even when a recovered ByteTrack ID is unchanged.
+diff --git a/ai/overlap_policy.py b/ai/overlap_policy.py
+index 808b5b7..76ed281 100644
+--- a/ai/overlap_policy.py
++++ b/ai/overlap_policy.py
+@@ -5,7 +5,16 @@ from ai.reid_target import iou
+ def overlap_geometry(a,b):
+     area=lambda box:max(0,box[2]-box[0])*max(0,box[3]-box[1])
+     inter=max(0,min(a[2],b[2])-max(a[0],b[0]))*max(0,min(a[3],b[3])-max(a[1],b[1]))
+-    return dict(iou=iou(a,b),overlap=inter/max(1,min(area(a),area(b))),target_cover=inter/max(1,area(a)))
++    return dict(iou=iou(a,b),overlap=inter/max(1,min(area(a),area(b))),target_cover=inter/max(1,area(a)),
++                competitor_cover=inter/max(1,area(b)))
++
++def minor_contact(geometry, cfg):
++    """Both crops must remain mostly uncontaminated; containment is not minor."""
++    return (getattr(cfg, 'REID_MINOR_OVERLAP_ENABLED', False)
++            and geometry['target_cover'] <= cfg.REID_MINOR_TARGET_COVER
++            and geometry['competitor_cover'] <= cfg.REID_MINOR_COMPETITOR_COVER
++            and geometry['iou'] <= cfg.REID_MINOR_IOU)
++
+ 
+ class OverlapMemory:
+     def __init__(self):self.reset()
+@@ -15,7 +24,8 @@ class OverlapMemory:
+         cfg=selector.cfg;box=candidate['bbox']
+         conflicts=[(p,overlap_geometry(box,p['bbox'])) for p in persons
+             if p is not candidate and not (p.get('track_id')==candidate.get('track_id') and tuple(p['bbox'])==tuple(box))]
+-        conflicts=[(p,g) for p,g in conflicts if g['overlap']>=cfg.REID_CROSSING_OVERLAP]
++        conflicts=[(p,g) for p,g in conflicts if g['overlap']>=cfg.REID_CROSSING_OVERLAP
++                   and not minor_contact(g, cfg)]
+         key=(selector.lock_session_id,selector.track_id)
+         if key!=self.key:self.reset();self.key=key
+         if not conflicts:self.reset();self.key=key;return False,'NO_OVERLAP'
+diff --git a/config.py b/config.py
+index 57811a7..6d4a768 100644
+--- a/config.py
++++ b/config.py
+@@ -907,3 +907,37 @@ REID_CANDIDATE_AWARE = True
+ REID_HOLD_SCAN_INTERVAL = 0.5  # ambiguous geometry: bounded global retry, no spatial exclusion
+ TRACK_SNAPSHOT_COOLDOWN = 1.0
+ TRACK_SNAPSHOT_MAX_BYTES = 64_000_000  # raw+annotated JPEG+JSON bundles; OFF by default
++
++# Only small intersections in BOTH crops bypass the overlap ambiguity gate.
++# Appearance thresholds, motion continuity, freshness and 3-frame confirmation
++# still apply. Set PTZ_MINOR_OVERLAP=0 for the historical geometry policy.
++REID_MINOR_OVERLAP_ENABLED = os.environ.get('PTZ_MINOR_OVERLAP', '1') == '1'
++REID_MINOR_TARGET_COVER = 0.05
++REID_MINOR_COMPETITOR_COVER = 0.25
++REID_MINOR_IOU = 0.05
++REID_OVERLAP_DIAGNOSTICS = os.environ.get('PTZ_OVERLAP_DIAGNOSTICS', '0') == '1'
++REID_CONFIRM_MAX_GAP = 1.0  # same-candidate confirmation cannot span long gaps
++
++# Phase 1 offline replay only. No runtime/motor consumer reads these switches.
++IDENTITY_MEMORY_ENABLED = False
++IDENTITY_MEMORY_GALLERY_ENABLED = False  # requires explicit crop quality review
++
++# Explicit GUI opt-in only; raw detector-frame dataset, no changes to control.
++IDENTITY_RECORD_DIRECTORY = str(PROJECT_ROOT / 'logs' / 'identity_capture')
++IDENTITY_RECORD_MAX_BYTES = 1_000_000_000
++IDENTITY_RECORD_MAX_FRAMES = 3000
++
++# GUI opt-in shadow only; never authorizes motor control.
++IDENTITY_SHADOW_DIRECTORY = str(PROJECT_ROOT / 'logs' / 'identity_shadow')
++IDENTITY_SHADOW_INTERVAL = 0.2  # at most 5 sampled jobs/s, one job in flight
++IDENTITY_SHADOW_MAX_RECORDS = 10000
++
++# Default v4 scorer for GUI-started shadow; live validation remains pending.
++# Set PTZ_SHADOW_BATCHED=0 only for v3 comparison or rollback.
++IDENTITY_SHADOW_BATCHED = os.environ.get('PTZ_SHADOW_BATCHED', '1') == '1'
++
++# Phase 2 offline PoC only. These flags never grant camera/motor authority.
++IDENTITY_CANDIDATE_FILTERING_ENABLED = False
++IDENTITY_DISTRACTOR_MEMORY_ENABLED = False
++IDENTITY_EVENT_REID_ENABLED = False
++IDENTITY_MULTI_CUE_ENABLED = False
+diff --git a/gui/cctv_app.py b/gui/cctv_app.py
+index 9f063b2..1251582 100644
+--- a/gui/cctv_app.py
++++ b/gui/cctv_app.py
+@@ -88,6 +88,10 @@ class CCTVApp:
+         self.pending_target_path = None
+         self.ai_initialization_error = None
+         self.reid_target = ReIDTargetSelector(cfg)
++        from runtime.identity_recording import IdentityCapture
++        self.identity_capture = IdentityCapture(cfg)  # no writer/thread until explicit Start
++        from runtime.identity_shadow import IdentityShadow
++        self.identity_shadow = IdentityShadow(cfg)  # explicit Start only, no motor consumer
+ 
+         self.latest_frame_rgb = None
+         self.latest_frame_time = None
+@@ -561,6 +565,18 @@ class CCTVApp:
+         ttk.Label(target_box, textvariable=self.target_status_text, wraplength=290).pack(anchor="w")
+         self._enable_target_drop(self.target_preview_label)
+ 
++        record_box = ttk.LabelFrame(panel, text='Record & gán nhãn', padding=6)
++        record_box.pack(fill='x', pady=(0, 8))
++        ttk.Button(record_box, text='Start record + nhãn target tự động',
++                   command=self.identity_capture.start).pack(fill='x')
++        ttk.Button(record_box, text='Stop record', command=self.identity_capture.stop).pack(fill='x')
++        ttk.Button(record_box, text='Start Phase 1 shadow (chỉ log)', command=self.identity_shadow.start).pack(fill='x')
++        ttk.Button(record_box, text='Stop shadow', command=self.identity_shadow.stop).pack(fill='x')
++        ttk.Button(record_box, text='Review nhãn thủ công (tùy chọn)…', command=self.open_identity_labels).pack(fill='x')
++        self.identity_record_text = tk.StringVar(value='Record OFF')
++        ttk.Label(record_box, textvariable=self.identity_record_text, wraplength=290).pack(anchor='w')
++        self.root.after(500, self.refresh_identity_record_status)
++
+         # ====================================================
+         # AUTOMATIC CONTROL
+         # ====================================================
+@@ -1047,6 +1063,8 @@ class CCTVApp:
+         try:
+             return InferenceWorker(self).ai_worker()
+         finally:
++            if hasattr(self, 'identity_shadow'):
++                self.identity_shadow.stop()
+             if hasattr(self, 'auto_pan_tilt'):
+                 self.auto_pan_tilt.cancel()
+             if hasattr(self, 'face_worker'):
+@@ -1195,7 +1213,8 @@ class CCTVApp:
+ 
+             from runtime.display_mapping import display_result
+             result = display_result(result, frame_bgr.shape, time.monotonic(),
+-                                    cfg.MAX_CONTROL_OBSERVATION_AGE)
++                                    cfg.MAX_CONTROL_OBSERVATION_AGE,
++                                    display_received=packet.receive_timestamp)
+ 
+             # ------------------------------------------------
+             # DIGITAL PTZ
+@@ -1849,6 +1868,24 @@ class CCTVApp:
+     # CLOSE
+     # ========================================================
+ 
++    def refresh_identity_record_status(self):
++        if not self.running or getattr(self, '_closing', False):
++            return
++        self.identity_record_text.set(self.identity_capture.status())
++        self.identity_record_text.set(self.identity_record_text.get()+'\n'+self.identity_shadow.status())
++        self.root.after(500, self.refresh_identity_record_status)
++
++    def open_identity_labels(self):
++        from tkinter import filedialog
++        import subprocess
++        import sys
++        from pathlib import Path
++        directory = filedialog.askdirectory(title='Chọn capture đã Stop record',
++                                             initialdir=cfg.IDENTITY_RECORD_DIRECTORY)
++        if directory:
++            tool = Path(__file__).resolve().parents[1]/'tools/label_identity_capture.py'
++            subprocess.Popen([sys.executable, str(tool), '--capture', directory])
++
+     def on_close(self):
+         if getattr(self, '_closing', False):
+             return
+@@ -1864,6 +1901,10 @@ class CCTVApp:
+         self.manual_controller.close()
+         self.auto_zoom.request_stop(reason='APPLICATION_CLOSE')
+         self.auto_focus.set_enabled(False)
++        if hasattr(self, 'identity_capture'):
++            self.identity_capture.stop()
++        if hasattr(self, 'identity_shadow'):
++            self.identity_shadow.stop()
+         motor_done = threading.Event()
+         stream_done = threading.Event()
+ 
+@@ -1923,6 +1964,10 @@ class CCTVApp:
+                 log_deadline = time.monotonic()+2.
+                 def close_logs():
+                     try:
++                        if hasattr(self, 'identity_capture'):
++                            self.identity_capture.close()
++                        if hasattr(self, 'identity_shadow'):
++                            self.identity_shadow.close()
+                         if latency.profiler.close(timeout=1.) is False:
+                             print('[CLOSE] Latency writer shutdown timed out')
+                         from telemetry import zoom_trace
+diff --git a/runtime/display_mapping.py b/runtime/display_mapping.py
+index da1ee96..263e6ac 100644
+--- a/runtime/display_mapping.py
++++ b/runtime/display_mapping.py
+@@ -14,15 +14,22 @@ def scale_detection(detection, source_shape, display_shape):
+     return result
+ 
+ 
+-def display_result(result, display_shape, now, max_age):
++def display_result(result, display_shape, now, max_age, *, display_received=None):
+     """Hide expired overlays; streams have independent receive clocks/sequence IDs."""
+     result = dict(result)
+     shape = result.get('frame_shape')
+     received = result.get('frame_received')
+     valid = shape is not None and received is not None and 0 <= now-received <= max_age
++    # A healthy sub stream must not keep moving boxes on a frozen main image.
++    # Receive freshness does not establish sensor-time synchronization.
++    if display_received is not None:
++        valid = valid and 0 <= now-display_received <= max_age
+     for key in ('persons', 'faces'):
+         result[key] = [scale_detection(d, shape, display_shape)
+                        for d in result.get(key, [])] if valid else []
+     for key in ('person_target', 'face_target'):
+         result[key] = scale_detection(result.get(key), shape, display_shape) if valid else None
++    if not valid:
++        for key in ('recognition', 'display_recognition', 'face_panel'):
++            result[key] = None
+     return result
+diff --git a/runtime/inference_worker.py b/runtime/inference_worker.py
+index 435e3ca..5abb447 100644
+--- a/runtime/inference_worker.py
++++ b/runtime/inference_worker.py
+@@ -37,6 +37,9 @@ class InferenceWorker:
+ 
+     def reset_tracking_worker(self):
+         """Only the AI thread mutates tracking state; UI requests resets via Event."""
++        shadow = getattr(self, 'identity_shadow', None)
++        if shadow is not None:
++            shadow.invalidate()
+         if hasattr(self, 'auto_pan_tilt'):
+             self.auto_pan_tilt.cancel()
+         if hasattr(self, 'person_tracker'):
+@@ -425,6 +428,9 @@ class InferenceWorker:
+                 report_perf("STALE_OBSERVATION")
+                 continue
+ 
++            # Recorder preserves raw detections as well as returned MOT tracklets.
++            capture = getattr(self, 'identity_capture', None)
++            recording_detections = [dict(p) for p in persons] if capture is not None and capture.enabled else None
+             if cfg.TARGET_CONTINUOUS_REID:
+                 # Per-frame labels exclude neighbours; none represent spatial tracks.
+                 for index, detection in enumerate(persons):
+@@ -447,6 +453,12 @@ class InferenceWorker:
+             try:
+                 reid_started = time.perf_counter()
+                 person = self.reid_target.select_person(frame_bgr, persons, frame_time)
++                shadow = getattr(self, 'identity_shadow', None)
++                if shadow is not None and shadow.enabled:
++                    shadow.submit(frame_bgr, persons, self.reid_target, person, frame_sequence, frame_time)
++                if recording_detections is not None:
++                    capture.record(frame_bgr, recording_detections, persons, self.reid_target,
++                                   person, frame_sequence, frame_time, yolo_ms)
+                 if not cfg.TARGET_CONTINUOUS_REID:
+                     self.person_tracker.record_selection(frame_bgr, self.reid_target, person, frame_time,
+                         getattr(self.person_detector, 'postprocess_info', None))
+diff --git a/runtime/motion_recording.py b/runtime/motion_recording.py
+index a18a4fd..a3ebd47 100644
+--- a/runtime/motion_recording.py
++++ b/runtime/motion_recording.py
+@@ -1,12 +1,13 @@
+ """Bounded opt-in raw decoded frame recorder. Never opens a camera or motor."""
+-import atexit,json,queue,threading,time
++import atexit,json,queue,threading,time,hashlib
+ from pathlib import Path
+ from uuid import uuid4
+ import cv2
+ 
+ 
+ class MotionRecorder:
+-    def __init__(self,cfg):
++    def __init__(self,cfg, *, stop_on_limit=False):
++        self.stop_on_limit = stop_on_limit
+         self.root=Path(cfg.CAMERA_MOTION_RECORD_DIRECTORY)/('capture_'+uuid4().hex)
+         self.max_bytes=int(getattr(cfg,'CAMERA_MOTION_RECORD_MAX_BYTES',256_000_000))
+         self.max_frames=int(getattr(cfg,'CAMERA_MOTION_RECORD_MAX_FRAMES',600))
+@@ -37,8 +38,13 @@ class MotionRecorder:
+                 # Lossless decoded image, not raw sensor/encoded RTSP or capture PTS.
+                 meta.update(source_kind='decoded_rtsp_frame',image=f'{self.written:06d}.png',color='BGR',
+                             recording_gaps_possible=True,dropped_before=self.dropped)
++                if getattr(self, 'include_image_hash', False):
++                    meta['image_sha256'] = hashlib.sha256(buf).hexdigest()
+                 encoded=(json.dumps(meta)+'\n').encode()
+-                if self.written>=self.max_frames or self.bytes+len(buf)+len(encoded)>self.max_bytes:self.dropped+=1;continue
++                if self.written>=self.max_frames or self.bytes+len(buf)+len(encoded)>self.max_bytes:
++                    self.dropped+=1
++                    if self.stop_on_limit:self.stop.set()
++                    continue
+                 self.root.mkdir(parents=True,exist_ok=True)
+                 (self.root/meta['image']).write_bytes(buf.tobytes())
+                 with (self.root/'frames.jsonl').open('ab') as f:f.write(encoded)
+diff --git a/runtime/scheduling.py b/runtime/scheduling.py
+index fdaa613..3e088c6 100644
+--- a/runtime/scheduling.py
++++ b/runtime/scheduling.py
+@@ -1,8 +1,25 @@
+ """One accelerator lane; CPU-only face work does not block GPU tracking."""
+ from contextlib import contextmanager, nullcontext
++from contextvars import ContextVar
+ import threading
+ from telemetry import latency
+ 
++background_work = ContextVar('background_inference', default=False)
++
++
++class BackgroundBusy(TimeoutError):
++    pass
++
++
++@contextmanager
++def opportunistic_inference():
++    """Thread/context-local admission: never queue background work ahead of live work."""
++    token = background_work.set(True)
++    try:
++        yield
++    finally:
++        background_work.reset(token)
++
+ 
+ class InferenceScheduler:
+     def __init__(self):
+@@ -12,10 +29,14 @@ class InferenceScheduler:
+         self.waiting_detection = 0
+         self.waiting_face = 0
+         self.owner_branch = None
++        self.waiting_foreground = 0
+ 
+     @contextmanager
+     def use(self, branch, valid=None, resource="accelerator"):
+         ident = threading.get_ident()
++        background = background_work.get() and resource != 'cpu'
++        if background:
++            branch = 'identity_shadow'
+         start = latency.profiler.event('INFERENCE_QUEUE_ENTER', branch=branch, resource=resource,
+             observed_owner=self.owner_branch, waiting_detection=self.waiting_detection,
+             waiting_face=self.waiting_face)
+@@ -34,11 +55,16 @@ class InferenceScheduler:
+             return
+         with self.condition:
+             nested = self.owner == ident
++            if background and not nested and (self.owner is not None or self.waiting_foreground):
++                # Raise rather than yield False: decorators must not run the model.
++                raise BackgroundBusy('Foreground accelerator work active or waiting')
+             if not nested:
+                 if branch == 'detection':
+                     self.waiting_detection += 1
+                 if branch == 'face':
+                     self.waiting_face += 1
++                if not background:
++                    self.waiting_foreground += 1
+                 try:
+                     self.condition.wait_for(lambda: self.owner is None and
+                         (branch == 'detection' or self.waiting_detection == 0) and
+@@ -46,6 +72,8 @@ class InferenceScheduler:
+                     self.owner = ident
+                     self.owner_branch = branch
+                 finally:
++                    if not background:
++                        self.waiting_foreground -= 1
+                     if branch == 'detection':
+                         self.waiting_detection -= 1
+                     if branch == 'face':
+diff --git a/test/test_dual_stream.py b/test/test_dual_stream.py
+index d6c9015..bce5bc7 100644
+--- a/test/test_dual_stream.py
++++ b/test/test_dual_stream.py
+@@ -54,3 +54,20 @@ class DualStreamTests(unittest.TestCase):
+         _,transform=controller.render(np.zeros((300,800,3),dtype=np.uint8))
+         self.assertEqual((transform['crop_x1'],transform['crop_y1']),(200,75))
+         self.assertEqual((controller.center_x,controller.center_y),(100,50))
++
++    def test_frozen_main_hides_fresh_sub_boxes_and_identity_panels(self):
++        detection = {'bbox': (10,20,30,40)}
++        original = dict(frame_shape=(100,200,3), frame_received=12.9,
++                        persons=[detection], person_target=detection,
++                        face_panel={'identity':'target'}, recognition={'identity':'target'})
++        for main_received in (10., 13.1, float('nan')):
++            mapped = display_result(original, (300,800,3), 13., .8,
++                                    display_received=main_received)
++            self.assertEqual(mapped['persons'], [])
++            self.assertIsNone(mapped['person_target'])
++            self.assertIsNone(mapped['face_panel'])
++            self.assertIsNone(mapped['recognition'])
++        recovered = display_result(original, (300,800,3), 13., .8,
++                                   display_received=12.95)
++        self.assertEqual(recovered['person_target']['bbox'], (40,60,120,120))
++        self.assertEqual(original['persons'], [detection])

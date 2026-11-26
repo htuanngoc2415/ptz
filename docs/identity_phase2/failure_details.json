@@ -1,0 +1,49 @@
+[
+  {
+    "capture": 1,
+    "negative_veto_frames": [],
+    "longest_D_gap": {
+      "from_frame": 5090,
+      "to_frame": 5172,
+      "seconds": 2.7305743569995684
+    },
+    "ambiguous_duration_s": {
+      "A": 22.425422178999725,
+      "B": 57.7789974000043,
+      "C": 73.53854480399968,
+      "D": 142.72884949099898
+    }
+  },
+  {
+    "capture": 2,
+    "negative_veto_frames": [
+      6058
+    ],
+    "longest_D_gap": {
+      "from_frame": 1631,
+      "to_frame": 1748,
+      "seconds": 3.8987671899994893
+    },
+    "ambiguous_duration_s": {
+      "A": 27.477159908999056,
+      "B": 83.17814705299861,
+      "C": 115.4672506809975,
+      "D": 158.52721901599398
+    }
+  },
+  {
+    "capture": 3,
+    "negative_veto_frames": [],
+    "longest_D_gap": {
+      "from_frame": 1846,
+      "to_frame": 2084,
+      "seconds": 7.945794700000079
+    },
+    "ambiguous_duration_s": {
+      "A": 4.972601788000247,
+      "B": 23.62149892900061,
+      "C": 80.19027826199954,
+      "D": 139.69266092499902
+    }
+  }
+]

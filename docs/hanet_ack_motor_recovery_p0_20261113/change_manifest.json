@@ -1,0 +1,30 @@
+{
+  "checkpoint_path": "/mnt/files/Project/ptz/.hotfix_checkpoints/hanet_motor_p0_20261113",
+  "checkpoint": "f10c87e979926a1c2e6453c43a718779405e8a35",
+  "modified": [
+    "camera/hanet_ack.py",
+    "camera/hanet_controller.py",
+    "camera/hanet_rpc.py",
+    "control/auto_pan_tilt.py",
+    "test/test_hanet_ack_compatibility.py",
+    "test/test_hanet_fault_injection.py",
+    "test/test_hanet_persisted_recovery.py",
+    "test/test_hanet_rpc.py",
+    "tools/run_hanet_fault_tests.py"
+  ],
+  "added": [
+    "test/test_hanet_motor_p0.py"
+  ],
+  "sha256": {
+    "camera/hanet_ack.py": "a0c0d824cb8fdf6d72258d50ece25b53e9b12f090e0396d40e4d1b72cc589d3a",
+    "camera/hanet_controller.py": "4867b215f529e21aa17b7154d72ea848738f9a198f3fad9b2ea51d1c9f202971",
+    "camera/hanet_rpc.py": "08bd0651817e7fd06a10587c8d2e47046d68d9b51bfa5931136842e32b9a242d",
+    "control/auto_pan_tilt.py": "088ab6ddd6cf18184a4941aa6a2e16bc2014b8d936d745ca428feb09f7444359",
+    "test/test_hanet_ack_compatibility.py": "a1d4e95d405eefd9d35efd09b88b7eef77256a84d34377b94c527636db34a4b6",
+    "test/test_hanet_fault_injection.py": "e6bbacf506c38df3d64d697b5a6a0516ce4d50a854b9f72bd0db07e6bdf41278",
+    "test/test_hanet_persisted_recovery.py": "f8222fc92db653ba3ef6380603a819feca105fac7415780ba2ce8c96e64cc6e5",
+    "test/test_hanet_rpc.py": "0d8aad08b9ed522490e5e4f02ed2b807c09a5b2e4064c9932f7ab58adaac3135",
+    "tools/run_hanet_fault_tests.py": "b7af38f2a2add983a73fb6b607a10b74479072a9bc5d639f8f2d2203db999426",
+    "test/test_hanet_motor_p0.py": "e664afc7c6b4e54167f32c1878bb02d7458458a22ec97935eca06fce917e4005"
+  }
+}

@@ -1,0 +1,180 @@
+{
+  "capture": {
+    "path": "logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+    "summary": {
+      "complete": true,
+      "frames": 1502,
+      "dropped": 0,
+      "errors": 0,
+      "recorded_bytes": 760367779,
+      "frames_sha256": "3f0abf3a2737dc4cd17e3dbc704d49a43ce0525c477fb740134e78c720959a5a",
+      "max_frames": 3000,
+      "max_bytes": 1000000000,
+      "ground_truth": false
+    },
+    "duration": 170.0710616239994,
+    "interval_s": {
+      "n": 1501,
+      "median": 0.10006770200016035,
+      "p95": 0.20293511799991393,
+      "max": 0.3335881530001643
+    }
+  },
+  "shadow": {
+    "start": {
+      "event": "SHADOW_START",
+      "source": "identity_shadow",
+      "ground_truth": false,
+      "physical_commands": 0,
+      "interval_s": 0.2,
+      "max_age_s": 0.8,
+      "comparison": "same sampled frame; baseline proposal before final motor gates",
+      "additional_inference": true,
+      "wall_time_ns": 1795053828352125163,
+      "monotonic_ts": 5292.377957351,
+      "admission": "opportunistic_no_wait"
+    },
+    "stop": {
+      "event": "SHADOW_STOP",
+      "saved": 4,
+      "skipped": 1488,
+      "stale": 0,
+      "different": 4,
+      "physical_commands": 0,
+      "monotonic_ts": 5461.18849136,
+      "closed_monotonic_ts": 5461.215508802,
+      "rejection_reasons": {
+        "ACCELERATOR_BUSY": 653,
+        "RATE_LIMIT": 835
+      }
+    },
+    "samples": 4,
+    "duration": 168.81053400899964,
+    "interval_s": {
+      "n": 3,
+      "median": 0.4002422319999823,
+      "p95": 0.7041468070004157,
+      "max": 0.7379139820004639
+    },
+    "processing_ms": {
+      "n": 4,
+      "median": 87.90190499939854,
+      "p95": 104.26696325030207,
+      "max": 106.51632500048436
+    },
+    "age_ms": {
+      "n": 4,
+      "median": 133.952465499533,
+      "p95": 155.23327085038545,
+      "max": 156.67268900051567
+    },
+    "categories": {
+      "baseline_only": 4
+    },
+    "reasons": {
+      "LOW_REFERENCE_SIMILARITY": 4
+    },
+    "sessions": [
+      {
+        "event": "SHADOW_SESSION",
+        "session_id": "283663ed7751425b918110d4d691951f",
+        "target_uid": "target_cabe43536a524a5f85e8171ee334cb3f",
+        "monotonic_ts": 5292.524124102,
+        "initial_threshold": 0.7,
+        "baseline_reacquiring": true,
+        "reference_sha256": "c4f3b2408f4fd80995cbab21f7943f5d068f166ba847b255d5eefc3cb0007daf"
+      }
+    ],
+    "matched_capture_frames": 4,
+    "metadata_mismatches": [],
+    "difference_spans": [
+      {
+        "category": "baseline_only",
+        "start": 5420.368242791,
+        "first_frame": 4995,
+        "frames": 4,
+        "end": 5421.797933208,
+        "last_frame": 5038,
+        "last_index": 3
+      }
+    ]
+  },
+  "metrics": {
+    "before": {
+      "frame_age_ms": {
+        "n": 35,
+        "median": 126.93641600071714,
+        "p95": 237.6472756999645,
+        "max": 341.28871299981256
+      },
+      "yolo_ms": {
+        "n": 35,
+        "median": 34.05574200041883,
+        "p95": 98.85934550020464,
+        "max": 334.2830920000779
+      },
+      "reid_ms": {
+        "n": 35,
+        "median": 73.5685800000283,
+        "p95": 154.41341719933894,
+        "max": 250.08980100028566
+      }
+    },
+    "shadow_sample_interval": {
+      "frame_age_ms": {
+        "n": 158,
+        "median": 87.78574550024132,
+        "p95": 204.19851749943518,
+        "max": 268.1096729993442
+      },
+      "yolo_ms": {
+        "n": 158,
+        "median": 62.12911800002985,
+        "p95": 109.87908484999033,
+        "max": 180.74201499985065
+      },
+      "reid_ms": {
+        "n": 158,
+        "median": 2.4543125005038746,
+        "p95": 124.38683044942991,
+        "max": 173.86749199977203
+      }
+    },
+    "after": {
+      "frame_age_ms": {
+        "n": 38,
+        "median": 86.95249499987767,
+        "p95": 181.09552630075993,
+        "max": 248.23201000072004
+      },
+      "yolo_ms": {
+        "n": 38,
+        "median": 39.0162059998147,
+        "p95": 89.52724795008179,
+        "max": 101.16990999995323
+      },
+      "reid_ms": {
+        "n": 38,
+        "median": 0.15777699991303962,
+        "p95": 118.88813495038447,
+        "max": 165.6929049995597
+      }
+    }
+  },
+  "latency": {
+    "retained_start": "2026-11-19T09:06:18.692+07:00",
+    "retained_end": "2026-11-19T09:07:17.078188+07:00",
+    "during": {
+      "n": 238,
+      "median": 58.4489425,
+      "p95": 72.4897273,
+      "max": 84.586784
+    },
+    "outside": {
+      "n": 528,
+      "median": 54.6454595,
+      "p95": 71.1787138,
+      "max": 83.875377
+    }
+  }
+}

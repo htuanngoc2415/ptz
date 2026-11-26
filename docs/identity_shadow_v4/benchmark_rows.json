@@ -1,0 +1,966 @@
+{
+  "old": [
+    {
+      "frame_id": 981,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 49.74611299985554,
+      "held_ms": 48.19149000104517,
+      "longest_hold_ms": 33.74625899959938,
+      "passes": 2
+    },
+    {
+      "frame_id": 1110,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 31.025964999571443,
+      "held_ms": 29.456534997734707,
+      "longest_hold_ms": 14.752746999874944,
+      "passes": 2
+    },
+    {
+      "frame_id": 1254,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 44.791558997530956,
+      "held_ms": 43.457081002998166,
+      "longest_hold_ms": 28.370207000989467,
+      "passes": 2
+    },
+    {
+      "frame_id": 1392,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 30.760215002374025,
+      "held_ms": 29.36189799947897,
+      "longest_hold_ms": 14.887053999700584,
+      "passes": 2
+    },
+    {
+      "frame_id": 1539,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 34.11977499854402,
+      "held_ms": 30.989506998594152,
+      "longest_hold_ms": 16.144217999681132,
+      "passes": 2
+    },
+    {
+      "frame_id": 1687,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 36.5383499993186,
+      "held_ms": 33.15727700100979,
+      "longest_hold_ms": 16.695903999789152,
+      "passes": 2
+    },
+    {
+      "frame_id": 1852,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 39.824644998589065,
+      "held_ms": 36.88371999669471,
+      "longest_hold_ms": 18.49260099697858,
+      "passes": 2
+    },
+    {
+      "frame_id": 2114,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 31.933008998748846,
+      "held_ms": 30.310289996123174,
+      "longest_hold_ms": 16.10915799756185,
+      "passes": 2
+    },
+    {
+      "frame_id": 2266,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 15.172081999480724,
+      "held_ms": 14.418342998396838,
+      "longest_hold_ms": 14.418342998396838,
+      "passes": 1
+    },
+    {
+      "frame_id": 2442,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 31.659994998335605,
+      "held_ms": 29.99599800023134,
+      "longest_hold_ms": 15.561872001853772,
+      "passes": 2
+    },
+    {
+      "frame_id": 2587,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 33.25128500000574,
+      "held_ms": 31.81846699953894,
+      "longest_hold_ms": 15.909477999230148,
+      "passes": 2
+    },
+    {
+      "frame_id": 2764,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 33.816309998655925,
+      "held_ms": 31.653221001761267,
+      "longest_hold_ms": 16.024928001570515,
+      "passes": 2
+    },
+    {
+      "frame_id": 2922,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 35.91654199772165,
+      "held_ms": 32.98665199690731,
+      "longest_hold_ms": 16.61006799986353,
+      "passes": 2
+    },
+    {
+      "frame_id": 3057,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 31.997333997423993,
+      "held_ms": 30.564585998945404,
+      "longest_hold_ms": 16.046927998104366,
+      "passes": 2
+    },
+    {
+      "frame_id": 3203,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 30.234650999773294,
+      "held_ms": 28.85596000123769,
+      "longest_hold_ms": 14.938947002519853,
+      "passes": 2
+    },
+    {
+      "frame_id": 3343,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 35.83126499870559,
+      "held_ms": 34.72342400345951,
+      "longest_hold_ms": 17.966966002859408,
+      "passes": 2
+    },
+    {
+      "frame_id": 3495,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 28.347089002636494,
+      "held_ms": 27.30888099904405,
+      "longest_hold_ms": 14.058932996704243,
+      "passes": 2
+    },
+    {
+      "frame_id": 3727,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 28.97951200066018,
+      "held_ms": 27.470845998323057,
+      "longest_hold_ms": 13.952563000202645,
+      "passes": 2
+    },
+    {
+      "frame_id": 3940,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 28.08783399814274,
+      "held_ms": 26.846173997910228,
+      "longest_hold_ms": 13.530154999898514,
+      "passes": 2
+    },
+    {
+      "frame_id": 4079,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 36.22587399877375,
+      "held_ms": 34.337195000262,
+      "longest_hold_ms": 17.344042000331683,
+      "passes": 2
+    },
+    {
+      "frame_id": 4215,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 15.596790999552468,
+      "held_ms": 14.647130999946967,
+      "longest_hold_ms": 14.647130999946967,
+      "passes": 1
+    },
+    {
+      "frame_id": 4357,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 17.71057599762571,
+      "held_ms": 16.829694002808537,
+      "longest_hold_ms": 16.829694002808537,
+      "passes": 1
+    },
+    {
+      "frame_id": 4493,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 31.70499599946197,
+      "held_ms": 29.537343005358707,
+      "longest_hold_ms": 15.159254002355738,
+      "passes": 2
+    },
+    {
+      "frame_id": 4650,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 33.03140999923926,
+      "held_ms": 30.45428200130118,
+      "longest_hold_ms": 15.46465100182104,
+      "passes": 2
+    },
+    {
+      "frame_id": 4809,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 34.21708300083992,
+      "held_ms": 31.35995000047842,
+      "longest_hold_ms": 15.891683000518242,
+      "passes": 2
+    },
+    {
+      "frame_id": 4999,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 51.73735599964857,
+      "held_ms": 48.273797998263035,
+      "longest_hold_ms": 26.515575998928398,
+      "passes": 2
+    },
+    {
+      "frame_id": 5149,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 39.52376899906085,
+      "held_ms": 37.474248001672095,
+      "longest_hold_ms": 20.852153000305407,
+      "passes": 2
+    },
+    {
+      "frame_id": 5358,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 30.385930000193184,
+      "held_ms": 29.071089000353822,
+      "longest_hold_ms": 14.563410000846488,
+      "passes": 2
+    },
+    {
+      "frame_id": 5509,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 32.013957999879494,
+      "held_ms": 30.410602001211373,
+      "longest_hold_ms": 15.402211000036914,
+      "passes": 2
+    },
+    {
+      "frame_id": 5659,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 32.750832000601804,
+      "held_ms": 30.740303998754825,
+      "longest_hold_ms": 15.46928899915656,
+      "passes": 2
+    },
+    {
+      "frame_id": 1136,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 35.12986499845283,
+      "held_ms": 32.72068899605074,
+      "longest_hold_ms": 16.716245998395607,
+      "passes": 2
+    },
+    {
+      "frame_id": 1377,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 35.63541599942255,
+      "held_ms": 32.922144997428404,
+      "longest_hold_ms": 16.565203997743083,
+      "passes": 2
+    },
+    {
+      "frame_id": 1551,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 35.775064996414585,
+      "held_ms": 33.02294400418759,
+      "longest_hold_ms": 16.593185002420796,
+      "passes": 2
+    },
+    {
+      "frame_id": 1719,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 41.32270100308233,
+      "held_ms": 37.835008995898534,
+      "longest_hold_ms": 19.301591997646028,
+      "passes": 2
+    },
+    {
+      "frame_id": 1907,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 37.60465600134921,
+      "held_ms": 34.495971998694586,
+      "longest_hold_ms": 17.979043997911504,
+      "passes": 2
+    },
+    {
+      "frame_id": 2124,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 36.17861000020639,
+      "held_ms": 33.36541600219789,
+      "longest_hold_ms": 16.77091700184974,
+      "passes": 2
+    },
+    {
+      "frame_id": 2339,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 36.16665899971849,
+      "held_ms": 33.30652100339648,
+      "longest_hold_ms": 17.848069001047406,
+      "passes": 2
+    },
+    {
+      "frame_id": 2495,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 36.76845199879608,
+      "held_ms": 33.58319299877621,
+      "longest_hold_ms": 17.249092998099513,
+      "passes": 2
+    },
+    {
+      "frame_id": 2653,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 38.294653000775725,
+      "held_ms": 34.91906699855463,
+      "longest_hold_ms": 17.853684999863617,
+      "passes": 2
+    },
+    {
+      "frame_id": 2800,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 36.279701998864766,
+      "held_ms": 33.358992001012666,
+      "longest_hold_ms": 16.71549900129321,
+      "passes": 2
+    },
+    {
+      "frame_id": 3042,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 34.41149799982668,
+      "held_ms": 32.2613470016222,
+      "longest_hold_ms": 16.473596999276197,
+      "passes": 2
+    },
+    {
+      "frame_id": 3191,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 32.99492899895995,
+      "held_ms": 30.920973997126566,
+      "longest_hold_ms": 15.59060299769044,
+      "passes": 2
+    },
+    {
+      "frame_id": 3337,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 43.76556999704917,
+      "held_ms": 40.83898100361694,
+      "longest_hold_ms": 21.28741700289538,
+      "passes": 2
+    },
+    {
+      "frame_id": 3518,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 35.70926799875451,
+      "held_ms": 33.21863100063638,
+      "longest_hold_ms": 17.233319002116332,
+      "passes": 2
+    },
+    {
+      "frame_id": 3684,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 33.831306998763466,
+      "held_ms": 32.09440400314634,
+      "longest_hold_ms": 16.523246002179803,
+      "passes": 2
+    },
+    {
+      "frame_id": 3838,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 29.955149002489634,
+      "held_ms": 28.36609999940265,
+      "longest_hold_ms": 14.634089999162825,
+      "passes": 2
+    },
+    {
+      "frame_id": 3977,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 34.3251890008105,
+      "held_ms": 31.62928000165266,
+      "longest_hold_ms": 16.275248999590985,
+      "passes": 2
+    },
+    {
+      "frame_id": 4195,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 30.53878100035945,
+      "held_ms": 28.714083004160784,
+      "longest_hold_ms": 15.285175002645701,
+      "passes": 2
+    },
+    {
+      "frame_id": 4359,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 33.81969499969273,
+      "held_ms": 32.064839000668144,
+      "longest_hold_ms": 16.231261000939412,
+      "passes": 2
+    },
+    {
+      "frame_id": 4511,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 29.69629100334714,
+      "held_ms": 28.10905700243893,
+      "longest_hold_ms": 14.70982300088508,
+      "passes": 2
+    },
+    {
+      "frame_id": 4657,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 30.601946000388125,
+      "held_ms": 29.100337000272702,
+      "longest_hold_ms": 14.680423999379855,
+      "passes": 2
+    },
+    {
+      "frame_id": 4801,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 34.46956499828957,
+      "held_ms": 32.551245003560325,
+      "longest_hold_ms": 16.978667001239955,
+      "passes": 2
+    },
+    {
+      "frame_id": 4954,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 30.498314001306426,
+      "held_ms": 28.807595997932367,
+      "longest_hold_ms": 15.014380998763954,
+      "passes": 2
+    },
+    {
+      "frame_id": 5097,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 29.905699000664754,
+      "held_ms": 27.82437199857668,
+      "longest_hold_ms": 14.500623998173978,
+      "passes": 2
+    },
+    {
+      "frame_id": 5240,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 36.309007002273574,
+      "held_ms": 33.06487100053346,
+      "longest_hold_ms": 17.316174998995848,
+      "passes": 2
+    },
+    {
+      "frame_id": 5391,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 44.70067000147537,
+      "held_ms": 40.56741900058114,
+      "longest_hold_ms": 21.880773001612397,
+      "passes": 2
+    },
+    {
+      "frame_id": 5625,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 38.1484770005045,
+      "held_ms": 34.62122200289741,
+      "longest_hold_ms": 17.713389999698848,
+      "passes": 2
+    },
+    {
+      "frame_id": 5841,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 57.38872899746639,
+      "held_ms": 52.55139899600181,
+      "longest_hold_ms": 28.587214997969568,
+      "passes": 2
+    },
+    {
+      "frame_id": 6024,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 68.85389699891675,
+      "held_ms": 63.999310001236154,
+      "longest_hold_ms": 37.15578199989977,
+      "passes": 2
+    },
+    {
+      "frame_id": 6238,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 36.76701400036109,
+      "held_ms": 33.572973999980604,
+      "longest_hold_ms": 16.923983999731718,
+      "passes": 2
+    }
+  ],
+  "batched": [
+    {
+      "frame_id": 981,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 20.375762000185205,
+      "held_ms": 15.778452998347348,
+      "longest_hold_ms": 15.778452998347348,
+      "passes": 1
+    },
+    {
+      "frame_id": 1110,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 17.981354001676664,
+      "held_ms": 13.283052998303901,
+      "longest_hold_ms": 13.283052998303901,
+      "passes": 1
+    },
+    {
+      "frame_id": 1254,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 17.766798002412543,
+      "held_ms": 12.548730002890807,
+      "longest_hold_ms": 12.548730002890807,
+      "passes": 1
+    },
+    {
+      "frame_id": 1392,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 17.246401999727823,
+      "held_ms": 13.79304199872422,
+      "longest_hold_ms": 13.79304199872422,
+      "passes": 1
+    },
+    {
+      "frame_id": 1539,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 20.590877000358887,
+      "held_ms": 13.045589003013447,
+      "longest_hold_ms": 13.045589003013447,
+      "passes": 1
+    },
+    {
+      "frame_id": 1687,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 36.00719699898036,
+      "held_ms": 26.550322996627074,
+      "longest_hold_ms": 13.537908998841885,
+      "passes": 2
+    },
+    {
+      "frame_id": 1852,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 34.28600000188453,
+      "held_ms": 26.768649997393368,
+      "longest_hold_ms": 13.575762997788843,
+      "passes": 2
+    },
+    {
+      "frame_id": 2114,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 32.68318600021303,
+      "held_ms": 27.22101799736265,
+      "longest_hold_ms": 13.743523999437457,
+      "passes": 2
+    },
+    {
+      "frame_id": 2266,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 15.323849002015777,
+      "held_ms": 13.34828600010951,
+      "longest_hold_ms": 13.34828600010951,
+      "passes": 1
+    },
+    {
+      "frame_id": 2442,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 18.229085002531065,
+      "held_ms": 13.838301001669606,
+      "longest_hold_ms": 13.838301001669606,
+      "passes": 1
+    },
+    {
+      "frame_id": 2587,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 18.06341900010011,
+      "held_ms": 14.460317997873062,
+      "longest_hold_ms": 14.460317997873062,
+      "passes": 1
+    },
+    {
+      "frame_id": 2764,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 19.58179299981566,
+      "held_ms": 13.441246999718715,
+      "longest_hold_ms": 13.441246999718715,
+      "passes": 1
+    },
+    {
+      "frame_id": 2922,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 22.27896800104645,
+      "held_ms": 14.901512000506045,
+      "longest_hold_ms": 14.901512000506045,
+      "passes": 1
+    },
+    {
+      "frame_id": 3057,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 16.984910998871783,
+      "held_ms": 13.363372003368568,
+      "longest_hold_ms": 13.363372003368568,
+      "passes": 1
+    },
+    {
+      "frame_id": 3203,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 16.583528002229286,
+      "held_ms": 13.673192999704042,
+      "longest_hold_ms": 13.673192999704042,
+      "passes": 1
+    },
+    {
+      "frame_id": 3343,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 17.29815499857068,
+      "held_ms": 13.80289000007906,
+      "longest_hold_ms": 13.80289000007906,
+      "passes": 1
+    },
+    {
+      "frame_id": 3495,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 15.441603998624487,
+      "held_ms": 12.27215400285786,
+      "longest_hold_ms": 12.27215400285786,
+      "passes": 1
+    },
+    {
+      "frame_id": 3727,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 15.871274001256097,
+      "held_ms": 12.187224998342572,
+      "longest_hold_ms": 12.187224998342572,
+      "passes": 1
+    },
+    {
+      "frame_id": 3940,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 15.951383997162338,
+      "held_ms": 12.539719999040244,
+      "longest_hold_ms": 12.539719999040244,
+      "passes": 1
+    },
+    {
+      "frame_id": 4079,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 18.931910002720542,
+      "held_ms": 13.649168002302758,
+      "longest_hold_ms": 13.649168002302758,
+      "passes": 1
+    },
+    {
+      "frame_id": 4215,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 15.889460002654232,
+      "held_ms": 13.588530997367343,
+      "longest_hold_ms": 13.588530997367343,
+      "passes": 1
+    },
+    {
+      "frame_id": 4357,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 16.520749999472173,
+      "held_ms": 13.969867999549024,
+      "longest_hold_ms": 13.969867999549024,
+      "passes": 1
+    },
+    {
+      "frame_id": 4493,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 17.685156002698932,
+      "held_ms": 12.959337997017428,
+      "longest_hold_ms": 12.959337997017428,
+      "passes": 1
+    },
+    {
+      "frame_id": 4650,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 22.886034999828553,
+      "held_ms": 15.04654699965613,
+      "longest_hold_ms": 15.04654699965613,
+      "passes": 1
+    },
+    {
+      "frame_id": 4809,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 34.18705300282454,
+      "held_ms": 25.434920000407146,
+      "longest_hold_ms": 13.122614000167232,
+      "passes": 2
+    },
+    {
+      "frame_id": 4999,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 53.42999200001941,
+      "held_ms": 43.51085799862631,
+      "longest_hold_ms": 22.431729001255007,
+      "passes": 2
+    },
+    {
+      "frame_id": 5149,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 32.57493700220948,
+      "held_ms": 26.056932998471893,
+      "longest_hold_ms": 13.25068900041515,
+      "passes": 2
+    },
+    {
+      "frame_id": 5358,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 17.47342399903573,
+      "held_ms": 13.179706998926122,
+      "longest_hold_ms": 13.179706998926122,
+      "passes": 1
+    },
+    {
+      "frame_id": 5509,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 18.77758099726634,
+      "held_ms": 13.800811000692192,
+      "longest_hold_ms": 13.800811000692192,
+      "passes": 1
+    },
+    {
+      "frame_id": 5659,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_ca0c81d0b16441a8b0c7b48b7b0a698f",
+      "wall_ms": 34.006188998318976,
+      "held_ms": 27.163285998540232,
+      "longest_hold_ms": 13.61555000039516,
+      "passes": 2
+    },
+    {
+      "frame_id": 1136,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 35.61622599954717,
+      "held_ms": 26.67588800250087,
+      "longest_hold_ms": 13.441341001453111,
+      "passes": 2
+    },
+    {
+      "frame_id": 1377,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 36.10774200205924,
+      "held_ms": 26.748248001240427,
+      "longest_hold_ms": 13.483249000273645,
+      "passes": 2
+    },
+    {
+      "frame_id": 1551,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 34.40312500242726,
+      "held_ms": 26.566779000859242,
+      "longest_hold_ms": 13.389616000495153,
+      "passes": 2
+    },
+    {
+      "frame_id": 1719,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 37.278730000252835,
+      "held_ms": 29.413649997877656,
+      "longest_hold_ms": 15.19874599762261,
+      "passes": 2
+    },
+    {
+      "frame_id": 1907,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 35.89991199987708,
+      "held_ms": 27.421657996455906,
+      "longest_hold_ms": 14.092892997723538,
+      "passes": 2
+    },
+    {
+      "frame_id": 2124,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 37.149818999751005,
+      "held_ms": 28.743477996613365,
+      "longest_hold_ms": 14.844002998870565,
+      "passes": 2
+    },
+    {
+      "frame_id": 2339,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 37.04540199760231,
+      "held_ms": 28.146440999989863,
+      "longest_hold_ms": 15.056655000080355,
+      "passes": 2
+    },
+    {
+      "frame_id": 2495,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 36.96107500218204,
+      "held_ms": 26.504343000851804,
+      "longest_hold_ms": 13.276162000693148,
+      "passes": 2
+    },
+    {
+      "frame_id": 2653,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 42.854612998780794,
+      "held_ms": 29.715585998928873,
+      "longest_hold_ms": 16.194247000385076,
+      "passes": 2
+    },
+    {
+      "frame_id": 2800,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 37.35819899884518,
+      "held_ms": 27.284159001283115,
+      "longest_hold_ms": 13.9209219996701,
+      "passes": 2
+    },
+    {
+      "frame_id": 3042,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 33.84626799743273,
+      "held_ms": 26.156960000662366,
+      "longest_hold_ms": 13.30682800107752,
+      "passes": 2
+    },
+    {
+      "frame_id": 3191,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 33.485569001641124,
+      "held_ms": 26.46261499830871,
+      "longest_hold_ms": 13.268497998069506,
+      "passes": 2
+    },
+    {
+      "frame_id": 3337,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 42.16137100229389,
+      "held_ms": 33.19833899877267,
+      "longest_hold_ms": 17.11428899943712,
+      "passes": 2
+    },
+    {
+      "frame_id": 3518,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 35.86871799780056,
+      "held_ms": 27.88171900101588,
+      "longest_hold_ms": 14.315805998194264,
+      "passes": 2
+    },
+    {
+      "frame_id": 3684,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 21.823842002049787,
+      "held_ms": 15.972959001373965,
+      "longest_hold_ms": 15.972959001373965,
+      "passes": 1
+    },
+    {
+      "frame_id": 3838,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 16.606781999144005,
+      "held_ms": 12.31142100004945,
+      "longest_hold_ms": 12.31142100004945,
+      "passes": 1
+    },
+    {
+      "frame_id": 3977,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 33.77050300332485,
+      "held_ms": 25.95167200342985,
+      "longest_hold_ms": 13.437632002023747,
+      "passes": 2
+    },
+    {
+      "frame_id": 4195,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 18.810319998010527,
+      "held_ms": 13.874781001504743,
+      "longest_hold_ms": 13.874781001504743,
+      "passes": 1
+    },
+    {
+      "frame_id": 4359,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 34.546122999017825,
+      "held_ms": 28.473272002884187,
+      "longest_hold_ms": 14.422975000343286,
+      "passes": 2
+    },
+    {
+      "frame_id": 4511,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 17.627343000640394,
+      "held_ms": 13.022783998167142,
+      "longest_hold_ms": 13.022783998167142,
+      "passes": 1
+    },
+    {
+      "frame_id": 4657,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 17.245033002836863,
+      "held_ms": 13.477601001795847,
+      "longest_hold_ms": 13.477601001795847,
+      "passes": 1
+    },
+    {
+      "frame_id": 4801,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 19.6596080022573,
+      "held_ms": 15.830020998691907,
+      "longest_hold_ms": 15.830020998691907,
+      "passes": 1
+    },
+    {
+      "frame_id": 4954,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 17.30010699975537,
+      "held_ms": 13.054381000983994,
+      "longest_hold_ms": 13.054381000983994,
+      "passes": 1
+    },
+    {
+      "frame_id": 5097,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 17.394825001247227,
+      "held_ms": 12.293841999053257,
+      "longest_hold_ms": 12.293841999053257,
+      "passes": 1
+    },
+    {
+      "frame_id": 5240,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 35.920489997806726,
+      "held_ms": 26.30005199898733,
+      "longest_hold_ms": 13.180935999116627,
+      "passes": 2
+    },
+    {
+      "frame_id": 5391,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 47.24941300082719,
+      "held_ms": 35.44259499904001,
+      "longest_hold_ms": 21.509854999749223,
+      "passes": 2
+    },
+    {
+      "frame_id": 5625,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 39.61183299907134,
+      "held_ms": 26.98683400012669,
+      "longest_hold_ms": 13.57622499926947,
+      "passes": 2
+    },
+    {
+      "frame_id": 5841,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 53.906666002148995,
+      "held_ms": 40.25997600183473,
+      "longest_hold_ms": 20.756664998771157,
+      "passes": 2
+    },
+    {
+      "frame_id": 6024,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 53.87131799943745,
+      "held_ms": 39.54203900502762,
+      "longest_hold_ms": 21.222695002506953,
+      "passes": 2
+    },
+    {
+      "frame_id": 6238,
+      "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_91efcb317617412bb9d9a5a02faede59",
+      "wall_ms": 93.72616299879155,
+      "held_ms": 85.33014199565514,
+      "longest_hold_ms": 70.90799799698289,
+      "passes": 2
+    }
+  ]
+}

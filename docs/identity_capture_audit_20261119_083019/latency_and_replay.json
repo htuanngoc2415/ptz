@@ -1,0 +1,36 @@
+{
+  "retained_trace_start": "2026-11-19T08:33:05.811+07:00",
+  "retained_trace_end": "2026-11-19T08:33:56.142211+07:00",
+  "gui_record": {
+    "n": 218,
+    "median": 63.080114,
+    "p95": 78.36342504999999,
+    "max": 106.877994
+  },
+  "gui_outside_record": {
+    "n": 416,
+    "median": 57.9311425,
+    "p95": 74.2516365,
+    "max": 117.967593
+  },
+  "slow_gui": [],
+  "phase1": {
+    "capture_706c13123cb84c2294eecf5fa4c3850f": {
+      "selected": {
+        "baseline": 1513,
+        "identity": 1270
+      },
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 245,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 23,
+        "CONFIRMED_MULTI_CUE": 1270,
+        "PERSON_OVERLAP": 116,
+        "LOW_DETECTION_CONFIDENCE": 13
+      },
+      "first_selected": {
+        "baseline": 1.3974563910001052,
+        "identity": 1.3974563910001052
+      }
+    }
+  }
+}

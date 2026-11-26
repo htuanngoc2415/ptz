@@ -1,0 +1,713 @@
+--- baseline/ptz/config.py
++++ corrected/ptz/config.py
+@@ -932,3 +932,10 @@
+ IDENTITY_DISTANT_CONFIRM_EXTRA = 1
+ if IDENTITY_TRACKING_ENABLED and TARGET_CONTINUOUS_REID:
+     raise ValueError('Identity tracking requires TARGET_CONTINUOUS_REID=False')
++
++# Independent opt-in ablations: real-video identity improvement is not yet established.
++IDENTITY_REGRESSION_FIX = os.environ.get('PTZ_IDENTITY_FIX', '0') == '1'
++IDENTITY_REID_OPTIMIZED = os.environ.get('PTZ_IDENTITY_REID_OPTIMIZED', '0') == '1'
++# Previous 0.35s window was shorter than observed ReID p95 (0.456s)
++# plus one detection period (0.187s). Still bounded by fresh identity evidence.
++IDENTITY_WEAK_OVERLAP_GRACE = .70
+--- baseline/ptz/ai/identity_manager.py
++++ corrected/ptz/ai/identity_manager.py
+@@ -10,8 +10,10 @@
+ import threading
+ import time
+ from uuid import uuid4
++from types import SimpleNamespace
+ from ai.hybrid_reid import HybridReIDTargetSelector
+ from ai.reid_target import iou
++from ai.overlap_policy import overlap_geometry
+ from ai.reid.trusted_gallery import TrustedTargetGallery
+ from runtime.identity_tracking import TargetObservation
+ from telemetry import latency
+@@ -28,7 +30,8 @@
+             predicted_frames=0, reid_invocations=0, stale_results=0, recoveries=0,
+             recovery_attempts=0, abandoned_recoveries=0, short_recovery_failures=0,
+             occlusion_attempts=0, occlusion_recoveries=0, tracker_rebindings=0, recovery_latency_s=[],
+-            reid_latency_ms=[], observed_target_seconds=0., ptz_commands_during_uncertain=None)
++            reid_latency_ms=[], observed_target_seconds=0., ptz_commands_during_uncertain=None,
++            denial_reasons={}, allow_reasons={}, observed_denial_reasons={}, reid_candidates=0)
+         super().__init__(cfg, reid)
+ 
+     def reset(self, preserve_reacquire=False):
+@@ -60,10 +63,13 @@
+         self._predictions = ()
+         self.last_raw_similarity = None
+         self._evidence_timestamp = self._evidence_frame_id = None
++        self._decision_gate = None
++        self._overlap_details = []
+         # Keep an in-flight slot occupied until it completes: resets cannot spawn
+         # unbounded GPU jobs. Its old epoch is rejected on consumption.
+ 
+     def _hold(self, reason, missing=False):
++        self._decision_gate = reason
+         if missing and not self._recovery_was_occlusion:
+             self.metrics['occlusion_attempts'] += 1
+             self._recovery_was_occlusion = True
+@@ -77,6 +83,60 @@
+             self.tracking_status = 'MISSING' if missing else 'TRACKED'
+             self.identity_status = 'UNCERTAIN'
+ 
++    def _candidate_overlap(self, candidate, persons, evidence_time=None, evidence_ids=()):
++        self._overlap_details = [dict(track_id=p.get('track_id'), confidence=p.get('confidence'),
++            **overlap_geometry(candidate['bbox'], p['bbox'])) for p in persons if p is not candidate]
++        if not getattr(self.cfg, 'IDENTITY_REGRESSION_FIX', False):
++            return super()._candidate_overlap(candidate, persons)
++        # The existing weak-contact policy remains conservative for foreground
++        # occluders, tentative competitors and merge/split geometry. Only replace
++        # uncompensated old geometry with a reliable native prediction.
++        proxy = copy.copy(self)
++        proxy.cfg = SimpleNamespace(**vars(self.cfg))
++        proxy.cfg.REID_WEAK_OVERLAP_GRACE = self.cfg.IDENTITY_WEAK_OVERLAP_GRACE
++        temporal = candidate.get('temporal_reliable', False)
++        if temporal:
++            proxy.person_box = candidate.get('predicted_bbox') or self.person_box
++        if evidence_time is not None and temporal:
++            proxy.locked, proxy.crossing_hold = True, False
++            proxy.track_id = candidate['track_id']
++            proxy.person_box = candidate.get('predicted_bbox') or candidate['bbox']
++            proxy.last_positive_verify = evidence_time
++            proxy.identity_status, proxy.negative_verifications = 'VERIFIED', 0
++        if candidate.get('track_id') != proxy.track_id:
++            return super()._candidate_overlap(candidate, persons)
++        if evidence_time is not None and temporal:
++            key = (proxy.lock_session_id, proxy.track_id)
++            if self._overlap_memory.key != key:
++                self._overlap_memory.reset()
++                self._overlap_memory.key = key
++            self._overlap_memory.verified_at = evidence_time
++            self._overlap_memory.verified_ids = tuple(evidence_ids)
++        blocked, reason = self._overlap_memory.assess(candidate, persons, proxy,
++            self.observation_time, self._previous_observation_time)
++        if reason == 'OVERLAP_CANDIDATES_CHANGED' and temporal:
++            # Tentative -> native ID changes are not themselves contradictory
++            # identity evidence after all geometry/association gates passed.
++            # Require another verification within the ORIGINAL bounded window;
++            # repeated ID churn cannot restart the grace indefinitely.
++            memory = self._overlap_memory
++            memory.ids = tuple(sorted(p['track_id'] for p in persons if p is not candidate
++                and overlap_geometry(candidate['bbox'], p['bbox'])['overlap'] >= self.cfg.REID_CROSSING_OVERLAP))
++            memory.verified_at, memory.verified_ids = None, ()
++            self._last_job_at = float('-inf')
++            if memory.since is not None and 0 <= self.observation_time-memory.since <= self.cfg.IDENTITY_WEAK_OVERLAP_GRACE:
++                blocked, reason = False, 'WEAK_OVERLAP_CONTINUITY'
++        self.overlap_reason = reason
++        self._weak_overlap_active = reason == 'WEAK_OVERLAP_CONTINUITY'
++        if self._weak_overlap_active and not temporal:
++            blocked, self.overlap_reason = True, 'WEAK_OVERLAP_MOTION_AMBIGUOUS'
++        return blocked
++
++    def _remember_verification(self, captured, rows):
++        if getattr(self.cfg, 'IDENTITY_REGRESSION_FIX', False):
++            self._overlap_memory.verified_at = captured
++            self._overlap_memory.verified_ids = tuple(p['track_id'] for p in rows)
++
+     def update_predictions(self, hypotheses):
+         # Hints are diagnostic only. They cannot become current observations or
+         # contribute to identity/gallery confirmation.
+@@ -110,15 +170,23 @@
+         scorer._score_trigger = 'IDENTITY_RECOVERY' if self.crossing_hold or self.reacquiring else (
+             'IDENTITY_VERIFY' if self.locked else 'IDENTITY_ACQUIRE')
+         scorer._score_valid = lambda: self._token() == token and 0 <= self.clock()-now <= self.cfg.REID_VERIFY_RESULT_MAX_AGE
+-        rows = copy.deepcopy(persons)
+-        image = frame.copy()
++        with latency.span('IDENTITY_SNAPSHOT', 'identity_snapshot_ms'):
++            rows = copy.deepcopy(persons)
++            image = frame.copy()
+         future = Future()
+         self._job = (future, token, now, self.frame_id, rows)
+         self._last_job_at = now
+         self.metrics['reid_invocations'] += 1
++        self.metrics['reid_candidates'] += len(rows)
++        latency.profiler.event('IDENTITY_REID_SUBMITTED', frame_id=self.frame_id,
++            frame_timestamp=now, decision_timestamp=self.clock(), candidate_track_ids=[p['track_id'] for p in rows],
++            token=list(token), queue_capacity=1)
+         context = copy_context()
++        submitted = time.perf_counter()
+         def run():
+             begin = time.perf_counter()
++            latency.profiler.event('IDENTITY_WORKER_STARTED', metric='identity_worker_schedule_ms',
++                duration_ms=(begin-submitted)*1000, frame_id=scorer.frame_id)
+             try:
+                 scores = scorer._scores(image, rows)
+                 future.set_result((scores, (time.perf_counter()-begin)*1000))
+@@ -132,14 +200,18 @@
+             return
+         future, token, captured, frame_id, rows = job
+         self._job = None
++        expired_at_decision = (getattr(self.cfg, 'IDENTITY_REGRESSION_FIX', False)
++            and not 0 <= self.clock()-captured <= self.cfg.REID_VERIFY_RESULT_MAX_AGE)
+         if (token != self._token() or not 0 <= now-captured <= self.cfg.REID_VERIFY_RESULT_MAX_AGE
+-                or frame_id <= self._last_result_frame):
++                or expired_at_decision or frame_id > self.frame_id or frame_id <= self._last_result_frame):
+             self.metrics['stale_results'] += 1
+             latency.profiler.count('identity_stale_results')
+             latency.profiler.event('IDENTITY_RESULT_DISCARDED', frame_id=frame_id,
+                                    reason='TOKEN_AGE_OR_ORDER', session_generation=self.track_generation,
+                                    result_token=list(token), active_token=list(self._token()))
+             return
++        latency.profiler.event('IDENTITY_RESULT_CONSUMED', metric='identity_result_age_ms',
++            duration_ms=(now-captured)*1000, frame_id=self.frame_id, evidence_frame_id=frame_id)
+         self._last_result_frame = frame_id
+         try:
+             scores, duration = future.result()
+@@ -158,6 +230,7 @@
+             return
+         source = rows[index]
+         self.last_raw_similarity = source.get('reference_similarity', source.get('raw_similarity'))
++        self.last_gallery_similarity = source.get('raw_similarity')
+         self._evidence_timestamp, self._evidence_frame_id = captured, frame_id
+         current = next((p for p in persons if p['track_id'] == source['track_id']), None)
+         others = [s for i, s in enumerate(scores) if i != index]
+@@ -174,7 +247,10 @@
+             self.pending_count = 0
+             return
+         ambiguous = self.margin is not None and self.margin < self.cfg.REID_MARGIN_THRESHOLD
+-        if ambiguous or self._candidate_overlap(current, persons):
++        confirmation_threshold = self.cfg.REID_REACQUIRE_THRESHOLD if self.locked or self.reacquiring else self.cfg.REID_ACQUIRE_THRESHOLD
++        evidence_time = captured if self.top1 >= (self.cfg.REID_KEEP_THRESHOLD if stable else confirmation_threshold) else None
++        if ambiguous or self._candidate_overlap(current, persons, evidence_time=evidence_time,
++                evidence_ids=[p['track_id'] for p in rows]):
+             self.pending_count = 0
+             if self.locked:
+                 self._hold('AMBIGUOUS_IDENTITY')
+@@ -184,6 +260,7 @@
+                        and source.get('confidence', 0) >= self.cfg.PERSON_CONF_THRESHOLD)
+             if self.top1 >= self.cfg.REID_KEEP_THRESHOLD:
+                 self.last_positive_verify = captured
++                self._remember_verification(captured, rows)
+                 self.negative_verifications = 0
+                 self.identity_status = 'VERIFIED'
+                 self.transition_reason = 'IDENTITY_VERIFIED'
+@@ -203,6 +280,11 @@
+         if self.top1 < threshold:
+             self.pending_count = 0
+             self.transition_reason = 'BELOW_CONFIRMATION_THRESHOLD'
++            return
++        if (getattr(self.cfg, 'IDENTITY_REGRESSION_FIX', False)
++                and (not current.get('temporal_reliable', False) or current.get('visibility', 0) < .5)):
++            self.pending_count = 0
++            self.transition_reason = 'CONFIRMATION_MOTION_UNRELIABLE'
+             return
+         continuous = (self.pending_id == current['track_id'] and self._candidate_result_time is not None
+             and 0 < captured-self._candidate_result_time <= self.cfg.IDENTITY_CONFIRM_MAX_GAP
+@@ -235,6 +317,7 @@
+         self.locked = self.just_locked = True
+         self.reacquiring = self.crossing_hold = False
+         self.last_positive_verify = captured
++        self._remember_verification(captured, rows)
+         self.person_box = current['bbox']
+         self.face_box = None
+         self.face_missing = 0
+@@ -283,12 +366,15 @@
+                 or (self.observation_time is not None and now <= self.observation_time)):
+             self.metrics['stale_results'] += 1
+             return None
++        self._decision_previous_stage = self.stage
+         self._last_observation_frame = self.frame_id
+         self._previous_observation_time = self.observation_time
+         self.observation_time = now
+         self._diagnostic_observation_time = now
+         self._observed_persons = persons
+         self.just_locked = False
++        self._decision_gate = None
++        self._overlap_details = []
+         if not self.valid:
+             return self._publish(None, persons, now)
+         self._prepare_gallery()
+@@ -308,7 +394,8 @@
+                 and now-self.last_positive_verify > self.cfg.IDENTITY_TEMPORAL_MAX_AGE):
+             self._hold('IDENTITY_EVIDENCE_EXPIRED')
+         reliable = self.locked and not self.crossing_hold and current is not None
+-        uncertain = (not reliable or self.identity_status == 'TEMPORAL'
++        uncertain = (not reliable or (getattr(self.cfg, 'IDENTITY_REGRESSION_FIX', False)
++            and self._weak_overlap_active) or self.identity_status == 'TEMPORAL'
+             or current.get('confidence', 0) < self.cfg.PERSON_CONF_THRESHOLD
+             or current.get('visibility', 0) < self.cfg.IDENTITY_GALLERY_MIN_VISIBILITY
+             or current.get('camera_movement', {}).get('classification') not in ('LOW_IMAGE_MOTION', None))
+@@ -316,6 +403,15 @@
+             self.cfg.IDENTITY_VERIFY_UNCERTAIN_INTERVAL if uncertain else self.cfg.IDENTITY_VERIFY_STABLE_INTERVAL)
+         eligible = [p for p in persons if p.get('confidence', 0) >= self.cfg.PERSON_CONF_THRESHOLD
+                     or (reliable and p['track_id'] == self.track_id)]
++        if (getattr(self.cfg, 'IDENTITY_REGRESSION_FIX', False) and self._weak_overlap_active
++                and self._overlap_memory.since is not None and self._last_job_at < self._overlap_memory.since):
++            self._last_job_at = float('-inf')
++        if getattr(self.cfg, 'IDENTITY_REID_OPTIMIZED', False) and reliable:
++            # Preserve all geometrically implicated candidates. Global search is
++            # unchanged when unbound/uncertain; never spatially exclude re-entry.
++            eligible = [p for p in eligible if p['track_id'] == self.track_id
++                or overlap_geometry(current['bbox'], p['bbox'])['overlap'] > 0
++                or iou(self.person_box, p['bbox']) >= self.cfg.REID_TRACK_IOU]
+         if now-self._last_job_at >= interval and eligible:
+             self._launch(frame, eligible, now)
+         if reliable:
+@@ -337,6 +433,14 @@
+             bool(person is not None and self.identity_status == 'VERIFIED'
+                 and person.get('visibility', 0) >= self.cfg.IDENTITY_GALLERY_MIN_VISIBILITY
+                 and person.get('confidence', 0) >= self.cfg.PERSON_CONF_THRESHOLD))
++        reason = ('OBSERVED_'+self.identity_status if person is not None else
++                  self._decision_gate or ('AWAITING_IDENTITY_RECONFIRMATION' if observed is not None
++                    and self.crossing_hold else self.transition_reason or 'NO_CONFIRMED_TARGET'))
++        counts = self.metrics['allow_reasons' if person is not None else 'denial_reasons']
++        counts[reason] = counts.get(reason, 0)+1
++        if observed is not None and person is None:
++            counts = self.metrics['observed_denial_reasons']
++            counts[reason] = counts.get(reason, 0)+1
+         self.metrics['predicted_frames'] += int(observed is None and any(
+             p['track_id'] == self.track_id for p in self._predictions))
+         self.metrics['observed_frames'] += int(observed is not None)
+@@ -352,13 +456,26 @@
+         if changed or self.cfg.IDENTITY_DIAGNOSTICS or now-self._last_diagnostic >= self.cfg.IDENTITY_DIAGNOSTIC_INTERVAL:
+             latency.profiler.event('IDENTITY_TRACKING_DECISION', **self.observation.payload(),
+                 previous_status=self._previous_status, reason=self.transition_reason,
++                control_reason=reason, frame_timestamp=now, decision_timestamp=self.clock(),
++                active_track_id=self.track_id, previous_state=self._decision_previous_stage,
++                next_state=self.stage, next_status=status,
++                observed_bbox=(observed or {}).get('bbox'), predicted_bbox=(observed or {}).get('predicted_bbox'),
++                track_age=(observed or {}).get('track_age'), time_since_update=(observed or {}).get('time_since_update'),
++                motion_consistency=(observed or {}).get('temporal_reliable'),
++                overlap_details=self._overlap_details, overlap_reason=getattr(self, 'overlap_reason', None),
++                scene_camera_movement=next((p.get('camera_movement') for p in persons
++                    if p.get('camera_movement')), None),
++                reid_result_age=None if self._evidence_timestamp is None else now-self._evidence_timestamp,
++                gallery_similarity=getattr(self, 'last_gallery_similarity', None),
+                 raw_osnet_similarity=self.last_raw_similarity, final_similarity=self.top1, appearance_margin=self.margin,
+                 evidence_frame_id=self._evidence_frame_id, evidence_timestamp=self._evidence_timestamp,
+                 predicted_hypotheses=list(self._predictions),
+                 candidate_track_ids=[p['track_id'] for p in persons],
+                 detections=[dict(track_id=p['track_id'], bbox=p['bbox'], confidence=p.get('confidence'),
+                     visibility=p.get('visibility'), association=p.get('association_confidence'),
+-                    association_margin=p.get('association_margin')) for p in persons],
++                    association_margin=p.get('association_margin'), predicted_bbox=p.get('predicted_bbox'),
++                    temporal_reliable=p.get('temporal_reliable'), track_age=p.get('track_age'),
++                    time_since_update=p.get('time_since_update'), observation_gap=p.get('observation_gap')) for p in persons],
+                 lock_session_id=self.lock_session_id, track_generation=self.track_generation,
+                 metrics=copy.deepcopy(self.metrics))
+             self._last_diagnostic = now
+--- baseline/ptz/ai/reid_target.py
++++ corrected/ptz/ai/reid_target.py
+@@ -266,12 +266,18 @@
+         with latency.span('REID_MATCH', 'reid_match_ms'):
+             raw = gallery.score(embeddings).detach().cpu().tolist()
+         if getattr(self, 'retain_candidate_embeddings', False):
+-            references = gallery.reference_score(embeddings).detach().cpu().tolist()
+-            for person, embedding, reference in zip(persons, embeddings, references):
+-                person['_identity_embedding'] = embedding.detach().cpu()
+-                person['reference_similarity'] = reference
++            with latency.span('REID_REFERENCE_EXPORT', 'reid_reference_export_ms'):
++                references = gallery.reference_score(embeddings).detach().cpu().tolist()
++                # One device-to-host copy instead of one copy per candidate.
++                with latency.span('REID_EMBEDDING_EXPORT', 'reid_embedding_export_ms'):
++                    exported = (embeddings.detach().cpu() if getattr(self.cfg, 'IDENTITY_REID_OPTIMIZED', False)
++                                else embeddings)
++                for person, embedding, reference in zip(persons, exported, references):
++                    person['_identity_embedding'] = embedding.detach().cpu()
++                    person['reference_similarity'] = reference
+         normalized = [None] * len(crops)
+-        qualities = [self.quality.analyze(frame, p) for p in persons]
++        with latency.span('REID_CROP_QUALITY', 'reid_crop_quality_ms'):
++            qualities = [self.quality.analyze(frame, p) for p in persons]
+         indices = [i for i,q in enumerate(qualities) if q and
+                    (q['person_mean_luma'] < getattr(self.cfg, 'REID_NORMALIZE_LUMA', 90)
+                     or q['local_contrast'] < getattr(self.cfg, 'REID_NORMALIZE_CONTRAST', 35))]
+--- baseline/ptz/tools/identity_replay.py
++++ corrected/ptz/tools/identity_replay.py
+@@ -121,46 +121,78 @@
+         loss_count=losses, recovery_count=recoveries, recovery_durations_s=durations,
+         unresolved_recovery=lost_at is not None, correct_target_observation_seconds=None,
+         identity_switches=None, false_reacquisitions=None, annotated_frames=0,
++        incorrect_target_observation_seconds=None, native_target_id_changes=None, target_track_fragments=None,
++        unnecessary_holds=None, legitimate_holds=None, detection_fps=None,
+         ptz_stability=None, note='Selected dwell is not proof of correct identity. Predictions excluded.')
+     if annotations is None: return result
+     truth = {a['frame_id']: a for a in annotations if a.get('people') is not None}
+     if not truth: return result
+-    correct = 0.
++    correct = incorrect = 0.
++    native_changes = fragments = 0
++    previous_native = None
++    native_missing = True
+     switches = false_reacquisitions = 0
+     previous_identity = None
+     for d, row, dt in zip(decisions, records, elapsed):
+         gt = truth.get(row['frame_id'])
+         if gt is None: continue
+         result['annotated_frames'] += 1
++        target_boxes = [p['bbox'] for p in gt['people'] if p['identity']==gt['target_identity']]
++        matches = [(iou(p['bbox'],box),p['track_id']) for p in d.get('observed_tracks',[])
++                   if p['track_id'] > 0 for box in target_boxes]
++        native = max(matches)[1] if matches and max(matches)[0]>=.5 else None
++        if native is not None:
++            native_changes += int(previous_native is not None and native != previous_native)
++            fragments += int(native_missing)
++            previous_native = native
++        native_missing = native is None
+         if not d['control_allowed']: continue
+         ranked = sorted(((iou(d['bbox'], p['bbox']), p['identity']) for p in gt['people']), reverse=True)
+         ident = ranked[0][1] if ranked and ranked[0][0] >= .5 else None
+         if ident == gt['target_identity']: correct += dt
++        elif ident is not None: incorrect += dt
+         if ident is not None and previous_identity is not None and ident != previous_identity: switches += 1
+         if d.get('just_locked') and ident != gt['target_identity']: false_reacquisitions += int(d.get('recovery', False))
+         if ident is not None: previous_identity = ident
+     result.update(correct_target_observation_seconds=correct, identity_switches=switches,
++                  incorrect_target_observation_seconds=incorrect, native_target_id_changes=native_changes,
++                  target_track_fragments=fragments,
+                   false_reacquisitions=false_reacquisitions,
+                   annotation_coverage=len(truth)/max(1,len(records)),
+                   note='Identity metrics apply only to annotated observations; use dense labels for acceptance.')
+     return result
+ 
+ 
+-def replay(records, frame_loader, reference, annotations=None):
++def replay(records, frame_loader, reference, annotations=None, ablations=False):
+     branches = {}
+-    for name, tracker_type, selector_type in [('legacy', ByteTrackPersonTracker, HybridReIDTargetSelector),
+-                                               ('identity', IdentityPersonTracker, IdentityAwareTargetSelector)]:
++    specs = [('legacy', ByteTrackPersonTracker, HybridReIDTargetSelector, False, False, False),
++             ('identity', IdentityPersonTracker, IdentityAwareTargetSelector, True, True, True)]
++    if ablations:
++        specs = [specs[0],
++            ('identity_baseline', IdentityPersonTracker, IdentityAwareTargetSelector, True, False, False),
++            ('identity_no_gmc', IdentityPersonTracker, IdentityAwareTargetSelector, False, False, False),
++            ('identity_corrected', IdentityPersonTracker, IdentityAwareTargetSelector, True, True, False),
++            specs[1]]
++    for name, tracker_type, selector_type, gmc, fix, optimized in specs:
++        cv2.setRNGSeed(0)
+         cfg = settings()
++        cfg.IDENTITY_GMC_ENABLED = gmc
++        cfg.IDENTITY_REGRESSION_FIX = fix
++        cfg.IDENTITY_REID_OPTIMIZED = optimized
++        is_identity = selector_type is IdentityAwareTargetSelector
+         tracker = tracker_type(cfg)
+         clock = [0.]
+-        selector = selector_type(cfg, clock=lambda: clock[0]) if name == 'identity' else selector_type(cfg)
++        selector = selector_type(cfg, clock=lambda: clock[0]) if is_identity else selector_type(cfg)
+         selector.embedding = reference[0]
+         selector.gallery = TargetEmbeddingGallery(reference)
+         selector.error = None
+-        decisions, timings = [], []
++        decisions, timings, tracking_times = [], [], []
++        workload = [0]
++        unreliable = provisional = gmc_applied = 0
+         calls = [0]
+         def scores(frame, persons):
+             calls[0] += 1
++            workload[0] += len(persons)
+             result = []
+             for p in persons:
+                 if 'embedding' in p:
+@@ -182,9 +214,13 @@
+             begin = time.perf_counter()
+             persons = tracker.update(copy.deepcopy(row['detections']), row['timestamp'],
+                                       frame=frame, frame_id=row['frame_id'])
+-            if name == 'identity': selector.update_predictions(tracker.hypotheses(row['timestamp']))
++            tracking_times.append((time.perf_counter()-begin)*1000)
++            unreliable += sum(not p.get('temporal_reliable', True) for p in persons)
++            provisional += sum(p['track_id'] < 0 for p in persons)
++            gmc_applied += int(any(p.get('camera_movement', {}).get('applied') for p in persons))
++            if is_identity: selector.update_predictions(tracker.hypotheses(row['timestamp']))
+             person = selector.select_person(frame, persons, row['timestamp'])
+-            job = getattr(selector, '_job', None) if name == 'identity' else getattr(selector, '_verification', None)
++            job = getattr(selector, '_job', None) if is_identity else getattr(selector, '_verification', None)
+             if job: job[0].result(timeout=10)
+             decisions.append(dict(frame_id=row['frame_id'], timestamp=row['timestamp'],
+                 bbox=list(person['bbox']) if person else None, track_id=selector.track_id if person else None,
+@@ -193,19 +229,25 @@
+                 recovery=getattr(selector, 'transition_reason', '') == 'TARGET_REACQUIRED',
+                 reason=getattr(selector, 'transition_reason', None), similarity=selector.top1,
+                 observed_track_ids=[p['track_id'] for p in persons],
+-                predicted_count=len(tracker.hypotheses(row['timestamp'])) if name == 'identity' else None))
++                observed_tracks=[dict(track_id=p['track_id'],bbox=list(p['bbox'])) for p in persons],
++                predicted_count=len(tracker.hypotheses(row['timestamp'])) if is_identity else None))
+             lost = selector.finish_frame(person, None)
+             if lost and name == 'legacy': tracker.reset()
+             timings.append((time.perf_counter()-begin)*1000)
+         branches[name] = dict(metrics=evaluate(decisions, records, annotations),
+-            reid_invocations=calls[0], association_selection_mean_ms=float(np.mean(timings)),
++            reid_invocations=calls[0], reid_candidate_evaluations=workload[0],
++            configuration=dict(gmc=gmc, corrected=fix, optimized=optimized),
++            tracker_mean_ms=float(np.mean(tracking_times)), tracker_p95_ms=float(np.percentile(tracking_times,95)),
++            unreliable_observations=unreliable, provisional_observations=provisional, gmc_applied_frames=gmc_applied,
++            denial_reasons=getattr(selector,'metrics',{}).get('denial_reasons'),
++            association_selection_mean_ms=float(np.mean(timings)),
+             association_selection_p95_ms=float(np.percentile(timings, 95)), decisions=decisions)
+     return dict(branches=branches, physical_ptz_commands=0,
+         timing_scope='Cached evidence association/selection and optional image GMC; excludes YOLO/OSNet and real async contention',
+         production_acceptance=False)
+ 
+ 
+-def synthetic():
++def synthetic(ablations=False):
+     records, truth = [], []
+     for i in range(100):
+         x = 100+i
+@@ -214,7 +256,7 @@
+             reid_score=.4 if 20 <= i < 60 else .95)] if visible else []
+         records.append(dict(frame_id=i, timestamp=i/10, detections=detections))
+         truth.append(dict(frame_id=i, target_identity='target', people=[dict(identity='target',bbox=d['bbox']) for d in detections]))
+-    result = replay(records, lambda row: np.zeros((400,600,3),np.uint8), torch.eye(512)[:1], truth)
++    result = replay(records, lambda row: np.zeros((400,600,3),np.uint8), torch.eye(512)[:1], truth, ablations=ablations)
+     result['provenance'] = 'Synthetic walking, appearance dip, temporary disappearance; scripted cosine evidence, not model accuracy'
+     return result
+ 
+@@ -246,6 +288,7 @@
+     p.add_argument('--roi', nargs=4, type=int, metavar=('X','Y','W','H'))
+     p.add_argument('--source-kind', choices=['raw_camera','monitor_recording','unknown'], default='unknown')
+     p.add_argument('--synthetic', action='store_true')
++    p.add_argument('--ablations', action='store_true', help='Five branches: legacy, baseline, no GMC, corrected, optimized')
+     p.add_argument('--annotations', type=Path)
+     p.add_argument('--annotation-template', type=Path)
+     p.add_argument('--out', type=Path, required=True)
+@@ -253,7 +296,7 @@
+     cv2.setNumThreads(1)
+     torch.set_num_threads(1)
+     if args.synthetic:
+-        result = synthetic()
++        result = synthetic(args.ablations)
+     else:
+         if not args.cache: p.error('--cache is required')
+         if args.video: cache_video(args)
+@@ -262,7 +305,7 @@
+             args.annotation_template.write_text('\n'.join(json.dumps(dict(frame_id=r['frame_id'],
+                 timestamp=r['timestamp'], image=r['image'], target_identity='target', people=None)) for r in rows)+'\n')
+         annotations = [json.loads(s) for s in args.annotations.read_text().splitlines()] if args.annotations else None
+-        result = replay(rows, loader, reference, annotations)
++        result = replay(rows, loader, reference, annotations, ablations=args.ablations)
+         result['provenance'] = json.loads((args.cache/'metadata.json').read_text())
+         result['model_cache_timings'] = {key: dict(mean_ms=float(np.mean([r[key] for r in rows])),
+             p95_ms=float(np.percentile([r[key] for r in rows],95))) for key in ('detection_ms','reid_ms') if key in rows[0]}
+--- baseline/ptz/tools/identity_reid_benchmark.py
++++ corrected/ptz/tools/identity_reid_benchmark.py
+@@ -0,0 +1,58 @@
++#!/usr/bin/env python3
++"""Real OSNet workload microbenchmark; no camera/controller or identity accuracy claim."""
++import argparse,copy,json,time
++from pathlib import Path
++import numpy as np
++import torch
++import cv2
++from identity_replay import load_cache,settings
++from ai.identity_manager import IdentityAwareTargetSelector
++from ai.reid.trusted_gallery import TrustedTargetGallery
++from ai.overlap_policy import overlap_geometry
++from person_search.reid import OSNetReID
++from telemetry import latency
++
++
++def main():
++    p=argparse.ArgumentParser(description=__doc__)
++    p.add_argument('--cache',type=Path,required=True)
++    p.add_argument('--out',type=Path,required=True)
++    p.add_argument('--device',default='cuda:0')
++    p.add_argument('--frames',type=int,default=20)
++    p.add_argument('--min-candidates',type=int,default=1)
++    args=p.parse_args()
++    cv2.setNumThreads(1);torch.set_num_threads(1)
++    rows,loader,ref=load_cache(args.cache);cfg=settings()
++    model=OSNetReID(cfg.REID_MODEL_PATH,device=args.device,batch_size=cfg.REID_BATCH_SIZE)
++    s=IdentityAwareTargetSelector(cfg,model);s.embedding=ref[0].to(model.device)
++    s.gallery=TrustedTargetGallery(ref.to(model.device));s.error=None
++    records=[r for r in rows if sum(d['confidence']>=cfg.PERSON_CONF_THRESHOLD for d in r['detections'])>=args.min_candidates][:args.frames]
++    if not records:raise ValueError('No detections to benchmark')
++    # Largest high-confidence bbox is a reproducible workload anchor ONLY.
++    # This benchmark does not identify the true target or replay selector decisions.
++    results={name:[] for name in ['all_candidates','local_candidates']}
++    crops={name:[] for name in results}
++    model.extract_embeddings([loader(records[0])])  # cold model warmup excluded
++    profiler=latency.LatencyProfiler(args.out.parent/'reid_profile',enabled=True,detailed_gpu_profiling=True)
++    old=latency.profiler;latency.profiler=profiler
++    try:
++        for index,row in enumerate(records):
++            frame=loader(row)
++            people=[dict(d,track_id=i) for i,d in enumerate(row['detections']) if d['confidence']>=cfg.PERSON_CONF_THRESHOLD]
++            if not people:continue
++            anchor=max(people,key=lambda d:(d['bbox'][2]-d['bbox'][0])*(d['bbox'][3]-d['bbox'][1]))
++            local=[d for d in people if d is anchor or overlap_geometry(anchor['bbox'],d['bbox'])['overlap']>0]
++            for name in (list(results) if index%2==0 else list(reversed(results))):
++                s.cfg.IDENTITY_REID_OPTIMIZED=name=='local_candidates'
++                batch=people if name=='all_candidates' else local
++                s.frame_id=row['frame_id'];now=time.monotonic()
++                with latency.correlated(benchmark_branch=name):
++                    s._launch(frame,batch,now)
++                s._job[0].result(timeout=30)
++                results[name].append((time.monotonic()-now)*1000);crops[name].append(len(batch));s._job=None
++    finally:
++        profiler.close();latency.profiler=old
++    output=dict(scope='Real OSNet + quality/normalization + gallery + async copy/scheduling; no simultaneous YOLO/GUI. Alternating order, warm model, same cached frames. Largest-box workload anchor is NOT ground truth.',physical_ptz_commands=0,
++        branches={k:dict(samples=len(v),mean_ms=float(np.mean(v)),p95_ms=float(np.percentile(v,95)),mean_candidates=float(np.mean(crops[k]))) for k,v in results.items()})
++    args.out.write_text(json.dumps(output,indent=2));print(json.dumps(output,indent=2))
++if __name__=='__main__':main()
+--- baseline/ptz/tools/identity_regression_scenarios.py
++++ corrected/ptz/tools/identity_regression_scenarios.py
+@@ -0,0 +1,46 @@
++#!/usr/bin/env python3
++"""Labelled scripted safety scenarios, not real identity accuracy."""
++import argparse,json
++from pathlib import Path
++import cv2,numpy as np,torch
++from identity_replay import replay
++
++
++def scenario(name):
++    records=[];truth=[]; images={}
++    rng=np.random.default_rng(42)
++    background=rng.integers(0,255,(400,600,3),dtype=np.uint8)
++    for i in range(100):
++        box=[100+i*.4,60,170+i*.4,260];visible=True;score=.95;others=[]
++        if name=='rotation_dip' and 25<=i<60:score=.4
++        if name=='weak_contact' and 20<=i<70:
++            others=[dict(bbox=[box[2]-5,80,box[2]+10,100],confidence=.95,reid_score=.1)]
++        if name=='crossing' and 30<=i<50:
++            others=[dict(bbox=[box[0]+10,60,box[2]+10,260],confidence=.95,reid_score=.1)]
++        if name=='ambiguous_candidates' and 30<=i<55:
++            others=[dict(bbox=[box[0]+10,60,box[2]+10,260],confidence=.95,reid_score=.94)]
++        if name=='occlusion_reentry' and 30<=i<45:visible=False
++        if name=='boundary' and 30<=i<55:box=[0,60,70,260]
++        frame=background
++        if name=='pan_zoom':
++            scale=1+i*.001;dx=i*.8
++            H=np.array([[scale,0,dx],[0,scale,0]],np.float32)
++            frame=cv2.warpAffine(background,H,(600,400))
++            box=[box[0]*scale+dx,box[1]*scale,box[2]*scale+dx,box[3]*scale]
++        detections=([dict(bbox=box,confidence=.95,reid_score=score)] if visible else [])+others
++        records.append(dict(frame_id=i,timestamp=i*.1,detections=detections))
++        truth.append(dict(frame_id=i,target_identity='target',people=([dict(identity='target',bbox=box)] if visible else [])+[dict(identity='other',bbox=p['bbox']) for p in others]))
++        images[i]=frame
++    return replay(records,lambda r:images[r['frame_id']],torch.eye(512)[:1],truth,ablations=True)
++
++
++def main():
++    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True);args=p.parse_args()
++    cv2.setNumThreads(1);torch.set_num_threads(1)
++    result={}
++    for name in ['rotation_dip','weak_contact','crossing','ambiguous_candidates','occlusion_reentry','boundary','pan_zoom']:
++        r=scenario(name)
++        for branch in r['branches'].values():branch.pop('decisions')
++        result[name]=r
++    args.out.write_text(json.dumps(dict(provenance='Scripted boxes and appearance with synthetic identity labels; no model accuracy or live stability claims.',scenarios=result),indent=2))
++if __name__=='__main__':main()
+--- baseline/ptz/test/test_identity_regression.py
++++ corrected/ptz/test/test_identity_regression.py
+@@ -0,0 +1,117 @@
++"""Regression evidence and fail-closed controls; no hardware or models."""
++import unittest
++from unittest.mock import Mock
++import config
++import test_identity_tracking as fixtures
++from test_identity_tracking import person, settings
++from ai.identity_manager import IdentityAwareTargetSelector
++
++
++class RegressionTests(unittest.TestCase):
++    def setUp(self):
++        fixtures.IdentityTests.setUp(self)
++        self.s.cfg.IDENTITY_REGRESSION_FIX = True
++        self.s.cfg.IDENTITY_REID_OPTIMIZED = True
++    step = fixtures.IdentityTests.step
++    lock = fixtures.IdentityTests.lock
++
++    def weak_rows(self):
++        return [person(), person(ident=2, bbox=(165,80,180,100))]
++
++    def test_verified_weak_contact_survives_old_timeout(self):
++        session = self.lock()
++        self.s._scores.return_value = [.9, .1]
++        for t in (.8, .9, 1.1, 1.2, 1.4, 1.5, 1.7, 1.8):
++            self.assertIsNotNone(self.step(t, self.weak_rows()), t)
++        self.assertEqual(session, self.s.lock_session_id)
++        self.assertIn(2, self.s._overlap_memory.verified_ids)
++
++    def test_baseline_reproduces_weak_overlap_timeout(self):
++        self.s.cfg.IDENTITY_REGRESSION_FIX = False
++        self.s.cfg.IDENTITY_REID_OPTIMIZED = False
++        self.lock()
++        self.s._scores.return_value = [.9, .1]
++        for t in (.8, .9, 1.1): self.step(t, self.weak_rows())
++        self.assertIsNone(self.step(1.2, self.weak_rows()))
++
++    def test_weak_overlap_without_verification_times_out(self):
++        from concurrent.futures import Future
++        self.lock()
++        self.s._job=(Future(),self.s._token(),.7,self.fid,[person(.7)])
++        self.assertIsNotNone(self.step(.8,self.weak_rows(),wait=False))
++        self.assertIsNone(self.step(1.6,self.weak_rows(),wait=False))
++
++    def test_unreliable_motion_cannot_initially_authorize(self):
++        for t in (0., .1, .3, .4, .6, .7, .9, 1.):
++            self.assertIsNone(self.step(t,[person(temporal_reliable=False)]))
++        self.assertFalse(self.s.locked)
++        self.assertEqual(self.s.transition_reason,'CONFIRMATION_MOTION_UNRELIABLE')
++
++    def test_suspicious_107ms_nested_tentative_remains_hold(self):
++        self.lock()
++        rows=[person(bbox=(475,54,551,326)), person(ident=-50200007,
++            bbox=(476,55,548,252),confidence=.2346,temporal_reliable=False,visibility=0)]
++        self.assertIsNone(self.step(.8,rows))
++        self.assertFalse(self.s.observation.control_allowed)
++
++    def test_stable_scheduler_excludes_distant_person_but_search_does_not(self):
++        self.lock()
++        self.s._scores = Mock(side_effect=lambda f, ps:[.9 if p['track_id']==1 else .1 for p in ps])
++        self.step(1.8,[person(),person(ident=2,x=400)])
++        self.assertEqual([p['track_id'] for p in self.s._scores.call_args[0][1]],[1])
++        self.step(1.9,[person(),person(ident=2,x=400)])
++        self.step(2.,[person(ident=2,x=400)])
++        self.assertEqual([p['track_id'] for p in self.s._scores.call_args[0][1]],[2])
++        self.assertFalse(self.s.observation.control_allowed)
++
++    def test_overlap_candidates_still_in_verification(self):
++        self.lock(); self.s._scores.return_value=[.9,.1]
++        self.step(.8,self.weak_rows())
++        self.assertEqual(len(self.s._scores.call_args[0][1]),2)
++
++    def test_denial_aggregates_account_for_observed_uncertainty(self):
++        self.lock()
++        self.step(.8,[person(),person(ident=2,x=120)])
++        self.assertEqual(sum(self.s.metrics['observed_denial_reasons'].values()),self.s.metrics['uncertain_frames'])
++        self.assertEqual(self.s.metrics['observed_denial_reasons']['PERSON_OVERLAP'],1)
++
++    def test_module_configuration_supported(self):
++        from unittest.mock import patch
++        with patch.object(config,'IDENTITY_REGRESSION_FIX',True):
++            s=IdentityAwareTargetSelector(config,Mock())
++            self.assertFalse(s._candidate_overlap(person(),[person()]))
++
++    def test_weak_competitor_id_change_requires_fresh_evidence_without_new_session(self):
++        session=self.lock();self.s._scores.return_value=[.9,.1]
++        self.assertIsNotNone(self.step(.8,self.weak_rows()))
++        rows=self.weak_rows();rows[1]['track_id']=3
++        self.assertIsNotNone(self.step(.9,rows))
++        for t in (1.1,1.2,1.4):self.assertIsNotNone(self.step(t,rows))
++        self.assertEqual(session,self.s.lock_session_id)
++
++    def test_repeated_weak_id_churn_cannot_extend_grace(self):
++        from concurrent.futures import Future
++        self.lock();self.s._job=(Future(),self.s._token(),.7,self.fid,[person(.7)])
++        for i,t in enumerate((.8,.9,1.1,1.3)):
++            rows=self.weak_rows();rows[1]['track_id']=20+i
++            self.assertIsNotNone(self.step(t,rows,wait=False))
++        rows=self.weak_rows();rows[1]['track_id']=99
++        self.assertIsNone(self.step(1.6,rows,wait=False))
++
++    def test_decision_clock_expiry_rejects_delayed_result_even_with_fresh_frame_time(self):
++        from concurrent.futures import Future
++        self.lock()
++        future=Future();future.set_result(([.99],1.))
++        self.s._job=(future,self.s._token(),.7,self.fid,[person(.7)])
++        self.now=20.;self.s.frame_id+=1
++        self.s.select_person(self.frame,[person(.8)],.8)
++        self.assertEqual(self.s.metrics['stale_results'],1)
++        self.assertEqual(self.s.last_positive_verify,.6)
++
++    def test_weak_contact_can_recover_with_fresh_confirmations(self):
++        self.lock();self.s._scores.return_value=[.9,.1]
++        self.step(.8,self.weak_rows())
++        self.s._hold('TEST_UNCERTAIN')
++        for t in (1.,1.1,1.3,1.4,1.6,1.7,1.9,2.):self.step(t,self.weak_rows())
++        self.assertFalse(self.s.crossing_hold)
++        self.assertTrue(self.s.observation.control_allowed)

@@ -1,0 +1,12 @@
+{
+  "environment": "Autofocus_Camera (Python 3.10)",
+  "command": "python tools/run_unit_tests.py",
+  "tests_run": 201,
+  "result": "PASS",
+  "seconds": 4.62,
+  "compileall": "PASS",
+  "pyflakes_changed_files": "PASS",
+  "hardware_motor_tests_run": false,
+  "hardware_read_only_probe": "docs/zoom_audit/read_only_probe.json",
+  "mock_evidence": "docs/zoom_audit/mock_result.json"
+}

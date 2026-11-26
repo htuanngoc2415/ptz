@@ -1,0 +1,121 @@
+--- a/camera/hanet_ack.py
++++ b/camera/hanet_ack.py
+@@ -1,7 +1,8 @@
+ """Conservative PTZ ACK contract and bounded, value-free schema diagnostics.
+ 
+ Boolean True is the existing software contract, NOT a captured firmware fixture.
+-No object/string/numeric success schema is enabled without hardware evidence.
++The opt-in camera_py profile supports the empty DoPtz result observed locally,
++using the user's working reference client as deployment compatibility evidence.
+ An ACK never establishes physical motor position or standstill.
+ """
+ from dataclasses import dataclass
+@@ -33,7 +34,8 @@
+     reason: str
+ 
+ 
+-def validate_response(message, request_id, *, method='Control.DoPtz', operation=None, code=None):
++def validate_response(message, request_id, *, method='Control.DoPtz', operation=None, code=None,
++                      ack_profile='strict'):
+     """Validate a matched JSON object; never infer success from no error."""
+     if not isinstance(message, dict):
+         return AckDecision(PROTOCOL_ERROR, 'MALFORMED_RESPONSE')
+@@ -64,8 +66,12 @@
+         # Existing synthetic boolean contract; NOT firmware verification.
+         return AckDecision(ACK_SUCCESS, 'VALID_METHOD_SUCCESS')
+     if isinstance(message.get('result'), dict) and not message['result']:
+-        # Observed STOP kCmdZoomWide response on 2026-11-13. Its envelope is
+-        # known; device command semantics and physical STOP are NOT verified.
++        # Deployment compatibility with the operator-confirmed camera.py client.
++        # Unlike that script, require a matched response, never accept timeout,
++        # and never generalize empty results to unrelated methods or commands.
++        if ack_profile == 'camera_py' and operation in ('START', 'STOP') and code in (
++                'kCmdZoomTele', 'kCmdZoomWide', 'kCmdLeft', 'kCmdRight', 'kCmdUp', 'kCmdDown'):
++            return AckDecision(ACK_SUCCESS, 'CAMERA_PY_EMPTY_RESULT')
+         return AckDecision(ACK_UNKNOWN, 'EMPTY_RESULT_UNVERIFIED')
+     return AckDecision(ACK_UNKNOWN, 'UNVERIFIED_RESULT_SCHEMA')
+ 
+--- a/camera/hanet_rpc.py
++++ b/camera/hanet_rpc.py
+@@ -26,7 +26,11 @@
+     """Client toi thieu cho JSON-RPC/WebSocket cua firmware HANET."""
+ 
+     def __init__(self, host: str, port: int, username: str, password: str, timeout=5.0,
+-                 response_diagnostics=None):
++                 response_diagnostics=None, ack_profile='strict'):
++        if ack_profile not in ('strict', 'camera_py'):
++            raise ValueError('Unsupported HANET ACK profile')
++        self.ack_profile = ack_profile
++        self._ack_evidence = None
+         self._lock = threading.RLock()
+         self._closed = False
+         self._io_deadline = None
+@@ -303,6 +307,7 @@
+         self._event('HANET_RESPONSE_SCHEMA', request_id=request_id,
+                     method='Control.DoPtz', rpc_code=code, operation=operation,
+                     ack_classification=decision.classification,
++                    ack_profile=getattr(self, 'ack_profile', 'strict'),
+                     parser_reason=decision.reason,
+                     **response_schema(message, request_id))
+ 
+@@ -337,7 +342,8 @@
+                     self._response_diagnostic(None, request_id, operation, code,
+                         AckDecision(PROTOCOL_ERROR, 'MALFORMED_RESPONSE'))
+                     raise HanetProtocolError('Malformed HANET response') from None
+-                decision = validate_response(message, request_id, operation=operation, code=code)
++                decision = validate_response(message, request_id, operation=operation, code=code,
++                    ack_profile=getattr(self, 'ack_profile', 'strict'))
+                 self._response_diagnostic(message, request_id, operation, code, decision)
+                 if decision.reason == 'MISMATCHED_REQUEST_ID':
+                     mismatch = True
+@@ -348,6 +354,8 @@
+                     raise HanetACKUnknown('HANET response has no verified success result')
+                 if decision.classification != ACK_SUCCESS:
+                     raise HanetProtocolError(decision.reason)
++                self._ack_evidence = ('CAMERA_PY_EMPTY_RESULT' if decision.reason == 'CAMERA_PY_EMPTY_RESULT'
++                                      else 'LEGACY_BOOLEAN_TRUE')
+                 return True
+             raise TimeoutError("HANET PTZ acknowledgement timed out")
+         except socket.timeout:
+@@ -368,6 +376,7 @@
+             request_id = str(uuid4())
+             operation = 'START' if start else 'STOP'
+             transmission = 'not_attempted'
++            self._ack_evidence = None
+             try:
+                 if reconnect:
+                     self.transport_state = 'TRANSPORT_RECOVERING'
+@@ -394,7 +403,8 @@
+                     raise HanetProtocolError('Stale HANET connection response')
+                 self._event('PAN_TILT_'+operation+'_ACK', rpc_command_id=request_id,
+                             operation=operation, rpc_code=code, acknowledged=ack,
+-                            ack_classification=ACK_SUCCESS, evidence='LEGACY_BOOLEAN_TRUE',
++                            ack_classification=ACK_SUCCESS, evidence=self._ack_evidence,
++                            ack_profile=self.ack_profile,
+                             physical_motor_stopped=None)
+                 self._reconnect_attempt = 0
+                 self._next_reconnect = 0.
+--- a/camera/hanet_controller.py
++++ b/camera/hanet_controller.py
+@@ -3,6 +3,7 @@
+ Lens coordinates and CNN focus calibrated for Dahua are deliberately unavailable.
+ """
+ import threading
++from functools import partial
+ from concurrent.futures import TimeoutError as FutureTimeoutError
+ import time
+ import hashlib
+@@ -29,7 +30,12 @@
+              'pan_left': 'kCmdLeft', 'pan_right': 'kCmdRight',
+              'tilt_up': 'kCmdUp', 'tilt_down': 'kCmdDown'}
+ 
+-    def __init__(self, *args, autoconnect=True, rpc_factory=HanetPTZClient, safety_state_path=None, **kwargs):
++    def __init__(self, *args, autoconnect=True, rpc_factory=None, safety_state_path=None,
++                 ack_profile='camera_py', **kwargs):
++        # The deployed HANET camera is operator-confirmed to work with camera.py.
++        # Preserve strict/custom clients for explicit injection and diagnostics.
++        if rpc_factory is None:
++            rpc_factory = partial(HanetPTZClient, ack_profile=ack_profile)
+         super().__init__(*args, autoconnect=False, rpc_factory=rpc_factory, **kwargs)
+         self.command_wait_timeout = self.timeout*3+2
+         self._active_codes = set()

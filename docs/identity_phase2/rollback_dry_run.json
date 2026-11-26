@@ -1,0 +1,14 @@
+{
+  "mode": "dry_run",
+  "restore": [
+    "ai/target_identity.py",
+    "config.py"
+  ],
+  "quarantine": [
+    "runtime/identity_events.py",
+    "tools/analyze_identity_live.py",
+    "tools/benchmark_identity_phase2.py",
+    "test/test_identity_phase2.py",
+    "test/test_identity_live_analysis.py"
+  ]
+}

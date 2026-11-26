@@ -1,0 +1,156 @@
+{
+  "coverage": [
+    "2026-11-16T13:49:25.435+07:00",
+    "2026-11-16T13:53:29.871+07:00"
+  ],
+  "files": [
+    "logs/camera/camera_control_20261116_134925_430677.log",
+    "logs/camera/camera_control_20261116_134925_430677.log.1",
+    "logs/camera/camera_control_20261116_134925_430677.log.2"
+  ],
+  "metrics": {
+    "START_sent_to_ack_ms": {
+      "n": 390,
+      "mean": 4.954664584615385,
+      "p50": 4.3411135,
+      "p95": 11.10719565,
+      "max": 16.467744
+    },
+    "STOP_sent_to_ack_ms": {
+      "n": 390,
+      "mean": 5.214093687179488,
+      "p50": 4.4943135,
+      "p95": 11.21272135,
+      "max": 27.957298
+    },
+    "dispatch_to_wire_ms": {
+      "n": 390,
+      "mean": 9.58234641025641,
+      "p50": 8.4198625,
+      "p95": 17.478533999999993,
+      "max": 33.030546
+    },
+    "dispatch_to_rpc_result_ms": {
+      "n": 390,
+      "mean": 16.47309587948718,
+      "p50": 15.679533,
+      "p95": 25.548663649999988,
+      "max": 37.888811
+    },
+    "start_return_to_stop_return_ms": {
+      "n": 390,
+      "mean": 143.077421674359,
+      "p50": 142.8993845,
+      "p95": 157.7069709,
+      "max": 183.714838
+    },
+    "observation_age_ms": {
+      "n": 390,
+      "mean": 100.92672738467697,
+      "p50": 98.81111700087786,
+      "p95": 161.8494681004449,
+      "max": 223.626893999608
+    },
+    "detection_to_dispatch_ms": {
+      "n": 390,
+      "mean": 46.48028086158798,
+      "p50": 37.24289999991015,
+      "p95": 102.51469250124487,
+      "max": 152.16694499758887
+    },
+    "inter_pulse_wait_ms": {
+      "n": 389,
+      "mean": 392.2512828355435,
+      "p50": 165.9772700004396,
+      "p95": 603.8521758026027,
+      "max": 25435.351194999384
+    },
+    "receive_to_rpc_result_ms": {
+      "n": 390,
+      "mean": 117.39982326416416,
+      "p50": 114.83055550092169,
+      "p95": 179.64310765068655,
+      "max": 247.352565999608
+    }
+  },
+  "event_counts": {
+    "CAMERA_COMMAND_QUEUE_ENTER": 1086,
+    "CAMERA_COMMAND_QUEUE_EXIT": 1086,
+    "CAMERA_TRANSACTION_START": 1086,
+    "ZOOM_TOGGLE": 3,
+    "PAN_TILT_CONFIG": 1,
+    "CAMERA_TRANSACTION_END": 1086,
+    "PAN_TILT_DECISION": 1078,
+    "ZOOM_POLICY_DECISION": 2415,
+    "ZOOM_OBSERVATION_DEQUEUED": 3792,
+    "ZOOM_RECOVERY_DECISION_START": 331,
+    "ZOOM_REQUEST_CREATED": 30,
+    "ZOOM_ACTION_ACCEPTED": 30,
+    "ZOOM_STATE": 70,
+    "ZOOM_RECOVERY_BUDGET": 19,
+    "ZOOM_CONTROL_DECISION": 514,
+    "ZOOM_RECOVERY_DECISION_END": 331,
+    "ZOOM_WORKER_DISPATCH": 30,
+    "ZOOM_STARTED": 30,
+    "ZOOM_POSITION_BEFORE": 30,
+    "ZOOM_COMMAND_SENT": 30,
+    "HANET_CONNECTION_OPEN": 1,
+    "PAN_TILT_START_SENT": 420,
+    "HANET_RESPONSE_SCHEMA": 249,
+    "PAN_TILT_START_ACK": 420,
+    "ZOOM_RPC_RESPONSE": 30,
+    "ZOOM_COMMAND_ACK": 30,
+    "ZOOM_RPC_ACK": 30,
+    "ZOOM_STOP_REQUESTED": 30,
+    "PAN_TILT_STOP_SENT": 420,
+    "PAN_TILT_STOP_ACK": 420,
+    "ZOOM_ACTION_ENDED": 30,
+    "PAN_TILT_DISPATCH": 390,
+    "PAN_TILT_WIRE_DISPATCH": 390,
+    "PAN_TILT_WIRE_RESPONSE": 390,
+    "PAN_TILT_RPC_RESULT": 390,
+    "PAN_TILT_STOP": 390,
+    "PAN_TILT_COMMAND_ENDED": 390,
+    "ZOOM_DECISION_EVAL_START": 183,
+    "ZOOM_FEEDBACK": 58,
+    "ZOOM_DECISION_EVAL_END": 183,
+    "ZOOM_OBSERVATION_AT_PLANNING": 14,
+    "ZOOM_COMMAND_DEFERRED": 3,
+    "ZOOM_DISPATCH_VALIDATION": 11,
+    "ZOOM_PLANNING_TO_RPC": 11,
+    "ZOOM_VISUALLY_STABLE": 7,
+    "PAN_TILT_TOGGLE": 2,
+    "SHUTDOWN_REQUESTED": 2,
+    "HANET_CONNECTION_CLOSED": 1,
+    "SHUTDOWN_COMPLETED": 1
+  },
+  "examples": [
+    {
+      "operation": "START",
+      "code": "kCmdRight",
+      "ms": 6.889923,
+      "sent": "2026-11-16T13:49:41.961+07:00",
+      "ack": "2026-11-16T13:49:41.968+07:00"
+    },
+    {
+      "operation": "START",
+      "code": "kCmdRight",
+      "ms": 6.03854,
+      "sent": "2026-11-16T13:49:42.280+07:00",
+      "ack": "2026-11-16T13:49:42.286+07:00"
+    },
+    {
+      "operation": "START",
+      "code": "kCmdRight",
+      "ms": 3.698526,
+      "sent": "2026-11-16T13:49:42.634+07:00",
+      "ack": "2026-11-16T13:49:42.637+07:00"
+    }
+  ],
+  "unconfirmed": [],
+  "hashes": {
+    "camera_control_20261116_134925_430677.log": "fabaf3a419bd4e3076eff11f36b376ed40ea823a49ec82e172d04aa223f57de5",
+    "camera_control_20261116_134925_430677.log.1": "ff52c72ae389a7ab3b7954b8d60e71b6235b3fe9991316ac4c786f53142d4b28",
+    "camera_control_20261116_134925_430677.log.2": "b5a57fe2734ac6b6094b05f47ac4ca618e9284e1f9ef16818dee475f91129c45"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "checkpoint_path": "/mnt/files/Project/ptz/.hotfix_checkpoints/hanet_20261113",
+  "commit": "8887d4dc92bcf63fea78e1e90abb212d20ce242b",
+  "files": [
+    "camera/hanet_rpc.py",
+    "camera/hanet_controller.py",
+    "runtime/camera_worker.py",
+    "control/auto_pan_tilt.py",
+    "control/orchestrator.py",
+    "control/manual.py",
+    "control/auto_zoom.py",
+    "gui/cctv_app.py",
+    "telemetry/latency.py",
+    "test/test_hanet_controller.py",
+    "test/test_auto_pan_tilt.py",
+    "test/test_pan_follow_revision.py"
+  ],
+  "protected_sha256": {
+    "ai/hybrid_reid.py": "041a21bba10735e2bd58ec94b7526b181c48fbc70e605d04e798e9629c0d844b",
+    "ai/overlap_policy.py": "cb46f3dae1ac35d188e1ead0fbd2ec7f30d9f675a6beac59e289d61ff66b5645",
+    "ai/sharpness.py": "9611bf9f41317a8de9bb11a5ea5196b4b02cb9893afe7f310c470ebe91645e96",
+    "ai/__init__.py": "54832e80c497dda4f33fa86de8f50f625ef07c4a79e34974f24fc987a1660452",
+    "ai/detector.py": "8916421db808c7df3f2abba89562bff5dbdc7b9ae084edeb359920636d76125e",
+    "ai/target_selector.py": "fa2242fcac3ab124f2d8bc16216b02a93266d2db78e576ee3ce1b19f3ac74c82",
+    "ai/reid_target.py": "d801bfabd4425d1bfe0f87257fe5810090fb91933abfaf88cf1103a1b46e53b5",
+    "ai/face/face_recognizer.py": "7a6decd43c0bbd0c0fdadc54e469c3c7f6b8f7eb2fe8f9d373397eef0598d94a",
+    "ai/face/face_alignment.py": "f855250e6aa46cda39defd2aec42e72637879eb4c0a040b4c364e3ee66f1d6c2",
+    "ai/face/__init__.py": "651a53ff311e2c706be0d5097bdb1645f3614f939b69925dd622c2ce95c6df41",
+    "ai/face/face_matcher.py": "03d5ce88c1f531793697a13e4f6f9baa4d454396cf8ba593096a868b3af5e8a2",
+    "ai/face/face_database.py": "865821620c31a24c9f3410af9c07129993a5fab84caeae0a11ffd3e7de7ce301",
+    "ai/face/ort_memory.py": "8c042e38474f2522b11b1ce3f5a7b80c8cc04597e7f9757f868ccf9fd5e834f3",
+    "ai/face/face_detector.py": "3849b091892434023d409dec44763afe2f1eefb85e80a7e576a9d65e540c72a8",
+    "ai/face/identity_confirmation.py": "6e3ba82d0891a1d533014faa21c3918949697361dc6b67f6583fac1ee0a29c86",
+    "ai/reid/gallery.py": "f8e5b4ca7c44854c0145fa6417aa2cabd646bf30b73a4fde446c1b633f2b5276",
+    "ai/reid/__init__.py": "4e76c225b682de1786239a303f0cc99e389c7cc7304809bc07ffa071fb5d2627",
+    "ai/quality/__init__.py": "2db53d4fc29a495cf34d0f5f82e617c1a48258b6a3b66aa0d6dfd6b088042094",
+    "ai/quality/image_quality.py": "c5a57bc75fe9e3c71f99147f55c4527e9d84b78da827520f86450057d7760c68",
+    "ai/quality/focus_quality.py": "811392cbf13d28d61b558503271a1b37b8896c9069406713f656f9e7dd0152af",
+    "config.py": "4bab309875968cbac0c14391dfe308938615dd2c63a5fa0157ea3228c214947b",
+    "control/pan_policy.py": "ae69b8d99a64b69cac50ca6c5189145b52fbe135add4b847961ae7577d9c8456",
+    "control/zoom_policy.py": "e5c69510193a877827f6749661e7922bbba5e20c80711bb17190d2d8566982c4"
+  }
+}

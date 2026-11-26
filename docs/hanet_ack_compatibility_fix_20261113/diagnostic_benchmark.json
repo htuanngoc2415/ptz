@@ -1,0 +1,7 @@
+{
+  "scope": "synthetic bounded schema projection only; no RPC or disk I/O",
+  "samples": 3000,
+  "mean_us": 11.262468,
+  "p95_us": 12.013,
+  "max_us": 65.583
+}

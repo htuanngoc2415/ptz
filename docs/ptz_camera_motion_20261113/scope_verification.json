@@ -1,0 +1,16 @@
+{
+  "existing_files_checked": 188,
+  "changed_existing_files": [
+    "config.py",
+    "runtime/byte_tracking.py"
+  ],
+  "identical_replay_frames": true,
+  "frame_count": 127,
+  "identical_transitions": true,
+  "transition_count": 7,
+  "identical_effective_config": true,
+  "effective_config_count": 153,
+  "identical_model_hashes": true,
+  "model_count": 6,
+  "camera_json_unchanged": true
+}

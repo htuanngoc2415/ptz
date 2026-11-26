@@ -1,0 +1,176 @@
+{
+  "captures": [
+    {
+      "capture": "logs/identity_capture/capture_9b6f72b28e284599a83a2ca918947993",
+      "summary": {
+        "complete": true,
+        "frames": 26,
+        "dropped": 0,
+        "errors": 0,
+        "recorded_bytes": 13703143,
+        "frames_sha256": "9012568e70c028235d894a284a7e0f188f588fbc8b3cfd9644e347345e97b1ae",
+        "max_frames": 3000,
+        "max_bytes": 1000000000,
+        "ground_truth": false
+      },
+      "created": "2026-11-19T08:20:59.259830+07:00",
+      "start": 2723.039413626,
+      "end": 2725.873336746,
+      "duration_s": 2.833923119999781,
+      "shape": [
+        480,
+        704,
+        3
+      ],
+      "interval_s": {
+        "n": 25,
+        "median": 0.10122171700004401,
+        "p95": 0.2198915684001802,
+        "max": 0.23400019799964866
+      },
+      "age_ms": {
+        "n": 26,
+        "median": 106.71078199993644,
+        "p95": 208.7163672499628,
+        "max": 220.44951900033993
+      },
+      "detector_ms": {
+        "n": 26,
+        "median": 26.343434000182242,
+        "p95": 56.72243974981939,
+        "max": 63.4447860002183
+      },
+      "states": {
+        "SEARCHING": 26
+      },
+      "labels": {
+        "UNCONFIRMED": 26
+      },
+      "track_ids": [
+        29,
+        30
+      ]
+    },
+    {
+      "capture": "logs/identity_capture/capture_eb68f45a3a914ba897f811ba3c0129b5",
+      "summary": {
+        "complete": true,
+        "frames": 114,
+        "dropped": 0,
+        "errors": 0,
+        "recorded_bytes": 61846962,
+        "frames_sha256": "3acc96db3e3fd140c0606a771a1afe485ef618031e112c996ec87defb7bfbe41",
+        "max_frames": 3000,
+        "max_bytes": 1000000000,
+        "ground_truth": false
+      },
+      "created": "2026-11-19T08:17:30.459334+07:00",
+      "start": 2514.311061561,
+      "end": 2525.583917529,
+      "duration_s": 11.27285596799993,
+      "shape": [
+        480,
+        704,
+        3
+      ],
+      "interval_s": {
+        "n": 113,
+        "median": 0.08692288499969436,
+        "p95": 0.16581640859994876,
+        "max": 0.4983090910000101
+      },
+      "age_ms": {
+        "n": 114,
+        "median": 59.14969150012439,
+        "p95": 159.49423464994652,
+        "max": 201.3376730001255
+      },
+      "detector_ms": {
+        "n": 114,
+        "median": 30.828416000076686,
+        "p95": 88.07046615015675,
+        "max": 482.164007999927
+      },
+      "states": {
+        "SEARCHING": 34,
+        "TARGET_LOCKED": 2,
+        "PERSON_ZOOM": 78
+      },
+      "labels": {
+        "UNCONFIRMED": 34,
+        "TARGET_SELECTED": 80
+      },
+      "track_ids": [
+        6,
+        7
+      ]
+    }
+  ],
+  "metrics": {
+    "record_intervals": {
+      "frame_age_ms": {
+        "n": 13,
+        "median": 94.83504699983314,
+        "p95": 188.59010679971104,
+        "max": 202.77976299985312
+      },
+      "yolo_ms": {
+        "n": 13,
+        "median": 37.96857700035616,
+        "p95": 147.83876500005107,
+        "max": 265.61356599995634
+      },
+      "reid_ms": {
+        "n": 13,
+        "median": 1.6882820000319043,
+        "p95": 112.75349440011261,
+        "max": 143.91932200032898
+      },
+      "face_ms": {
+        "n": 13,
+        "median": 0.06341600010273396,
+        "p95": 0.11589479991016559,
+        "max": 0.119498999993084
+      }
+    },
+    "outside_record_intervals": {
+      "frame_age_ms": {
+        "n": 197,
+        "median": 116.06222399996113,
+        "p95": 275.3937663997021,
+        "max": 418.7958699999399
+      },
+      "yolo_ms": {
+        "n": 197,
+        "median": 81.67010200031655,
+        "p95": 222.045574600088,
+        "max": 315.56271699992067
+      },
+      "reid_ms": {
+        "n": 197,
+        "median": 0.2251699997941614,
+        "p95": 186.53018019967925,
+        "max": 310.4595419999896
+      },
+      "face_ms": {
+        "n": 197,
+        "median": 0.10636899969540536,
+        "p95": 0.2661102000274695,
+        "max": 0.5184350002309657
+      }
+    }
+  },
+  "events": {
+    "FRAME_METRICS": 210,
+    "REID_SCORE": 70,
+    "TARGET_CANDIDATE": 5,
+    "TARGET_CONFIRMED": 2,
+    "FACE_DETECTED": 64,
+    "FACE_LOST": 64,
+    "ZOOM_START": 29,
+    "ZOOM_STOP": 29,
+    "TARGET_LOST": 3,
+    "TARGET_REACQUIRED": 2,
+    "PERCEPTION_RESULT_STALE": 1
+  }
+}

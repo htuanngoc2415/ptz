@@ -1,0 +1,32 @@
+{
+  "results": [
+    {
+      "cache": "docs/identity_shadow_audit_20261119_173204/capture_cache",
+      "frames": 1505,
+      "full_output_mismatches": 0
+    },
+    {
+      "cache": "docs/identity_shadow_v3/capture_cache",
+      "frames": 1502,
+      "full_output_mismatches": 0
+    },
+    {
+      "cache": "docs/identity_capture_audit_20261119_083019/capture_706c13123cb84c2294eecf5fa4c3850f/cache",
+      "frames": 1667,
+      "full_output_mismatches": 0
+    },
+    {
+      "cache": "docs/identity_capture_audit_20261119/capture_eb68f45a3a914ba897f811ba3c0129b5/cache",
+      "frames": 114,
+      "full_output_mismatches": 0
+    },
+    {
+      "cache": "docs/identity_capture_audit_20261119/capture_9b6f72b28e284599a83a2ca918947993/cache",
+      "frames": 26,
+      "full_output_mismatches": 0
+    }
+  ],
+  "snapshot_sha256": "d80813f00fab13b863a21d64c53c784e99672b04ac0a25ade5454e0d3c717e39",
+  "current_sha256": "8376b7da84d5617154231da1518af3334714c305d87be5ac35a4bc1fc686ac2a",
+  "physical_commands": 0
+}

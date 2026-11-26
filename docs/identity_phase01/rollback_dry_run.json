@@ -1,0 +1,15 @@
+{
+  "mode": "dry_run",
+  "restore": [
+    "config.py"
+  ],
+  "quarantine": [
+    "ai/target_identity.py",
+    "tools/identity_metrics.py",
+    "tools/identity_replay.py",
+    "tools/rollback_identity_phase01.py",
+    "test/test_target_identity.py",
+    "test/test_identity_replay.py"
+  ],
+  "preserve": "all existing user changes, docs, logs, caches and Git history"
+}

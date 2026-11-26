@@ -1,0 +1,82 @@
+{
+  "A": {
+    "decision_counts": {
+      "TARGET_LOCKED": 684,
+      "TARGET_UNCERTAIN": 135,
+      "DEADZONE": 13
+    },
+    "move_proposals": 684,
+    "speed_histogram": {
+      "2": 295,
+      "3": 55,
+      "1": 334
+    },
+    "proposed_pulse_mean_s": 0.12000000000000012,
+    "physical_recenter_time": null,
+    "overshoot": null,
+    "correct_target_time": null,
+    "id_switches": null,
+    "physical_speed": null,
+    "note": "Independent policy proposals; not scheduled/actual commands. B/D uncalibrated pulse proxies, not implemented calibrated controllers."
+  },
+  "B_pulse_proxy": {
+    "decision_counts": {
+      "TARGET_LOCKED": 684,
+      "TARGET_UNCERTAIN": 135,
+      "DEADZONE": 13
+    },
+    "move_proposals": 684,
+    "speed_histogram": {
+      "2": 295,
+      "3": 55,
+      "1": 334
+    },
+    "proposed_pulse_mean_s": 0.17731701736262095,
+    "physical_recenter_time": null,
+    "overshoot": null,
+    "correct_target_time": null,
+    "id_switches": null,
+    "physical_speed": null,
+    "note": "Independent policy proposals; not scheduled/actual commands. B/D uncalibrated pulse proxies, not implemented calibrated controllers."
+  },
+  "C": {
+    "decision_counts": {
+      "TARGET_LOCKED": 684,
+      "TARGET_UNCERTAIN": 135,
+      "DEADZONE": 13
+    },
+    "move_proposals": 684,
+    "speed_histogram": {
+      "2": 295,
+      "3": 55,
+      "1": 334
+    },
+    "proposed_pulse_mean_s": 0.12000000000000012,
+    "physical_recenter_time": null,
+    "overshoot": null,
+    "correct_target_time": null,
+    "id_switches": null,
+    "physical_speed": null,
+    "note": "Independent policy proposals; not scheduled/actual commands. B/D uncalibrated pulse proxies, not implemented calibrated controllers."
+  },
+  "D_pulse_proxy": {
+    "decision_counts": {
+      "TARGET_LOCKED": 684,
+      "TARGET_UNCERTAIN": 135,
+      "DEADZONE": 13
+    },
+    "move_proposals": 684,
+    "speed_histogram": {
+      "2": 295,
+      "3": 55,
+      "1": 334
+    },
+    "proposed_pulse_mean_s": 0.17731701736262095,
+    "physical_recenter_time": null,
+    "overshoot": null,
+    "correct_target_time": null,
+    "id_switches": null,
+    "physical_speed": null,
+    "note": "Independent policy proposals; not scheduled/actual commands. B/D uncalibrated pulse proxies, not implemented calibrated controllers."
+  }
+}

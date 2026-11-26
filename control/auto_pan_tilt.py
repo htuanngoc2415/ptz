@@ -6,6 +6,7 @@ from telemetry import latency
 from uuid import uuid4
 from .pan_policy import plan_pan
 from runtime.stop_retry import StopRetryBudget
+from runtime.target_prediction import predict_box
 
 
 class AutoPanTiltController:
@@ -109,11 +110,16 @@ class AutoPanTiltController:
             if self._latest and received <= self._latest[0]:
                 self._decision('OUT_OF_ORDER_OBSERVATION', fields)
                 return self._latest[3] is not None
-            direction = self._direction(box, shape)
+            # Identity-authorized bbox stays unchanged for face/zoom/UI consumers.
+            plan_box, prediction_fields = predict_box(box,shape,fields.get('motion_prediction'),now,
+                (session,track,fields.get('track_generation')))
+            if prediction_fields:fields.update(prediction_fields)
+            fields['planned_bbox'] = plan_box
+            direction = self._direction(plan_box, shape)
             if direction:
                 h,w = shape[:2]
                 center = ((box[0]+box[2])/2, (box[1]+box[3])/2)
-                duration = self._pulse(box, shape)
+                duration = self._pulse(plan_box, shape)
                 fields.update(target_center=center, normalized_error_x=center[0]/w-.5,
                     normalized_error_y=center[1]/h-.5, command_direction=direction[0],
                     command_speed=direction[1], command_duration_ms=duration*1000,

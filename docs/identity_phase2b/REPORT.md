@@ -1,0 +1,156 @@
+# Phase 2B — Continuity-Aware Identity Verification
+
+**Quyết định: NO-GO cho tích hợp hoặc mở rộng gate ở vòng này.** Đã hoàn tất audit 205 trường hợp, PoC offline, A/B/C/E1/E2/E3 trên hai capture với hai cadence, review tool và regression. Chưa có nhãn identity độc lập; không được kết luận accuracy tốt hơn. Baseline, shadow v4, model, scheduler và controller giữ nguyên.
+
+## 1. Source, dữ liệu và phạm vi
+
+- Đọc đối chiếu [Phase 2 follow-up](../identity_phase2_v4_followup/REPORT.md), [báo cáo v4 gốc](../identity_shadow_v4/REPORT.md), [audit live v4](../identity_shadow_audit_20261119_191352/REPORT.md), manager/hybrid/overlap, ablation/replay/metrics. Báo cáo v4 gốc là lịch sử; cấu hình hiện tại đã mặc định batch v4 và log live đã VERIFIED.
+- Git HEAD/dirty tree được lưu, không reset/clean/commit: [HEAD](git_head.txt), [status](git_status_before.txt), [diff](git_diff_before.patch), [snapshot source](source_before.tar.gz). [Hash trước](source_before.json), [kiểm tra sau](source_integrity.json).
+- Development: capture `18e5ba0fa26d492cbb7c19839cccb4b2`, 1.120 frame, phiên 19:13. Retrospective holdout: capture `b4602881389f406b8db527c0bc96750d`, 1.081 frame, phiên 19:00.
+- Tách theo capture, không trộn frame liền kề giữa hai tập. Cả hai capture từng được phân tích trước đây, vì vậy **holdout hồi cứu không phải tập hoàn toàn chưa từng thấy**. Không có tuning dựa trên nhãn holdout; nhãn hiện chưa tồn tại.
+- Source/model/observation cache/reference/PNG được kiểm hash theo các công cụ đang dùng. Không thay YOLO26n, ByteTrack, OSNet-AIN, weights hoặc config. Không mở camera/network/motor.
+- Kết quả cuối trong `benchmark_final`; lượt `benchmark` trước đó được giữ để truy vết. Sau lượt đầu, thêm test/risk latch cho approaching khi identity vẫn confirmed, rồi chạy lại toàn bộ. Counts không đổi; không tối ưu tham số dựa trên holdout.
+
+## 2. Root cause của 205 lựa chọn B có nhưng C mất
+
+Có đầy đủ bảng [CSV 205 dòng](failures.csv), [JSONL có evidence](failures.jsonl), [summary](audit_summary.json), và [mọi frame B selected](all_b_selected.jsonl). Mỗi dòng gồm ảnh nguồn, bbox/track, state trước/sau, anchor frame/age, reference/anchor similarity, delta score của track ở observation trước, quality evidence, competitor scores/overlap, memory, pending gap/IoU/appearance, và gate đầu tiên từ anchor. Pose/visibility/identity correctness chưa biết được giữ UNKNOWN/null, không tự suy ra từ score.
+
+| Nhóm | Số frame | Cùng track với trusted | Đổi track | Chưa có anchor | Anchor ≤1s | Median tuổi anchor |
+|---|---:|---:|---:|---:|---:|---:|
+| AWAITING_MULTI_OBSERVATION_CONFIRMATION | 33 | 28 | 4 | 1 | 21 | 0.616s |
+| LOW_REFERENCE_SIMILARITY | 113 | 113 | 0 | 0 | 3 | 3.400s |
+| UNCERTAIN_CROP_QUALITY | 59 | 48 | 11 | 0 | 31 | 0.964s |
+
+**Quality (59):** 50 bbox chạm mép dưới, 9 chạm mép trên. `crop_quality` yêu cầu bbox nằm hoàn toàn trong ảnh với bất đẳng thức strict; khi kiểm tra này fail, focus không được tính và `full_body_like` cũng false. Vì vậy không gọi các trường hợp này là blur hoặc coi full-body-like là một đo lường độc lập. Có 26 frame reference ≥0,7 nhưng vẫn bị gate quality; frame 1354 có similarity 0,807, anchor mới khoảng 0,103s, bbox kết thúc ở y=480.
+
+**Low similarity (113):** tất cả cùng ByteTrack ID với anchor nhưng 110/113 anchor đã quá 1s; median 3,400s, max 7,070s. Reference trong nhóm dưới 0,7. Ví dụ 1467 có score 0,688, threshold reacquire 0,7 sau quality HOLD; frame 1473 score 0,699, anchor 0,835s. Không thể giữ identity chỉ nhờ cùng ID cũ; cũng không được nới thời hạn để cứu phần lớn nhóm này.
+
+**Pending (33):** 19 frame ở count=1, 14 frame ở count=2; 21 frame score ≥0,7, max 0,809. Trong 14 trường hợp có pending trước đó, không có gap >1s hoặc IoU <0,4; chúng vẫn chưa đủ ba lần xác nhận. 19 trường hợp còn lại bắt đầu chuỗi mới, không phải tất cả đều là lỗi geometry hoặc scheduler. Frame 1045 còn chưa có trusted anchor nên không đủ điều kiện continuation.
+
+Gate đầu tiên trong các episode được truy vết là `UNCERTAIN_CROP_QUALITY` cho cả ba nhóm; trường hợp chưa có anchor tính từ đầu capture. Đây là chuỗi trạng thái quan sát được, không tự chứng minh mọi gate quality đều sai. Sau quality HOLD, state chuyển AMBIGUOUS, pending bị xóa; nếu bounded resume không đạt thì threshold trở lại reacquire và phải đủ ba observation. Reference giảm có thể làm quá trình này kéo dài.
+
+### Trả lời các điểm audit còn lại
+
+- Track ID là tín hiệu continuity, không phải identity. Tổng 189 frame cùng ID trusted, 15 đổi ID, 1 chưa có anchor; thông tin này không phải nhãn đúng/sai.
+- Mỗi dòng lưu mọi competitor, margin/overlap và memory. Có competitor không tự có nghĩa là distractor đã được xác nhận. Score thấp đơn lẻ hiện đã không đủ để học negative; memory còn yêu cầu positive witness, quality, continuity và TTL.
+- Quay lưng/tư thế/che khuất phải review chuỗi ảnh. Các sheet trong audit trước cho thấy có quay hướng/ra khỏi ảnh; không gán tự động tình trạng đó cho toàn bộ 205 frame. Delta score và khoảng thời gian được xuất để phân biệt sụt đột ngột với biến đổi từ từ; chưa có nhãn pose độc lập để quy nguyên nhân.
+- Quality gate của C chặn association trực tiếp; đồng thời quality sạch là điều kiện học distractor. Gallery gate tách riêng và gallery đang OFF; không có gallery update nào trong benchmark.
+- Nhóm score cao/pending không có nghĩa “OSNet đúng mà geometry sai”: một số chỉ thiếu số observation. B cũng không phải GT, nên 205 trường hợp gọi là **policy disagreement**, không gọi là 205 false rejection.
+
+## 3. Ground-truth review pack và công cụ
+
+**0 frame có nhãn độc lập tại thời điểm báo cáo.** [Annotation status](annotation_status.json). Không tự điền baseline/OSNet vào GT. Đã tạo [trang review local](review/index.html), [hướng dẫn](review/README.md), [manifest](review/pack.json).
+
+- Development đủ 1.120 ảnh, 425 frame ưu tiên: gồm 43 frame pack cũ, đủ 205 disagreement, mẫu đều và vùng thay đổi tập track ID.
+- Retrospective holdout đủ 1.081 ảnh, 330 frame ưu tiên. Toàn bộ chuỗi luôn truy cập được để review liên tục, không chỉ nhìn ảnh disagreement.
+- UI có target reference, bbox đánh số trung tính, identity `target`/`other_N`/`UNKNOWN`, visibility VISIBLE/PARTIAL_OCCLUSION/FULL_OCCLUSION/OUT_OF_FRAME/UNKNOWN, pose và event; không hiển thị score/quyết định policy. Mặc định mọi identity chưa biết.
+- Có thể gán UNKNOWN sau khi review; UNKNOWN được loại khỏi metrics identity, không tính thành distractor. Export/import JSON kèm reviewer, pack checksum; validator từ chối khác pack, thiếu candidate, duplicate frame và visibility mâu thuẫn.
+- Có dữ liệu front/back/turning, người tách biệt, tiến gần, ảnh overlap/crossing, đổi track, low similarity, HOLD/recovery; xác nhận event/visibility do reviewer thực hiện. Đặc biệt không suy full occlusion từ detector absence. UI hỗ trợ đánh dấu thiếu hoặc không rõ tình huống.
+- Cần nhãn liên tiếp cho các đoạn đánh giá duration, fragmentation và recovery; nhãn sparse không đủ để báo cáo accuracy toàn capture. Nếu cần kiểm chứng độc lập chưa từng thấy, phải có tập mới được reserve trước khi tuning.
+
+## 4. Thiết kế ba gate
+
+PoC nằm riêng ở [tools/identity_continuity.py](../../tools/identity_continuity.py), không được import bởi app/runtime. Hai feature flag trong `ContinuityPolicy` là `quality_continuation=False` và `low_similarity_continuation=False`; không thêm global flag hay sửa mặc định v4. Tất cả acquisition/selection vẫn gọi manager C nguyên trạng.
+
+**Acquisition/reacquisition:** giữ threshold 0,65/0,50/0,70, margin 0,08, ba confirmations, IoU 0,4, max-gap 1s, max-age 0,8s. Không hạ threshold để tạo MATCH.
+
+**Continuation:** chỉ bổ sung `localization_candidate`/`localization_bbox` từ bbox thực quan sát. `selected_candidate` và `bbox` vẫn None khi C HOLD; `identity_confidence=unverified`, `localization_confidence=observed_provisional`, `identity_updated=false`, `ptz_authorized=false`. Không xuất bbox dự đoán thành target. Không gia hạn trusted anchor hoặc history từ provisional.
+
+Các điều kiện continuation: provenance và embedding hợp lệ của toàn bộ candidate; cùng track không bị trùng ID; ít nhất hai trusted observation liên tục để tính velocity; IoU với anchor và bbox dự đoán đều ≥0,4; similarity với appearance trusted ≥0,7; reference margin và anchor margin với mọi competitor ≥0,08; không có memory conflict, occlusion, unsafe detection, overlap hoặc approaching risk. Budget tính từ trusted anchor bằng `min(max_age,max_gap)` = **0,8s tại lúc consume**, không nối dài bằng chuỗi provisional.
+
+- E1 chỉ xử lý lý do `UNCERTAIN_CROP_QUALITY`, reference vẫn ≥keep và các guard trên đạt.
+- E2 chỉ xử lý `LOW_REFERENCE_SIMILARITY` khi crop measured_clear, giữ guard anchor/competitor/motion. Score thấp không bị coi là negative mới nhưng cũng không xác nhận identity.
+- E3 bật hai flag để khảo sát tương tác. Vì E1/E2 chưa được xác nhận accuracy, E3 chỉ là thí nghiệm kỹ thuật, không được coi là tổ hợp đã được chứng minh tốt.
+
+**Gallery update:** constructor PoC từ chối gallery_enabled; không có provisional embedding nào vào gallery/history. Production adaptation vẫn OFF. Core gallery gate hiện có yêu cầu quality_approved, reference mạnh, không occluded và không overlap; không sửa gate này.
+
+### Crossing và state
+
+Dùng `continuity_state` diagnostic, không tạo enum runtime thứ hai: CONFIRMED_CLEAR/CONFIRMED_AT_RISK/OCCLUDED_PREDICTED/AMBIGUOUS/REVERIFYING/LOST ánh xạ lên output strict hiện có.
+
+Khi target và competitor tiến gần (bbox mở rộng như heuristic event cũ), ghi risk latch ngay cả khi core còn confirmed. Overlap, absence, đổi/duplicate ID, motion hoặc appearance conflict chặn provisional. Latch chỉ được xóa khi core có strict confirmation rõ trở lại; không nối nhờ người gần nhất hay IoU đơn thuần. `OCCLUDED_PREDICTED` chỉ là trạng thái uncertainty, không phát predicted bbox hoặc PTZ. Core vẫn lưu target/distractor history như trước; snapshot anchor không bị thay bằng provisional.
+
+## 5. Benchmark cuối
+
+Cùng cache, cùng model/source, frame và tuổi observation cho A/B/C/E1/E2/E3. Đã kiểm parity B với replay có sẵn; E1/E2/E3 có cùng selected/reason/state/action strict với C trên tất cả frame. Không dùng future frame hoặc embedding frame chưa được chọn để xác nhận quá khứ.
+
+Đối chứng cadence chính là fixed200/v4: dùng cùng tập frame fixed200 đã đóng băng từ follow-up (515 dev, 486 holdout); không thử lại adaptive200/500 hay Event-D. Bảng mọi-frame là đối chứng dày để phân biệt effect của policy khỏi sampling. Các manager khởi tạo mới cho từng variant/cadence, không tái sử dụng trạng thái từ tương lai.
+
+Ô E thể hiện **identity confirmed + provisional localization**, hai số không phải accuracy:
+
+| Tập / cadence | Frame | A | B | C | E1 | E2 | E3 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| development / all | 1120 | 937 | 786 | 581 | 581 + 19 | 581 + 4 | 581 + 23 |
+| development / fixed200 | 515 | 432 | 360 | 261 | 261 + 6 | 261 + 1 | 261 + 7 |
+| retrospective_holdout / all | 1081 | 810 | 758 | 457 | 457 + 23 | 457 + 1 | 457 + 24 |
+| retrospective_holdout / fixed200 | 486 | 344 | 323 | 178 | 178 + 7 | 178 + 1 | 178 + 8 |
+
+Ở 205 disagreement gốc, **E1 cung cấp provisional ở 19 frame; E2 không cung cấp provisional thêm ở frame nào trong 205**. Bốn provisional E2 trên development nằm ngoài tập 205 (5068, 5072, 5074, 5084), reference khoảng 0,477–0,490. Vì vậy không gọi 23 provisional E3 là “khắc phục 23/205 lỗi”. Không có identity mới nào được xác nhận bởi E so với C.
+
+Đã xem trực quan toàn bộ hợp 47 frame provisional của hai cadence/hai capture: bbox xanh trong ảnh kiểm tra nằm trên người áo đen; không thấy box được thêm trên người áo đỏ/đeo ba lô trong tập này. Đây là review của người làm phân tích theo output đã biết, **không phải nhãn độc lập**, không chứng minh zero ID switch hoặc an toàn toàn chuỗi. [Dev 1](development_provisional_0.jpg), [dev 2](development_provisional_1.jpg), [holdout 1](retrospective_holdout_provisional_0.jpg), [holdout 2](retrospective_holdout_provisional_1.jpg), [từng frame](provisional_review.json).
+
+### Duration và metrics identity
+
+Identity HOLD của C/E giữ nguyên. Ở development mọi-frame, proxy tích phân trạng thái giữa các timestamp cho C là 65,742s HOLD; E3 vẫn 65,742s identity HOLD, nhưng 2,868s interval được gắn provisional localization. Đây là **sample-interval occupancy proxy**, không phải thời gian bám đúng đã chứng nhận, không phải lệnh motor và không gia hạn TTL thực tế giữa các mẫu.
+
+[Mỗi variant report.json](benchmark_final/development/all/report.json) có reason distribution, anchor age, provisional count, HOLD/ambiguous interval, reacquisition episode/fraction, policy recovery time, conflict counters, latency/gap/age. Recovery ở đây chỉ là chuyển trạng thái policy sau HOLD, bao gồm cả lúc target ngoài ảnh; không thay cho recovery theo visibility GT.
+
+Correct/wrong tracking time, false acceptance/rejection, ID switch, fragmentation và recovery theo GT đều null khi chưa review. [Evaluator](../../tools/phase2b_evaluate.py) đã chuẩn bị để tính riêng confirmed identity và localization sau khi có nhãn; UNKNOWN/unreviewed làm đứt khoảng tính metrics. Không có số ID switch “0” được suy ra từ unit tests hoặc parity.
+
+## 6. Latency, inference và sampling
+
+Không thêm một lần OSNet nào trong PoC: A/B/C/E dùng cùng embedding cache đã kiểm chứng bằng OSNet thật ở bước trước. Thời gian cache là phép đo offline cũ, không phải latency live mới. Ở development all, ReID cache P50/P95 khoảng 34,02/44,69ms. V4 batch backend và scheduler không sửa; không ưu tiên job mới, không giảm tần suất, không tăng backlog hay timeout.
+
+Policy CPU wall time P95 trong lượt cuối (ms):
+
+| Tập / cadence | C | E3 |
+|---|---:|---:|
+| development / all | 2.063 | 2.161 |
+| development / fixed200 | 1.907 | 2.096 |
+| retrospective_holdout / all | 1.940 | 2.000 |
+| retrospective_holdout / fixed200 | 2.046 | 2.310 |
+
+Đây là replay CPU tuần tự, chưa đo contention/detection FPS/PTZ latency live. Sample age và gap giống nhau giữa các variant trên cùng cadence theo thiết kế; không dùng điều này để tuyên bố hệ thống live không có overhead. Trong 33 pending disagreement dense, nguyên nhân trực tiếp là thiếu số xác nhận sau quality HOLD; không có bằng chứng cần sửa scheduler cho riêng nhóm này.
+
+## 7. Tests và thay đổi code
+
+**359 test pass = 330 regression có sẵn + 29 test mới**, có offline guard. [Log chung](all_tests.log), [test mới](unit_tests.log). Bao phủ flags OFF parity, quality/similarity ablation riêng, không có anchor, provisional không tự refresh anchor/gallery, TTL, stale/future/wrong session/out-of-order, đổi/duplicate/reused ID, approaching/crossing/separation, competitor xa nhưng giống appearance, invalid evidence, motion jump, occlusion/absence, reset và annotation/UNKNOWN metrics. Unit tests không chứng nhận accuracy hoặc an toàn trên người thật.
+
+UI JavaScript đã smoke test navigation, yêu cầu reviewer, UNKNOWN, conflict visibility, export/import và sai pack bằng mock DOM; chưa có browser rendering automation trong môi trường này. [Log](ui_smoke.txt). Không tự mở trình duyệt/desktop người dùng.
+
+Các file mới:
+
+- [identity_continuity.py](../../tools/identity_continuity.py): wrapper offline và hai flag mặc định OFF.
+- [phase2b_audit.py](../../tools/phase2b_audit.py): ledger 205 case và truy vết episode.
+- [benchmark_identity_phase2b.py](../../tools/benchmark_identity_phase2b.py): matched ablation, strict parity, metrics kỹ thuật.
+- [phase2b_review.py](../../tools/phase2b_review.py) và [HTML template](../../tools/phase2b_review_template.html): review pack không pseudo-label và validator.
+- [phase2b_evaluate.py](../../tools/phase2b_evaluate.py): metric sau human review, tách identity/localization.
+- [test_identity_continuity.py](../../test/test_identity_continuity.py): kiểm thử guard và review.
+- Artifact, report, snapshot và scripts tái lập trong thư mục này. Không có file source/config cũ nào bị thay đổi.
+
+## 8. Quyết định NO-GO và việc tiếp theo
+
+Các guard hoạt động và PoC tái lập được, nhưng chỉ thêm số ít localization provisional trong một thời hạn ngắn. Identity confirmed không thay đổi, E2 không giải quyết nhóm 113 disagreement có anchor phần lớn quá cũ; chưa có GT độc lập chứng minh correct-target time tốt hơn hoặc false rejection giảm mà không tăng wrong-target time. Do đó chưa đạt điều kiện tích hợp. Không thể từ đó kết luận đã chứng minh mọi hướng continuity đều vô ích; kết luận chỉ áp dụng cho PoC/gate và dữ liệu này.
+
+**Dừng mở rộng/nới gate trong vòng Phase 2B này**, không tăng TTL, hạ threshold hoặc ghép thêm scheduler để nâng selected count. Theo hướng bạn yêu cầu, bước nghiên cứu hợp lý tiếp theo là **Local Visual Tracking / PTZ Motion Compensation** như PoC độc lập, dùng cùng identity verifier làm kiểm tra và không tự trao quyền motor. Chưa triển khai hướng mới trong nhiệm vụ này.
+
+Việc người dùng có thể làm tiếp: mở review/index.html, gán identity/visibility cho các đoạn liên tiếp và xuất JSON; ưu tiên dev rồi giữ holdout tách biệt. Không cần quay lại hai bản hiện có. Nếu cần kết luận accuracy tổng quát, cần thêm tập kiểm chứng thật sự chưa dùng phát triển sau khi policy được đóng băng.
+
+## 9. Rollback và chạy lại
+
+Runtime/production không thay đổi nên không cần rollback v4 hoặc config. Wrapper flags OFF là chế độ mặc định. Có công cụ quarantine chỉ các source/test offline mới, kiểm hash và mặc định dry-run; không đụng capture/cache hoặc source cũ:
+
+```bash
+# Từ /mnt/files/Project/ptz/ptz
+python3 docs/identity_phase2b/rollback.py
+# Chỉ khi chủ động gỡ PoC offline: thêm --apply
+```
+
+Chạy lại vào thư mục output mới để giữ evidence cũ:
+
+```bash
+PYTHONPATH=. python3 tools/benchmark_identity_phase2b.py --output /tmp/ptz_phase2b_rerun
+PYTHONPATH=.:test python3 -m unittest test_identity_continuity
+```
+
+Các lệnh review/validate/evaluate GT nằm trong [review/README.md](review/README.md). Raw log, ảnh gốc và nhãn user không bị ghi đè.

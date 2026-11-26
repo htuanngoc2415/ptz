@@ -1,0 +1,6 @@
+Would restore camera/hanet_rpc.py
+Would restore tools/run_hanet_fault_tests.py
+Would restore telemetry/latency.py
+Would remove camera/hanet_ack.py
+Would remove test/test_hanet_ack_compatibility.py
+Motor checkpoints, logs, credentials, tracking configuration and reports are preserved.

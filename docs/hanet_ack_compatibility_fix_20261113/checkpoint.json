@@ -1,0 +1,19 @@
+{
+  "path": "/mnt/files/Project/ptz/.hotfix_checkpoints/hanet_ack_20261113",
+  "commit": "01ac2d9086e076e07275c4df273081b689d78855",
+  "sha256": {
+    "camera/hanet_rpc.py": "29adb024ac6b1eaf027a1d414b70e17dbdddddb5d1453edd916ae23d6235ac83",
+    "camera/hanet_controller.py": "06147e6e74abe805a6826dbe2712eee7724e5c404888107062a2076fa6f2e4dd",
+    "control/auto_zoom.py": "81f462385a420f2bc9cf1789ffce36f757a74a29d53a316d3e4973e0f2b4c11e",
+    "control/auto_pan_tilt.py": "23be103d6c26a2b46b1884177ac50ddf8134900f3483a5204c4b8f006b4dd3c5",
+    "control/orchestrator.py": "fc9bf1ac190db1a1867f990635751b6b065b73854866bfcd0cf9b6a21f9b5a03",
+    "control/manual.py": "b82c9ecdfb5e0271960f7e7de4695a353740e49625e6ad2880e10ffc3f9f7079",
+    "runtime/camera_worker.py": "abd981c80434402959419e99b5bd1c6c4edc3c4797b8b54d3a8d396fc5b422d0",
+    "runtime/stop_retry.py": "c659da0cb908193e79aeb709ed70626acaa1668fedcaa6523432c43ecd51150e",
+    "runtime/shutdown.py": "0cb43f4bd19dbd8eb449381144811331cfe6d20c543178556feb1c4b27c41e68",
+    "gui/cctv_app.py": "6ba12e45b3d6eb8d769f7639a373e5059ffc5925873fbb186d42092fb921f5d8",
+    "telemetry/latency.py": "2e0a0cb6e9a9fef9b18d9a5c65f13cffd4034b1b38d72a2756be4c70470f9456",
+    "tools/run_hanet_fault_tests.py": "82d3ac6b4a576f0a456249b614fcf10dd709280d91b9a5cda24fde656cb58dc2"
+  },
+  "after_commit": "d8797a4cf67b391f91cd1b8bfbefc81806658fae"
+}

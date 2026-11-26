@@ -1,0 +1,75 @@
+{
+  "scope": "offline real CUDA OSNet; synthetic receive timestamp; controlled foreground contention, not live FPS",
+  "source_capture_sha256": "3f0abf3a2737dc4cd17e3dbc704d49a43ce0525c477fb740134e78c720959a5a",
+  "exact_parity": [
+    {
+      "frame_id": 1136,
+      "candidates": 4,
+      "passes": 2
+    },
+    {
+      "frame_id": 1661,
+      "candidates": 3,
+      "passes": 2
+    },
+    {
+      "frame_id": 2188,
+      "candidates": 3,
+      "passes": 2
+    },
+    {
+      "frame_id": 2639,
+      "candidates": 4,
+      "passes": 2
+    },
+    {
+      "frame_id": 3129,
+      "candidates": 3,
+      "passes": 2
+    },
+    {
+      "frame_id": 3556,
+      "candidates": 2,
+      "passes": 2
+    },
+    {
+      "frame_id": 3951,
+      "candidates": 2,
+      "passes": 2
+    },
+    {
+      "frame_id": 4434,
+      "candidates": 3,
+      "passes": 2
+    },
+    {
+      "frame_id": 4815,
+      "candidates": 1,
+      "passes": 2
+    },
+    {
+      "frame_id": 5201,
+      "candidates": 4,
+      "passes": 2
+    },
+    {
+      "frame_id": 5683,
+      "candidates": 4,
+      "passes": 2
+    },
+    {
+      "frame_id": 6238,
+      "candidates": 4,
+      "passes": 2
+    }
+  ],
+  "contention": {
+    "saved": 1,
+    "stale": 0,
+    "retries": 1,
+    "completed_passes": 2,
+    "discarded_passes": 0,
+    "path": "docs/identity_shadow_v3/offline_smoke/shadow_3cd490d959dd4b259a73ea05330ab9cb.jsonl"
+  },
+  "physical_commands": 0
+}

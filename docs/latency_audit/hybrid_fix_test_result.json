@@ -1,0 +1,11 @@
+{
+  "tests": 216,
+  "result": "PASS",
+  "command": "python tools/run_unit_tests.py",
+  "environment": "Autofocus_Camera",
+  "compileall": "PASS",
+  "pyflakes_changed_production_files": "PASS",
+  "hardware_motor_test": false,
+  "real_model_inference_test": false,
+  "mock_evidence": "docs/latency_audit/hybrid_fix_mock/result.json"
+}

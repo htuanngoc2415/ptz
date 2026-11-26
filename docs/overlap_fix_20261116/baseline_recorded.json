@@ -1,0 +1,312 @@
+{
+  "kind": "Recorded gate-only replay; not full tracking/identity benchmark",
+  "results": [
+    {
+      "marker": "2026-11-16T11:55:26.073+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 0.29850958499991975
+    },
+    {
+      "marker": "2026-11-16T11:55:26.613+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 0.8680785689994082
+    },
+    {
+      "marker": "2026-11-16T11:55:27.189+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 1.437868744998923
+    },
+    {
+      "marker": "2026-11-16T11:55:27.729+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 1.9999112149998837
+    },
+    {
+      "marker": "2026-11-16T11:55:28.256+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 2.5321959519988013
+    },
+    {
+      "marker": "2026-11-16T11:55:28.763+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 3.0342459959992993
+    },
+    {
+      "marker": "2026-11-16T11:55:29.323+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 3.5690647779993014
+    },
+    {
+      "marker": "2026-11-16T11:55:30.080+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 0.19515886400040472
+    },
+    {
+      "marker": "2026-11-16T11:55:30.886+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 0.7994529459992918
+    },
+    {
+      "marker": "2026-11-16T11:55:31.423+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 1.3334692909993464
+    },
+    {
+      "marker": "2026-11-16T11:55:33.252+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 1.0325107910011866
+    },
+    {
+      "marker": "2026-11-16T11:55:36.070+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 0.7722531229992455
+    },
+    {
+      "marker": "2026-11-16T11:55:38.710+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 0.5333597200005897
+    },
+    {
+      "marker": "2026-11-16T11:55:39.271+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 1.0988894109996181
+    },
+    {
+      "marker": "2026-11-16T11:55:39.832+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 1.666654569999082
+    },
+    {
+      "marker": "2026-11-16T11:55:40.383+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 2.1969112219994713
+    },
+    {
+      "marker": "2026-11-16T11:55:40.909+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 2.7332093759996496
+    },
+    {
+      "marker": "2026-11-16T11:55:46.794+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 0.23330486999839195
+    },
+    {
+      "marker": "2026-11-16T11:55:47.296+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 0.5321134760015411
+    },
+    {
+      "marker": "2026-11-16T11:55:47.887+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 1.0995695450001222
+    },
+    {
+      "marker": "2026-11-16T11:55:48.421+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 0.5315493480011355
+    },
+    {
+      "marker": "2026-11-16T11:55:53.497+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 0.36649562400089053
+    },
+    {
+      "marker": "2026-11-16T11:55:54.021+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 0.5311174169983133
+    },
+    {
+      "marker": "2026-11-16T11:55:54.752+07:00",
+      "geometry_gate": "CONTINUE",
+      "previous_observation_available": true,
+      "ground_truth_identity": null,
+      "evidence_age": 0.7036380480003572
+    },
+    {
+      "marker": "2026-11-16T11:56:00.640+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 0.32755252800052403
+    },
+    {
+      "marker": "2026-11-16T11:56:01.202+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 0.5677044469994144
+    },
+    {
+      "marker": "2026-11-16T11:56:01.961+07:00",
+      "geometry_gate": "CONTINUE",
+      "previous_observation_available": true,
+      "ground_truth_identity": null,
+      "evidence_age": 0.46806599000046845
+    },
+    {
+      "marker": "2026-11-16T11:56:02.490+07:00",
+      "geometry_gate": "CONTINUE",
+      "previous_observation_available": true,
+      "ground_truth_identity": null,
+      "evidence_age": 0.5370003419993736
+    },
+    {
+      "marker": "2026-11-16T11:56:03.077+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": true,
+      "ground_truth_identity": null,
+      "evidence_age": 0.7716883590001089
+    },
+    {
+      "marker": "2026-11-16T11:56:03.859+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": 1.569920952000757
+    },
+    {
+      "marker": "2026-11-16T11:56:04.955+07:00",
+      "geometry_gate": "CONTINUE",
+      "previous_observation_available": true,
+      "ground_truth_identity": null,
+      "evidence_age": 0.43621847900067223
+    },
+    {
+      "marker": "2026-11-16T11:56:05.591+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": true,
+      "ground_truth_identity": null,
+      "evidence_age": 1.0682097600001725
+    },
+    {
+      "marker": "2026-11-16T11:56:06.136+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": true,
+      "ground_truth_identity": null,
+      "evidence_age": 1.601552124000591
+    },
+    {
+      "marker": "2026-11-16T11:56:06.624+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": true,
+      "ground_truth_identity": null,
+      "evidence_age": 2.1019852299996273
+    },
+    {
+      "marker": "2026-11-16T11:56:07.131+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": true,
+      "ground_truth_identity": null,
+      "evidence_age": 2.63519132699912
+    },
+    {
+      "marker": "2026-11-16T11:56:07.692+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": true,
+      "ground_truth_identity": null,
+      "evidence_age": 3.169497520000732
+    },
+    {
+      "marker": "2026-11-16T11:56:08.223+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": null
+    },
+    {
+      "marker": "2026-11-16T11:56:08.822+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": null
+    },
+    {
+      "marker": "2026-11-16T11:56:09.382+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": null
+    },
+    {
+      "marker": "2026-11-16T11:56:10.112+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": true,
+      "ground_truth_identity": null,
+      "evidence_age": null
+    },
+    {
+      "marker": "2026-11-16T11:56:16.406+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": true,
+      "ground_truth_identity": null,
+      "evidence_age": null
+    },
+    {
+      "marker": "2026-11-16T11:56:18.865+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": null
+    },
+    {
+      "marker": "2026-11-16T11:56:19.585+07:00",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": false,
+      "ground_truth_identity": null,
+      "evidence_age": null
+    }
+  ],
+  "hold_decisions": 39,
+  "false_holds": null,
+  "identity_switches": null,
+  "full_losses": null,
+  "reid_model_time": null,
+  "detection_throughput": null
+}

@@ -1,0 +1,7 @@
+Would restore camera/hanet_controller.py
+Would restore camera/hanet_ack.py
+Would restore camera/hanet_rpc.py
+Would restore tools/run_hanet_fault_tests.py
+Would remove test/test_hanet_persisted_recovery.py
+Would remove test/fixtures/hanet_stop_empty_result_20261113.json
+Tracking, configuration, models, logs and motor checkpoints are untouched.

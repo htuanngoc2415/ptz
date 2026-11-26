@@ -1,0 +1,12 @@
+{
+  "changed_files_verified": 7,
+  "markdown_links_valid": true,
+  "benchmark_captures": 3,
+  "frames": 4674,
+  "candidates": 9900,
+  "event_jobs": 1402,
+  "source_hashes_match_executed_benchmark": true,
+  "physical_commands": 0,
+  "full_hold_s": 85.59036613505668,
+  "event_hold_s": 26.982640180056478
+}

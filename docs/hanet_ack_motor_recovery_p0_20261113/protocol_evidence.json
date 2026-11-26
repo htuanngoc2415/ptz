@@ -1,0 +1,505 @@
+{
+  "latest_run_event_counts": {
+    "MOTOR_FAULT_LATCHED": 2,
+    "CAMERA_COMMAND_QUEUE_ENTER": 33,
+    "ZOOM_TOGGLE": 3,
+    "CAMERA_COMMAND_QUEUE_EXIT": 33,
+    "CAMERA_TRANSACTION_START": 33,
+    "PAN_TILT_CONFIG": 1,
+    "CAMERA_TRANSACTION_END": 26,
+    "PAN_TILT_DECISION": 152,
+    "ZOOM_POLICY_DECISION": 588,
+    "ZOOM_OBSERVATION_DEQUEUED": 1346,
+    "ZOOM_RECOVERY_DECISION_START": 1,
+    "ZOOM_REQUEST_CREATED": 1,
+    "ZOOM_ACTION_ACCEPTED": 1,
+    "ZOOM_STATE": 1,
+    "ZOOM_RECOVERY_BUDGET": 1,
+    "ZOOM_CONTROL_DECISION": 1,
+    "ZOOM_RECOVERY_DECISION_END": 1,
+    "ZOOM_WORKER_DISPATCH": 1,
+    "ZOOM_STARTED": 1,
+    "ZOOM_POSITION_BEFORE": 1,
+    "ZOOM_STOP_REQUESTED": 7,
+    "MOTOR_RECOVERY_STARTED": 7,
+    "HANET_CONNECTION_OPEN": 6,
+    "PAN_TILT_STOP_SENT": 6,
+    "HANET_RESPONSE_SCHEMA": 5,
+    "PAN_TILT_STOP_UNCONFIRMED": 13,
+    "HANET_TRANSPORT_ERROR": 6,
+    "HANET_CONNECTION_CLOSED": 6,
+    "MOTOR_RECOVERY_FAILED": 7,
+    "ZOOM_ACTION_ENDED": 7,
+    "HANET_RECONNECT_ATTEMPT": 5,
+    "HANET_RECONNECT_SUCCESS": 5,
+    "HANET_RECONNECT_FAILED": 5,
+    "CAMERA_TRANSACTION_ERROR": 7,
+    "ZOOM_STOP_SUPPRESSED": 1,
+    "PAN_TILT_TOGGLE": 2,
+    "SHUTDOWN_REQUESTED": 2,
+    "SHUTDOWN_COMPLETED_WITH_UNCONFIRMED_MOTOR": 3
+  },
+  "latest_run_schemas": [
+    {
+      "frame_id": 437,
+      "received_ns": 6136055403775,
+      "acquisition_id": null,
+      "lock_session_id": null,
+      "target_track_id": 0,
+      "track_generation": 0,
+      "zoom_state": "TARGET_RECOVERY",
+      "previous_zoom_state": "TARGET_RECOVERY",
+      "face_visible": false,
+      "face_detected": false,
+      "face_latched": false,
+      "zoom_owner": "TARGET_RECOVERY",
+      "person_track_valid": false,
+      "person_ratio": null,
+      "face_ratio": null,
+      "face_lost_duration_ms": null,
+      "decision_reason": "START_FAILED",
+      "command_id": "cmd_c1c5d34e68d4413e94e9b13ff64d1d9f",
+      "zoom_domain": "RECOVERY",
+      "recovery_scope": "TARGET",
+      "zoom_intent_id": "cmd_c1c5d34e68d4413e94e9b13ff64d1d9f",
+      "zoom_intent_generation": 1,
+      "frame_timestamp": 6136.055407477,
+      "zoom_intent_bbox": null,
+      "zoom_intent_ratio": null,
+      "lens_telemetry_timestamp": null,
+      "zoom_intent_expiry": 6136.855407477,
+      "stop_initiator": "zoom-watchdog",
+      "stop_reason": "START_FAILED",
+      "backend": "hanet",
+      "connection_generation": 1,
+      "timeout": 5.0,
+      "transport_state": "CONNECTED",
+      "request_id": "de995253-18d1-4d14-a88c-3141cdf3ca69",
+      "method": "Control.DoPtz",
+      "rpc_code": "kCmdZoomWide",
+      "operation": "STOP",
+      "ack_classification": "ACK_UNKNOWN",
+      "parser_reason": "EMPTY_RESULT_UNVERIFIED",
+      "response_id": "de995253-18d1-4d14-a88c-3141cdf3ca69",
+      "response_id_type": "str",
+      "response_keys": [
+        "id",
+        "jsonrpc",
+        "result"
+      ],
+      "response_shape": {
+        "type": "dict",
+        "fields": {
+          "id": {
+            "type": "str"
+          },
+          "jsonrpc": {
+            "type": "str"
+          },
+          "result": {
+            "type": "dict",
+            "fields": {},
+            "omitted_keys": 0,
+            "truncated": false
+          }
+        },
+        "omitted_keys": 0,
+        "truncated": false
+      },
+      "result_type": "dict",
+      "result_keys": [],
+      "session_id": null,
+      "track_id": 0,
+      "timestamp_monotonic": 6136.317628113,
+      "run_id": "daef19b24aaf401eab37ed6135e1dd7c",
+      "scenario": "unknown",
+      "timestamp": "2026-11-13T10:47:39.285+07:00",
+      "monotonic_ns": 6136317628113,
+      "event": "HANET_RESPONSE_SCHEMA",
+      "thread": "camera-command"
+    },
+    {
+      "frame_id": 437,
+      "received_ns": 6136055403775,
+      "acquisition_id": null,
+      "lock_session_id": null,
+      "target_track_id": 0,
+      "track_generation": 0,
+      "zoom_state": "TARGET_RECOVERY",
+      "previous_zoom_state": "TARGET_RECOVERY",
+      "face_visible": false,
+      "face_detected": false,
+      "face_latched": false,
+      "zoom_owner": "TARGET_RECOVERY",
+      "person_track_valid": false,
+      "person_ratio": null,
+      "face_ratio": null,
+      "face_lost_duration_ms": null,
+      "decision_reason": "REQUESTED",
+      "command_id": "cmd_c1c5d34e68d4413e94e9b13ff64d1d9f",
+      "zoom_domain": "RECOVERY",
+      "recovery_scope": "TARGET",
+      "zoom_intent_id": "cmd_c1c5d34e68d4413e94e9b13ff64d1d9f",
+      "zoom_intent_generation": 1,
+      "frame_timestamp": 6136.055407477,
+      "zoom_intent_bbox": null,
+      "zoom_intent_ratio": null,
+      "lens_telemetry_timestamp": null,
+      "zoom_intent_expiry": 6136.855407477,
+      "stop_initiator": "zoom-watchdog",
+      "stop_reason": "REQUESTED",
+      "backend": "hanet",
+      "connection_generation": 3,
+      "timeout": 5.0,
+      "transport_state": "CONNECTED",
+      "request_id": "fff60bbb-6364-46a6-beaa-7575db5e1390",
+      "method": "Control.DoPtz",
+      "rpc_code": "kCmdZoomWide",
+      "operation": "STOP",
+      "ack_classification": "ACK_UNKNOWN",
+      "parser_reason": "EMPTY_RESULT_UNVERIFIED",
+      "response_id": "fff60bbb-6364-46a6-beaa-7575db5e1390",
+      "response_id_type": "str",
+      "response_keys": [
+        "id",
+        "jsonrpc",
+        "result"
+      ],
+      "response_shape": {
+        "type": "dict",
+        "fields": {
+          "id": {
+            "type": "str"
+          },
+          "jsonrpc": {
+            "type": "str"
+          },
+          "result": {
+            "type": "dict",
+            "fields": {},
+            "omitted_keys": 0,
+            "truncated": false
+          }
+        },
+        "omitted_keys": 0,
+        "truncated": false
+      },
+      "result_type": "dict",
+      "result_keys": [],
+      "session_id": null,
+      "track_id": 0,
+      "timestamp_monotonic": 6137.875067639,
+      "run_id": "daef19b24aaf401eab37ed6135e1dd7c",
+      "scenario": "unknown",
+      "timestamp": "2026-11-13T10:47:40.842+07:00",
+      "monotonic_ns": 6137875067639,
+      "event": "HANET_RESPONSE_SCHEMA",
+      "thread": "camera-command"
+    },
+    {
+      "frame_id": 437,
+      "received_ns": 6136055403775,
+      "acquisition_id": null,
+      "lock_session_id": null,
+      "target_track_id": 0,
+      "track_generation": 0,
+      "zoom_state": "TARGET_RECOVERY",
+      "previous_zoom_state": "TARGET_RECOVERY",
+      "face_visible": false,
+      "face_detected": false,
+      "face_latched": false,
+      "zoom_owner": "TARGET_RECOVERY",
+      "person_track_valid": false,
+      "person_ratio": null,
+      "face_ratio": null,
+      "face_lost_duration_ms": null,
+      "decision_reason": "REQUESTED",
+      "command_id": "cmd_c1c5d34e68d4413e94e9b13ff64d1d9f",
+      "zoom_domain": "RECOVERY",
+      "recovery_scope": "TARGET",
+      "zoom_intent_id": "cmd_c1c5d34e68d4413e94e9b13ff64d1d9f",
+      "zoom_intent_generation": 1,
+      "frame_timestamp": 6136.055407477,
+      "zoom_intent_bbox": null,
+      "zoom_intent_ratio": null,
+      "lens_telemetry_timestamp": null,
+      "zoom_intent_expiry": 6136.855407477,
+      "stop_initiator": "detection-tracking",
+      "stop_reason": "REQUESTED",
+      "backend": "hanet",
+      "connection_generation": 4,
+      "timeout": 5.0,
+      "transport_state": "CONNECTED",
+      "request_id": "e81aa7d2-550a-41c3-89d4-98299fa733b9",
+      "method": "Control.DoPtz",
+      "rpc_code": "kCmdZoomWide",
+      "operation": "STOP",
+      "ack_classification": "ACK_UNKNOWN",
+      "parser_reason": "EMPTY_RESULT_UNVERIFIED",
+      "response_id": "e81aa7d2-550a-41c3-89d4-98299fa733b9",
+      "response_id_type": "str",
+      "response_keys": [
+        "id",
+        "jsonrpc",
+        "result"
+      ],
+      "response_shape": {
+        "type": "dict",
+        "fields": {
+          "id": {
+            "type": "str"
+          },
+          "jsonrpc": {
+            "type": "str"
+          },
+          "result": {
+            "type": "dict",
+            "fields": {},
+            "omitted_keys": 0,
+            "truncated": false
+          }
+        },
+        "omitted_keys": 0,
+        "truncated": false
+      },
+      "result_type": "dict",
+      "result_keys": [],
+      "session_id": null,
+      "track_id": 0,
+      "timestamp_monotonic": 6139.911655477,
+      "run_id": "daef19b24aaf401eab37ed6135e1dd7c",
+      "scenario": "unknown",
+      "timestamp": "2026-11-13T10:47:42.879+07:00",
+      "monotonic_ns": 6139911655477,
+      "event": "HANET_RESPONSE_SCHEMA",
+      "thread": "camera-command"
+    },
+    {
+      "frame_id": 437,
+      "received_ns": 6136055403775,
+      "acquisition_id": null,
+      "lock_session_id": null,
+      "target_track_id": 0,
+      "track_generation": 0,
+      "zoom_state": "TARGET_RECOVERY",
+      "previous_zoom_state": "TARGET_RECOVERY",
+      "face_visible": false,
+      "face_detected": false,
+      "face_latched": false,
+      "zoom_owner": "TARGET_RECOVERY",
+      "person_track_valid": false,
+      "person_ratio": null,
+      "face_ratio": null,
+      "face_lost_duration_ms": null,
+      "decision_reason": "REQUESTED",
+      "command_id": "cmd_c1c5d34e68d4413e94e9b13ff64d1d9f",
+      "zoom_domain": "RECOVERY",
+      "recovery_scope": "TARGET",
+      "zoom_intent_id": "cmd_c1c5d34e68d4413e94e9b13ff64d1d9f",
+      "zoom_intent_generation": 1,
+      "frame_timestamp": 6136.055407477,
+      "zoom_intent_bbox": null,
+      "zoom_intent_ratio": null,
+      "lens_telemetry_timestamp": null,
+      "zoom_intent_expiry": 6136.855407477,
+      "stop_initiator": "detection-tracking",
+      "stop_reason": "REQUESTED",
+      "backend": "hanet",
+      "connection_generation": 5,
+      "timeout": 5.0,
+      "transport_state": "CONNECTED",
+      "request_id": "897082ac-059a-4b07-af84-cbd333df83a8",
+      "method": "Control.DoPtz",
+      "rpc_code": "kCmdZoomWide",
+      "operation": "STOP",
+      "ack_classification": "ACK_UNKNOWN",
+      "parser_reason": "EMPTY_RESULT_UNVERIFIED",
+      "response_id": "897082ac-059a-4b07-af84-cbd333df83a8",
+      "response_id_type": "str",
+      "response_keys": [
+        "id",
+        "jsonrpc",
+        "result"
+      ],
+      "response_shape": {
+        "type": "dict",
+        "fields": {
+          "id": {
+            "type": "str"
+          },
+          "jsonrpc": {
+            "type": "str"
+          },
+          "result": {
+            "type": "dict",
+            "fields": {},
+            "omitted_keys": 0,
+            "truncated": false
+          }
+        },
+        "omitted_keys": 0,
+        "truncated": false
+      },
+      "result_type": "dict",
+      "result_keys": [],
+      "session_id": null,
+      "track_id": 0,
+      "timestamp_monotonic": 6143.971086495,
+      "run_id": "daef19b24aaf401eab37ed6135e1dd7c",
+      "scenario": "unknown",
+      "timestamp": "2026-11-13T10:47:46.938+07:00",
+      "monotonic_ns": 6143971086495,
+      "event": "HANET_RESPONSE_SCHEMA",
+      "thread": "camera-command"
+    },
+    {
+      "command_id": "cmd_b351ac8ede334b72a41b230f221a081c",
+      "backend": "hanet",
+      "connection_generation": 6,
+      "timeout": 5.0,
+      "transport_state": "CONNECTED",
+      "request_id": "bb6abb3a-319e-4538-82be-e2e2dfb4a10b",
+      "method": "Control.DoPtz",
+      "rpc_code": "kCmdZoomWide",
+      "operation": "STOP",
+      "ack_classification": "ACK_UNKNOWN",
+      "parser_reason": "EMPTY_RESULT_UNVERIFIED",
+      "response_id": "bb6abb3a-319e-4538-82be-e2e2dfb4a10b",
+      "response_id_type": "str",
+      "response_keys": [
+        "id",
+        "jsonrpc",
+        "result"
+      ],
+      "response_shape": {
+        "type": "dict",
+        "fields": {
+          "id": {
+            "type": "str"
+          },
+          "jsonrpc": {
+            "type": "str"
+          },
+          "result": {
+            "type": "dict",
+            "fields": {},
+            "omitted_keys": 0,
+            "truncated": false
+          }
+        },
+        "omitted_keys": 0,
+        "truncated": false
+      },
+      "result_type": "dict",
+      "result_keys": [],
+      "session_id": null,
+      "track_id": null,
+      "frame_id": null,
+      "track_generation": null,
+      "timestamp_monotonic": 6202.270228499,
+      "run_id": "daef19b24aaf401eab37ed6135e1dd7c",
+      "scenario": "unknown",
+      "timestamp": "2026-11-13T10:48:45.237+07:00",
+      "monotonic_ns": 6202270228499,
+      "event": "HANET_RESPONSE_SCHEMA",
+      "thread": "camera-command"
+    }
+  ],
+  "all_retained_camera_schema_samples": [
+    {
+      "file": "logs/camera/camera_control_20261113_104723_870476.log",
+      "timestamp": "2026-11-13T10:47:39.285+07:00",
+      "operation": "STOP",
+      "result_type": "dict",
+      "classification": "ACK_UNKNOWN",
+      "reason": "EMPTY_RESULT_UNVERIFIED"
+    },
+    {
+      "file": "logs/camera/camera_control_20261113_104723_870476.log",
+      "timestamp": "2026-11-13T10:47:40.842+07:00",
+      "operation": "STOP",
+      "result_type": "dict",
+      "classification": "ACK_UNKNOWN",
+      "reason": "EMPTY_RESULT_UNVERIFIED"
+    },
+    {
+      "file": "logs/camera/camera_control_20261113_104723_870476.log",
+      "timestamp": "2026-11-13T10:47:42.879+07:00",
+      "operation": "STOP",
+      "result_type": "dict",
+      "classification": "ACK_UNKNOWN",
+      "reason": "EMPTY_RESULT_UNVERIFIED"
+    },
+    {
+      "file": "logs/camera/camera_control_20261113_104723_870476.log",
+      "timestamp": "2026-11-13T10:47:46.938+07:00",
+      "operation": "STOP",
+      "result_type": "dict",
+      "classification": "ACK_UNKNOWN",
+      "reason": "EMPTY_RESULT_UNVERIFIED"
+    },
+    {
+      "file": "logs/camera/camera_control_20261113_104723_870476.log",
+      "timestamp": "2026-11-13T10:48:45.237+07:00",
+      "operation": "STOP",
+      "result_type": "dict",
+      "classification": "ACK_UNKNOWN",
+      "reason": "EMPTY_RESULT_UNVERIFIED"
+    },
+    {
+      "file": "logs/camera/camera_control_20261113_102030_063664.log",
+      "timestamp": "2026-11-13T10:20:44.084+07:00",
+      "operation": "STOP",
+      "result_type": "dict",
+      "classification": "ACK_UNKNOWN",
+      "reason": "UNVERIFIED_RESULT_SCHEMA"
+    },
+    {
+      "file": "logs/camera/camera_control_20261113_102030_063664.log",
+      "timestamp": "2026-11-13T10:20:45.628+07:00",
+      "operation": "STOP",
+      "result_type": "dict",
+      "classification": "ACK_UNKNOWN",
+      "reason": "UNVERIFIED_RESULT_SCHEMA"
+    },
+    {
+      "file": "logs/camera/camera_control_20261113_102030_063664.log",
+      "timestamp": "2026-11-13T10:20:47.658+07:00",
+      "operation": "STOP",
+      "result_type": "dict",
+      "classification": "ACK_UNKNOWN",
+      "reason": "UNVERIFIED_RESULT_SCHEMA"
+    },
+    {
+      "file": "logs/camera/camera_control_20261113_102030_063664.log",
+      "timestamp": "2026-11-13T10:20:51.688+07:00",
+      "operation": "STOP",
+      "result_type": "dict",
+      "classification": "ACK_UNKNOWN",
+      "reason": "UNVERIFIED_RESULT_SCHEMA"
+    },
+    {
+      "file": "logs/camera/camera_control_20261113_102030_063664.log",
+      "timestamp": "2026-11-13T10:21:56.401+07:00",
+      "operation": "STOP",
+      "result_type": "dict",
+      "classification": "ACK_UNKNOWN",
+      "reason": "UNVERIFIED_RESULT_SCHEMA"
+    }
+  ],
+  "source_sha256": {
+    "logs/camera/camera_control_20261113_104723_870476.log": "5103e63ae66e9f3cb5cd1fb9fd8880babbefd885c2d05b6322a7c7db60812b9d",
+    "logs/ptz_20261113_104720.log": "c55435f130ef80e63cb7759e5c595e25d92367d0daeebec493e5be164554f718",
+    "logs/camera/first_failures_20261113_104723_870476.json": "509bbf36e873dcdbb3302f395541ddd3cca972847699da665ddcedc22d110942",
+    "logs/camera/motor_state/c761c95e9887b30d9adb.json": "86029ee412f5b48d30bc928a4447e0f0d6de180160c6283576f433f071a577c3",
+    "logs/hanet_integration_motion.json": "7eedef51978d15d89a65904713f570fe9c01653460f0ad50f09078654004f8ba",
+    "logs/hanet_integration_verified_ack.json": "7ceee49298d147f70000e3702620bfe9a412e4b3974303fc8f2b15473352e95a"
+  },
+  "hardware_run": false,
+  "public_search": {
+    "query": "\"HANET\" \"Control.DoPtz\" API SDK",
+    "result": "No results returned; this does not establish that no vendor documentation exists."
+  },
+  "protocol_source": "https://www.jsonrpc.org/specification",
+  "firmware_success_schema_verified": false
+}

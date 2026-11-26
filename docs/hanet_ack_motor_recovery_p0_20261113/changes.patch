@@ -1,0 +1,499 @@
+diff --git a/camera/hanet_ack.py b/camera/hanet_ack.py
+index 3bd6035..b7d144d 100644
+--- a/camera/hanet_ack.py
++++ b/camera/hanet_ack.py
+@@ -35,6 +35,22 @@ class AckDecision:
+ 
+ def validate_response(message, request_id, *, method='Control.DoPtz', operation=None, code=None):
+     """Validate a matched JSON object; never infer success from no error."""
++    if not isinstance(message, dict):
++        return AckDecision(PROTOCOL_ERROR, 'MALFORMED_RESPONSE')
++    if ('id' not in message or type(message['id']) is not type(request_id)
++            or message['id'] != request_id):
++        return AckDecision(PROTOCOL_ERROR, 'MISMATCHED_REQUEST_ID')
++    if message.get('jsonrpc') != '2.0':
++        return AckDecision(PROTOCOL_ERROR, 'MALFORMED_RESPONSE')
++    if 'error' in message:
++        error = message['error']
++        if ('result' in message or not isinstance(error, dict)
++                or type(error.get('code')) is not int
++                or not isinstance(error.get('message'), str)):
++            return AckDecision(PROTOCOL_ERROR, 'MALFORMED_RESPONSE')
++        return AckDecision(ACK_REJECTED, 'EXPLICIT_REJECTION')
++    if 'result' not in message:
++        return AckDecision(ACK_UNKNOWN, 'MISSING_RESULT')
+     if method != 'Control.DoPtz':
+         return AckDecision(ACK_UNKNOWN, 'METHOD_NOT_SUPPORTED')
+     if operation is not None and operation not in ('START', 'STOP'):
+@@ -42,28 +58,16 @@ def validate_response(message, request_id, *, method='Control.DoPtz', operation=
+     if code is not None and code not in (
+             'kCmdZoomTele', 'kCmdZoomWide', 'kCmdLeft', 'kCmdRight', 'kCmdUp', 'kCmdDown'):
+         return AckDecision(PROTOCOL_ERROR, 'UNSUPPORTED_PTZ_CODE')
+-    if not isinstance(message, dict):
+-        return AckDecision(PROTOCOL_ERROR, 'RESPONSE_NOT_OBJECT')
+-    if type(message.get('id')) is not type(request_id) or message.get('id') != request_id:
+-        return AckDecision(PROTOCOL_ERROR, 'REQUEST_ID_MISMATCH')
+-    if 'jsonrpc' in message and message['jsonrpc'] != '2.0':
+-        return AckDecision(PROTOCOL_ERROR, 'INVALID_JSONRPC_VERSION')
+-    error = message.get('error')
+-    if isinstance(error, dict) and error:
+-        return AckDecision(ACK_REJECTED, 'ERROR_OBJECT')
+-    if error is not None:
+-        # A malformed error field cannot be ignored even beside result=True.
+-        return AckDecision(PROTOCOL_ERROR, 'INVALID_ERROR_FIELD')
+     if message.get('result') is False:
+-        return AckDecision(ACK_REJECTED, 'BOOLEAN_FALSE')
++        return AckDecision(ACK_REJECTED, 'EXPLICIT_REJECTION')
+     if message.get('result') is True:
+-        return AckDecision(ACK_SUCCESS, 'LEGACY_BOOLEAN_TRUE')
++        # Existing synthetic boolean contract; NOT firmware verification.
++        return AckDecision(ACK_SUCCESS, 'VALID_METHOD_SUCCESS')
+     if isinstance(message.get('result'), dict) and not message['result']:
+         # Observed STOP kCmdZoomWide response on 2026-11-13. Its envelope is
+         # known; device command semantics and physical STOP are NOT verified.
+         return AckDecision(ACK_UNKNOWN, 'EMPTY_RESULT_UNVERIFIED')
+-    return AckDecision(ACK_UNKNOWN, 'RESULT_MISSING' if 'result' not in message
+-                       else 'UNVERIFIED_RESULT_SCHEMA')
++    return AckDecision(ACK_UNKNOWN, 'UNVERIFIED_RESULT_SCHEMA')
+ 
+ 
+ def failure_classification(exc):
+diff --git a/camera/hanet_controller.py b/camera/hanet_controller.py
+index ce6dec4..d6ee0e4 100644
+--- a/camera/hanet_controller.py
++++ b/camera/hanet_controller.py
+@@ -225,10 +225,11 @@ class HanetController(PTZController):
+             finally:
+                 os.close(directory)
+         except OSError as exc:
+-            # The confirmed STOP is already durably committed. Failed cleanup
+-            # can leave an extra fault on restart, never erase an active code.
++            # Do not grant READY while a guard can reintroduce the old fault
++            # on restart. The caller retains the code and ownership for retry.
+             self._fault_event('MOTOR_CHECKPOINT_CLEANUP_PENDING',
+                               exception_type=type(exc).__name__)
++            raise
+ 
+     def _fault_event(self, event, **fields):
+         generation = getattr(self._rpc, 'generation', None)
+@@ -265,10 +266,10 @@ class HanetController(PTZController):
+                 self._active_codes.remove(code)
+                 try:
+                     self._save_motor_state()
++                    self._discard_stop_guard()
+                 except Exception:
+                     self._active_codes.add(code)
+                     raise
+-                self._discard_stop_guard()
+             except Exception as exc:
+                 failed = True
+                 self._fault_event('MOTOR_CHECKPOINT_COMMIT_FAILED' if ack_received else 'PAN_TILT_STOP_UNCONFIRMED',
+diff --git a/camera/hanet_rpc.py b/camera/hanet_rpc.py
+index 165d489..4c781f2 100644
+--- a/camera/hanet_rpc.py
++++ b/camera/hanet_rpc.py
+@@ -335,11 +335,11 @@ class HanetPTZClient:
+                     message = json.loads(payload.decode("utf-8"))
+                 except (ValueError, UnicodeError, RecursionError):
+                     self._response_diagnostic(None, request_id, operation, code,
+-                        AckDecision(PROTOCOL_ERROR, 'MALFORMED_JSON'))
++                        AckDecision(PROTOCOL_ERROR, 'MALFORMED_RESPONSE'))
+                     raise HanetProtocolError('Malformed HANET response') from None
+                 decision = validate_response(message, request_id, operation=operation, code=code)
+                 self._response_diagnostic(message, request_id, operation, code, decision)
+-                if decision.reason == 'REQUEST_ID_MISMATCH':
++                if decision.reason == 'MISMATCHED_REQUEST_ID':
+                     mismatch = True
+                     continue
+                 if decision.classification == ACK_REJECTED:
+@@ -404,6 +404,7 @@ class HanetPTZClient:
+                             operation=operation, rpc_code=code, acknowledged=False,
+                             transmission=transmission,
+                             ack_classification=failure_classification(exc),
++                            parser_reason='CONNECTION_FAILURE' if failure_classification(exc) == 'TRANSPORT_ERROR' else None,
+                             exception_type=type(exc).__name__, exception_message=self._safe_error(exc),
+                             exception_errno=getattr(exc, 'errno', None))
+                 self._event('HANET_TRANSPORT_ERROR', rpc_command_id=request_id, operation=operation,
+diff --git a/control/auto_pan_tilt.py b/control/auto_pan_tilt.py
+index 0884ad0..bcdd218 100644
+--- a/control/auto_pan_tilt.py
++++ b/control/auto_pan_tilt.py
+@@ -134,6 +134,7 @@ class AutoPanTiltController:
+             item = self._latest
+             now = time.monotonic()
+             return bool(self.enabled and not self._closed and not self._fault and item
++                and getattr(self.ptz, '_motor_fault', False) is not True
+                 and not self.orchestrator.manual
+                 and self.orchestrator.owner == 'pan_tilt'
+                 and 0 <= now-item[0] <= self.cfg.MAX_CONTROL_OBSERVATION_AGE
+@@ -200,6 +201,13 @@ class AutoPanTiltController:
+             if not self.orchestrator.acquire('pan_tilt'):
+                 self._decision('MANUAL_OVERRIDE' if self.orchestrator.manual else 'MOTOR_BUSY', item[5])
+                 continue
++            if getattr(self.ptz, '_motor_fault', False) is True:
++                # A persisted backend fault can exist without a local owner.
++                # Discard this intent; recovery requires a fresh observation.
++                self.cancel()
++                self.orchestrator.release('pan_tilt')
++                self._decision('MOTOR_FAULT', item[5])
++                continue
+             fields = dict(item[5], command_id='pan_'+uuid4().hex, motor_owner='pan_tilt', lock_session_id=item[1], target_track_id=item[2],
+                           observation_time=item[0], pan_tilt_command=item[3][0])
+             self._active_fields = fields
+diff --git a/test/test_hanet_ack_compatibility.py b/test/test_hanet_ack_compatibility.py
+index 3f58ce4..f1bc86a 100644
+--- a/test/test_hanet_ack_compatibility.py
++++ b/test/test_hanet_ack_compatibility.py
+@@ -42,20 +42,19 @@ class AckParserTests(unittest.TestCase):
+     def test_legacy_boolean_true_contract_start_and_stop(self):
+         for operation in ('START', 'STOP'):
+             with self.subTest(operation=operation):
+-                client = self.client([self.frame({'id':'new', 'result':True})])
++                client = self.client([self.frame({'jsonrpc':'2.0', 'id':'new', 'result':True})])
+                 self.assertTrue(client._receive_response('new', operation=operation, code='kCmdLeft'))
+                 self.assertEqual(client._event.call_args.kwargs['ack_classification'], ACK_SUCCESS)
+ 
+     def test_false_and_error_object_are_rejected(self):
+-        for message in ({'id':'new', 'result':False},
+-                        {'id':'new', 'error':{'code':401, 'message':'never-log-password'}},
+-                        {'id':'new', 'result':True, 'error':{'code':1}}):
++        for message in ({'jsonrpc':'2.0', 'id':'new', 'result':False},
++                        {'jsonrpc':'2.0', 'id':'new', 'error':{'code':401, 'message':'never-log-password'}}):
+             with self.subTest(message=message):
+                 client = self.client([self.frame(message)])
+                 with self.assertRaises(HanetRPCRejected): client._receive_response('new')
+ 
+     def test_missing_null_object_numeric_and_string_remain_unknown(self):
+-        messages = [{'id':'new'}]+[{'id':'new', 'result':value} for value in
++        messages = [{'jsonrpc':'2.0', 'id':'new'}]+[{'jsonrpc':'2.0', 'id':'new', 'result':value} for value in
+                     (None, {}, {'success':True}, {'data':{'code':0}}, 1, 0, 'true', 'OK', [])]
+         for message in messages:
+             with self.subTest(message=message):
+@@ -66,13 +65,13 @@ class AckParserTests(unittest.TestCase):
+     def test_malformed_json_and_unexpected_envelope(self):
+         for reply in ((1,b'{'), (1,b'\xff'), self.frame([]), self.frame(None),
+                       self.frame({'id':'new','jsonrpc':'1.0','result':True}),
+-                      self.frame({'id':'new','result':True,'error':False})):
++                      self.frame({'jsonrpc':'2.0', 'id':'new','result':True,'error':False})):
+             with self.subTest(reply=reply):
+                 client = self.client([reply])
+                 with self.assertRaises(HanetProtocolError): client._receive_response('new')
+ 
+     def test_ping_pong_are_not_ack_and_binary_is_protocol_error(self):
+-        client = self.client([(9,b'ping'), (10,b'pong'), self.frame({'id':'new','result':True})])
++        client = self.client([(9,b'ping'), (10,b'pong'), self.frame({'jsonrpc':'2.0', 'id':'new','result':True})])
+         client._send_frame = Mock()
+         self.assertTrue(client._receive_response('new'))
+         client._send_frame.assert_called_once_with(b'ping', opcode=10)
+@@ -80,20 +79,20 @@ class AckParserTests(unittest.TestCase):
+         with self.assertRaises(HanetProtocolError): client._receive_response('new')
+ 
+     def test_mismatch_then_valid_ack_and_mismatch_only(self):
+-        stale = self.frame({'id':'old','result':True})
+-        client = self.client([stale, self.frame({'id':'new','result':True})])
++        stale = self.frame({'jsonrpc':'2.0', 'id':'old','result':True})
++        client = self.client([stale, self.frame({'jsonrpc':'2.0', 'id':'new','result':True})])
+         self.assertTrue(client._receive_response('new'))
+-        self.assertEqual(client._event.call_args_list[0].kwargs['parser_reason'], 'REQUEST_ID_MISMATCH')
++        self.assertEqual(client._event.call_args_list[0].kwargs['parser_reason'], 'MISMATCHED_REQUEST_ID')
+         client = self.client([stale, TimeoutError()])
+         with self.assertRaises(HanetProtocolError): client._receive_response('new')
+-        self.assertEqual(validate_response({'id':1,'result':True}, '1').classification, PROTOCOL_ERROR)
++        self.assertEqual(validate_response({'jsonrpc':'2.0', 'id':1,'result':True}, '1').classification, PROTOCOL_ERROR)
+ 
+     def test_delayed_ack_inside_deadline(self):
+         now = [0.]
+         client = self.client([])
+         def receive():
+             now[0] = .5
+-            return self.frame({'id':'new','result':True})
++            return self.frame({'jsonrpc':'2.0', 'id':'new','result':True})
+         client._recv_frame.side_effect = receive
+         client.timeout = 1.
+         with patch('camera.hanet_rpc.time.monotonic', lambda: now[0]):
+@@ -106,7 +105,7 @@ class AckParserTests(unittest.TestCase):
+         client._io_deadline = 1.
+         def receive():
+             now[0] = 1.1
+-            return self.frame({'id':'new','result':True})
++            return self.frame({'jsonrpc':'2.0', 'id':'new','result':True})
+         client._recv_frame.side_effect = receive
+         with patch('camera.hanet_rpc.time.monotonic', lambda: now[0]):
+             with self.assertRaises(TimeoutError): client._receive_response('new')
+@@ -116,7 +115,7 @@ class AckParserTests(unittest.TestCase):
+         client.generation = 2
+         def receive():
+             client.generation = 3
+-            return self.frame({'id':'new','result':True})
++            return self.frame({'jsonrpc':'2.0', 'id':'new','result':True})
+         client._recv_frame.side_effect = receive
+         with self.assertRaises(HanetProtocolError):
+             client._receive_response('new', generation=2, operation='STOP')
+@@ -131,7 +130,7 @@ class AckParserTests(unittest.TestCase):
+ 
+     def test_schema_has_no_remote_values_or_untrusted_keys(self):
+         secrets = ['never-log-password','never-log-session','cookie-secret','dynamic-secret-key']
+-        message = {'id':secrets[0], 'result': {'status':secrets[1], 'code':123456789,
++        message = {'jsonrpc':'2.0', 'id':secrets[0], 'result': {'status':secrets[1], 'code':123456789,
+             'data':{'success':secrets[2]}, secrets[3]:True}, 'token':secrets[1]}
+         schema = response_schema(message, 'local-uuid')
+         text = json.dumps(schema)
+@@ -145,15 +144,15 @@ class AckParserTests(unittest.TestCase):
+         nested = {'status':True}
+         for _ in range(50): nested = {'data':nested,'status':'x'*10000}
+         for result in (nested, {str(i):'s'*1000 for i in range(1000)}):
+-            self.assertLessEqual(len(json.dumps(response_schema({'id':'new','result':result}, 'new'))), 4096)
++            self.assertLessEqual(len(json.dumps(response_schema({'jsonrpc':'2.0', 'id':'new','result':result}, 'new'))), 4096)
+ 
+     def test_rate_limit_first_unknown_after_success_and_config_off(self):
+         client = self.client([])
+         with patch('camera.hanet_rpc.time.monotonic', return_value=100.):
+             for _ in range(100):
+-                client._response_diagnostic({'id':'new','result':True}, 'new', 'STOP', 'kCmdLeft',
++                client._response_diagnostic({'jsonrpc':'2.0', 'id':'new','result':True}, 'new', 'STOP', 'kCmdLeft',
+                                             AckDecision(ACK_SUCCESS, 'LEGACY_BOOLEAN_TRUE'))
+-            client._response_diagnostic({'id':'new'}, 'new', 'STOP', 'kCmdLeft',
++            client._response_diagnostic({'jsonrpc':'2.0', 'id':'new'}, 'new', 'STOP', 'kCmdLeft',
+                                         AckDecision(ACK_UNKNOWN, 'RESULT_MISSING'))
+         self.assertEqual(client._event.call_count, 2)
+         client.response_diagnostics = False
+@@ -163,7 +162,7 @@ class AckParserTests(unittest.TestCase):
+             other = HanetPTZClient('offline.invalid',80,'u','p')
+         self.addCleanup(other.close)
+         self.assertFalse(other.response_diagnostics)
+-        other._recv_frame = Mock(return_value=self.frame({'id':'new','result':{}}))
++        other._recv_frame = Mock(return_value=self.frame({'jsonrpc':'2.0', 'id':'new','result':{}}))
+         with self.assertRaises(HanetACKUnknown): other._receive_response('new')
+ 
+     def test_first_start_and_stop_schemas_survive_rotation(self):
+@@ -172,7 +171,7 @@ class AckParserTests(unittest.TestCase):
+             try:
+                 for op in ('START','STOP'):
+                     profiler.event('HANET_RESPONSE_SCHEMA', operation=op, ack_classification=ACK_UNKNOWN,
+-                                   **response_schema({'id':'local','result':{'status':'secret'}}, 'local'))
++                                   **response_schema({'jsonrpc':'2.0', 'id':'local','result':{'status':'secret'}}, 'local'))
+                 for _ in range(300): profiler.event('CAMERA_TEST_ROTATION', message='x'*200)
+             finally:
+                 self.assertTrue(profiler.close())
+diff --git a/test/test_hanet_fault_injection.py b/test/test_hanet_fault_injection.py
+index 994d280..74eef84 100644
+--- a/test/test_hanet_fault_injection.py
++++ b/test/test_hanet_fault_injection.py
+@@ -112,8 +112,8 @@ class FakeSocket:
+         if isinstance(outcome, BaseException): self.responses.append(outcome); return
+         if self.late:
+             self.responses.append(self.frame(self.late)); self.late = None
+-        response = {'id': request['id'], 'result': outcome}
+-        if outcome == 'expired': response = {'id': request['id'], 'error': {'code': 401}}
++        response = {'jsonrpc':'2.0', 'id': request['id'], 'result': outcome}
++        if outcome == 'expired': response = {'jsonrpc':'2.0', 'id': request['id'], 'error': {'code': 401, 'message': 'synthetic expired session'}}
+         self.responses.append(self.frame(response))
+ 
+     @staticmethod
+@@ -233,7 +233,7 @@ class FaultInjectionTests(unittest.TestCase):
+         first, second = FakeSocket([TimeoutError()]), FakeSocket([False])
+         client = self.client([first,second])
+         with self.assertRaises(TimeoutError): client.motion('kCmdLeft', True, 1)
+-        second.late = {'id': first.commands[0]['id'], 'result': True}
++        second.late = {'jsonrpc':'2.0', 'id': first.commands[0]['id'], 'result': True}
+         self.clock.advance(1)
+         with self.assertRaises(HanetRPCRejected): client.motion('kCmdLeft', False, 1)
+         self.assertIsNone(client._ws)
+diff --git a/test/test_hanet_motor_p0.py b/test/test_hanet_motor_p0.py
+new file mode 100644
+index 0000000..17f93a7
+--- /dev/null
++++ b/test/test_hanet_motor_p0.py
+@@ -0,0 +1,114 @@
++"""P0 regressions: synthetic ACKs only; fixtures deny live network access."""
++import json
++import threading
++import unittest
++from pathlib import Path
++from unittest.mock import patch
++
++from camera.hanet_ack import validate_response, ACK_SUCCESS, ACK_UNKNOWN, ACK_REJECTED, PROTOCOL_ERROR
++from control.auto_zoom import AutoZoomController
++from control.orchestrator import ControlOrchestrator
++from telemetry import latency
++import test_hanet_persisted_recovery as fixtures
++
++
++class EnvelopeTests(unittest.TestCase):
++    def test_success_requires_complete_unambiguous_envelope(self):
++        for response in ({'id':'r','result':True},
++                         {'jsonrpc':'2.0','id':'r','result':True,'error':None},
++                         {'jsonrpc':'2.0','id':'r','result':True,'error':{}},
++                         {'jsonrpc':'2.0','id':'r','result':True,'error':{'code':1,'message':'denied'}}):
++            with self.subTest(response=response):
++                self.assertEqual(validate_response(response,'r').classification,PROTOCOL_ERROR)
++
++    def test_explicit_result_contract_and_reason_matrix(self):
++        for result,classification,reason in (
++            (True,ACK_SUCCESS,'VALID_METHOD_SUCCESS'),
++            (False,ACK_REJECTED,'EXPLICIT_REJECTION'),
++            ({},ACK_UNKNOWN,'EMPTY_RESULT_UNVERIFIED'),
++            (None,ACK_UNKNOWN,'UNVERIFIED_RESULT_SCHEMA')):
++            with self.subTest(result=result):
++                decision=validate_response({'jsonrpc':'2.0','id':'r','result':result},'r')
++                self.assertEqual((decision.classification,decision.reason),(classification,reason))
++        self.assertEqual(validate_response({'jsonrpc':'2.0','id':'r'},'r').reason,'MISSING_RESULT')
++        self.assertEqual(validate_response({'jsonrpc':'2.0','id':'old','result':True},'r').reason,'MISMATCHED_REQUEST_ID')
++
++    def test_malformed_error_is_protocol_error(self):
++        for error in (None,False,{}, {'code':True,'message':'denied'}, {'code':1}, {'code':1,'message':False}):
++            with self.subTest(error=error):
++                self.assertEqual(validate_response({'jsonrpc':'2.0','id':'r','error':error},'r').classification,PROTOCOL_ERROR)
++
++    def test_valid_error_and_other_method_never_accept(self):
++        self.assertEqual(validate_response({'jsonrpc':'2.0','id':'r','error':{'code':1,'message':'denied'}},'r').classification,ACK_REJECTED)
++        self.assertEqual(validate_response({'jsonrpc':'2.0','id':'r','result':True},'r',method='Other.Method').classification,ACK_UNKNOWN)
++
++
++class CleanupOwnershipTests(unittest.TestCase):
++    setUp=fixtures.PersistedRecoveryTests.setUp
++    camera=fixtures.PersistedRecoveryTests.camera
++
++    def test_guard_unlink_failure_keeps_zoom_owner_until_recovery_and_restart(self):
++        camera,rpc=self.camera(); owner=ControlOrchestrator();owner.acquire('zoom')
++        zoom=AutoZoomController(camera,orchestrator=owner,wait_after_zoom=0)
++        self.addCleanup(zoom.close)
++        self.assertTrue(camera.command('zoom_out')[0])
++        zoom.busy=zoom.zoom_motor_active=True
++        zoom._started=0;zoom.zoom_direction=-1
++        real_unlink=Path.unlink
++        def unlink(path,*a,**kw):
++            if path==camera._stop_guard_path: raise OSError('synthetic guard cleanup failure')
++            return real_unlink(path,*a,**kw)
++        with patch.object(Path,'unlink',unlink):
++            zoom.stop()
++        self.assertEqual(owner.owner,'zoom')
++        self.assertTrue(camera._motor_fault)
++        self.assertNotEqual(camera.motor_state,'READY')
++        self.assertFalse(owner.acquire('pan_tilt'))
++        self.assertFalse(camera.command('pan_left')[0])
++        self.assertTrue(camera.emergency_stop()[0]);zoom.stop()
++        self.assertIsNone(owner.owner)
++        self.assertFalse(camera._stop_guard_path.exists())
++        self.assertEqual(json.loads(self.path.read_text())['active_codes'],[])
++        camera.close()
++        restarted,new_rpc=self.camera()
++        self.assertEqual(restarted.motor_state,'READY');new_rpc.motion.assert_not_called()
++
++    def test_cleanup_directory_fsync_failure_does_not_report_ready(self):
++        import os,stat
++        camera,rpc=self.camera();camera.command('pan_left')
++        real=os.fsync
++        def sync(fd):
++            if (stat.S_ISDIR(os.fstat(fd).st_mode) and not camera._stop_guard_path.exists()
++                    and not json.loads(self.path.read_text())['active_codes']):
++                raise OSError('synthetic cleanup directory fsync failure')
++            return real(fd)
++        with patch('camera.hanet_controller.os.fsync',side_effect=sync):
++            self.assertFalse(camera.stop()[0])
++        self.assertTrue(camera._motor_fault)
++        self.assertFalse(camera.command('pan_right')[0])
++        self.assertTrue(camera.emergency_stop()[0])
++        self.assertEqual(camera.motor_state,'READY')
++
++
++class PanAdmissionTests(unittest.TestCase):
++    setUp=fixtures.PanTransportRecoveryTests.setUp
++    submit=fixtures.PanTransportRecoveryTests.submit
++
++    def test_backend_fault_without_owner_never_emits_dispatch(self):
++        self.camera._motor_fault=True;self.camera.motor_state='FAULT_LATCHED'
++        decided=threading.Event()
++        def event(name,**fields):
++            self.events.append((name,fields))
++            if name=='PAN_TILT_DECISION' and fields.get('decision_reason')=='MOTOR_FAULT':decided.set()
++            if name=='PAN_TILT_DISPATCH':decided.set()
++        with patch.object(latency.profiler,'event',side_effect=event):
++            self.submit();self.assertTrue(decided.wait(1))
++        self.assertNotIn('PAN_TILT_DISPATCH',[n for n,f in self.events])
++        self.assertFalse(self.wire.commands)
++        self.assertIsNone(self.owner.owner)
++
++    def test_manual_override_does_not_dispatch(self):
++        self.owner.manual=True
++        self.assertFalse(self.submit())
++        self.assertEqual(self.events[-1][1]['decision_reason'],'MANUAL_OVERRIDE')
++        self.assertFalse(self.wire.commands)
+diff --git a/test/test_hanet_persisted_recovery.py b/test/test_hanet_persisted_recovery.py
+index b789112..ab15dfc 100644
+--- a/test/test_hanet_persisted_recovery.py
++++ b/test/test_hanet_persisted_recovery.py
+@@ -33,13 +33,13 @@ class RecordedSchemaTests(unittest.TestCase):
+         self.assertFalse(fixture['provenance']['raw_response_captured'])
+ 
+     def test_scope_is_control_do_ptz_and_unknown_not_promoted_for_any_direction(self):
+-        self.assertEqual(validate_response({'id':'r','result':True},'r',method='Other.Method').classification,ACK_UNKNOWN)
++        self.assertEqual(validate_response({'jsonrpc':'2.0', 'id':'r','result':True},'r',method='Other.Method').classification,ACK_UNKNOWN)
+         for op in ('START','STOP'):
+             for code in HanetController.CODES.values():
+                 with self.subTest(operation=op,code=code):
+-                    self.assertEqual(validate_response({'id':'r','result':{}},'r',operation=op,code=code).classification,ACK_UNKNOWN)
+-        self.assertEqual(validate_response({'id':'r','result':True},'r',operation='MOVE').classification,PROTOCOL_ERROR)
+-        self.assertEqual(validate_response({'id':'r','result':True},'r',code='other').classification,PROTOCOL_ERROR)
++                    self.assertEqual(validate_response({'jsonrpc':'2.0', 'id':'r','result':{}},'r',operation=op,code=code).classification,ACK_UNKNOWN)
++        self.assertEqual(validate_response({'jsonrpc':'2.0', 'id':'r','result':True},'r',operation='MOVE').classification,PROTOCOL_ERROR)
++        self.assertEqual(validate_response({'jsonrpc':'2.0', 'id':'r','result':True},'r',code='other').classification,PROTOCOL_ERROR)
+ 
+ 
+ class PersistedRecoveryTests(unittest.TestCase):
+@@ -136,8 +136,8 @@ class PersistedRecoveryTests(unittest.TestCase):
+ 
+     def test_durable_guard_survives_crash_before_cleanup(self):
+         camera,rpc=self.camera();camera.command('pan_left')
+-        with patch.object(camera,'_discard_stop_guard'):
+-            self.assertTrue(camera.stop()[0])
++        with patch.object(camera,'_discard_stop_guard',side_effect=OSError('crash before cleanup')):
++            self.assertFalse(camera.stop()[0])
+         self.assertEqual(json.loads(self.path.read_text())['active_codes'],[])
+         restarted,_=self.camera()
+         self.assertTrue(restarted._motor_fault)
+@@ -159,7 +159,7 @@ class PersistedRecoveryTests(unittest.TestCase):
+             if path==camera._stop_guard_path:raise OSError('cleanup failed')
+             return real(path,*a,**kw)
+         with patch.object(Path,'unlink',fail_guard):
+-            self.assertTrue(camera.stop()[0])  # main STOP checkpoint is already durable
++            self.assertFalse(camera.stop()[0])  # guard cleanup is part of recovery
+         restarted,_=self.camera()
+         self.assertTrue(restarted._motor_fault)
+ 
+diff --git a/test/test_hanet_rpc.py b/test/test_hanet_rpc.py
+index 3b38157..b26b626 100644
+--- a/test/test_hanet_rpc.py
++++ b/test/test_hanet_rpc.py
+@@ -17,8 +17,8 @@ class HanetAckTests(unittest.TestCase):
+         return client
+ 
+     def test_ignores_unrelated_response(self):
+-        client = self.client([(1, json.dumps({'id':'old','result':True}).encode()),
+-                              (1, json.dumps({'id':'new','result':True}).encode())])
++        client = self.client([(1, json.dumps({'jsonrpc':'2.0', 'id':'old','result':True}).encode()),
++                              (1, json.dumps({'jsonrpc':'2.0', 'id':'new','result':True}).encode())])
+         client._receive_response('new')
+         self.assertEqual(client._recv_frame.call_count, 2)
+ 
+@@ -27,6 +27,6 @@ class HanetAckTests(unittest.TestCase):
+             self.client([socket.timeout()])._receive_response('new')
+ 
+     def test_error_is_not_ack(self):
+-        reply = json.dumps({'id':'new','error':{'code':1}}).encode()
++        reply = json.dumps({'jsonrpc':'2.0', 'id':'new','error':{'code':1,'message':'synthetic rejection'}}).encode()
+         with self.assertRaises(RuntimeError):
+             self.client([(1, reply)])._receive_response('new')
+diff --git a/tools/run_hanet_fault_tests.py b/tools/run_hanet_fault_tests.py
+index 7e27bf3..c418405 100644
+--- a/tools/run_hanet_fault_tests.py
++++ b/tools/run_hanet_fault_tests.py
+@@ -27,7 +27,7 @@ def main():
+     parser.add_argument('--regression', action='store_true')
+     parser.add_argument('--json', type=Path)
+     args = parser.parse_args()
+-    modules = ['test_hanet_persisted_recovery', 'test_hanet_ack_compatibility',
++    modules = ['test_hanet_motor_p0', 'test_hanet_persisted_recovery', 'test_hanet_ack_compatibility',
+                'test_hanet_fault_injection', 'test_hanet_shutdown']
+     if args.regression:
+         modules += ['test_hanet_rpc', 'test_hanet_controller', 'test_auto_pan_tilt',

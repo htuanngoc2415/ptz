@@ -88,6 +88,10 @@ class CCTVApp:
         self.pending_target_path = None
         self.ai_initialization_error = None
         self.reid_target = ReIDTargetSelector(cfg)
+        from runtime.identity_recording import IdentityCapture
+        self.identity_capture = IdentityCapture(cfg)  # no writer/thread until explicit Start
+        from runtime.identity_shadow import IdentityShadow
+        self.identity_shadow = IdentityShadow(cfg)  # explicit Start only, no motor consumer
 
         self.latest_frame_rgb = None
         self.latest_frame_time = None
@@ -560,6 +564,18 @@ class CCTVApp:
         ttk.Label(target_box, textvariable=self.target_name_text, wraplength=290).pack(anchor="w", pady=(6, 0))
         ttk.Label(target_box, textvariable=self.target_status_text, wraplength=290).pack(anchor="w")
         self._enable_target_drop(self.target_preview_label)
+
+        record_box = ttk.LabelFrame(panel, text='Record & gán nhãn', padding=6)
+        record_box.pack(fill='x', pady=(0, 8))
+        ttk.Button(record_box, text='Start record + nhãn target tự động',
+                   command=self.identity_capture.start).pack(fill='x')
+        ttk.Button(record_box, text='Stop record', command=self.identity_capture.stop).pack(fill='x')
+        ttk.Button(record_box, text='Start Phase 1 shadow (chỉ log)', command=self.identity_shadow.start).pack(fill='x')
+        ttk.Button(record_box, text='Stop shadow', command=self.identity_shadow.stop).pack(fill='x')
+        ttk.Button(record_box, text='Review nhãn thủ công (tùy chọn)…', command=self.open_identity_labels).pack(fill='x')
+        self.identity_record_text = tk.StringVar(value='Record OFF')
+        ttk.Label(record_box, textvariable=self.identity_record_text, wraplength=290).pack(anchor='w')
+        self.root.after(500, self.refresh_identity_record_status)
 
         # ====================================================
         # AUTOMATIC CONTROL
@@ -1047,6 +1063,8 @@ class CCTVApp:
         try:
             return InferenceWorker(self).ai_worker()
         finally:
+            if hasattr(self, 'identity_shadow'):
+                self.identity_shadow.stop()
             if hasattr(self, 'auto_pan_tilt'):
                 self.auto_pan_tilt.cancel()
             if hasattr(self, 'face_worker'):
@@ -1195,7 +1213,8 @@ class CCTVApp:
 
             from runtime.display_mapping import display_result
             result = display_result(result, frame_bgr.shape, time.monotonic(),
-                                    cfg.MAX_CONTROL_OBSERVATION_AGE)
+                                    cfg.MAX_CONTROL_OBSERVATION_AGE,
+                                    display_received=packet.receive_timestamp)
 
             # ------------------------------------------------
             # DIGITAL PTZ
@@ -1849,6 +1868,24 @@ class CCTVApp:
     # CLOSE
     # ========================================================
 
+    def refresh_identity_record_status(self):
+        if not self.running or getattr(self, '_closing', False):
+            return
+        self.identity_record_text.set(self.identity_capture.status())
+        self.identity_record_text.set(self.identity_record_text.get()+'\n'+self.identity_shadow.status())
+        self.root.after(500, self.refresh_identity_record_status)
+
+    def open_identity_labels(self):
+        from tkinter import filedialog
+        import subprocess
+        import sys
+        from pathlib import Path
+        directory = filedialog.askdirectory(title='Chọn capture đã Stop record',
+                                             initialdir=cfg.IDENTITY_RECORD_DIRECTORY)
+        if directory:
+            tool = Path(__file__).resolve().parents[1]/'tools/label_identity_capture.py'
+            subprocess.Popen([sys.executable, str(tool), '--capture', directory])
+
     def on_close(self):
         if getattr(self, '_closing', False):
             return
@@ -1864,6 +1901,10 @@ class CCTVApp:
         self.manual_controller.close()
         self.auto_zoom.request_stop(reason='APPLICATION_CLOSE')
         self.auto_focus.set_enabled(False)
+        if hasattr(self, 'identity_capture'):
+            self.identity_capture.stop()
+        if hasattr(self, 'identity_shadow'):
+            self.identity_shadow.stop()
         motor_done = threading.Event()
         stream_done = threading.Event()
 
@@ -1923,6 +1964,10 @@ class CCTVApp:
                 log_deadline = time.monotonic()+2.
                 def close_logs():
                     try:
+                        if hasattr(self, 'identity_capture'):
+                            self.identity_capture.close()
+                        if hasattr(self, 'identity_shadow'):
+                            self.identity_shadow.close()
                         if latency.profiler.close(timeout=1.) is False:
                             print('[CLOSE] Latency writer shutdown timed out')
                         from telemetry import zoom_trace

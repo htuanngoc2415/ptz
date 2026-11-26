@@ -1,0 +1,57 @@
+ M ai/hybrid_reid.py
+ M ai/overlap_policy.py
+ M config.py
+ M gui/cctv_app.py
+ M runtime/display_mapping.py
+ M runtime/inference_worker.py
+ M runtime/motion_recording.py
+ M runtime/scheduling.py
+ M test/test_dual_stream.py
+?? __pycache__/
+?? ai/__pycache__/
+?? ai/face/__pycache__/
+?? ai/quality/__pycache__/
+?? ai/reid/__pycache__/
+?? ai/target_identity.py
+?? app/__pycache__/
+?? camera/__pycache__/
+?? control/__pycache__/
+?? data/
+?? docs/
+?? gui/__pycache__/
+?? logs/
+?? models/
+?? person_search/__pycache__/
+?? person_search/models/
+?? person_search/networks/__pycache__/
+?? person_search/targets/
+?? runtime/__pycache__/
+?? runtime/identity_events.py
+?? runtime/identity_recording.py
+?? runtime/identity_shadow.py
+?? runtime/identity_shadow_batch.py
+?? telemetry/__pycache__/
+?? telemetry/pipeline_report.html
+?? test/__pycache__/
+?? test/fixtures/
+?? test/test_identity_live_analysis.py
+?? test/test_identity_phase2.py
+?? test/test_identity_recording.py
+?? test/test_identity_replay.py
+?? test/test_identity_shadow.py
+?? test/test_identity_shadow_batch.py
+?? test/test_minor_overlap.py
+?? test/test_ptz_latency_tools.py
+?? test/test_target_identity.py
+?? tools/__pycache__/
+?? tools/analyze_identity_live.py
+?? tools/benchmark_identity_phase2.py
+?? tools/benchmark_ptz_motor.py
+?? tools/compare_ptz_policies.py
+?? tools/evaluate_local_tracking.py
+?? tools/identity_dataset.py
+?? tools/identity_metrics.py
+?? tools/identity_replay.py
+?? tools/label_identity_capture.py
+?? tools/prepare_identity_capture.py
+?? tools/rollback_identity_phase01.py

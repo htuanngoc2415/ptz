@@ -1,0 +1,7022 @@
+[
+  {
+    "scenario": "front_clear",
+    "frames": [
+      {
+        "frame_id": 3,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 4,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 5,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 6,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 7,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 8,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 9,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 10,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 11,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 12,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 13,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 14,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 15,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 16,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 17,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 18,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 19,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 20,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 21,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 22,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      }
+    ]
+  },
+  {
+    "scenario": "stationary_front",
+    "frames": [
+      {
+        "frame_id": 3,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 4,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 5,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 6,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 7,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 8,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 9,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 10,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 11,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 12,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 13,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 14,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 15,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 16,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 17,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 18,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 19,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 20,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 21,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 22,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      }
+    ]
+  },
+  {
+    "scenario": "moving_front",
+    "frames": [
+      {
+        "frame_id": 3,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 4,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            102,
+            50,
+            172,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 5,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            104,
+            50,
+            174,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 6,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            106,
+            50,
+            176,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 7,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            108,
+            50,
+            178,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 8,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            110,
+            50,
+            180,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 9,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            112,
+            50,
+            182,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 10,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            114,
+            50,
+            184,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 11,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            116,
+            50,
+            186,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 12,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            118,
+            50,
+            188,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 13,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            120,
+            50,
+            190,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 14,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            122,
+            50,
+            192,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 15,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            124,
+            50,
+            194,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 16,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            126,
+            50,
+            196,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 17,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            128,
+            50,
+            198,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 18,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            130,
+            50,
+            200,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 19,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            132,
+            50,
+            202,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 20,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            134,
+            50,
+            204,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 21,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            136,
+            50,
+            206,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 22,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            138,
+            50,
+            208,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      }
+    ]
+  },
+  {
+    "scenario": "partial",
+    "frames": [
+      {
+        "frame_id": 3,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.2,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 4,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.2,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 5,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.2,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 6,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.2,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 7,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.2,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 8,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.2,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 9,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.2,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 10,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.2,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 11,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.2,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 12,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.2,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 13,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.2,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 14,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.2,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 15,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.2,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 16,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.2,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 17,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.2,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 18,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.2,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 19,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.2,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 20,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.2,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 21,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.2,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 22,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.2,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      }
+    ]
+  },
+  {
+    "scenario": "full_occlusion",
+    "frames": [
+      {
+        "frame_id": 3,
+        "visible": false,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 4,
+        "visible": false,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 5,
+        "visible": false,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 6,
+        "visible": false,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 7,
+        "visible": false,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 8,
+        "visible": false,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 9,
+        "visible": false,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 10,
+        "visible": false,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 11,
+        "visible": false,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 12,
+        "visible": false,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 13,
+        "visible": false,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 14,
+        "visible": false,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 15,
+        "visible": false,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 16,
+        "visible": false,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 17,
+        "visible": false,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 18,
+        "visible": false,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 19,
+        "visible": false,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 20,
+        "visible": false,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 21,
+        "visible": false,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 22,
+        "visible": false,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      }
+    ]
+  },
+  {
+    "scenario": "crossing_separation",
+    "frames": [
+      {
+        "frame_id": 3,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 4,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 5,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 6,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 7,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 8,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 9,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 10,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 11,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 12,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "VISIBLE_UNVERIFIED",
+          "identity_known": true,
+          "reason": "CONFIRMING_REFERENCE",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 13,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "VISIBLE_UNVERIFIED",
+          "identity_known": true,
+          "reason": "CONFIRMING_REFERENCE",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 14,
+        "visible": true,
+        "A": {
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "control_eligible": true
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "CLEAR_REFERENCE",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 2,
+          "tracking_status": "OBSERVED",
+          "prediction_uncertainty": 0.1,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 15,
+        "visible": true,
+        "A": {
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "control_eligible": true
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "CLEAR_REFERENCE",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 2,
+          "tracking_status": "OBSERVED",
+          "prediction_uncertainty": 0.1,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 16,
+        "visible": true,
+        "A": {
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "control_eligible": true
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "CLEAR_REFERENCE",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 2,
+          "tracking_status": "OBSERVED",
+          "prediction_uncertainty": 0.1,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 17,
+        "visible": true,
+        "A": {
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "control_eligible": true
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "CLEAR_REFERENCE",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 2,
+          "tracking_status": "OBSERVED",
+          "prediction_uncertainty": 0.1,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 18,
+        "visible": true,
+        "A": {
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "control_eligible": true
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "CLEAR_REFERENCE",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 2,
+          "tracking_status": "OBSERVED",
+          "prediction_uncertainty": 0.1,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 19,
+        "visible": true,
+        "A": {
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "control_eligible": true
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "CLEAR_REFERENCE",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 2,
+          "tracking_status": "OBSERVED",
+          "prediction_uncertainty": 0.1,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 20,
+        "visible": true,
+        "A": {
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "control_eligible": true
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "CLEAR_REFERENCE",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 2,
+          "tracking_status": "OBSERVED",
+          "prediction_uncertainty": 0.1,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 21,
+        "visible": true,
+        "A": {
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "control_eligible": true
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "CLEAR_REFERENCE",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 2,
+          "tracking_status": "OBSERVED",
+          "prediction_uncertainty": 0.1,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 22,
+        "visible": true,
+        "A": {
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "control_eligible": true
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "CLEAR_REFERENCE",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 2,
+          "tracking_status": "OBSERVED",
+          "prediction_uncertainty": 0.1,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      }
+    ]
+  },
+  {
+    "scenario": "similar_clothing",
+    "frames": [
+      {
+        "frame_id": 3,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 4,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 5,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 6,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 7,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 8,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 9,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 10,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 11,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 12,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 13,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 14,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 15,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 16,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 17,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 18,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 19,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 20,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 21,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 22,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "AMBIGUOUS",
+          "identity_known": true,
+          "reason": "APPEARANCE_CONFLICT",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      }
+    ]
+  },
+  {
+    "scenario": "moving_ptz",
+    "frames": [
+      {
+        "frame_id": 3,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 4,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 5,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 6,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 7,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 8,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 9,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 10,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 11,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 12,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 13,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 14,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 15,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 16,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 17,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 18,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 19,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 20,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 21,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 22,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOCKED",
+          "identity_known": true,
+          "reason": "TRUSTED_VISIBLE_SUPPORT",
+          "bbox": [
+            100,
+            50,
+            170,
+            250
+          ],
+          "selected_candidate": "target",
+          "track_id": 1,
+          "tracking_status": "PARTIAL_OBSERVED",
+          "prediction_uncertainty": 0.35,
+          "geometric_overlap": true,
+          "actual_occlusion": "UNKNOWN",
+          "support": 0.5,
+          "control_eligible": true,
+          "hypotheses": [
+            {
+              "candidate": "target",
+              "reference_similarity": 1.0,
+              "anchor_similarity": 1.0
+            },
+            {
+              "candidate": "other",
+              "reference_similarity": 0.0,
+              "anchor_similarity": 0.0
+            }
+          ],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      }
+    ]
+  },
+  {
+    "scenario": "detection_missing",
+    "frames": [
+      {
+        "frame_id": 3,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "OCCLUDED_UNOBSERVED",
+          "identity_known": true,
+          "reason": "DETECTOR_ABSENCE_IDENTITY_NOT_DISPROVEN",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 4,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "OCCLUDED_UNOBSERVED",
+          "identity_known": true,
+          "reason": "DETECTOR_ABSENCE_IDENTITY_NOT_DISPROVEN",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 5,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "OCCLUDED_UNOBSERVED",
+          "identity_known": true,
+          "reason": "DETECTOR_ABSENCE_IDENTITY_NOT_DISPROVEN",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 6,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "OCCLUDED_UNOBSERVED",
+          "identity_known": true,
+          "reason": "DETECTOR_ABSENCE_IDENTITY_NOT_DISPROVEN",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 7,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "OCCLUDED_UNOBSERVED",
+          "identity_known": true,
+          "reason": "DETECTOR_ABSENCE_IDENTITY_NOT_DISPROVEN",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 8,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "OCCLUDED_UNOBSERVED",
+          "identity_known": true,
+          "reason": "DETECTOR_ABSENCE_IDENTITY_NOT_DISPROVEN",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 9,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "OCCLUDED_UNOBSERVED",
+          "identity_known": true,
+          "reason": "DETECTOR_ABSENCE_IDENTITY_NOT_DISPROVEN",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 10,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "OCCLUDED_UNOBSERVED",
+          "identity_known": true,
+          "reason": "DETECTOR_ABSENCE_IDENTITY_NOT_DISPROVEN",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 11,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOST_LOCALIZATION",
+          "identity_known": true,
+          "reason": "DETECTOR_ABSENCE_IDENTITY_NOT_DISPROVEN",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 12,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOST_LOCALIZATION",
+          "identity_known": true,
+          "reason": "DETECTOR_ABSENCE_IDENTITY_NOT_DISPROVEN",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 13,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOST_LOCALIZATION",
+          "identity_known": true,
+          "reason": "DETECTOR_ABSENCE_IDENTITY_NOT_DISPROVEN",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 14,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOST_LOCALIZATION",
+          "identity_known": true,
+          "reason": "DETECTOR_ABSENCE_IDENTITY_NOT_DISPROVEN",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 15,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOST_LOCALIZATION",
+          "identity_known": true,
+          "reason": "DETECTOR_ABSENCE_IDENTITY_NOT_DISPROVEN",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 16,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOST_LOCALIZATION",
+          "identity_known": true,
+          "reason": "DETECTOR_ABSENCE_IDENTITY_NOT_DISPROVEN",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 17,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOST_LOCALIZATION",
+          "identity_known": true,
+          "reason": "DETECTOR_ABSENCE_IDENTITY_NOT_DISPROVEN",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 18,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOST_LOCALIZATION",
+          "identity_known": true,
+          "reason": "DETECTOR_ABSENCE_IDENTITY_NOT_DISPROVEN",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 19,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOST_LOCALIZATION",
+          "identity_known": true,
+          "reason": "DETECTOR_ABSENCE_IDENTITY_NOT_DISPROVEN",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 20,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOST_LOCALIZATION",
+          "identity_known": true,
+          "reason": "DETECTOR_ABSENCE_IDENTITY_NOT_DISPROVEN",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 21,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOST_LOCALIZATION",
+          "identity_known": true,
+          "reason": "DETECTOR_ABSENCE_IDENTITY_NOT_DISPROVEN",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      },
+      {
+        "frame_id": 22,
+        "visible": true,
+        "A": {
+          "bbox": null,
+          "selected_candidate": null,
+          "control_eligible": false
+        },
+        "B": {
+          "state": "LOST_LOCALIZATION",
+          "identity_known": true,
+          "reason": "DETECTOR_ABSENCE_IDENTITY_NOT_DISPROVEN",
+          "bbox": null,
+          "selected_candidate": null,
+          "track_id": null,
+          "tracking_status": "UNOBSERVED",
+          "prediction_uncertainty": 1.0,
+          "geometric_overlap": false,
+          "actual_occlusion": "UNKNOWN",
+          "support": null,
+          "control_eligible": false,
+          "hypotheses": [],
+          "gallery_updated": false,
+          "physical_commands": 0
+        }
+      }
+    ]
+  }
+]

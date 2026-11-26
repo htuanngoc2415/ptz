@@ -1,0 +1,83 @@
+{
+  "baseline_A_candidate": {
+    "path": "/mnt/files/Project/AI_PTZ_BASELINE_0838_BACKUP_20261116_114845/ptz",
+    "files": {
+      "config.py": "f23c7334088aefc42410397867e404ea6313e4793258aa99036bdf7e061ec664",
+      "camera.json": "227a5813f0fe6411823dd44869da7d939645b4dfafd7b8c22e0bf49d3d34ce1f",
+      "ai/hybrid_reid.py": "041a21bba10735e2bd58ec94b7526b181c48fbc70e605d04e798e9629c0d844b",
+      "ai/overlap_policy.py": "cb46f3dae1ac35d188e1ead0fbd2ec7f30d9f675a6beac59e289d61ff66b5645",
+      "ai/reid_target.py": "d801bfabd4425d1bfe0f87257fe5810090fb91933abfaf88cf1103a1b46e53b5",
+      "control/auto_pan_tilt.py": "088ab6ddd6cf18184a4941aa6a2e16bc2014b8d936d745ca428feb09f7444359",
+      "runtime/inference_worker.py": "3cdd8187c386f7a70efc27a603f705265f6098d454b0fdb2623335c88b207d0d",
+      "person_search/reid.py": "522988c3c5c5eadcebe24185877e5c104a57eca10a0a27ac93cfe55ed7c9fbda",
+      "models/person/person.pt": "cf07f3fac8dfa98a0a6acf2bcc7f22585256015042e494e8b8ed242293f99ab8",
+      "person_search/models/osnet_ain_x1_0_msmt17.pth": "8a07e8da38946f7cee37f4561617bf8b6d2fe8f3a4027852893ea092e46d919f"
+    },
+    "head": "ede31989fe6a39b04d7cd4d31675ebd811a28397"
+  },
+  "baseline_B_verified_pre_async": {
+    "path": "/mnt/files/Project/ptz_before_async_control_20261116_162242/project/ptz",
+    "files": {
+      "config.py": "b87663f165c9cf3a891f557ad10baac8b2be90bc798154d17dbf7291555e4bde",
+      "camera.json": "227a5813f0fe6411823dd44869da7d939645b4dfafd7b8c22e0bf49d3d34ce1f",
+      "ai/hybrid_reid.py": "2de845b6a76cc117424eea39d05e3ec000ecc919c74f5dec9b45bbb8a0ef2a50",
+      "ai/overlap_policy.py": "e76e3ec4762bdf47b4c444be771858323ce009dbaef42721775529fdbcd9d464",
+      "ai/reid_target.py": "d801bfabd4425d1bfe0f87257fe5810090fb91933abfaf88cf1103a1b46e53b5",
+      "control/auto_pan_tilt.py": "088ab6ddd6cf18184a4941aa6a2e16bc2014b8d936d745ca428feb09f7444359",
+      "runtime/inference_worker.py": "3cdd8187c386f7a70efc27a603f705265f6098d454b0fdb2623335c88b207d0d",
+      "person_search/reid.py": "522988c3c5c5eadcebe24185877e5c104a57eca10a0a27ac93cfe55ed7c9fbda",
+      "models/person/person.pt": "cf07f3fac8dfa98a0a6acf2bcc7f22585256015042e494e8b8ed242293f99ab8",
+      "person_search/models/osnet_ain_x1_0_msmt17.pth": "8a07e8da38946f7cee37f4561617bf8b6d2fe8f3a4027852893ea092e46d919f"
+    },
+    "head": "ede31989fe6a39b04d7cd4d31675ebd811a28397"
+  },
+  "current_async": {
+    "path": "/mnt/files/Project/ptz_performance_experiment_20261116/installed_async_before_rollback",
+    "files": {
+      "config.py": "56e891bd031104d528e5b742ad0192bfe632c7867d5af360ae91fed6ebc3f766",
+      "camera.json": "227a5813f0fe6411823dd44869da7d939645b4dfafd7b8c22e0bf49d3d34ce1f",
+      "ai/hybrid_reid.py": "2de845b6a76cc117424eea39d05e3ec000ecc919c74f5dec9b45bbb8a0ef2a50",
+      "ai/overlap_policy.py": "e76e3ec4762bdf47b4c444be771858323ce009dbaef42721775529fdbcd9d464",
+      "ai/reid_target.py": "d801bfabd4425d1bfe0f87257fe5810090fb91933abfaf88cf1103a1b46e53b5",
+      "control/auto_pan_tilt.py": "a85761c70cbaac2daa331b7658e8da537775cdf528ccf810f72ae9966feef89e",
+      "runtime/inference_worker.py": "787e3e8481e56dbbf5798733d465e1b24a485ca24ba8926f7e729da8f3af5ac6",
+      "person_search/reid.py": "522988c3c5c5eadcebe24185877e5c104a57eca10a0a27ac93cfe55ed7c9fbda",
+      "models/person/person.pt": "cf07f3fac8dfa98a0a6acf2bcc7f22585256015042e494e8b8ed242293f99ab8",
+      "person_search/models/osnet_ain_x1_0_msmt17.pth": "8a07e8da38946f7cee37f4561617bf8b6d2fe8f3a4027852893ea092e46d919f"
+    },
+    "head": "ede31989fe6a39b04d7cd4d31675ebd811a28397"
+  },
+  "candidate_C": {
+    "path": "/mnt/files/Project/ptz_performance_experiment_20261116/ptz",
+    "files": {
+      "config.py": "2e4c9b540c3cb0b99a3f85a5b6676be715ee2c6a9ddec00c98331d7d5ea320a0",
+      "camera.json": "227a5813f0fe6411823dd44869da7d939645b4dfafd7b8c22e0bf49d3d34ce1f",
+      "ai/hybrid_reid.py": "2de845b6a76cc117424eea39d05e3ec000ecc919c74f5dec9b45bbb8a0ef2a50",
+      "ai/overlap_policy.py": "e76e3ec4762bdf47b4c444be771858323ce009dbaef42721775529fdbcd9d464",
+      "ai/reid_target.py": "ba85f32a23e2e6d87074548352d8b65f1896e94c5d20a35c25783fc36cc9edb3",
+      "control/auto_pan_tilt.py": "a85761c70cbaac2daa331b7658e8da537775cdf528ccf810f72ae9966feef89e",
+      "runtime/inference_worker.py": "787e3e8481e56dbbf5798733d465e1b24a485ca24ba8926f7e729da8f3af5ac6",
+      "person_search/reid.py": "522988c3c5c5eadcebe24185877e5c104a57eca10a0a27ac93cfe55ed7c9fbda",
+      "models/person/person.pt": "cf07f3fac8dfa98a0a6acf2bcc7f22585256015042e494e8b8ed242293f99ab8",
+      "person_search/models/osnet_ain_x1_0_msmt17.pth": "8a07e8da38946f7cee37f4561617bf8b6d2fe8f3a4027852893ea092e46d919f"
+    },
+    "head": "07f6593"
+  },
+  "active_after_rollback": {
+    "path": "/mnt/files/Project/ptz/ptz",
+    "files": {
+      "config.py": "b87663f165c9cf3a891f557ad10baac8b2be90bc798154d17dbf7291555e4bde",
+      "camera.json": "227a5813f0fe6411823dd44869da7d939645b4dfafd7b8c22e0bf49d3d34ce1f",
+      "ai/hybrid_reid.py": "2de845b6a76cc117424eea39d05e3ec000ecc919c74f5dec9b45bbb8a0ef2a50",
+      "ai/overlap_policy.py": "e76e3ec4762bdf47b4c444be771858323ce009dbaef42721775529fdbcd9d464",
+      "ai/reid_target.py": "d801bfabd4425d1bfe0f87257fe5810090fb91933abfaf88cf1103a1b46e53b5",
+      "control/auto_pan_tilt.py": "088ab6ddd6cf18184a4941aa6a2e16bc2014b8d936d745ca428feb09f7444359",
+      "runtime/inference_worker.py": "3cdd8187c386f7a70efc27a603f705265f6098d454b0fdb2623335c88b207d0d",
+      "person_search/reid.py": "522988c3c5c5eadcebe24185877e5c104a57eca10a0a27ac93cfe55ed7c9fbda",
+      "models/person/person.pt": "cf07f3fac8dfa98a0a6acf2bcc7f22585256015042e494e8b8ed242293f99ab8",
+      "person_search/models/osnet_ain_x1_0_msmt17.pth": "8a07e8da38946f7cee37f4561617bf8b6d2fe8f3a4027852893ea092e46d919f"
+    },
+    "head": "ede31989fe6a39b04d7cd4d31675ebd811a28397",
+    "branch": "baseline/verified-pre-async-20261116"
+  }
+}

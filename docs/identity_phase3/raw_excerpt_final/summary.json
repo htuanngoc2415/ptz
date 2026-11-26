@@ -1,0 +1,72 @@
+{
+  "source": "/mnt/files/Project/ptz/ptz/logs/modular_benchmark/20261021T120841Z_4dacd817/stage_0_replay_1/original.mp4",
+  "source_sha256": "12b3a673cc0a04d9421bb74c07a9f3a732abac15f940cb62e36977db2b89ff56",
+  "coordinate_width": 960,
+  "frame_count": 100,
+  "media_seconds": 3.96,
+  "source_type": "reencoded_camera_excerpt",
+  "capture_timestamp_available": false,
+  "independent_gt": false,
+  "flags": {
+    "enabled": true
+  },
+  "anchor_input": {
+    "0": {
+      "frame_id": 0,
+      "bbox": [
+        865,
+        455,
+        948,
+        695
+      ],
+      "reviewer": "coding_agent_visible_partial_person_ROI_not_full_body_GT"
+    }
+  },
+  "pts_basis": "ffprobe_best_effort_timestamp_time",
+  "threads": 1,
+  "opencv": "4.13.0",
+  "decode_resize_write_included_in_wall": true,
+  "wall_seconds": 1.9368551179941278,
+  "cpu_seconds": 4.244831846,
+  "cpu_percent_one_core": 219.1610413481051,
+  "pipeline_throughput_fps": 51.63008790433606,
+  "rss_peak_mb": 300.8828125,
+  "gpu": "not used by this CPU-only experiment; other-process GPU load not measured",
+  "decode_ms_p95": 10.048849053418962,
+  "frame_gap_p95": 0.040000000000000036,
+  "C_status": "UNAVAILABLE: no synchronized independently trusted YOLO corrections",
+  "accuracy_metrics": null,
+  "wrong_direction_time": null,
+  "takeover_count": null,
+  "recovery_accuracy": null,
+  "static_vs_ptz": null,
+  "variants": {
+    "A": {
+      "valid_frames": 21,
+      "invalid_frames": 79,
+      "valid_updates_per_media_second": 5.303030303030303,
+      "latency_ms_p50": 0.014317996829049662,
+      "latency_ms_p95": 0.07505330031563058,
+      "active_attempt_latency_p95": 0.11440300295362249,
+      "observation_age_p95": 0.76,
+      "states": {
+        "PROPAGATED": 21,
+        "NO_VALID_ANCHOR": 79
+      }
+    },
+    "B": {
+      "valid_frames": 12,
+      "invalid_frames": 88,
+      "valid_updates_per_media_second": 3.0303030303030303,
+      "latency_ms_p50": 0.01794950003386475,
+      "latency_ms_p95": 5.94697909655224,
+      "active_attempt_latency_p95": 12.426544399932009,
+      "observation_age_p95": 0.01307424769984208,
+      "states": {
+        "ANCHORED": 1,
+        "LOCAL_VISUAL_ONLY": 11,
+        "FEATURE_SURVIVAL": 88
+      }
+    }
+  }
+}

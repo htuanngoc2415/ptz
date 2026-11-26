@@ -1,0 +1,110 @@
+{
+  "during": {
+    "seconds": 38.23400002100061,
+    "counter_delta_rates": {
+      "received_frames": 29.99947688889451,
+      "detection_frames": 9.886488460333151,
+      "gui_unique_frames": 12.632735254870138
+    },
+    "cpu_median": 519.3878762003872,
+    "rss_max_mb": 2531.140625
+  },
+  "after": {
+    "seconds": 17.083905325999694,
+    "counter_delta_rates": {
+      "received_frames": 30.02826287144511,
+      "detection_frames": 11.648390470599566,
+      "gui_unique_frames": 13.22882535857036
+    },
+    "cpu_median": 465.5013264031614,
+    "rss_max_mb": 2527.640625
+  },
+  "source_matches": {
+    "ai/target_identity.py": true,
+    "runtime/identity_shadow.py": true
+  },
+  "baseline_only_reasons": {
+    "LOW_REFERENCE_SIMILARITY": 32,
+    "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 19,
+    "PERSON_OVERLAP": 8
+  },
+  "shadow_only": [
+    {
+      "frame_id": 1517,
+      "offset_s": 3.9630697869997675,
+      "baseline_state": "OCCLUDED_HOLD",
+      "top1": 0.8478089547092911,
+      "mode": "acquire"
+    },
+    {
+      "frame_id": 2297,
+      "offset_s": 29.96457356799965,
+      "baseline_state": "SEARCHING",
+      "top1": 0.6862063103526346,
+      "mode": "acquire"
+    },
+    {
+      "frame_id": 2305,
+      "offset_s": 30.237519577999592,
+      "baseline_state": "SEARCHING",
+      "top1": 0.6959920624187168,
+      "mode": "continuing"
+    },
+    {
+      "frame_id": 2312,
+      "offset_s": 30.464028766999945,
+      "baseline_state": "SEARCHING",
+      "top1": 0.6991184404541445,
+      "mode": "continuing"
+    },
+    {
+      "frame_id": 4179,
+      "offset_s": 92.70304768200003,
+      "baseline_state": "OCCLUDED_HOLD",
+      "top1": 0.7908135179838619,
+      "mode": "continuing"
+    },
+    {
+      "frame_id": 4184,
+      "offset_s": 92.86943470300048,
+      "baseline_state": "OCCLUDED_HOLD",
+      "top1": 0.8033131607426798,
+      "mode": "continuing"
+    },
+    {
+      "frame_id": 5970,
+      "offset_s": 152.40781416000027,
+      "baseline_state": "SEARCHING",
+      "top1": 0.6676539742489176,
+      "mode": "acquire"
+    },
+    {
+      "frame_id": 5974,
+      "offset_s": 152.5410555010003,
+      "baseline_state": "SEARCHING",
+      "top1": 0.6796130530744058,
+      "mode": "continuing"
+    },
+    {
+      "frame_id": 5988,
+      "offset_s": 153.0072591070002,
+      "baseline_state": "SEARCHING",
+      "top1": 0.6668792261324814,
+      "mode": "continuing"
+    },
+    {
+      "frame_id": 5996,
+      "offset_s": 153.27163590800046,
+      "baseline_state": "SEARCHING",
+      "top1": 0.6654381612652978,
+      "mode": "continuing"
+    },
+    {
+      "frame_id": 6001,
+      "offset_s": 153.4406934409999,
+      "baseline_state": "SEARCHING",
+      "top1": 0.6626651616655828,
+      "mode": "continuing"
+    }
+  ]
+}

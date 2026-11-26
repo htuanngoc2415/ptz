@@ -1,0 +1,184 @@
+[
+  {
+    "path": "/mnt/files/Project/ptz/16_11(3).mov",
+    "width": 1920.0,
+    "height": 1080.0,
+    "fps": 29.97381702272986,
+    "frames": 2633.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/16_11(2) (1).mov",
+    "width": 1920.0,
+    "height": 1080.0,
+    "fps": 29.973872653377203,
+    "frames": 4130.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/16_11(2).mov",
+    "width": 1920.0,
+    "height": 1080.0,
+    "fps": 29.973916997024784,
+    "frames": 6263.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/13_11.mov",
+    "width": 1920.0,
+    "height": 1080.0,
+    "fps": 29.973913975676865,
+    "frames": 4194.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/16_11(1).mov",
+    "width": 1920.0,
+    "height": 1080.0,
+    "fps": 29.97389698860381,
+    "frames": 7062.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/ptz/logs/modular_benchmark/replay_face/20261021T050616Z_68e41709/stage_9_replay_1/original.mp4",
+    "width": 2448.0,
+    "height": 2048.0,
+    "fps": 25.0,
+    "frames": 8.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/ptz/logs/modular_benchmark/replay_camera/20261021T050057Z_f1b59b3a/stage_0_replay_1/original.mp4",
+    "width": 2448.0,
+    "height": 2048.0,
+    "fps": 25.0,
+    "frames": 30.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/ptz/logs/modular_benchmark/replay_camera/20261021T050057Z_f1b59b3a/stage_0_replay_2/original.mp4",
+    "width": 2448.0,
+    "height": 2048.0,
+    "fps": 25.0,
+    "frames": 30.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/ptz/logs/modular_benchmark/20261021T120841Z_4dacd817/stage_0_replay_1/original.mp4",
+    "width": 2448.0,
+    "height": 2048.0,
+    "fps": 25.0,
+    "frames": 100.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/ptz/logs/modular_benchmark/20261021T120841Z_4dacd817/stage_0_replay_2/original.mp4",
+    "width": 2448.0,
+    "height": 2048.0,
+    "fps": 25.0,
+    "frames": 100.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/ptz/logs/modular_benchmark/quality_digital_final/20261021T051822Z_6d14e84e/stage_10_replay_1/original.mp4",
+    "width": 2448.0,
+    "height": 2048.0,
+    "fps": 25.0,
+    "frames": 8.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/ptz/logs/modular_benchmark/quality_digital_final/20261021T051822Z_6d14e84e/stage_8_replay_1/original.mp4",
+    "width": 2448.0,
+    "height": 2048.0,
+    "fps": 25.0,
+    "frames": 8.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/ptz/logs/modular_benchmark/replay_yolo/20261021T050118Z_0c844006/stage_2_replay_1/original.mp4",
+    "width": 2448.0,
+    "height": 2048.0,
+    "fps": 25.0,
+    "frames": 8.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/ptz/logs/modular_benchmark/final_a/20261021T051016Z_857a8403/stage_0_replay_1/original.mp4",
+    "width": 2448.0,
+    "height": 2048.0,
+    "fps": 25.0,
+    "frames": 20.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/ptz/logs/modular_benchmark/final_a/20261021T051016Z_857a8403/stage_0_replay_2/original.mp4",
+    "width": 2448.0,
+    "height": 2048.0,
+    "fps": 25.0,
+    "frames": 20.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/ptz/logs/modular_benchmark/final_a/20261021T051016Z_857a8403/stage_2_replay_2/original.mp4",
+    "width": 2448.0,
+    "height": 2048.0,
+    "fps": 25.0,
+    "frames": 20.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/ptz/logs/modular_benchmark/final_a/20261021T051016Z_857a8403/stage_2_replay_1/original.mp4",
+    "width": 2448.0,
+    "height": 2048.0,
+    "fps": 25.0,
+    "frames": 20.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/ptz/logs/modular_benchmark/final_b/20261021T051057Z_3ceaa753/stage_0_replay_1/original.mp4",
+    "width": 2448.0,
+    "height": 2048.0,
+    "fps": 25.0,
+    "frames": 20.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/ptz/logs/modular_benchmark/final_b/20261021T051057Z_3ceaa753/stage_0_replay_2/original.mp4",
+    "width": 2448.0,
+    "height": 2048.0,
+    "fps": 25.0,
+    "frames": 20.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/ptz/logs/modular_benchmark/final_b/20261021T051057Z_3ceaa753/stage_2_replay_2/original.mp4",
+    "width": 2448.0,
+    "height": 2048.0,
+    "fps": 25.0,
+    "frames": 20.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/ptz/logs/modular_benchmark/final_b/20261021T051057Z_3ceaa753/stage_2_replay_1/original.mp4",
+    "width": 2448.0,
+    "height": 2048.0,
+    "fps": 25.0,
+    "frames": 20.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/ptz/logs/modular_benchmark/replay_modules/20261021T050342Z_e76873ff/stage_10_replay_1/original.mp4",
+    "width": 2448.0,
+    "height": 2048.0,
+    "fps": 25.0,
+    "frames": 8.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/ptz/logs/modular_benchmark/replay_modules/20261021T050342Z_e76873ff/stage_8_replay_1/original.mp4",
+    "width": 2448.0,
+    "height": 2048.0,
+    "fps": 25.0,
+    "frames": 8.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/ptz/logs/modular_benchmark/replay_modules/20261021T050342Z_e76873ff/stage_3_replay_1/original.mp4",
+    "width": 2448.0,
+    "height": 2048.0,
+    "fps": 25.0,
+    "frames": 8.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/ptz/logs/modular_benchmark/replay_modules/20261021T050342Z_e76873ff/stage_7_replay_1/original.mp4",
+    "width": 2448.0,
+    "height": 2048.0,
+    "fps": 25.0,
+    "frames": 8.0
+  },
+  {
+    "path": "/mnt/files/Project/ptz/ptz/logs/modular_benchmark/replay_modules/20261021T050342Z_e76873ff/stage_4_replay_1/original.mp4",
+    "width": 2448.0,
+    "height": 2048.0,
+    "fps": 25.0,
+    "frames": 8.0
+  }
+]

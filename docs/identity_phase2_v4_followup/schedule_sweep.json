@@ -1,0 +1,936 @@
+{
+  "results": [
+    {
+      "capture": "173204",
+      "kind": "dense",
+      "extra_service_delay_s": 0.0,
+      "source_frames": 1505,
+      "jobs_attempted": 1483,
+      "completed": 1478,
+      "selected": 1047,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 247,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 39,
+        "CONFIRMED_MULTI_CUE": 1047,
+        "LOW_DETECTION_CONFIDENCE": 8,
+        "PERSON_OVERLAP": 132,
+        "AMBIGUOUS_MARGIN": 5
+      },
+      "skips": {
+        "BUSY": 22,
+        "RESET_IN_FLIGHT": 5
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.4333330299996305,
+      "gap_p95_s": 0.19836140999905183,
+      "live_intersection": {
+        "not_sampled": 9,
+        "same": 171,
+        "new_selection": 79
+      },
+      "events": "173204_dense_0.jsonl"
+    },
+    {
+      "capture": "173204",
+      "kind": "fixed200",
+      "extra_service_delay_s": 0.0,
+      "source_frames": 1505,
+      "jobs_attempted": 603,
+      "completed": 599,
+      "selected": 367,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 136,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 39,
+        "CONFIRMED_MULTI_CUE": 367,
+        "PERSON_OVERLAP": 52,
+        "LOW_DETECTION_CONFIDENCE": 3,
+        "AMBIGUOUS_MARGIN": 2
+      },
+      "skips": {
+        "BUSY": 9,
+        "RATE": 893,
+        "RESET_IN_FLIGHT": 4
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.6339420629992674,
+      "gap_p95_s": 0.3671125287992254,
+      "live_intersection": {
+        "not_sampled": 101,
+        "same": 118,
+        "new_selection": 40
+      },
+      "events": "173204_fixed200_0.jsonl"
+    },
+    {
+      "capture": "173204",
+      "kind": "fixed333",
+      "extra_service_delay_s": 0.0,
+      "source_frames": 1505,
+      "jobs_attempted": 392,
+      "completed": 391,
+      "selected": 195,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 114,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 44,
+        "CONFIRMED_MULTI_CUE": 195,
+        "PERSON_OVERLAP": 35,
+        "AMBIGUOUS_MARGIN": 2,
+        "LOW_DETECTION_CONFIDENCE": 1
+      },
+      "skips": {
+        "BUSY": 7,
+        "RATE": 1106,
+        "RESET_IN_FLIGHT": 1
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.932922490999772,
+      "gap_p95_s": 0.5022755118017812,
+      "live_intersection": {
+        "not_sampled": 172,
+        "new_selection": 19,
+        "same": 67,
+        "lost_selection": 1
+      },
+      "events": "173204_fixed333_0.jsonl"
+    },
+    {
+      "capture": "173204",
+      "kind": "adaptive",
+      "extra_service_delay_s": 0.0,
+      "source_frames": 1505,
+      "jobs_attempted": 445,
+      "completed": 441,
+      "selected": 131,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 214,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 46,
+        "CONFIRMED_MULTI_CUE": 131,
+        "PERSON_OVERLAP": 47,
+        "LOW_DETECTION_CONFIDENCE": 3
+      },
+      "skips": {
+        "BUSY": 7,
+        "RATE": 1053,
+        "RESET_IN_FLIGHT": 4
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.6382209490002424,
+      "gap_p95_s": 0.5972385991015471,
+      "live_intersection": {
+        "not_sampled": 115,
+        "same": 134,
+        "new_selection": 9,
+        "lost_selection": 1
+      },
+      "events": "173204_adaptive_0.jsonl"
+    },
+    {
+      "capture": "173204",
+      "kind": "fixed200",
+      "extra_service_delay_s": 0.15,
+      "source_frames": 1505,
+      "jobs_attempted": 599,
+      "completed": 594,
+      "selected": 362,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 134,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 40,
+        "CONFIRMED_MULTI_CUE": 362,
+        "LOW_DETECTION_CONFIDENCE": 4,
+        "PERSON_OVERLAP": 52,
+        "AMBIGUOUS_MARGIN": 2
+      },
+      "skips": {
+        "BUSY": 828,
+        "RATE": 78,
+        "RESET_IN_FLIGHT": 5
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.6339420629992674,
+      "gap_p95_s": 0.367588130999502,
+      "live_intersection": {
+        "not_sampled": 108,
+        "same": 112,
+        "new_selection": 39
+      },
+      "events": "173204_fixed200_150.jsonl"
+    },
+    {
+      "capture": "173204",
+      "kind": "fixed333",
+      "extra_service_delay_s": 0.15,
+      "source_frames": 1505,
+      "jobs_attempted": 391,
+      "completed": 388,
+      "selected": 194,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 113,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 44,
+        "CONFIRMED_MULTI_CUE": 194,
+        "PERSON_OVERLAP": 34,
+        "AMBIGUOUS_MARGIN": 2,
+        "LOW_DETECTION_CONFIDENCE": 1
+      },
+      "skips": {
+        "BUSY": 554,
+        "RATE": 560,
+        "RESET_IN_FLIGHT": 3
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.9642951120004,
+      "gap_p95_s": 0.5055154733006929,
+      "live_intersection": {
+        "not_sampled": 172,
+        "same": 68,
+        "new_selection": 18,
+        "lost_selection": 1
+      },
+      "events": "173204_fixed333_150.jsonl"
+    },
+    {
+      "capture": "173204",
+      "kind": "adaptive",
+      "extra_service_delay_s": 0.15,
+      "source_frames": 1505,
+      "jobs_attempted": 443,
+      "completed": 438,
+      "selected": 131,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 211,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 46,
+        "CONFIRMED_MULTI_CUE": 131,
+        "PERSON_OVERLAP": 47,
+        "LOW_DETECTION_CONFIDENCE": 3
+      },
+      "skips": {
+        "BUSY": 580,
+        "RATE": 482,
+        "RESET_IN_FLIGHT": 5
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.6382209490002424,
+      "gap_p95_s": 0.5977026667984319,
+      "live_intersection": {
+        "not_sampled": 121,
+        "same": 128,
+        "new_selection": 9,
+        "lost_selection": 1
+      },
+      "events": "173204_adaptive_150.jsonl"
+    },
+    {
+      "capture": "173204",
+      "kind": "fixed200",
+      "extra_service_delay_s": 0.35,
+      "source_frames": 1505,
+      "jobs_attempted": 349,
+      "completed": 343,
+      "selected": 138,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 133,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 43,
+        "CONFIRMED_MULTI_CUE": 138,
+        "PERSON_OVERLAP": 27,
+        "AMBIGUOUS_MARGIN": 1,
+        "LOW_DETECTION_CONFIDENCE": 1
+      },
+      "skips": {
+        "AGE": 1,
+        "BUSY": 1156,
+        "RESET_IN_FLIGHT": 5
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.9992904350001481,
+      "gap_p95_s": 0.5367463325526841,
+      "live_intersection": {
+        "not_sampled": 190,
+        "same": 57,
+        "new_selection": 11,
+        "lost_selection": 1
+      },
+      "events": "173204_fixed200_350.jsonl"
+    },
+    {
+      "capture": "173204",
+      "kind": "fixed333",
+      "extra_service_delay_s": 0.35,
+      "source_frames": 1505,
+      "jobs_attempted": 349,
+      "completed": 343,
+      "selected": 138,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 133,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 43,
+        "CONFIRMED_MULTI_CUE": 138,
+        "PERSON_OVERLAP": 27,
+        "AMBIGUOUS_MARGIN": 1,
+        "LOW_DETECTION_CONFIDENCE": 1
+      },
+      "skips": {
+        "AGE": 1,
+        "BUSY": 1156,
+        "RESET_IN_FLIGHT": 5
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.9992904350001481,
+      "gap_p95_s": 0.5367463325526841,
+      "live_intersection": {
+        "not_sampled": 190,
+        "same": 57,
+        "new_selection": 11,
+        "lost_selection": 1
+      },
+      "events": "173204_fixed333_350.jsonl"
+    },
+    {
+      "capture": "173204",
+      "kind": "adaptive",
+      "extra_service_delay_s": 0.35,
+      "source_frames": 1505,
+      "jobs_attempted": 325,
+      "completed": 319,
+      "selected": 109,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 135,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 47,
+        "CONFIRMED_MULTI_CUE": 109,
+        "PERSON_OVERLAP": 27,
+        "LOW_DETECTION_CONFIDENCE": 1
+      },
+      "skips": {
+        "AGE": 1,
+        "BUSY": 1051,
+        "RATE": 129,
+        "RESET_IN_FLIGHT": 5
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.9955398290003359,
+      "gap_p95_s": 0.5994149394007764,
+      "live_intersection": {
+        "not_sampled": 193,
+        "same": 59,
+        "new_selection": 5,
+        "lost_selection": 2
+      },
+      "events": "173204_adaptive_350.jsonl"
+    },
+    {
+      "capture": "190016",
+      "kind": "dense",
+      "extra_service_delay_s": 0.0,
+      "source_frames": 1081,
+      "jobs_attempted": 1071,
+      "completed": 1066,
+      "selected": 758,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 158,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 15,
+        "CONFIRMED_MULTI_CUE": 758,
+        "PERSON_OVERLAP": 101,
+        "AMBIGUOUS_MARGIN": 1,
+        "LOW_DETECTION_CONFIDENCE": 27,
+        "NO_OBSERVATION_UNKNOWN": 6
+      },
+      "skips": {
+        "BUSY": 4,
+        "RESET_IN_FLIGHT": 5
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.43005065100078355,
+      "gap_p95_s": 0.23262214300120831,
+      "live_intersection": {
+        "same": 116,
+        "new_selection": 64,
+        "not_sampled": 7
+      },
+      "events": "190016_dense_0.jsonl"
+    },
+    {
+      "capture": "190016",
+      "kind": "fixed200",
+      "extra_service_delay_s": 0.0,
+      "source_frames": 1081,
+      "jobs_attempted": 489,
+      "completed": 486,
+      "selected": 323,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 92,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 12,
+        "CONFIRMED_MULTI_CUE": 323,
+        "PERSON_OVERLAP": 41,
+        "LOW_DETECTION_CONFIDENCE": 16,
+        "NO_OBSERVATION_UNKNOWN": 2
+      },
+      "skips": {
+        "RATE": 585,
+        "BUSY": 1,
+        "RESET_IN_FLIGHT": 3
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.6346621759985283,
+      "gap_p95_s": 0.3992680502007715,
+      "live_intersection": {
+        "same": 85,
+        "new_selection": 29,
+        "not_sampled": 73
+      },
+      "events": "190016_fixed200_0.jsonl"
+    },
+    {
+      "capture": "190016",
+      "kind": "fixed333",
+      "extra_service_delay_s": 0.0,
+      "source_frames": 1081,
+      "jobs_attempted": 329,
+      "completed": 329,
+      "selected": 172,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 107,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 14,
+        "CONFIRMED_MULTI_CUE": 172,
+        "PERSON_OVERLAP": 25,
+        "LOW_DETECTION_CONFIDENCE": 10,
+        "NO_OBSERVATION_UNKNOWN": 1
+      },
+      "skips": {
+        "RATE": 745,
+        "BUSY": 1
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.7634327199994004,
+      "gap_p95_s": 0.5325384986987046,
+      "live_intersection": {
+        "not_sampled": 127,
+        "same": 45,
+        "new_selection": 15
+      },
+      "events": "190016_fixed333_0.jsonl"
+    },
+    {
+      "capture": "190016",
+      "kind": "adaptive",
+      "extra_service_delay_s": 0.0,
+      "source_frames": 1081,
+      "jobs_attempted": 365,
+      "completed": 362,
+      "selected": 109,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 178,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 19,
+        "CONFIRMED_MULTI_CUE": 109,
+        "PERSON_OVERLAP": 38,
+        "LOW_DETECTION_CONFIDENCE": 16,
+        "NO_OBSERVATION_UNKNOWN": 2
+      },
+      "skips": {
+        "RATE": 709,
+        "BUSY": 1,
+        "RESET_IN_FLIGHT": 3
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.7353146210007253,
+      "gap_p95_s": 0.6041992469981778,
+      "live_intersection": {
+        "same": 89,
+        "new_selection": 7,
+        "not_sampled": 91
+      },
+      "events": "190016_adaptive_0.jsonl"
+    },
+    {
+      "capture": "190016",
+      "kind": "fixed200",
+      "extra_service_delay_s": 0.15,
+      "source_frames": 1081,
+      "jobs_attempted": 489,
+      "completed": 484,
+      "selected": 323,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 92,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 12,
+        "CONFIRMED_MULTI_CUE": 323,
+        "PERSON_OVERLAP": 39,
+        "LOW_DETECTION_CONFIDENCE": 16,
+        "NO_OBSERVATION_UNKNOWN": 2
+      },
+      "skips": {
+        "BUSY": 516,
+        "RATE": 70,
+        "RESET_IN_FLIGHT": 5
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.6346621759985283,
+      "gap_p95_s": 0.39983056300152386,
+      "live_intersection": {
+        "same": 85,
+        "new_selection": 29,
+        "not_sampled": 73
+      },
+      "events": "190016_fixed200_150.jsonl"
+    },
+    {
+      "capture": "190016",
+      "kind": "fixed333",
+      "extra_service_delay_s": 0.15,
+      "source_frames": 1081,
+      "jobs_attempted": 329,
+      "completed": 327,
+      "selected": 172,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 106,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 14,
+        "CONFIRMED_MULTI_CUE": 172,
+        "PERSON_OVERLAP": 24,
+        "LOW_DETECTION_CONFIDENCE": 10,
+        "NO_OBSERVATION_UNKNOWN": 1
+      },
+      "skips": {
+        "BUSY": 362,
+        "RATE": 384,
+        "RESET_IN_FLIGHT": 2
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.8289614889981749,
+      "gap_p95_s": 0.5341447725013495,
+      "live_intersection": {
+        "not_sampled": 127,
+        "same": 45,
+        "new_selection": 15
+      },
+      "events": "190016_fixed333_150.jsonl"
+    },
+    {
+      "capture": "190016",
+      "kind": "adaptive",
+      "extra_service_delay_s": 0.15,
+      "source_frames": 1081,
+      "jobs_attempted": 365,
+      "completed": 360,
+      "selected": 109,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 178,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 19,
+        "CONFIRMED_MULTI_CUE": 109,
+        "PERSON_OVERLAP": 36,
+        "LOW_DETECTION_CONFIDENCE": 16,
+        "NO_OBSERVATION_UNKNOWN": 2
+      },
+      "skips": {
+        "BUSY": 358,
+        "RATE": 352,
+        "RESET_IN_FLIGHT": 5
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.7353146210007253,
+      "gap_p95_s": 0.6043302030982886,
+      "live_intersection": {
+        "same": 89,
+        "new_selection": 7,
+        "not_sampled": 91
+      },
+      "events": "190016_adaptive_150.jsonl"
+    },
+    {
+      "capture": "190016",
+      "kind": "fixed200",
+      "extra_service_delay_s": 0.35,
+      "source_frames": 1081,
+      "jobs_attempted": 294,
+      "completed": 289,
+      "selected": 166,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 82,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 12,
+        "CONFIRMED_MULTI_CUE": 166,
+        "PERSON_OVERLAP": 19,
+        "LOW_DETECTION_CONFIDENCE": 10
+      },
+      "skips": {
+        "BUSY": 781,
+        "RESET_IN_FLIGHT": 5
+      },
+      "gaps_above_1s": 1,
+      "gap_max_s": 1.1337217260006582,
+      "gap_p95_s": 0.6023387326487863,
+      "live_intersection": {
+        "not_sampled": 124,
+        "same": 48,
+        "new_selection": 15
+      },
+      "events": "190016_fixed200_350.jsonl"
+    },
+    {
+      "capture": "190016",
+      "kind": "fixed333",
+      "extra_service_delay_s": 0.35,
+      "source_frames": 1081,
+      "jobs_attempted": 294,
+      "completed": 289,
+      "selected": 166,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 82,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 12,
+        "CONFIRMED_MULTI_CUE": 166,
+        "PERSON_OVERLAP": 19,
+        "LOW_DETECTION_CONFIDENCE": 10
+      },
+      "skips": {
+        "BUSY": 781,
+        "RESET_IN_FLIGHT": 5
+      },
+      "gaps_above_1s": 1,
+      "gap_max_s": 1.1337217260006582,
+      "gap_p95_s": 0.6023387326487863,
+      "live_intersection": {
+        "not_sampled": 124,
+        "same": 48,
+        "new_selection": 15
+      },
+      "events": "190016_fixed333_350.jsonl"
+    },
+    {
+      "capture": "190016",
+      "kind": "adaptive",
+      "extra_service_delay_s": 0.35,
+      "source_frames": 1081,
+      "jobs_attempted": 272,
+      "completed": 267,
+      "selected": 85,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 131,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 22,
+        "CONFIRMED_MULTI_CUE": 85,
+        "PERSON_OVERLAP": 19,
+        "LOW_DETECTION_CONFIDENCE": 10
+      },
+      "skips": {
+        "BUSY": 718,
+        "RATE": 85,
+        "RESET_IN_FLIGHT": 5
+      },
+      "gaps_above_1s": 1,
+      "gap_max_s": 1.1337217260006582,
+      "gap_p95_s": 0.6353355550018023,
+      "live_intersection": {
+        "not_sampled": 123,
+        "same": 59,
+        "new_selection": 5
+      },
+      "events": "190016_adaptive_350.jsonl"
+    },
+    {
+      "capture": "191352",
+      "kind": "dense",
+      "extra_service_delay_s": 0.0,
+      "source_frames": 1120,
+      "jobs_attempted": 1109,
+      "completed": 1108,
+      "selected": 786,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 143,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 26,
+        "CONFIRMED_MULTI_CUE": 786,
+        "LOW_DETECTION_CONFIDENCE": 6,
+        "NO_OBSERVATION_UNKNOWN": 53,
+        "PERSON_OVERLAP": 94
+      },
+      "skips": {
+        "BUSY": 3,
+        "RESET_IN_FLIGHT": 1
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.40437745199960773,
+      "gap_p95_s": 0.20287819630066223,
+      "live_intersection": {
+        "same": 141,
+        "new_selection": 134,
+        "not_sampled": 1
+      },
+      "events": "191352_dense_0.jsonl"
+    },
+    {
+      "capture": "191352",
+      "kind": "fixed200",
+      "extra_service_delay_s": 0.0,
+      "source_frames": 1120,
+      "jobs_attempted": 515,
+      "completed": 515,
+      "selected": 360,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 83,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 18,
+        "CONFIRMED_MULTI_CUE": 360,
+        "NO_OBSERVATION_UNKNOWN": 16,
+        "LOW_DETECTION_CONFIDENCE": 1,
+        "PERSON_OVERLAP": 37
+      },
+      "skips": {
+        "RATE": 597
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.528936826998688,
+      "gap_p95_s": 0.36871135704950575,
+      "live_intersection": {
+        "not_sampled": 115,
+        "new_selection": 71,
+        "same": 90
+      },
+      "events": "191352_fixed200_0.jsonl"
+    },
+    {
+      "capture": "191352",
+      "kind": "fixed333",
+      "extra_service_delay_s": 0.0,
+      "source_frames": 1120,
+      "jobs_attempted": 340,
+      "completed": 340,
+      "selected": 203,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 81,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 19,
+        "CONFIRMED_MULTI_CUE": 203,
+        "NO_OBSERVATION_UNKNOWN": 11,
+        "LOW_DETECTION_CONFIDENCE": 1,
+        "PERSON_OVERLAP": 25
+      },
+      "skips": {
+        "RATE": 772
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.6321805659972597,
+      "gap_p95_s": 0.5002102274029312,
+      "live_intersection": {
+        "not_sampled": 190,
+        "new_selection": 34,
+        "same": 52
+      },
+      "events": "191352_fixed333_0.jsonl"
+    },
+    {
+      "capture": "191352",
+      "kind": "adaptive",
+      "extra_service_delay_s": 0.0,
+      "source_frames": 1120,
+      "jobs_attempted": 391,
+      "completed": 391,
+      "selected": 110,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 189,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 40,
+        "CONFIRMED_MULTI_CUE": 110,
+        "NO_OBSERVATION_UNKNOWN": 16,
+        "LOW_DETECTION_CONFIDENCE": 1,
+        "PERSON_OVERLAP": 35
+      },
+      "skips": {
+        "RATE": 721
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.7013089520005451,
+      "gap_p95_s": 0.6254654242984541,
+      "live_intersection": {
+        "not_sampled": 154,
+        "new_selection": 14,
+        "same": 104,
+        "lost_selection": 4
+      },
+      "events": "191352_adaptive_0.jsonl"
+    },
+    {
+      "capture": "191352",
+      "kind": "fixed200",
+      "extra_service_delay_s": 0.15,
+      "source_frames": 1120,
+      "jobs_attempted": 515,
+      "completed": 513,
+      "selected": 360,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 83,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 18,
+        "CONFIRMED_MULTI_CUE": 360,
+        "NO_OBSERVATION_UNKNOWN": 15,
+        "LOW_DETECTION_CONFIDENCE": 1,
+        "PERSON_OVERLAP": 36
+      },
+      "skips": {
+        "BUSY": 539,
+        "RATE": 58,
+        "RESET_IN_FLIGHT": 2
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.528936826998688,
+      "gap_p95_s": 0.37565881679965957,
+      "live_intersection": {
+        "not_sampled": 115,
+        "new_selection": 71,
+        "same": 90
+      },
+      "events": "191352_fixed200_150.jsonl"
+    },
+    {
+      "capture": "191352",
+      "kind": "fixed333",
+      "extra_service_delay_s": 0.15,
+      "source_frames": 1120,
+      "jobs_attempted": 340,
+      "completed": 339,
+      "selected": 203,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 81,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 19,
+        "CONFIRMED_MULTI_CUE": 203,
+        "NO_OBSERVATION_UNKNOWN": 11,
+        "LOW_DETECTION_CONFIDENCE": 1,
+        "PERSON_OVERLAP": 24
+      },
+      "skips": {
+        "BUSY": 360,
+        "RATE": 412,
+        "RESET_IN_FLIGHT": 1
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.8032223879999947,
+      "gap_p95_s": 0.5010883301012654,
+      "live_intersection": {
+        "not_sampled": 190,
+        "new_selection": 34,
+        "same": 52
+      },
+      "events": "191352_fixed333_150.jsonl"
+    },
+    {
+      "capture": "191352",
+      "kind": "adaptive",
+      "extra_service_delay_s": 0.15,
+      "source_frames": 1120,
+      "jobs_attempted": 391,
+      "completed": 389,
+      "selected": 110,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 189,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 40,
+        "CONFIRMED_MULTI_CUE": 110,
+        "NO_OBSERVATION_UNKNOWN": 15,
+        "LOW_DETECTION_CONFIDENCE": 1,
+        "PERSON_OVERLAP": 34
+      },
+      "skips": {
+        "BUSY": 400,
+        "RATE": 321,
+        "RESET_IN_FLIGHT": 2
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.7013089520005451,
+      "gap_p95_s": 0.6259523228982288,
+      "live_intersection": {
+        "not_sampled": 154,
+        "new_selection": 14,
+        "same": 104,
+        "lost_selection": 4
+      },
+      "events": "191352_adaptive_150.jsonl"
+    },
+    {
+      "capture": "191352",
+      "kind": "fixed200",
+      "extra_service_delay_s": 0.35,
+      "source_frames": 1120,
+      "jobs_attempted": 303,
+      "completed": 301,
+      "selected": 133,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 111,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 26,
+        "CONFIRMED_MULTI_CUE": 133,
+        "NO_OBSERVATION_UNKNOWN": 9,
+        "LOW_DETECTION_CONFIDENCE": 1,
+        "PERSON_OVERLAP": 21
+      },
+      "skips": {
+        "BUSY": 809,
+        "RESET_IN_FLIGHT": 2
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.901290568002878,
+      "gap_p95_s": 0.5687504340998206,
+      "live_intersection": {
+        "not_sampled": 199,
+        "same": 56,
+        "new_selection": 19,
+        "lost_selection": 2
+      },
+      "events": "191352_fixed200_350.jsonl"
+    },
+    {
+      "capture": "191352",
+      "kind": "fixed333",
+      "extra_service_delay_s": 0.35,
+      "source_frames": 1120,
+      "jobs_attempted": 303,
+      "completed": 301,
+      "selected": 133,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 111,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 26,
+        "CONFIRMED_MULTI_CUE": 133,
+        "NO_OBSERVATION_UNKNOWN": 9,
+        "LOW_DETECTION_CONFIDENCE": 1,
+        "PERSON_OVERLAP": 21
+      },
+      "skips": {
+        "BUSY": 809,
+        "RESET_IN_FLIGHT": 2
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.901290568002878,
+      "gap_p95_s": 0.5687504340998206,
+      "live_intersection": {
+        "not_sampled": 199,
+        "same": 56,
+        "new_selection": 19,
+        "lost_selection": 2
+      },
+      "events": "191352_fixed333_350.jsonl"
+    },
+    {
+      "capture": "191352",
+      "kind": "adaptive",
+      "extra_service_delay_s": 0.35,
+      "source_frames": 1120,
+      "jobs_attempted": 278,
+      "completed": 276,
+      "selected": 93,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 123,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 30,
+        "CONFIRMED_MULTI_CUE": 93,
+        "NO_OBSERVATION_UNKNOWN": 9,
+        "LOW_DETECTION_CONFIDENCE": 1,
+        "PERSON_OVERLAP": 20
+      },
+      "skips": {
+        "BUSY": 743,
+        "RATE": 91,
+        "RESET_IN_FLIGHT": 2
+      },
+      "gaps_above_1s": 0,
+      "gap_max_s": 0.901290568002878,
+      "gap_p95_s": 0.6349088336010027,
+      "live_intersection": {
+        "not_sampled": 202,
+        "same": 55,
+        "lost_selection": 3,
+        "new_selection": 16
+      },
+      "events": "191352_adaptive_350.jsonl"
+    }
+  ],
+  "ground_truth": false,
+  "physical_commands": 0,
+  "limitations": [
+    "Cached policy experiments; no live accelerator contention measurement",
+    "Reset uses logged consumption time; acquisition uses initial logged threshold",
+    "Service delay includes cached per-frame serial OSNet wall time plus hypothetical delay",
+    "All datasets are development/reused captures, not independent holdout"
+  ]
+}

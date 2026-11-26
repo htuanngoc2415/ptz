@@ -1,0 +1,41 @@
+{
+  "samples": 180,
+  "parts_real_osnet": true,
+  "split": "development",
+  "source_capture_sha256": "a6dbb84e5968e29dae4c4883fccc81d4f87df3c5fd7b42a2e3caf05f799b87a7",
+  "observations_sha256": "a5c61f5d0e288016c9b03f885cd28d066fe1a4e37ceb788eb9c3a60e7754fe25",
+  "C": {
+    "status": "NOT_RUN_NO_SEGMENTATION_WEIGHTS",
+    "reason": "Use occlusion_shadow --video --seg-model with an existing local model"
+  },
+  "baseline_scope": "Current selector using historical cached full-body scores; no claim of original live schedule parity",
+  "historical_source_differences": [
+    "ai/hybrid_reid.py"
+  ],
+  "independent_gt": false,
+  "physical_commands": 0,
+  "A": {
+    "selected": 157,
+    "reasons": {
+      "RESET": 180
+    },
+    "policy_control_interruption_sample_interval_s": 2.270793894000235,
+    "localization_recall": null,
+    "identity_switch_count": null,
+    "lost_target_duration": null,
+    "actual_ptz_interruption_s": null
+  },
+  "B": {
+    "selected": 65,
+    "reasons": {
+      "APPEARANCE_CONFLICT": 106,
+      "CONFIRMING_REFERENCE": 9,
+      "CLEAR_REFERENCE": 65
+    },
+    "policy_control_interruption_sample_interval_s": 13.058952358998795,
+    "localization_recall": null,
+    "identity_switch_count": null,
+    "lost_target_duration": null,
+    "actual_ptz_interruption_s": null
+  }
+}

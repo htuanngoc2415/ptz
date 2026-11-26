@@ -1,0 +1,475 @@
+--- before/control/auto_pan_tilt.py
++++ after/control/auto_pan_tilt.py
+@@ -3,11 +3,16 @@
+ import threading
+ import time
+ from telemetry import latency
++from uuid import uuid4
+ 
+ 
+ class AutoPanTiltController:
+     def __init__(self, ptz, orchestrator, cfg, status=lambda message: None):
+         self.ptz, self.orchestrator, self.cfg, self.status = ptz, orchestrator, cfg, status
++        if getattr(cfg, 'AUTO_PAN_TILT_ADAPTIVE', False):
++            if not (0 < cfg.AUTO_PAN_TILT_PULSE <= cfg.AUTO_PAN_TILT_MAX_PULSE <= .5
++                    and cfg.AUTO_PAN_TILT_DEADZONE < cfg.AUTO_PAN_TILT_FAR_ERROR <= .5):
++                raise ValueError('Invalid adaptive pan/tilt pulse limits')
+         self.enabled = bool(cfg.AUTO_PAN_TILT_ENABLED and getattr(ptz, 'supports_pan_tilt', False))
+         self.session_valid = lambda session, track: False
+         self._condition = threading.Condition(threading.RLock())
+@@ -17,13 +22,27 @@
+         self._ready_after = 0.
+         self._fault = False
+         self.busy = False
++        self._active_fields = {}
++        self._last_stop = 0.
++        self._log_key = None
++        self._log_time = 0.
++
+         self.ptz.pan_tilt_intent_valid = self.validate_intent
+         self._thread = threading.Thread(target=self._run, name='auto-pan-tilt', daemon=True)
++        latency.profiler.event('PAN_TILT_CONFIG', auto_pan_enabled=self.enabled,
++            pulse_ms=cfg.AUTO_PAN_TILT_PULSE*1000, settle_ms=cfg.AUTO_PAN_TILT_SETTLE*1000,
++            max_speed=cfg.AUTO_PAN_TILT_MAX_SPEED, deadzone=cfg.AUTO_PAN_TILT_DEADZONE,
++            release=cfg.AUTO_PAN_TILT_RELEASE,
++            adaptive=getattr(cfg, 'AUTO_PAN_TILT_ADAPTIVE', False),
++            max_pulse_ms=getattr(cfg, 'AUTO_PAN_TILT_MAX_PULSE', cfg.AUTO_PAN_TILT_PULSE)*1000,
++            max_observation_age_ms=cfg.MAX_CONTROL_OBSERVATION_AGE*1000)
+         self._thread.start()
+ 
+-    def set_enabled(self, enabled):
++    def set_enabled(self, enabled, reason="USER_TOGGLE"):
+         with self._condition:
+             self.enabled = bool(enabled and getattr(self.ptz, 'supports_pan_tilt', False) and not self._fault)
++            latency.profiler.event('PAN_TILT_TOGGLE', auto_pan_enabled=self.enabled,
++                                   requested_enabled=bool(enabled), decision_reason=reason)
+             self._latest = None
+             self._axis = None
+             self._condition.notify_all()
+@@ -58,16 +77,77 @@
+         speed = min(self.cfg.AUTO_PAN_TILT_MAX_SPEED, max(1, 1+int(abs(error)*6)))
+         return command, speed
+ 
+-    def submit(self, person, shape, received, session, track):
++    def _pulse(self, box, shape):
++        if not getattr(self.cfg, 'AUTO_PAN_TILT_ADAPTIVE', False):
++            return self.cfg.AUTO_PAN_TILT_PULSE
++        h, w = shape[:2]
++        error = max(abs((box[0]+box[2])/2/w-.5), abs((box[1]+box[3])/2/h-.5))
++        fraction = min(1., max(0., (error-self.cfg.AUTO_PAN_TILT_DEADZONE) /
++            max(.001, self.cfg.AUTO_PAN_TILT_FAR_ERROR-self.cfg.AUTO_PAN_TILT_DEADZONE)))
++        return self.cfg.AUTO_PAN_TILT_PULSE + fraction*(
++            self.cfg.AUTO_PAN_TILT_MAX_PULSE-self.cfg.AUTO_PAN_TILT_PULSE)
++
++    def _decision(self, reason, fields):
++        # Count every evaluation; emit at most twice a second per stable decision.
++        latency.profiler.count('pan_tilt_decisions_'+reason)
++        now = time.monotonic()
++        key = (reason, fields.get('command_direction'))
++        if key != self._log_key or now-self._log_time >= .5:
++            self._log_key, self._log_time = key, now
++            latency.profiler.event('PAN_TILT_DECISION', **dict(fields,
++                decision_reason=reason, auto_pan_enabled=self.enabled,
++                motor_owner=self.orchestrator.owner,
++                cooldown_remaining_ms=max(0., self._ready_after-now)*1000))
++
++    def submit(self, person, shape, received, session, track, metadata=None):
+         with self._condition:
+             now = time.monotonic()
+-            if (not self.enabled or self._closed or self._fault or person is None or not session
+-                    or not 0 <= now-received <= self.cfg.MAX_CONTROL_OBSERVATION_AGE
+-                    or not self.session_valid(session, track)):
++            box = person.get('bbox') if person else None
++            fields = dict(metadata or {}, lock_session_id=session, target_track_id=track,
++                target_bbox=box, observation_age_ms=(now-received)*1000,
++                command_direction=None, command_speed=None, command_duration_ms=None,
++                command_status='GATED', command_id=None, stop_reason=None,
++                target_center=None, normalized_error_x=None, normalized_error_y=None)
++            if not self.enabled or self._closed or self._fault:
++                reason = 'AUTO_PAN_DISABLED'
++            elif self.orchestrator.manual:
++                reason = 'MANUAL_OVERRIDE'
++            elif not session or not self.session_valid(session, track):
++                reason = 'TARGET_UNCERTAIN'
++            elif (person is None or box is None or len(box) != 4
++                    or not all(math.isfinite(v) for v in box)
++                    or shape[0] <= 0 or shape[1] <= 0
++                    or box[2] <= box[0] or box[3] <= box[1]
++                    or box[2] <= 0 or box[3] <= 0 or box[0] >= shape[1] or box[1] >= shape[0]):
++                reason = 'NO_VALID_TARGET'
++            elif not math.isfinite(received) or not 0 <= now-received <= self.cfg.MAX_CONTROL_OBSERVATION_AGE:
++                reason = 'STALE_OBSERVATION'
++            else:
++                reason = None
++            if reason:
++                self._decision(reason, fields)
+                 self.cancel()
+                 return False
+-            direction = self._direction(person['bbox'], shape)
+-            self._latest = (received, session, track, direction) if direction else None
++            if self._latest and received <= self._latest[0]:
++                self._decision('OUT_OF_ORDER_OBSERVATION', fields)
++                return self._latest[3] is not None
++            direction = self._direction(box, shape)
++            if direction:
++                h,w = shape[:2]
++                center = ((box[0]+box[2])/2, (box[1]+box[3])/2)
++                duration = self._pulse(box, shape)
++                fields.update(target_center=center, normalized_error_x=center[0]/w-.5,
++                    normalized_error_y=center[1]/h-.5, command_direction=direction[0],
++                    command_speed=direction[1], command_duration_ms=duration*1000,
++                    command_status='READY')
++                # Keep tuple layout used by wire validation; plan fields are immutable copies.
++                self._latest = (received, session, track, direction, duration, fields)
++                reason = ('COOLDOWN' if now < self._ready_after else
++                          'MOTOR_BUSY' if self.orchestrator.blocked() else 'TARGET_LOCKED')
++            else:
++                self._latest = None
++                reason = 'DEADZONE'
++            self._decision(reason, fields)
+             self._condition.notify_all()
+             return direction is not None
+ 
+@@ -85,11 +165,13 @@
+                 and item[3][0] == fields.get('pan_tilt_command')
+                 and self.session_valid(item[1], item[2]))
+ 
+-    def _stop(self):
++    def _stop(self, reason="PULSE_COMPLETE", fields=None):
+         try:
+             ok, message = self.ptz.stop()
+         except Exception as exc:
+             ok, message = False, type(exc).__name__
++        latency.profiler.event('PAN_TILT_STOP', **dict(fields or {},
++            stop_reason=reason, acknowledged=bool(ok), rpc_result=str(message)))
+         if not ok:
+             self._fault = True
+             self.enabled = False
+@@ -97,7 +179,8 @@
+             return False
+         self._fault = False
+         self.busy = False
+-        self._ready_after = time.monotonic()+self.cfg.AUTO_PAN_TILT_SETTLE
++        self._last_stop = time.monotonic()
++        self._ready_after = self._last_stop+self.cfg.AUTO_PAN_TILT_SETTLE
+         self.orchestrator.release('pan_tilt', self.cfg.AUTO_PAN_TILT_SETTLE)
+         return True
+ 
+@@ -111,36 +194,69 @@
+                 item = self._latest
+             if self._fault:
+                 # Retain exclusive ownership until STOP is acknowledged.
+-                if not self._stop():
++                if not self._stop("STOP_RETRY", self._active_fields):
+                     time.sleep(.25)
+                 continue
+-            if (not item or not self.enabled or item[0] < self._ready_after
++            if (not item or not self.enabled or time.monotonic() < self._ready_after
++                    or item[0] <= self._last_stop
+                     or time.monotonic()-item[0] > self.cfg.MAX_CONTROL_OBSERVATION_AGE):
+                 continue
+             if not self.orchestrator.acquire('pan_tilt'):
++                self._decision('MANUAL_OVERRIDE' if self.orchestrator.manual else 'MOTOR_BUSY', item[5])
+                 continue
+-            fields = dict(motor_owner='pan_tilt', lock_session_id=item[1], target_track_id=item[2],
++            fields = dict(item[5], command_id='pan_'+uuid4().hex, motor_owner='pan_tilt', lock_session_id=item[1], target_track_id=item[2],
+                           observation_time=item[0], pan_tilt_command=item[3][0])
++            self._active_fields = fields
++            stop_reason = 'PULSE_COMPLETE'
++            dispatched = None
+             try:
+                 if not self.validate_intent(fields):
+                     self.orchestrator.release('pan_tilt')
+                     continue
+                 self.busy = True
++                dispatched = time.monotonic()
++                latency.profiler.event('PAN_TILT_DISPATCH', **dict(fields,
++                    command_status='COMMAND_DISPATCHED', observation_age_ms=(dispatched-item[0])*1000,
++                    detection_to_dispatch_ms=(dispatched-fields['detection_completed_timestamp'])*1000
++                        if fields.get('detection_completed_timestamp') is not None else None,
++                    inter_pulse_wait_ms=(dispatched-self._last_stop)*1000 if self._last_stop else None))
++                latency.profiler.count('pan_tilt_command_count')
+                 with latency.correlated(**fields):
+                     ok, message = self.ptz.command(*item[3])
++                latency.profiler.event('PAN_TILT_RPC_RESULT', **dict(fields,
++                    acknowledged=bool(ok), rpc_result=str(message),
++                    command_status='ACK' if ok else 'COMMAND_FAILED'))
+                 if not ok and self.validate_intent(fields):
+                     self.enabled = False
+                     self.status(f'Auto Pan/Tilt disabled: {message}')
+-                deadline = time.monotonic()+self.cfg.AUTO_PAN_TILT_PULSE
++                deadline = time.monotonic()+item[4]
+                 with self._condition:
+                     while ok and time.monotonic() < deadline and self.validate_intent(fields):
+                         self._condition.wait(timeout=min(.02, max(0., deadline-time.monotonic())))
++                if not ok:
++                    stop_reason = 'COMMAND_FAILED'
++                elif time.monotonic() < deadline:
++                    stop_reason = 'MANUAL_OVERRIDE' if self.orchestrator.manual else 'AUTHORIZATION_OR_GEOMETRY_CHANGED'
+             except Exception as exc:
++                stop_reason = 'COMMAND_FAILED'
++                latency.profiler.event('PAN_TILT_RPC_RESULT', **dict(fields,
++                    command_status='COMMAND_FAILED', exception=type(exc).__name__))
+                 self.enabled = False
+                 self.status(f'Auto Pan/Tilt error: {type(exc).__name__}')
+             finally:
+                 if self.busy:
+-                    self._stop()
++                    latest = self._latest
++                    displacement = None
++                    if (latest and latest[1:3] == item[1:3] and latest[0] > dispatched
++                            and time.monotonic()-latest[0] <= self.cfg.MAX_CONTROL_OBSERVATION_AGE
++                            and self.session_valid(item[1], item[2])):
++                        before, after = item[5]['target_center'], latest[5]['target_center']
++                        displacement = (after[0]-before[0], after[1]-before[1])
++                    self._stop(stop_reason, fields)
++                    latency.profiler.event('PAN_TILT_COMMAND_ENDED', **dict(fields,
++                        stop_reason=stop_reason, image_displacement_px=displacement,
++                        displacement_evidence='target_image_motion_not_motor_telemetry',
++                        command_active_duration_ms=(time.monotonic()-dispatched)*1000 if dispatched else None))
+ 
+     def close(self, timeout=None):
+         with self._condition:
+--- before/control/auto_zoom.py
++++ after/control/auto_zoom.py
+@@ -394,6 +394,9 @@
+             if enabled and not self.enabled and not self.busy:
+                 self._recovery_spent = 0.0
+             self.enabled = bool(enabled) and not (self.busy and not self.enabled)
++            latency.profiler.event('ZOOM_TOGGLE', auto_zoom_enabled=self.enabled,
++                requested_enabled=bool(enabled), max_observation_age_ms=self.max_observation_age*1000,
++                feedback_timeout_ms=self.feedback_timeout*1000)
+             self._previous_ratio = None
+             self._previous_time = None
+             if enabled and not self.busy:
+@@ -565,13 +568,33 @@
+         now = time.monotonic()
+         self._observe_motor_idle()
+         published = now if publish_time is None else publish_time
+-        values = (observation_time, absent_since, zoom_level, published)
+-        if (not all(math.isfinite(v) for v in values)
+-                or not absent_since <= observation_time <= published <= now
+-                or now-observation_time > self.max_observation_age
+-                or now-published > self.feedback_timeout):
+-            self._recovery_hold_reason = 'STALE_RECOVERY_OBSERVATION'
+-            self.stop(reason='STALE_RECOVERY_OBSERVATION')
++        timestamps = (observation_time, absent_since, published)
++        if not all(isinstance(v, (int, float)) and math.isfinite(v) for v in timestamps):
++            reason = 'RECOVERY_INVALID_TIMESTAMP'
++        elif not absent_since <= observation_time <= published <= now:
++            reason = 'RECOVERY_TIMESTAMP_ORDER'
++        elif now-observation_time > self.max_observation_age:
++            reason = 'RECOVERY_OBSERVATION_TOO_OLD'
++        elif now-published > self.feedback_timeout:
++            reason = 'RECOVERY_PUBLISH_TOO_OLD'
++        elif self._correlation.get('lock_session_id') and not self.session_valid(self._correlation['lock_session_id']):
++            reason = 'RECOVERY_SESSION_MISMATCH'
++        elif not isinstance(zoom_level, (int, float)) or not math.isfinite(zoom_level):
++            reason = 'RECOVERY_INVALID_ZOOM_ESTIMATE'
++        else:
++            reason = None
++        if reason:
++            self._recovery_hold_reason = reason
++            latency.profiler.count('zoom_recovery_rejected_'+reason)
++            if (reason != getattr(self, '_last_recovery_reason', None)
++                    or now-getattr(self, '_last_recovery_log', 0.) >= .5):
++                self._last_recovery_reason, self._last_recovery_log = reason, now
++                latency.profiler.event('ZOOM_RECOVERY_FRESHNESS_REJECTED', reason=reason,
++                    observation_timestamp=observation_time, publish_timestamp=published,
++                    absent_since=absent_since, now_timestamp=now,
++                    max_observation_age_ms=self.max_observation_age*1000,
++                    feedback_timeout_ms=self.feedback_timeout*1000)
++            self.stop(reason=reason)
+             return False
+         if not self.enabled or observation_time <= self._last_observation:
+             return False
+--- before/ai/hybrid_reid.py
++++ after/ai/hybrid_reid.py
+@@ -102,7 +102,39 @@
+             if self.negative_verifications >= self.cfg.REID_NEGATIVE_CONFIRMATIONS:
+                 self._hold('LOW_REID_SCORE')
+ 
++    def _candidate_overlap(self, candidate, persons):
++        box = candidate['bbox']
++        rows = []
++        unsafe = False
++        for p in persons:
++            b = p['bbox']
++            intersection = max(0, min(box[2],b[2])-max(box[0],b[0])) * max(0, min(box[3],b[3])-max(box[1],b[1]))
++            overlap = intersection/max(1, min((box[2]-box[0])*(box[3]-box[1]), (b[2]-b[0])*(b[3]-b[1])))
++            # Only identical copies of one tracker observation are redundant.
++            same = p is candidate or (p.get('track_id') == candidate.get('track_id')
++                                     and tuple(b) == tuple(box))
++            unsafe |= not same and overlap >= self.cfg.REID_CROSSING_OVERLAP
++            rows.append(dict(track_id=p.get('track_id'), bbox=b, iou=iou(box,b),
++                overlap_ratio=overlap, similarity=p.get('reid_score'), confidence=p.get('confidence')))
++        now = self.observation_time or 0.
++        if unsafe and now-getattr(self, '_last_overlap_log', float('-inf')) >= .5:
++            self._last_overlap_log = now
++            latency.profiler.event('TARGET_OVERLAP_EVIDENCE', frame_id=self.frame_id,
++                target_uid=self.target_uid, target_track_id=candidate.get('track_id'),
++                observation_timestamp=now, candidates=rows, similarity=self.top1,
++                margin=self.margin, threshold=self.cfg.REID_CROSSING_OVERLAP,
++                decision_reason='PERSON_OVERLAP', identity_status=self.identity_status)
++        return bool(unsafe)
++
++    def acquisition_allowed(self, candidate, persons):
++        # Same geometry gate before confirmation as during continuity/recovery.
++        allowed = not self._candidate_overlap(candidate, self._observed_persons)
++        if not allowed:
++            self.transition_reason = 'ACQUISITION_OVERLAP'
++        return allowed
++
+     def select_person(self, frame, persons, now):
++        self._observed_persons = persons
+         # Low-score detections maintain ByteTrack motion, never authorize a target.
+         eligible = [p for p in persons if p.get('confidence', 1.) >= self.cfg.PERSON_CONF_THRESHOLD]
+         if not self.locked:
+@@ -118,7 +150,7 @@
+         self.observation_time = now
+         self.just_locked = False
+         current = next((p for p in persons if p.get('track_id') == self.track_id), None)
+-        overlapping = self._crossing_evidence(persons, current['bbox'] if current else None)
++        overlapping = current is not None and self._candidate_overlap(current, persons)
+         jump = (current is not None and self.person_box is not None
+                 and iou(current['bbox'], self.person_box) < self.cfg.REID_TRACK_IOU)
+         if current is None or overlapping or jump:
+@@ -148,7 +180,7 @@
+         self.top2 = scores[order[1]] if len(order) > 1 else None
+         self.margin = self.top1-self.top2 if self.top2 is not None else None
+         threshold = self.cfg.REID_REACQUIRE_THRESHOLD if recovering else self.cfg.REID_ACQUIRE_THRESHOLD
+-        if (self.top1 < threshold or overlapping
++        if (self.top1 < threshold or self._candidate_overlap(candidate, persons)
+                 or (self.margin is not None and self.margin < self.cfg.REID_MARGIN_THRESHOLD)):
+             self.pending_count = 0
+             self.pending_id = self.pending_box = None
+--- before/ai/reid_target.py
++++ after/ai/reid_target.py
+@@ -353,6 +353,9 @@
+         self.person_box = person['bbox']
+         return person
+ 
++    def acquisition_allowed(self, candidate, persons):
++        return True
++
+     @latency.measured('REID_SELECTION', 'reid_selection_ms')
+     def select_person(self, frame, persons, now):
+         if self.observation_time is not None and now <= self.observation_time:
+@@ -429,7 +432,8 @@
+         self.margin = self.top1-self.top2 if self.top2 is not None else None
+         threshold = getattr(self.cfg, 'REID_REACQUIRE_THRESHOLD', self.cfg.REID_SIM_THRESHOLD) if self.reacquiring else getattr(self.cfg, 'REID_ACQUIRE_THRESHOLD', self.cfg.REID_SIM_THRESHOLD)
+         accepted = (self.top1 >= threshold
+-                    and (self.margin is None or self.margin >= self.cfg.REID_MARGIN_THRESHOLD))
++                    and (self.margin is None or self.margin >= self.cfg.REID_MARGIN_THRESHOLD)
++                    and self.acquisition_allowed(candidate, persons))
+         if accepted:
+             previous = self.associate(persons, self.candidate_box, self.cfg.REID_CONFIRM_IOU) if not continuous else None
+             self.confirm = self.confirm+1 if continuous or previous is candidate else 1
+--- before/runtime/inference_worker.py
++++ after/runtime/inference_worker.py
+@@ -403,6 +403,7 @@
+                     self.auto_zoom.request_stop(reason='STALE_OBSERVATION')
+                     continue
+                 persons = self.person_detector.detect(frame_bgr)
++            detection_completed = time.monotonic()
+             latency.profiler.count('detection_frames')
+             latency.profiler.event('PERSON_DETECTION_RESULT', num_persons=len(persons))
+             if self.handle_detector_failure():
+@@ -481,7 +482,12 @@
+                     self.reid_target.lock_session_id, self.reid_target.track_id)
+                 if hasattr(self, 'auto_pan_tilt'):
+                     pan_needed = self.auto_pan_tilt.submit(person, frame_bgr.shape, frame_time,
+-                        self.reid_target.lock_session_id, self.reid_target.track_id)
++                        self.reid_target.lock_session_id, self.reid_target.track_id,
++                        metadata=dict(frame_id=frame_sequence, detection_completed_timestamp=detection_completed,
++                            target_uid=getattr(self.reid_target, 'target_uid', None),
++                            tracking_state=getattr(self.reid_target, 'tracking_status', self.reid_target.stage),
++                            identity_state=getattr(self.reid_target, 'identity_status', None),
++                            auto_zoom_enabled=self.auto_zoom.enabled))
+                     if pan_needed:
+                         self.auto_zoom.request_stop(reason='PAN_TILT_CENTERING')
+                 if person is not None and not pan_needed:
+--- before/camera/hanet_controller.py
++++ after/camera/hanet_controller.py
+@@ -106,7 +106,27 @@
+                     return False, 'Stale camera movement rejected'
+             code = self.CODES[ptz_cmd]
+             self._active_codes.add(code)  # lost ACK may still mean physical motion
+-            rpc.motion(code, True, self._clamp_speed(self.speed if speed is None else speed))
++            speed_value = self._clamp_speed(self.speed if speed is None else speed)
++            is_zoom = ptz_cmd in ('zoom_in', 'zoom_out')
++            sent = time.perf_counter_ns()
++            if is_zoom:
++                latency.profiler.event('ZOOM_COMMAND_SENT', backend='hanet',
++                    rpc_method='HANET.motion', rpc_code=code, command_kind='pulse',
++                    zoom_direction=1 if ptz_cmd == 'zoom_in' else -1)
++            elif fields.get('motor_owner') == 'pan_tilt':
++                latency.profiler.event('PAN_TILT_WIRE_DISPATCH', backend='hanet',
++                    command_direction=ptz_cmd, command_speed=speed_value,
++                    observation_age_ms=(time.monotonic()-fields['observation_time'])*1000
++                        if 'observation_time' in fields else None)
++            try:
++                rpc.motion(code, True, speed_value)
++            except Exception as exc:
++                latency.profiler.event('ZOOM_RPC_ERROR' if is_zoom else 'PAN_TILT_WIRE_ERROR',
++                    backend='hanet', exception=type(exc).__name__)
++                raise
++            latency.profiler.elapsed('ZOOM_RPC_RESPONSE' if is_zoom else 'PAN_TILT_WIRE_RESPONSE',
++                sent, 'zoom_rpc_latency_ms' if is_zoom else 'pan_tilt_rpc_latency_ms',
++                backend='hanet', acknowledged=True)
+             return True, 'HANET acknowledged; physical motion unverified'
+         except Exception as exc:
+             self.stop()
+--- before/telemetry/zoom_trace.py
++++ after/telemetry/zoom_trace.py
+@@ -93,14 +93,14 @@
+             reason = row.get('reason', 'UNAVAILABLE')
+             reasons = s['recognition_rejection_reasons']
+             reasons[reason] = reasons.get(reason, 0)+1
+-        if event == 'ZOOM_COMMAND_SENT' and row.get('rpc_method') == 'ptz.start':
++        if event == 'ZOOM_COMMAND_SENT' and row.get('rpc_method') in ('ptz.start', 'HANET.motion'):
+             s['number_of_zoom_commands'] += 1
+             if row.get('command_id') in self._correction_commands:
+                 s['number_of_corrections'] += 1
+                 self._correction_commands.discard(row['command_id'])
+             code = row.get('rpc_code')
+             s['number_of_absolute_commands'] += code == 'PositionABS'
+-            s['number_of_pulse_commands'] += code in ('ZoomTele','ZoomWide')
++            s['number_of_pulse_commands'] += code in ('ZoomTele','ZoomWide','kCmdZoomTele','kCmdZoomWide')
+             times.setdefault('FIRST_COMMAND', now)
+         if event == 'ZOOM_ACTION_ACCEPTED' and row.get('correction'):
+             self._correction_commands.add(row.get('command_id'))
+--- before/config.py
++++ after/config.py
+@@ -866,3 +866,8 @@
+ REID_NEGATIVE_CONFIRMATIONS = 3  # tolerate one bad view; hold after 3 negative samples
+ REID_VERIFY_RESULT_MAX_AGE = 2.0  # monotonic capture-to-consumption seconds
+ REID_IDENTITY_MAX_AGE = 5.0  # bound continuation when verification is unavailable
++
++# Opt-in A/B: retain conservative baseline until physical response is calibrated.
++AUTO_PAN_TILT_ADAPTIVE = False
++AUTO_PAN_TILT_MAX_PULSE = 0.24
++AUTO_PAN_TILT_FAR_ERROR = 0.30
+--- before/gui/cctv_app.py
++++ after/gui/cctv_app.py
+@@ -1686,7 +1686,8 @@
+ 
+     def _manual_override(self):
+         self.auto_pan_tilt_var.set(False)
+-        self.auto_pan_tilt.set_enabled(False)
++        self.auto_pan_tilt.set_enabled(False, reason="MANUAL_OVERRIDE")
++        self.set_status("Manual control: Auto Pan/Tilt is off; enable it again to resume following")
+         self.auto_zoom_var.set(False)
+         self.auto_focus_var.set(False)
+         self.tracking_reset.set()
+--- before/test/test_auto_pan_tilt.py
++++ after/test/test_auto_pan_tilt.py
+@@ -146,7 +146,7 @@
+     def test_selected_person_is_forwarded_and_centering_suppresses_zoom(self):
+         from test_reid_target import WorkerTests
+         pan = Mock()
+-        pan.submit.side_effect = lambda person, *args: person is not None
++        pan.submit.side_effect = lambda person, *args, **kwargs: person is not None
+         def attach(app, index):
+             if index == 0:
+                 app.auto_pan_tilt = pan

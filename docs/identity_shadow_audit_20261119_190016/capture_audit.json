@@ -1,0 +1,190 @@
+{
+  "capture": "logs/identity_capture/capture_b4602881389f406b8db527c0bc96750d",
+  "summary": {
+    "complete": true,
+    "frames": 1081,
+    "dropped": 0,
+    "errors": 0,
+    "recorded_bytes": 543213573,
+    "frames_sha256": "89e84285dba52630da7ed057d18f8cca0691ee09d070ce91dab7389613842be5",
+    "max_frames": 3000,
+    "max_bytes": 1000000000,
+    "ground_truth": false
+  },
+  "duration_s": 134.29365630100074,
+  "frame_bounds": [
+    793,
+    4822
+  ],
+  "source_matches": {
+    "ai/target_identity.py": true,
+    "runtime/identity_shadow.py": true,
+    "runtime/identity_shadow_batch.py": true,
+    "runtime/scheduling.py": true,
+    "person_search/reid.py": true,
+    "ai/hybrid_reid.py": true,
+    "ai/reid_target.py": true,
+    "ai/overlap_policy.py": true,
+    "runtime/byte_tracking.py": true,
+    "control/pan_policy.py": true
+  },
+  "model_matches": {
+    "/mnt/files/Project/ptz/ptz/models/person/person.pt": true,
+    "/mnt/files/Project/ptz/ptz/person_search/models/osnet_ain_x1_0_msmt17.pth": true
+  },
+  "categories": {
+    "baseline_only": 87,
+    "same": 7,
+    "both_hold": 142
+  },
+  "reasons": {
+    "LOW_REFERENCE_SIMILARITY": 108,
+    "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 62,
+    "CONFIRMED_MULTI_CUE": 7,
+    "PERSON_OVERLAP": 38,
+    "LOW_DETECTION_CONFIDENCE": 19,
+    "NO_OBSERVATION_UNKNOWN": 2
+  },
+  "baseline_only_reasons": {
+    "LOW_REFERENCE_SIMILARITY": 37,
+    "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 48,
+    "PERSON_OVERLAP": 1,
+    "LOW_DETECTION_CONFIDENCE": 1
+  },
+  "matched": 187,
+  "missing_frames": [
+    4825,
+    4833,
+    4841,
+    4849,
+    4856,
+    4863,
+    4876,
+    4886,
+    4891,
+    4909,
+    4955,
+    4988,
+    5024,
+    5035,
+    5094,
+    5114,
+    5149,
+    5181,
+    5217,
+    5239,
+    5251,
+    5274,
+    5281,
+    5286,
+    5300,
+    5306,
+    5314,
+    5320,
+    5329,
+    5336,
+    5341,
+    5348,
+    5367,
+    5374,
+    5377,
+    5410,
+    5478,
+    5538,
+    5552,
+    5558,
+    5567,
+    5569,
+    5632,
+    5643,
+    5800,
+    5855,
+    5873,
+    5883,
+    5969
+  ],
+  "metadata_mismatches": [],
+  "sessions": [
+    {
+      "event": "SHADOW_SESSION",
+      "session_id": "7ac1694d139c4d1aa5e2f4fc84a44e0a",
+      "target_uid": "target_e2959390c6aa43d49e1a40f6365d1537",
+      "monotonic_ts": 30139.272481562,
+      "initial_threshold": 0.65,
+      "baseline_reacquiring": false,
+      "reference_sha256": "c4f3b2408f4fd80995cbab21f7943f5d068f166ba847b255d5eefc3cb0007daf"
+    },
+    {
+      "event": "SHADOW_SESSION",
+      "session_id": "79e5a1ae35b04815a1e1536cecded188",
+      "target_uid": "target_74c509ab1f294acea07d076d662ecaee",
+      "monotonic_ts": 30272.953103588,
+      "initial_threshold": 0.65,
+      "baseline_reacquiring": false,
+      "reference_sha256": "c4f3b2408f4fd80995cbab21f7943f5d068f166ba847b255d5eefc3cb0007daf"
+    }
+  ],
+  "resets": [
+    {
+      "event": "SHADOW_RESET",
+      "session_id": "7ac1694d139c4d1aa5e2f4fc84a44e0a",
+      "target_uid": "target_e2959390c6aa43d49e1a40f6365d1537",
+      "monotonic_ts": 30155.452407343,
+      "reset_serial": 1,
+      "history_retained": true,
+      "threshold": 0.7
+    },
+    {
+      "event": "SHADOW_RESET",
+      "session_id": "7ac1694d139c4d1aa5e2f4fc84a44e0a",
+      "target_uid": "target_e2959390c6aa43d49e1a40f6365d1537",
+      "monotonic_ts": 30185.212520177,
+      "reset_serial": 2,
+      "history_retained": true,
+      "threshold": 0.7
+    },
+    {
+      "event": "SHADOW_RESET",
+      "session_id": "7ac1694d139c4d1aa5e2f4fc84a44e0a",
+      "target_uid": "target_e2959390c6aa43d49e1a40f6365d1537",
+      "monotonic_ts": 30248.292494935,
+      "reset_serial": 3,
+      "history_retained": true,
+      "threshold": 0.7
+    },
+    {
+      "event": "SHADOW_RESET",
+      "session_id": "7ac1694d139c4d1aa5e2f4fc84a44e0a",
+      "target_uid": "target_e2959390c6aa43d49e1a40f6365d1537",
+      "monotonic_ts": 30260.019288007,
+      "reset_serial": 4,
+      "history_retained": true,
+      "threshold": 0.7
+    },
+    {
+      "event": "SHADOW_RESET",
+      "session_id": "7ac1694d139c4d1aa5e2f4fc84a44e0a",
+      "target_uid": "target_e2959390c6aa43d49e1a40f6365d1537",
+      "monotonic_ts": 30262.313503713,
+      "reset_serial": 5,
+      "history_retained": true,
+      "threshold": 0.7
+    }
+  ],
+  "record_flags": {
+    "IDENTITY_CANDIDATE_FILTERING_ENABLED": false,
+    "IDENTITY_DISTRACTOR_MEMORY_ENABLED": false,
+    "IDENTITY_EVENT_REID_ENABLED": false,
+    "IDENTITY_MEMORY_ENABLED": false,
+    "IDENTITY_MEMORY_GALLERY_ENABLED": false,
+    "IDENTITY_MULTI_CUE_ENABLED": false,
+    "IDENTITY_RECORD_DIRECTORY": "/mnt/files/Project/ptz/ptz/logs/identity_capture",
+    "IDENTITY_RECORD_MAX_BYTES": 1000000000,
+    "IDENTITY_RECORD_MAX_FRAMES": 3000,
+    "IDENTITY_SHADOW_BATCHED": false,
+    "IDENTITY_SHADOW_DIRECTORY": "/mnt/files/Project/ptz/ptz/logs/identity_shadow",
+    "IDENTITY_SHADOW_INTERVAL": 0.2,
+    "IDENTITY_SHADOW_MAX_RECORDS": 10000
+  },
+  "ground_truth": false
+}

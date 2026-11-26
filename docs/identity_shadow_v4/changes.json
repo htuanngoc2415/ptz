@@ -1,0 +1,22 @@
+{
+  "runtime/identity_shadow.py": {
+    "before": "fd2c2168d6fd7802aeb851d04db9924b8b5be313cbb0b4119e642cde3b87e2e1",
+    "after": "db768f5314c409c467f0df3f5a367e12c84c8af40d20a3fe85539d98f645158c"
+  },
+  "config.py": {
+    "before": "3af7cf486b73543cf92264a6c52ea0c23f6250c69beb5a438af73b44a7669a32",
+    "after": "b8dddaff9439c040e9493442655137148bed7ea43c34728755c7481b1134436d"
+  },
+  "runtime/identity_shadow_batch.py": {
+    "before": null,
+    "after": "4e3c7e8dcef6933321c52f49270f22c660708c87c132e0f84f554a3e8d583f19"
+  },
+  "test/test_identity_shadow_batch.py": {
+    "before": null,
+    "after": "be793f5f57e695ea305b6c915f2aab72011145b356e7094d91b9287b52fe6ab5"
+  },
+  "docs/identity_shadow/README.md": {
+    "before": "e4ab4f0707df274ebfd4be68dbe0e38e456703e767217d54b1e3bb0121717aca",
+    "after": "0691a23e6b503d2538ebb67353376ad1721a449bfc3a94875a97ed98da5c405c"
+  }
+}

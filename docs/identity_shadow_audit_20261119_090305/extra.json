@@ -1,0 +1,47 @@
+{
+  "reset_count": 7,
+  "session_count": 1,
+  "same_session": true,
+  "reset_thresholds": [
+    0.7
+  ],
+  "metrics": {
+    "receive_to_gui_submit_ms": {
+      "stage": "receive_to_gui_submit_ms",
+      "count": "3148",
+      "mean": "57.47738440311303",
+      "min": "31.373016",
+      "max": "126.262499",
+      "percentile_window_count": "3148",
+      "p50": "57.960804499999995",
+      "p90": "71.00021790000001",
+      "p95": "73.89814325000002",
+      "p99": "82.85993455000002"
+    },
+    "identity_shadow_resource_hold_ms": {
+      "stage": "identity_shadow_resource_hold_ms",
+      "count": "810",
+      "mean": "66.10016464567906",
+      "min": "34.434287",
+      "max": "158.147485",
+      "percentile_window_count": "810",
+      "p50": "63.164088",
+      "p90": "87.4842663",
+      "p95": "98.89632404999999",
+      "p99": "131.89643321999998"
+    },
+    "reid_identity_shadow_wall_ms": {
+      "stage": "reid_identity_shadow_wall_ms",
+      "count": "4",
+      "mean": "88.43886425",
+      "min": "74.576826",
+      "max": "105.734843",
+      "percentile_window_count": "4",
+      "p50": "86.72189399999999",
+      "p90": "101.1267023",
+      "p95": "103.43077265",
+      "p99": "105.27402893"
+    }
+  },
+  "note": "Resource hold events include nested scheduler acquisitions; counts and durations must not be summed as unique GPU passes/time."
+}

@@ -1,0 +1,112 @@
+[
+  {
+    "path": "ptz/phanmem_v1.0",
+    "files": 98258,
+    "bytes": 824471933
+  },
+  {
+    "path": "ptz/phanmem_v1.0.zip",
+    "files": 1,
+    "bytes": 746877149
+  },
+  {
+    "path": "ptz/output.jpg",
+    "files": 1,
+    "bytes": 89412
+  },
+  {
+    "path": "ptz/__pycache__",
+    "files": 11,
+    "bytes": 78232
+  },
+  {
+    "path": "ptz/camera/__pycache__",
+    "files": 27,
+    "bytes": 319439
+  },
+  {
+    "path": "ptz/zoom_calibration/__pycache__",
+    "files": 13,
+    "bytes": 95423
+  },
+  {
+    "path": "ptz/tools/__pycache__",
+    "files": 28,
+    "bytes": 348078
+  },
+  {
+    "path": "ptz/ai/__pycache__",
+    "files": 10,
+    "bytes": 84653
+  },
+  {
+    "path": "ptz/runtime/__pycache__",
+    "files": 33,
+    "bytes": 313379
+  },
+  {
+    "path": "ptz/app/__pycache__",
+    "files": 3,
+    "bytes": 7814
+  },
+  {
+    "path": "ptz/telemetry/__pycache__",
+    "files": 18,
+    "bytes": 183284
+  },
+  {
+    "path": "ptz/person_search/__pycache__",
+    "files": 3,
+    "bytes": 8758
+  },
+  {
+    "path": "ptz/control/__pycache__",
+    "files": 28,
+    "bytes": 385985
+  },
+  {
+    "path": "ptz/test/__pycache__",
+    "files": 86,
+    "bytes": 1293704
+  },
+  {
+    "path": "ptz/gui/__pycache__",
+    "files": 7,
+    "bytes": 154540
+  },
+  {
+    "path": "ptz/test/ha_ptz/__pycache__",
+    "files": 5,
+    "bytes": 56473
+  },
+  {
+    "path": "ptz/person_search/networks/__pycache__",
+    "files": 2,
+    "bytes": 11133
+  },
+  {
+    "path": "ptz/ai/face/__pycache__",
+    "files": 12,
+    "bytes": 50333
+  },
+  {
+    "path": "ptz/ai/reid/__pycache__",
+    "files": 2,
+    "bytes": 2467
+  },
+  {
+    "path": "ptz/ai/quality/__pycache__",
+    "files": 3,
+    "bytes": 4014
+  },
+  {
+    "path": "ptz/zoom_calibration/tests/__pycache__",
+    "files": 1,
+    "bytes": 25205
+  },
+  {
+    "path": "__pycache__",
+    "files": 1,
+    "bytes": 42337
+  }
+]

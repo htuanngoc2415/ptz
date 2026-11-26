@@ -1,0 +1,76 @@
+{
+  "kind": "same-evidence offline policy replay; not production scheduler benchmark",
+  "observations_sha256": "53bf068c32f19d37e3e2514e4715a32f2566a4c3ba0b908a38cc4358b08821d9",
+  "video": "/mnt/files/Project/ptz/16_11(2).mov",
+  "reference": "/mnt/files/Project/ptz/ptz/person_search/targets/target.jpg",
+  "identity_enabled": true,
+  "gallery_enabled": false,
+  "ground_truth": false,
+  "physical_commands": 0,
+  "baseline_completion": "cached verification consumed on next sampled frame",
+  "timing_scope": "shared extraction measurements, NOT per-policy end-to-end FPS",
+  "metrics": {
+    "baseline": {
+      "samples": 240,
+      "duration_s": 39.86833333333335,
+      "ambiguous_state_duration_s": 1.6683333333333437,
+      "target_correct_tracking_time_s": null,
+      "wrong_target_tracking_time_s": null,
+      "id_switches": null,
+      "fragmentation": null,
+      "target_loss": null,
+      "recovery_latency_s": null,
+      "annotated_duration_s": 0.0,
+      "annotation_coverage": 0.0,
+      "detection_latency_ms": {
+        "count": 240,
+        "mean": 16.000239999996307,
+        "p95": 19.503337999935866
+      },
+      "reid_latency_ms": {
+        "count": 240,
+        "mean": 24.990558324999768,
+        "p95": 41.97309500000301
+      },
+      "frame_age_ms": {
+        "count": 240,
+        "mean": 41.913876687499396,
+        "p95": 56.89227400000618
+      },
+      "detection_service_fps": 62.49906251407672,
+      "detection_sample_fps": 5.994732661678022,
+      "selected_observations": 73
+    },
+    "identity": {
+      "samples": 240,
+      "duration_s": 39.86833333333335,
+      "ambiguous_state_duration_s": 39.53500000000001,
+      "target_correct_tracking_time_s": null,
+      "wrong_target_tracking_time_s": null,
+      "id_switches": null,
+      "fragmentation": null,
+      "target_loss": null,
+      "recovery_latency_s": null,
+      "annotated_duration_s": 0.0,
+      "annotation_coverage": 0.0,
+      "detection_latency_ms": {
+        "count": 240,
+        "mean": 16.000239999996307,
+        "p95": 19.503337999935866
+      },
+      "reid_latency_ms": {
+        "count": 240,
+        "mean": 24.990558324999768,
+        "p95": 41.97309500000301
+      },
+      "frame_age_ms": {
+        "count": 240,
+        "mean": 41.913876687499396,
+        "p95": 56.89227400000618
+      },
+      "detection_service_fps": 62.49906251407672,
+      "detection_sample_fps": 5.994732661678022,
+      "selected_observations": 2
+    }
+  }
+}

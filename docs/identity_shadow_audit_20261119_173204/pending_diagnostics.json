@@ -1,0 +1,368 @@
+[
+  {
+    "frame_id": 1031,
+    "pending_count": 1,
+    "previous_pending": false
+  },
+  {
+    "frame_id": 1096,
+    "pending_count": 1,
+    "previous_pending": true,
+    "gap": 2.167204273002426,
+    "iou": 0.0,
+    "appearance": 0.8623068149865003
+  },
+  {
+    "frame_id": 1101,
+    "pending_count": 2,
+    "previous_pending": true,
+    "gap": 0.17408892199819093,
+    "iou": 0.8450704225352113,
+    "appearance": 0.9133681171848638
+  },
+  {
+    "frame_id": 1148,
+    "pending_count": 1,
+    "previous_pending": true,
+    "gap": 1.5596596810028132,
+    "iou": 0.10252478229914015,
+    "appearance": 0.8530716419074074
+  },
+  {
+    "frame_id": 1179,
+    "pending_count": 1,
+    "previous_pending": true,
+    "gap": 1.0333213149970106,
+    "iou": 0.41014735833233495,
+    "appearance": 0.8530646085831853
+  },
+  {
+    "frame_id": 1243,
+    "pending_count": 1,
+    "previous_pending": true,
+    "gap": 2.1333261210020282,
+    "iou": 0.025115896954404086,
+    "appearance": 0.844895688432507
+  },
+  {
+    "frame_id": 1258,
+    "pending_count": 2,
+    "previous_pending": true,
+    "gap": 0.4991996440003277,
+    "iou": 0.7728036441026024,
+    "appearance": 0.9161790089464543
+  },
+  {
+    "frame_id": 1314,
+    "pending_count": 1,
+    "previous_pending": true,
+    "gap": 1.8674317629993311,
+    "iou": 0.21995898523007443,
+    "appearance": 0.8570930461791904
+  },
+  {
+    "frame_id": 1415,
+    "pending_count": 1,
+    "previous_pending": true,
+    "gap": 3.3659904829983134,
+    "iou": 0.0,
+    "appearance": 0.8546187167459489
+  },
+  {
+    "frame_id": 1433,
+    "pending_count": 2,
+    "previous_pending": true,
+    "gap": 0.5990433910010324,
+    "iou": 0.822932382389247,
+    "appearance": 0.9541617941912675
+  },
+  {
+    "frame_id": 1468,
+    "pending_count": 1,
+    "previous_pending": true,
+    "gap": 1.1658335690008244,
+    "iou": 0.7380749919015225,
+    "appearance": 0.9102757445126061
+  },
+  {
+    "frame_id": 1526,
+    "pending_count": 1,
+    "previous_pending": true,
+    "gap": 1.9348502879984153,
+    "iou": 0.5897299631314976,
+    "appearance": 0.9144547193608008
+  },
+  {
+    "frame_id": 1559,
+    "pending_count": 1,
+    "previous_pending": false
+  },
+  {
+    "frame_id": 1617,
+    "pending_count": 1,
+    "previous_pending": true,
+    "gap": 1.940187579999474,
+    "iou": 0.7200369842431714,
+    "appearance": 0.8500506841253236
+  },
+  {
+    "frame_id": 1677,
+    "pending_count": 1,
+    "previous_pending": true,
+    "gap": 1.9937493639990862,
+    "iou": 0.3064851837651312,
+    "appearance": 0.8967332321088276
+  },
+  {
+    "frame_id": 1687,
+    "pending_count": 2,
+    "previous_pending": true,
+    "gap": 0.3316235999991477,
+    "iou": 0.8299256195590541,
+    "appearance": 0.9240031310805995
+  },
+  {
+    "frame_id": 2130,
+    "pending_count": 1,
+    "previous_pending": false
+  },
+  {
+    "frame_id": 2135,
+    "pending_count": 2,
+    "previous_pending": true,
+    "gap": 0.16683062999800313,
+    "iou": 0.8716981132075472,
+    "appearance": 0.907458795554826
+  },
+  {
+    "frame_id": 2165,
+    "pending_count": 1,
+    "previous_pending": true,
+    "gap": 1.00449628899878,
+    "iou": 0.6883116883116883,
+    "appearance": 0.9260907737798909
+  },
+  {
+    "frame_id": 2176,
+    "pending_count": 2,
+    "previous_pending": true,
+    "gap": 0.3622348280005099,
+    "iou": 0.9059300753332046,
+    "appearance": 0.94695672497276
+  },
+  {
+    "frame_id": 2437,
+    "pending_count": 1,
+    "previous_pending": false
+  },
+  {
+    "frame_id": 2442,
+    "pending_count": 2,
+    "previous_pending": true,
+    "gap": 0.1665606200003822,
+    "iou": 0.9444834855938159,
+    "appearance": 0.9333669139732992
+  },
+  {
+    "frame_id": 2520,
+    "pending_count": 1,
+    "previous_pending": false
+  },
+  {
+    "frame_id": 2556,
+    "pending_count": 1,
+    "previous_pending": true,
+    "gap": 1.1994396169975516,
+    "iou": 0.18497683653209795,
+    "appearance": 0.9235908539499076
+  },
+  {
+    "frame_id": 2619,
+    "pending_count": 1,
+    "previous_pending": true,
+    "gap": 2.0973416330016335,
+    "iou": 0.27985300040273864,
+    "appearance": 0.9015418663982337
+  },
+  {
+    "frame_id": 2679,
+    "pending_count": 1,
+    "previous_pending": false
+  },
+  {
+    "frame_id": 2849,
+    "pending_count": 1,
+    "previous_pending": false
+  },
+  {
+    "frame_id": 2981,
+    "pending_count": 1,
+    "previous_pending": false
+  },
+  {
+    "frame_id": 3037,
+    "pending_count": 1,
+    "previous_pending": true,
+    "gap": 1.8667626699971152,
+    "iou": 0.1028214269994278,
+    "appearance": 0.9164005509531243
+  },
+  {
+    "frame_id": 3076,
+    "pending_count": 1,
+    "previous_pending": true,
+    "gap": 1.2999673590020393,
+    "iou": 0.3341239980369704,
+    "appearance": 0.8694038342629795
+  },
+  {
+    "frame_id": 3384,
+    "pending_count": 1,
+    "previous_pending": false
+  },
+  {
+    "frame_id": 3473,
+    "pending_count": 1,
+    "previous_pending": false
+  },
+  {
+    "frame_id": 3513,
+    "pending_count": 1,
+    "previous_pending": false
+  },
+  {
+    "frame_id": 3524,
+    "pending_count": 2,
+    "previous_pending": true,
+    "gap": 0.3671037009989959,
+    "iou": 0.8781887755102041,
+    "appearance": 0.9127502926725262
+  },
+  {
+    "frame_id": 3575,
+    "pending_count": 1,
+    "previous_pending": false
+  },
+  {
+    "frame_id": 3878,
+    "pending_count": 1,
+    "previous_pending": false
+  },
+  {
+    "frame_id": 3882,
+    "pending_count": 2,
+    "previous_pending": true,
+    "gap": 0.13255115499850945,
+    "iou": 0.8459877343007688,
+    "appearance": 0.9536509551226858
+  },
+  {
+    "frame_id": 3935,
+    "pending_count": 1,
+    "previous_pending": false
+  },
+  {
+    "frame_id": 3948,
+    "pending_count": 2,
+    "previous_pending": true,
+    "gap": 0.4318580130020564,
+    "iou": 0.6605226612801414,
+    "appearance": 0.9356103445736055
+  },
+  {
+    "frame_id": 4087,
+    "pending_count": 1,
+    "previous_pending": true,
+    "gap": 4.636803179997514,
+    "iou": 0.007895326587253702,
+    "appearance": 0.8675708135125997
+  },
+  {
+    "frame_id": 4279,
+    "pending_count": 1,
+    "previous_pending": false
+  },
+  {
+    "frame_id": 4615,
+    "pending_count": 1,
+    "previous_pending": false
+  },
+  {
+    "frame_id": 4700,
+    "pending_count": 1,
+    "previous_pending": false
+  },
+  {
+    "frame_id": 4866,
+    "pending_count": 1,
+    "previous_pending": false
+  },
+  {
+    "frame_id": 4905,
+    "pending_count": 1,
+    "previous_pending": false
+  },
+  {
+    "frame_id": 4914,
+    "pending_count": 2,
+    "previous_pending": true,
+    "gap": 0.30118723399937153,
+    "iou": 0.9830886618178573,
+    "appearance": 0.9038099437474673
+  },
+  {
+    "frame_id": 4952,
+    "pending_count": 1,
+    "previous_pending": true,
+    "gap": 1.2664806770008,
+    "iou": 0.19853570409812685,
+    "appearance": 0.8078051198971467
+  },
+  {
+    "frame_id": 4995,
+    "pending_count": 1,
+    "previous_pending": true,
+    "gap": 1.4351266689991462,
+    "iou": 0.29417889256980595,
+    "appearance": 0.8669267957633955
+  },
+  {
+    "frame_id": 5313,
+    "pending_count": 1,
+    "previous_pending": false
+  },
+  {
+    "frame_id": 5321,
+    "pending_count": 2,
+    "previous_pending": true,
+    "gap": 0.2676503850016161,
+    "iou": 0.9557644882860666,
+    "appearance": 0.9751177413650944
+  },
+  {
+    "frame_id": 5392,
+    "pending_count": 1,
+    "previous_pending": true,
+    "gap": 2.368342997997388,
+    "iou": 0.500130992926382,
+    "appearance": 0.8973288012266754
+  },
+  {
+    "frame_id": 5502,
+    "pending_count": 1,
+    "previous_pending": false
+  },
+  {
+    "frame_id": 5517,
+    "pending_count": 2,
+    "previous_pending": true,
+    "gap": 0.500692051002261,
+    "iou": 0.831054012985219,
+    "appearance": 0.948571476882723
+  },
+  {
+    "frame_id": 5558,
+    "pending_count": 1,
+    "previous_pending": false
+  }
+]

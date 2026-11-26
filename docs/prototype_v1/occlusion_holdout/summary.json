@@ -1,0 +1,51 @@
+{
+  "samples": 1081,
+  "parts_real_osnet": false,
+  "split": "holdout",
+  "source_capture_sha256": "89e84285dba52630da7ed057d18f8cca0691ee09d070ce91dab7389613842be5",
+  "observations_sha256": "08505b16897a9640e03cebc5aa5e098a3e063aaee34ae1e2038b90bcc3056868",
+  "C": {
+    "status": "NOT_RUN_NO_SEGMENTATION_WEIGHTS",
+    "reason": "Use occlusion_shadow --video --seg-model with an existing local model"
+  },
+  "baseline_scope": "Current selector using historical cached full-body scores; no claim of original live schedule parity",
+  "historical_source_differences": [
+    "ai/hybrid_reid.py"
+  ],
+  "independent_gt": false,
+  "physical_commands": 0,
+  "A": {
+    "selected": 802,
+    "reasons": {
+      "NO_SELECTION:SEARCHING": 188,
+      "SELECTED": 802,
+      "OVERLAP:IDENTITY_THREATENING_OVERLAP": 1,
+      "OVERLAP:OVERLAP_WITHOUT_TRUSTED_CONTINUITY": 12,
+      "OVERLAP:NO_OVERLAP": 10,
+      "OVERLAP:GEOMETRY_OVERLAP": 45,
+      "OVERLAP:NO_AMBIGUOUS_OVERLAP": 23
+    },
+    "policy_control_interruption_sample_interval_s": 43.01303101800295,
+    "localization_recall": null,
+    "identity_switch_count": null,
+    "lost_target_duration": null,
+    "actual_ptz_interruption_s": null
+  },
+  "B": {
+    "selected": 406,
+    "reasons": {
+      "APPEARANCE_CONFLICT": 620,
+      "CONFIRMING_REFERENCE": 17,
+      "CLEAR_REFERENCE": 406,
+      "GEOMETRY_ONLY_VISIBILITY_UNKNOWN": 16,
+      "INITIAL_OR_REBOUND_NEEDS_CLEAR_EVIDENCE": 11,
+      "STALE_SESSION_OR_ORDER": 5,
+      "DETECTOR_ABSENCE_IDENTITY_NOT_DISPROVEN": 6
+    },
+    "policy_control_interruption_sample_interval_s": 88.21595650699965,
+    "localization_recall": null,
+    "identity_switch_count": null,
+    "lost_target_duration": null,
+    "actual_ptz_interruption_s": null
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "status": "AWAITING_LIVE_EVIDENCE",
+  "status_scope": "v4 operational log only; no GT or live performance acceptance",
+  "path": "logs/identity_shadow/shadow_d3b836c5ae5c492ba7ddb95282250359.jsonl",
+  "sha256": "7c7a1a665d6e310eb2fdb106e86459ccbad7e9b7522e27949d7f318ae6e448f7",
+  "runtime": "v3_or_earlier",
+  "source_sha256": {
+    "ai/target_identity.py": "d80813f00fab13b863a21d64c53c784e99672b04ac0a25ade5454e0d3c717e39",
+    "runtime/identity_shadow.py": "fd2c2168d6fd7802aeb851d04db9924b8b5be313cbb0b4119e642cde3b87e2e1",
+    "runtime/scheduling.py": "24a40a059934a81ea2cd94fa99d7a6a1603ee16c790b0d698d9e4a6db4e50be7"
+  },
+  "start": {
+    "event": "SHADOW_START",
+    "source": "identity_shadow",
+    "ground_truth": false,
+    "physical_commands": 0,
+    "interval_s": 0.2,
+    "max_age_s": 0.8,
+    "comparison": "same sampled frame; baseline proposal before final motor gates",
+    "additional_inference": true,
+    "wall_time_ns": 1795084360070343316,
+    "monotonic_ts": 24852.902382282,
+    "admission": "opportunistic_resumable_until_frame_deadline"
+  },
+  "stop": {
+    "event": "SHADOW_STOP",
+    "saved": 259,
+    "skipped": 1177,
+    "stale": 84,
+    "different": 87,
+    "physical_commands": 0,
+    "monotonic_ts": 25010.37070278,
+    "closed_monotonic_ts": 25010.370785194,
+    "rejection_reasons": {
+      "WORKER_BUSY": 1124,
+      "RATE_LIMIT": 53,
+      "RESULT_AGE": 79,
+      "SUPERSEDED": 4,
+      "STOPPED": 1
+    },
+    "admission_retries": 9236,
+    "completed_passes": 565,
+    "discarded_passes": 60
+  },
+  "errors": [],
+  "comparisons": 259,
+  "comparison_per_session_second": 1.6447752740418085,
+  "comparison_per_sample_span_second": 1.6521266911712789,
+  "gap_s": {
+    "n": 258,
+    "p50": 0.3659438159993442,
+    "p95": 1.9667286304495064,
+    "max": 4.636803179997514
+  },
+  "gaps_above_1s": 44,
+  "age_ms": {
+    "n": 259,
+    "p50": 382.226094003272,
+    "p95": 704.4886821007822,
+    "max": 787.2600919981778
+  },
+  "windows": {
+    "OFF_before": {
+      "requested_duration_s": 20.0,
+      "retained_span_s": 0,
+      "retained_first": null,
+      "retained_last": null,
+      "detection_results": 0,
+      "detection_hz": null,
+      "foreground_wait_ms": {
+        "n": 0,
+        "p50": null,
+        "p95": null,
+        "max": null
+      },
+      "receive_to_gui_submit_ms": {
+        "n": 0,
+        "p50": null,
+        "p95": null,
+        "max": null
+      }
+    },
+    "ON": {
+      "requested_duration_s": 157.46832049799923,
+      "retained_span_s": 42.171625409002445,
+      "retained_first": 24968.198977636,
+      "retained_last": 25010.370603045,
+      "detection_results": 398,
+      "detection_hz": 9.437625326033515,
+      "foreground_wait_ms": {
+        "n": 2069,
+        "p50": 5.352721,
+        "p95": 77.34008939999991,
+        "max": 1399.894029
+      },
+      "receive_to_gui_submit_ms": {
+        "n": 538,
+        "p50": 58.843686000000005,
+        "p95": 74.24762614999999,
+        "max": 113.226608
+      }
+    },
+    "OFF_after": {
+      "requested_duration_s": 20.0,
+      "retained_span_s": 16.93626412800222,
+      "retained_first": 25010.383091145,
+      "retained_last": 25027.319355273,
+      "detection_results": 191,
+      "detection_hz": 11.277575654019403,
+      "foreground_wait_ms": {
+        "n": 944,
+        "p50": 0.065617,
+        "p95": 36.02630894999998,
+        "max": 297.662158
+      },
+      "receive_to_gui_submit_ms": {
+        "n": 216,
+        "p50": 56.451341,
+        "p95": 72.9811515,
+        "max": 108.89785
+      }
+    }
+  },
+  "trace_sha256": {
+    "logs/latency/latency_trace_20261119_173207_536257.jsonl": "4afd420b9ddcc054754f9943fe01f66e438e1275bc0b01d5b2a9dab311ebe383",
+    "logs/latency/latency_trace_20261119_173207_536257.jsonl.1": "fedae054d24d916c05e476a5d96724f32733887d3a5bd974cd457ca302ec34ed",
+    "logs/latency/latency_trace_20261119_173207_536257.jsonl.2": "6005b0360376f1e6144e42c195b215e4a35c1ea92e5cc8dcb92089841194956b",
+    "logs/latency/latency_trace_20261119_173207_536257.jsonl.3": "a4c9cff38298338fdc80f511260d5c01752841b6fbbd0eff15a6b120580e7fe9"
+  },
+  "limitations": [
+    "ON/OFF scene and workload may differ; not causal A/B",
+    "Retained span does not prove complete trace coverage",
+    "GUI-submit is not glass-to-glass; no identity accuracy claim"
+  ]
+}

@@ -1,0 +1,37 @@
+[
+  {
+    "path": "ptz/config.py",
+    "baseline_sha256": "210ecd82d7ad1311a7332121b303ebd6f62ea71a41b4d2ea1a9ae8ee59dd7602",
+    "sha256": "2771836e8e9f42db6d08c8073a8270c1e109c2972b4966ca0861a90f3ad1096e"
+  },
+  {
+    "path": "ptz/ai/identity_manager.py",
+    "baseline_sha256": "864b8804b26f2d28279ef73b3d3945f22815cb75006121d9c014d188365f9e65",
+    "sha256": "81cbaa82aef643001f34e0a987289ba7b0af6e8a6a31bd3ea3e7ff297c08aa9d"
+  },
+  {
+    "path": "ptz/ai/reid_target.py",
+    "baseline_sha256": "bf504bcb980c47ff8ed5723bb0e25455e9399f4475b6870b6c615115e5a45182",
+    "sha256": "8eec28ef8fcc7203a8bfc961a57f0d73b354e06df246276a85614996401f5a90"
+  },
+  {
+    "path": "ptz/tools/identity_replay.py",
+    "baseline_sha256": "cea04e5884a9472e67070f94e4106a5bc7c8e17c4009e039b12fe07d2df070e6",
+    "sha256": "7e6f39e8846aa09e1c8845e59fb4e71cecda40af9cb6d66a77c9384b0661bfc4"
+  },
+  {
+    "path": "ptz/tools/identity_reid_benchmark.py",
+    "baseline_sha256": null,
+    "sha256": "afecf44fccb0b09fe5e7859bd2dba01d9f34c0e46be8023daadd463cb47c882b"
+  },
+  {
+    "path": "ptz/tools/identity_regression_scenarios.py",
+    "baseline_sha256": null,
+    "sha256": "476a63bdc8e648cee8fbf7d24d4f6ea4cbfb2ef039f0c4e4e5f17101a12e6fa3"
+  },
+  {
+    "path": "ptz/test/test_identity_regression.py",
+    "baseline_sha256": null,
+    "sha256": "af4879a6e01dd2587abf1147486c3467ddf5cf74caac229c899f757b6e396aa8"
+  }
+]

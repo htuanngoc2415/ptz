@@ -1,0 +1,14 @@
+{
+  "preexisting_python_files": 289,
+  "changed_preexisting": [],
+  "new_files": {
+    "tools/phase3_gmc_diagnostic.py": "20202de0c7a60ee765e8f174b01dc465c9b11589bddc9f2a8e47399c18adb0b0",
+    "tools/phase3_record.py": "a9274d6b5f4a7b68a162a04c3fc2b47a69df38e8599ad12f06ecae1a75fa7a67",
+    "tools/phase3_metrics.py": "d7d3aedd3e1d786dc3fa6d98e288c27189ecace3ee1c711338973133d88f4e89",
+    "tools/phase3_review.html": "2df0f5836dc2f0f74956c0faf8dca0b9bcff2a510491c1d79768a0d49422519f",
+    "tools/phase3_replay.py": "1b444ca1dc7404de9815445a04ee21bd5e25bb18cbe1323b83c1cf39b1f6d278",
+    "tools/phase3_local.py": "ae56bed0be87cd1879a74c80bc4a681d4868bb3b725558fd51439ad63c035548",
+    "test/test_phase3_metrics.py": "790bdee4f5e8a852ddebf8c761abe57d399ac090a7e532b0839908f0935ea42e",
+    "test/test_phase3_local.py": "2d87b7b4b1997e22132ef54a26ee1a7cf7bc3ec177bb172746194d244feb09b2"
+  }
+}

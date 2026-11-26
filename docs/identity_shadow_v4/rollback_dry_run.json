@@ -1,0 +1,12 @@
+{
+  "mode": "dry_run",
+  "restore": [
+    "runtime/identity_shadow.py",
+    "config.py",
+    "docs/identity_shadow/README.md"
+  ],
+  "quarantine": [
+    "runtime/identity_shadow_batch.py",
+    "test/test_identity_shadow_batch.py"
+  ]
+}

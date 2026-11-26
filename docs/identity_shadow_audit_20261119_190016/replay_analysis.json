@@ -1,0 +1,82 @@
+{
+  "comparison": {
+    "both_hold": 271,
+    "same": 758,
+    "baseline_only": 52
+  },
+  "segments": {
+    "crossing": {
+      "first": 1206,
+      "last": 1515,
+      "duration_s": 10.298328498000046,
+      "reviewed_frames": [
+        1206,
+        1224,
+        1239,
+        1253,
+        1289,
+        1309,
+        1335,
+        1379,
+        1413,
+        1435,
+        1474,
+        1515
+      ],
+      "reasons": {
+        "PERSON_OVERLAP": 33,
+        "LOW_REFERENCE_SIMILARITY": 32,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 3
+      }
+    },
+    "overlap": {
+      "first": 2043,
+      "last": 2294,
+      "duration_s": 8.361466376001772,
+      "reviewed_frames": [
+        2043,
+        2071,
+        2089,
+        2112,
+        2130,
+        2148,
+        2164,
+        2182,
+        2196,
+        2215,
+        2253,
+        2294
+      ],
+      "reasons": {
+        "PERSON_OVERLAP": 61,
+        "LOW_REFERENCE_SIMILARITY": 9,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 2
+      }
+    },
+    "long_hold": {
+      "first": 3941,
+      "last": 4633,
+      "duration_s": 23.065291326001898,
+      "reviewed_frames": [
+        3941,
+        3978,
+        4042,
+        4116,
+        4180,
+        4235,
+        4321,
+        4385,
+        4446,
+        4496,
+        4562,
+        4633
+      ],
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 102,
+        "LOW_DETECTION_CONFIDENCE": 27,
+        "NO_OBSERVATION_UNKNOWN": 6,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 2
+      }
+    }
+  }
+}

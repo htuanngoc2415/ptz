@@ -1,0 +1,18 @@
+{
+  "scope": "Real OSNet + quality/normalization + gallery + async copy/scheduling; no simultaneous YOLO/GUI. Alternating order, warm model, same cached frames. Largest-box workload anchor is NOT ground truth.",
+  "physical_ptz_commands": 0,
+  "branches": {
+    "all_candidates": {
+      "samples": 20,
+      "mean_ms": 103.19325105001553,
+      "p95_ms": 143.27802679945313,
+      "mean_candidates": 2.3
+    },
+    "local_candidates": {
+      "samples": 20,
+      "mean_ms": 52.186204950157844,
+      "p95_ms": 62.045811650659765,
+      "mean_candidates": 1.0
+    }
+  }
+}

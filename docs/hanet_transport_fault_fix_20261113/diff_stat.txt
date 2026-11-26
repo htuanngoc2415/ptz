@@ -1,0 +1,18 @@
+ camera/hanet_controller.py         | 222 +++++++++++++++---
+ camera/hanet_rpc.py                | 273 ++++++++++++++++++-----
+ control/auto_pan_tilt.py           |  50 ++++-
+ control/auto_zoom.py               |  17 +-
+ control/manual.py                  |  43 +++-
+ control/orchestrator.py            |  10 +-
+ gui/cctv_app.py                    |  80 +++++--
+ runtime/camera_worker.py           | 116 +++++++---
+ runtime/shutdown.py                |  60 +++++
+ runtime/stop_retry.py              |  24 ++
+ telemetry/latency.py               |  28 ++-
+ test/test_auto_pan_tilt.py         |   1 +
+ test/test_hanet_controller.py      |   5 +-
+ test/test_hanet_fault_injection.py | 445 +++++++++++++++++++++++++++++++++++++
+ test/test_hanet_shutdown.py        | 210 +++++++++++++++++
+ test/test_pan_follow_revision.py   |   1 +
+ tools/run_hanet_fault_tests.py     |  66 ++++++
+ 17 files changed, 1493 insertions(+), 158 deletions(-)

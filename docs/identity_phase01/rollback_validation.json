@@ -1,0 +1,8 @@
+{
+  "temporary_copy_only": true,
+  "dry_run_pass": true,
+  "subsequent_edit_refused_without_mutation": true,
+  "restore_original_dirty_config": true,
+  "new_files_quarantined": true,
+  "actual_workspace_rollback": false
+}

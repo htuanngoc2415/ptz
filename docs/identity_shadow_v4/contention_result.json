@@ -1,0 +1,188 @@
+{
+  "scope": "controlled scheduler contention, real CUDA OSNet, simulated foreground hold times; NOT live FPS or accuracy",
+  "recorded_window": [
+    24968.5,
+    24980.5
+  ],
+  "duration_s": 12.0,
+  "input_frames": 124,
+  "foreground_intervals": 262,
+  "foreground_hold_s": 9.83766280000782,
+  "runs": [
+    {
+      "repeat": 0,
+      "batched": false,
+      "saved": 18,
+      "stale": 8,
+      "passes": 42,
+      "discarded_passes": 6,
+      "retries": 760,
+      "sample_gaps": {
+        "n": 17,
+        "median": 0.46363065599871334,
+        "p95": 1.9757243407977512,
+        "max": 2.000969903994701
+      },
+      "gaps_over_1s": 5,
+      "age_ms": {
+        "n": 18,
+        "median": 259.47349249872786,
+        "p95": 606.8599792031818,
+        "max": 660.2069380060129
+      },
+      "foreground_wait_ms": {
+        "n": 262,
+        "median": 0.06586299787159078,
+        "p95": 22.102532800454327,
+        "max": 69.61537700044573
+      },
+      "log": "/mnt/files/Project/ptz/ptz/docs/identity_shadow_v4/contention_logs/shadow_cf0f11a7c53e440ebebe3118f1576bff.jsonl"
+    },
+    {
+      "repeat": 0,
+      "batched": true,
+      "saved": 30,
+      "stale": 3,
+      "passes": 38,
+      "discarded_passes": 0,
+      "retries": 646,
+      "sample_gaps": {
+        "n": 29,
+        "median": 0.2990494249970652,
+        "p95": 1.0191118830029142,
+        "max": 1.5944979210034944
+      },
+      "gaps_over_1s": 2,
+      "age_ms": {
+        "n": 30,
+        "median": 220.83852950527216,
+        "p95": 709.339510151585,
+        "max": 773.8245260043186
+      },
+      "foreground_wait_ms": {
+        "n": 262,
+        "median": 0.0667710010020528,
+        "p95": 4.151498998362499,
+        "max": 56.71858400091878
+      },
+      "log": "/mnt/files/Project/ptz/ptz/docs/identity_shadow_v4/contention_logs/shadow_f5aaa369f04f4d84b77ca0f1a2ad7f1d.jsonl"
+    },
+    {
+      "repeat": 1,
+      "batched": true,
+      "saved": 27,
+      "stale": 4,
+      "passes": 37,
+      "discarded_passes": 1,
+      "retries": 685,
+      "sample_gaps": {
+        "n": 26,
+        "median": 0.2836085634990013,
+        "p95": 1.1334047547479713,
+        "max": 1.794731251000485
+      },
+      "gaps_over_1s": 3,
+      "age_ms": {
+        "n": 27,
+        "median": 260.2449740006705,
+        "p95": 567.8594844048348,
+        "max": 767.2549729977618
+      },
+      "foreground_wait_ms": {
+        "n": 262,
+        "median": 0.06666249828413129,
+        "p95": 18.034825699760344,
+        "max": 43.09912499957136
+      },
+      "log": "/mnt/files/Project/ptz/ptz/docs/identity_shadow_v4/contention_logs/shadow_aa220295306540b4a427056ac150c144.jsonl"
+    },
+    {
+      "repeat": 1,
+      "batched": false,
+      "saved": 20,
+      "stale": 8,
+      "passes": 44,
+      "discarded_passes": 4,
+      "retries": 772,
+      "sample_gaps": {
+        "n": 19,
+        "median": 0.369493092992343,
+        "p95": 1.9725686453995877,
+        "max": 2.000969904009253
+      },
+      "gaps_over_1s": 5,
+      "age_ms": {
+        "n": 20,
+        "median": 279.9645890008833,
+        "p95": 498.9113874013128,
+        "max": 535.3096760009066
+      },
+      "foreground_wait_ms": {
+        "n": 262,
+        "median": 0.06575150109711103,
+        "p95": 11.536759849695933,
+        "max": 58.25942499723169
+      },
+      "log": "/mnt/files/Project/ptz/ptz/docs/identity_shadow_v4/contention_logs/shadow_79df4badd2364a728fa1f6a3dbf20273.jsonl"
+    },
+    {
+      "repeat": 2,
+      "batched": false,
+      "saved": 20,
+      "stale": 7,
+      "passes": 45,
+      "discarded_passes": 5,
+      "retries": 761,
+      "sample_gaps": {
+        "n": 19,
+        "median": 0.369493092992343,
+        "p95": 1.9725686453995877,
+        "max": 2.000969904009253
+      },
+      "gaps_over_1s": 3,
+      "age_ms": {
+        "n": 20,
+        "median": 283.9571580007032,
+        "p95": 649.5569785542103,
+        "max": 779.61124799549
+      },
+      "foreground_wait_ms": {
+        "n": 262,
+        "median": 0.06557800043083262,
+        "p95": 16.54123929893103,
+        "max": 41.2664510004106
+      },
+      "log": "/mnt/files/Project/ptz/ptz/docs/identity_shadow_v4/contention_logs/shadow_f12203f1342f44ad9db149bc4ef61e6e.jsonl"
+    },
+    {
+      "repeat": 2,
+      "batched": true,
+      "saved": 29,
+      "stale": 5,
+      "passes": 37,
+      "discarded_passes": 0,
+      "retries": 673,
+      "sample_gaps": {
+        "n": 28,
+        "median": 0.2692087370051013,
+        "p95": 1.215637645400056,
+        "max": 1.794731251000485
+      },
+      "gaps_over_1s": 2,
+      "age_ms": {
+        "n": 29,
+        "median": 246.22038999950746,
+        "p95": 582.4947314060408,
+        "max": 606.4374949964986
+      },
+      "foreground_wait_ms": {
+        "n": 262,
+        "median": 0.06526449942612089,
+        "p95": 11.321269849213403,
+        "max": 54.7785560011107
+      },
+      "log": "/mnt/files/Project/ptz/ptz/docs/identity_shadow_v4/contention_logs/shadow_4545bda9d31d4be98c565d84bc93f5e7.jsonl"
+    }
+  ],
+  "physical_commands": 0
+}

@@ -1,0 +1,8 @@
+{
+  "tests": 227,
+  "result": "PASS",
+  "command": "python tools/run_unit_tests.py",
+  "compileall": "PASS",
+  "pyflakes": "PASS",
+  "hardware_movement": false
+}

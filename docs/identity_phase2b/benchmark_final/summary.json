@@ -1,0 +1,1960 @@
+{
+  "reports": {
+    "development": {
+      "all": {
+        "A": {
+          "samples": 1120,
+          "selected": 937,
+          "provisional": 0,
+          "localization": 937,
+          "reasons": {
+            "RESET": 133,
+            "PERIODIC_VERIFY": 914,
+            "TRACK_MISSING": 61,
+            "PERSON_OVERLAP": 12
+          },
+          "continuation_reasons": {
+            "null": 1120
+          },
+          "anchor_age_s": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          },
+          "policy_ms": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          },
+          "identity_hold_interval_s": 22.051141548003216,
+          "localization_hold_interval_s": 22.051141548003216,
+          "provisional_interval_s": 0,
+          "ambiguous_interval_s": 0,
+          "reid_invocations_this_replay": 0,
+          "reid_scope": "shared cached OSNet evidence",
+          "reid_cached_ms": {
+            "n": 1120,
+            "p50": 34.0211980001186,
+            "p95": 44.68555635030497,
+            "max": 395.41359199938597
+          },
+          "age_ms": {
+            "n": 1120,
+            "p50": 72.25850100076059,
+            "p95": 152.87080029884234,
+            "max": 281.09985700211837
+          },
+          "gap_s": {
+            "n": 1119,
+            "p50": 0.10354507499869214,
+            "p95": 0.20287783089988806,
+            "max": 0.40437745199960773
+          },
+          "identity_accuracy": null,
+          "correct_target_tracking_time_s": null,
+          "wrong_target_tracking_time_s": null,
+          "false_acceptance": null,
+          "false_rejection": null,
+          "id_switches": null,
+          "fragmentation": null,
+          "recovery_latency_s": null,
+          "live_cpu_gpu_contention": null,
+          "physical_commands": 0,
+          "hold_episodes_after_first_selection": 2,
+          "reacquired_episodes": 2,
+          "reacquisition_fraction": 1.0,
+          "policy_recovery_latency_s": {
+            "n": 2,
+            "p50": 9.89017382700149,
+            "p95": 10.979434849502468,
+            "max": 11.100463852002576
+          },
+          "association_conflicts": 0
+        },
+        "B": {
+          "samples": 1120,
+          "selected": 786,
+          "provisional": 0,
+          "localization": 786,
+          "reasons": {
+            "LOW_REFERENCE_SIMILARITY": 151,
+            "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 26,
+            "CONFIRMED_MULTI_CUE": 786,
+            "LOW_DETECTION_CONFIDENCE": 6,
+            "NO_OBSERVATION_UNKNOWN": 53,
+            "PERSON_OVERLAP": 98
+          },
+          "continuation_reasons": {
+            "null": 1120
+          },
+          "anchor_age_s": {
+            "n": 1096,
+            "p50": 0.13716919850230624,
+            "p95": 7.7987046185007785,
+            "max": 12.765445493001607
+          },
+          "policy_ms": {
+            "n": 1120,
+            "p50": 0.5442125038825907,
+            "p95": 0.9460377521463669,
+            "max": 1.6796409981907345
+          },
+          "identity_hold_interval_s": 39.69991005999691,
+          "localization_hold_interval_s": 39.69991005999691,
+          "provisional_interval_s": 0,
+          "ambiguous_interval_s": 36.00438815899179,
+          "reid_invocations_this_replay": 0,
+          "reid_scope": "shared cached OSNet evidence",
+          "reid_cached_ms": {
+            "n": 1120,
+            "p50": 34.0211980001186,
+            "p95": 44.68555635030497,
+            "max": 395.41359199938597
+          },
+          "age_ms": {
+            "n": 1120,
+            "p50": 72.25850100076059,
+            "p95": 152.87080029884234,
+            "max": 281.09985700211837
+          },
+          "gap_s": {
+            "n": 1119,
+            "p50": 0.10354507499869214,
+            "p95": 0.20287783089988806,
+            "max": 0.40437745199960773
+          },
+          "identity_accuracy": null,
+          "correct_target_tracking_time_s": null,
+          "wrong_target_tracking_time_s": null,
+          "false_acceptance": null,
+          "false_rejection": null,
+          "id_switches": null,
+          "fragmentation": null,
+          "recovery_latency_s": null,
+          "live_cpu_gpu_contention": null,
+          "physical_commands": 0,
+          "hold_episodes_after_first_selection": 8,
+          "reacquired_episodes": 7,
+          "reacquisition_fraction": 0.875,
+          "policy_recovery_latency_s": {
+            "n": 7,
+            "p50": 4.536512806997052,
+            "p95": 12.310602748501696,
+            "max": 12.666883992002113
+          },
+          "association_conflicts": 0
+        },
+        "C": {
+          "samples": 1120,
+          "selected": 581,
+          "provisional": 0,
+          "localization": 581,
+          "reasons": {
+            "UNCERTAIN_CROP_QUALITY": 133,
+            "LOW_REFERENCE_SIMILARITY": 208,
+            "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 41,
+            "CONFIRMED_MULTI_CUE": 581,
+            "LOW_DETECTION_CONFIDENCE": 6,
+            "NO_OBSERVATION_UNKNOWN": 53,
+            "PERSON_OVERLAP": 98
+          },
+          "continuation_reasons": {
+            "null": 1120
+          },
+          "anchor_age_s": {
+            "n": 1095,
+            "p50": 0.19846448300086195,
+            "p95": 12.918234376800676,
+            "max": 17.833970805997524
+          },
+          "policy_ms": {
+            "n": 1120,
+            "p50": 1.1715725013345946,
+            "p95": 2.0625389537599403,
+            "max": 6.117921002442017
+          },
+          "identity_hold_interval_s": 65.74160437799583,
+          "localization_hold_interval_s": 65.74160437799583,
+          "provisional_interval_s": 0,
+          "ambiguous_interval_s": 62.046082476990705,
+          "reid_invocations_this_replay": 0,
+          "reid_scope": "shared cached OSNet evidence",
+          "reid_cached_ms": {
+            "n": 1120,
+            "p50": 34.0211980001186,
+            "p95": 44.68555635030497,
+            "max": 395.41359199938597
+          },
+          "age_ms": {
+            "n": 1120,
+            "p50": 72.25850100076059,
+            "p95": 152.87080029884234,
+            "max": 281.09985700211837
+          },
+          "gap_s": {
+            "n": 1119,
+            "p50": 0.10354507499869214,
+            "p95": 0.20287783089988806,
+            "max": 0.40437745199960773
+          },
+          "identity_accuracy": null,
+          "correct_target_tracking_time_s": null,
+          "wrong_target_tracking_time_s": null,
+          "false_acceptance": null,
+          "false_rejection": null,
+          "id_switches": null,
+          "fragmentation": null,
+          "recovery_latency_s": null,
+          "live_cpu_gpu_contention": null,
+          "physical_commands": 0,
+          "hold_episodes_after_first_selection": 14,
+          "reacquired_episodes": 13,
+          "reacquisition_fraction": 0.9285714285714286,
+          "policy_recovery_latency_s": {
+            "n": 13,
+            "p50": 0.6987210789993696,
+            "p95": 16.413072086398458,
+            "max": 17.73041769899646
+          },
+          "association_conflicts": 0
+        },
+        "E1": {
+          "samples": 1120,
+          "selected": 581,
+          "provisional": 19,
+          "localization": 600,
+          "reasons": {
+            "UNCERTAIN_CROP_QUALITY": 133,
+            "LOW_REFERENCE_SIMILARITY": 208,
+            "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 41,
+            "CONFIRMED_MULTI_CUE": 581,
+            "LOW_DETECTION_CONFIDENCE": 6,
+            "NO_OBSERVATION_UNKNOWN": 53,
+            "PERSON_OVERLAP": 98
+          },
+          "continuation_reasons": {
+            "NO_TRUSTED_ANCHOR": 24,
+            "null": 581,
+            "BOUNDED_QUALITY_CONTINUATION": 19,
+            "GATE_NOT_IN_ABLATION": 19,
+            "GEOMETRY_OR_MOTION_CONFLICT": 1,
+            "REVERIFY_AFTER_GEOMETRY_OR_MOTION_CONFLICT": 37,
+            "UNSAFE_DETECTION": 1,
+            "NO_OBSERVED_LOCALIZATION": 53,
+            "TRACK_ID_CHANGED_OR_DUPLICATED": 114,
+            "APPROACHING_COMPETITOR": 42,
+            "OVERLAP_RISK": 93,
+            "REVERIFY_AFTER_OVERLAP_RISK": 85,
+            "ANCHOR_EXPIRED": 2,
+            "REVERIFY_AFTER_ANCHOR_EXPIRED": 47,
+            "REVERIFY_AFTER_APPROACHING_COMPETITOR": 2
+          },
+          "anchor_age_s": {
+            "n": 1095,
+            "p50": 0.19846448300086195,
+            "p95": 12.918234376800676,
+            "max": 17.833970805997524
+          },
+          "policy_ms": {
+            "n": 1120,
+            "p50": 1.2738914992951322,
+            "p95": 2.2706145464326255,
+            "max": 145.93612799944822
+          },
+          "identity_hold_interval_s": 65.74160437799583,
+          "localization_hold_interval_s": 63.37618465099149,
+          "provisional_interval_s": 2.365419727004337,
+          "ambiguous_interval_s": 62.046082476990705,
+          "reid_invocations_this_replay": 0,
+          "reid_scope": "shared cached OSNet evidence",
+          "reid_cached_ms": {
+            "n": 1120,
+            "p50": 34.0211980001186,
+            "p95": 44.68555635030497,
+            "max": 395.41359199938597
+          },
+          "age_ms": {
+            "n": 1120,
+            "p50": 72.25850100076059,
+            "p95": 152.87080029884234,
+            "max": 281.09985700211837
+          },
+          "gap_s": {
+            "n": 1119,
+            "p50": 0.10354507499869214,
+            "p95": 0.20287783089988806,
+            "max": 0.40437745199960773
+          },
+          "identity_accuracy": null,
+          "correct_target_tracking_time_s": null,
+          "wrong_target_tracking_time_s": null,
+          "false_acceptance": null,
+          "false_rejection": null,
+          "id_switches": null,
+          "fragmentation": null,
+          "recovery_latency_s": null,
+          "live_cpu_gpu_contention": null,
+          "physical_commands": 0,
+          "hold_episodes_after_first_selection": 14,
+          "reacquired_episodes": 13,
+          "reacquisition_fraction": 0.9285714285714286,
+          "policy_recovery_latency_s": {
+            "n": 13,
+            "p50": 0.6987210789993696,
+            "p95": 16.413072086398458,
+            "max": 17.73041769899646
+          },
+          "association_conflicts": 216
+        },
+        "E2": {
+          "samples": 1120,
+          "selected": 581,
+          "provisional": 4,
+          "localization": 585,
+          "reasons": {
+            "UNCERTAIN_CROP_QUALITY": 133,
+            "LOW_REFERENCE_SIMILARITY": 208,
+            "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 41,
+            "CONFIRMED_MULTI_CUE": 581,
+            "LOW_DETECTION_CONFIDENCE": 6,
+            "NO_OBSERVATION_UNKNOWN": 53,
+            "PERSON_OVERLAP": 98
+          },
+          "continuation_reasons": {
+            "NO_TRUSTED_ANCHOR": 24,
+            "null": 581,
+            "GATE_NOT_IN_ABLATION": 34,
+            "GEOMETRY_OR_MOTION_CONFLICT": 1,
+            "REVERIFY_AFTER_GEOMETRY_OR_MOTION_CONFLICT": 37,
+            "UNSAFE_DETECTION": 1,
+            "NO_OBSERVED_LOCALIZATION": 53,
+            "TRACK_ID_CHANGED_OR_DUPLICATED": 114,
+            "APPROACHING_COMPETITOR": 42,
+            "OVERLAP_RISK": 93,
+            "REVERIFY_AFTER_OVERLAP_RISK": 85,
+            "ANCHOR_EXPIRED": 2,
+            "REVERIFY_AFTER_ANCHOR_EXPIRED": 47,
+            "REVERIFY_AFTER_APPROACHING_COMPETITOR": 2,
+            "BOUNDED_SIMILARITY_CONTINUATION": 4
+          },
+          "anchor_age_s": {
+            "n": 1095,
+            "p50": 0.19846448300086195,
+            "p95": 12.918234376800676,
+            "max": 17.833970805997524
+          },
+          "policy_ms": {
+            "n": 1120,
+            "p50": 1.2707139976555482,
+            "p95": 2.1762773998489133,
+            "max": 3.466770998784341
+          },
+          "identity_hold_interval_s": 65.74160437799583,
+          "localization_hold_interval_s": 65.23909605499648,
+          "provisional_interval_s": 0.502508322999347,
+          "ambiguous_interval_s": 62.046082476990705,
+          "reid_invocations_this_replay": 0,
+          "reid_scope": "shared cached OSNet evidence",
+          "reid_cached_ms": {
+            "n": 1120,
+            "p50": 34.0211980001186,
+            "p95": 44.68555635030497,
+            "max": 395.41359199938597
+          },
+          "age_ms": {
+            "n": 1120,
+            "p50": 72.25850100076059,
+            "p95": 152.87080029884234,
+            "max": 281.09985700211837
+          },
+          "gap_s": {
+            "n": 1119,
+            "p50": 0.10354507499869214,
+            "p95": 0.20287783089988806,
+            "max": 0.40437745199960773
+          },
+          "identity_accuracy": null,
+          "correct_target_tracking_time_s": null,
+          "wrong_target_tracking_time_s": null,
+          "false_acceptance": null,
+          "false_rejection": null,
+          "id_switches": null,
+          "fragmentation": null,
+          "recovery_latency_s": null,
+          "live_cpu_gpu_contention": null,
+          "physical_commands": 0,
+          "hold_episodes_after_first_selection": 14,
+          "reacquired_episodes": 13,
+          "reacquisition_fraction": 0.9285714285714286,
+          "policy_recovery_latency_s": {
+            "n": 13,
+            "p50": 0.6987210789993696,
+            "p95": 16.413072086398458,
+            "max": 17.73041769899646
+          },
+          "association_conflicts": 216
+        },
+        "E3": {
+          "samples": 1120,
+          "selected": 581,
+          "provisional": 23,
+          "localization": 604,
+          "reasons": {
+            "UNCERTAIN_CROP_QUALITY": 133,
+            "LOW_REFERENCE_SIMILARITY": 208,
+            "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 41,
+            "CONFIRMED_MULTI_CUE": 581,
+            "LOW_DETECTION_CONFIDENCE": 6,
+            "NO_OBSERVATION_UNKNOWN": 53,
+            "PERSON_OVERLAP": 98
+          },
+          "continuation_reasons": {
+            "NO_TRUSTED_ANCHOR": 24,
+            "null": 581,
+            "BOUNDED_QUALITY_CONTINUATION": 19,
+            "GATE_NOT_IN_ABLATION": 15,
+            "GEOMETRY_OR_MOTION_CONFLICT": 1,
+            "REVERIFY_AFTER_GEOMETRY_OR_MOTION_CONFLICT": 37,
+            "UNSAFE_DETECTION": 1,
+            "NO_OBSERVED_LOCALIZATION": 53,
+            "TRACK_ID_CHANGED_OR_DUPLICATED": 114,
+            "APPROACHING_COMPETITOR": 42,
+            "OVERLAP_RISK": 93,
+            "REVERIFY_AFTER_OVERLAP_RISK": 85,
+            "ANCHOR_EXPIRED": 2,
+            "REVERIFY_AFTER_ANCHOR_EXPIRED": 47,
+            "REVERIFY_AFTER_APPROACHING_COMPETITOR": 2,
+            "BOUNDED_SIMILARITY_CONTINUATION": 4
+          },
+          "anchor_age_s": {
+            "n": 1095,
+            "p50": 0.19846448300086195,
+            "p95": 12.918234376800676,
+            "max": 17.833970805997524
+          },
+          "policy_ms": {
+            "n": 1120,
+            "p50": 1.2743810002575628,
+            "p95": 2.1607517464872217,
+            "max": 6.089285998314153
+          },
+          "identity_hold_interval_s": 65.74160437799583,
+          "localization_hold_interval_s": 62.87367632799214,
+          "provisional_interval_s": 2.867928050003684,
+          "ambiguous_interval_s": 62.046082476990705,
+          "reid_invocations_this_replay": 0,
+          "reid_scope": "shared cached OSNet evidence",
+          "reid_cached_ms": {
+            "n": 1120,
+            "p50": 34.0211980001186,
+            "p95": 44.68555635030497,
+            "max": 395.41359199938597
+          },
+          "age_ms": {
+            "n": 1120,
+            "p50": 72.25850100076059,
+            "p95": 152.87080029884234,
+            "max": 281.09985700211837
+          },
+          "gap_s": {
+            "n": 1119,
+            "p50": 0.10354507499869214,
+            "p95": 0.20287783089988806,
+            "max": 0.40437745199960773
+          },
+          "identity_accuracy": null,
+          "correct_target_tracking_time_s": null,
+          "wrong_target_tracking_time_s": null,
+          "false_acceptance": null,
+          "false_rejection": null,
+          "id_switches": null,
+          "fragmentation": null,
+          "recovery_latency_s": null,
+          "live_cpu_gpu_contention": null,
+          "physical_commands": 0,
+          "hold_episodes_after_first_selection": 14,
+          "reacquired_episodes": 13,
+          "reacquisition_fraction": 0.9285714285714286,
+          "policy_recovery_latency_s": {
+            "n": 13,
+            "p50": 0.6987210789993696,
+            "p95": 16.413072086398458,
+            "max": 17.73041769899646
+          },
+          "association_conflicts": 216
+        }
+      },
+      "fixed200": {
+        "A": {
+          "samples": 515,
+          "selected": 432,
+          "provisional": 0,
+          "localization": 432,
+          "reasons": {
+            "RESET": 69,
+            "PERIODIC_VERIFY": 420,
+            "TRACK_MISSING": 22,
+            "PERSON_OVERLAP": 4
+          },
+          "continuation_reasons": {
+            "null": 515
+          },
+          "anchor_age_s": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          },
+          "policy_ms": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          },
+          "identity_hold_interval_s": 21.968787759000406,
+          "localization_hold_interval_s": 21.968787759000406,
+          "provisional_interval_s": 0,
+          "ambiguous_interval_s": 0,
+          "reid_invocations_this_replay": 0,
+          "reid_scope": "shared cached OSNet evidence",
+          "reid_cached_ms": {
+            "n": 515,
+            "p50": 34.08087299976614,
+            "p95": 46.08911930117756,
+            "max": 70.74348400055896
+          },
+          "age_ms": {
+            "n": 515,
+            "p50": 73.02313199761556,
+            "p95": 203.74075460022138,
+            "max": 281.09985700211837
+          },
+          "gap_s": {
+            "n": 514,
+            "p50": 0.2655174104984326,
+            "p95": 0.36871135704950575,
+            "max": 0.528936826998688
+          },
+          "identity_accuracy": null,
+          "correct_target_tracking_time_s": null,
+          "wrong_target_tracking_time_s": null,
+          "false_acceptance": null,
+          "false_rejection": null,
+          "id_switches": null,
+          "fragmentation": null,
+          "recovery_latency_s": null,
+          "live_cpu_gpu_contention": null,
+          "physical_commands": 0,
+          "hold_episodes_after_first_selection": 2,
+          "reacquired_episodes": 2,
+          "reacquisition_fraction": 1.0,
+          "policy_recovery_latency_s": {
+            "n": 2,
+            "p50": 10.084019999500015,
+            "p95": 10.937119242249901,
+            "max": 11.031908046999888
+          },
+          "association_conflicts": 0
+        },
+        "B": {
+          "samples": 515,
+          "selected": 360,
+          "provisional": 0,
+          "localization": 360,
+          "reasons": {
+            "LOW_REFERENCE_SIMILARITY": 83,
+            "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 18,
+            "CONFIRMED_MULTI_CUE": 360,
+            "NO_OBSERVATION_UNKNOWN": 16,
+            "LOW_DETECTION_CONFIDENCE": 1,
+            "PERSON_OVERLAP": 37
+          },
+          "continuation_reasons": {
+            "null": 515
+          },
+          "anchor_age_s": {
+            "n": 507,
+            "p50": 0.29794130599839264,
+            "p95": 9.835139721298765,
+            "max": 14.533512609999889
+          },
+          "policy_ms": {
+            "n": 515,
+            "p50": 0.5393229948822409,
+            "p95": 0.8659629980684258,
+            "max": 1.7348870023852214
+          },
+          "identity_hold_interval_s": 40.67264636900654,
+          "localization_hold_interval_s": 40.67264636900654,
+          "provisional_interval_s": 0,
+          "ambiguous_interval_s": 37.174091382006736,
+          "reid_invocations_this_replay": 0,
+          "reid_scope": "shared cached OSNet evidence",
+          "reid_cached_ms": {
+            "n": 515,
+            "p50": 34.08087299976614,
+            "p95": 46.08911930117756,
+            "max": 70.74348400055896
+          },
+          "age_ms": {
+            "n": 515,
+            "p50": 73.02313199761556,
+            "p95": 203.74075460022138,
+            "max": 281.09985700211837
+          },
+          "gap_s": {
+            "n": 514,
+            "p50": 0.2655174104984326,
+            "p95": 0.36871135704950575,
+            "max": 0.528936826998688
+          },
+          "identity_accuracy": null,
+          "correct_target_tracking_time_s": null,
+          "wrong_target_tracking_time_s": null,
+          "false_acceptance": null,
+          "false_rejection": null,
+          "id_switches": null,
+          "fragmentation": null,
+          "recovery_latency_s": null,
+          "live_cpu_gpu_contention": null,
+          "physical_commands": 0,
+          "hold_episodes_after_first_selection": 6,
+          "reacquired_episodes": 5,
+          "reacquisition_fraction": 0.8333333333333334,
+          "policy_recovery_latency_s": {
+            "n": 5,
+            "p50": 6.198742259002756,
+            "p95": 13.748094676202163,
+            "max": 14.200938599002257
+          },
+          "association_conflicts": 0
+        },
+        "C": {
+          "samples": 515,
+          "selected": 261,
+          "provisional": 0,
+          "localization": 261,
+          "reasons": {
+            "UNCERTAIN_CROP_QUALITY": 69,
+            "LOW_REFERENCE_SIMILARITY": 102,
+            "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 29,
+            "CONFIRMED_MULTI_CUE": 261,
+            "NO_OBSERVATION_UNKNOWN": 16,
+            "LOW_DETECTION_CONFIDENCE": 1,
+            "PERSON_OVERLAP": 37
+          },
+          "continuation_reasons": {
+            "null": 515
+          },
+          "anchor_age_s": {
+            "n": 506,
+            "p50": 0.3664492905008956,
+            "p95": 15.008193409748856,
+            "max": 20.63369266099835
+          },
+          "policy_ms": {
+            "n": 515,
+            "p50": 1.0850729959202,
+            "p95": 1.9066431967075892,
+            "max": 2.8398639988154173
+          },
+          "identity_hold_interval_s": 66.66322842199952,
+          "localization_hold_interval_s": 66.66322842199952,
+          "provisional_interval_s": 0,
+          "ambiguous_interval_s": 63.16467343499971,
+          "reid_invocations_this_replay": 0,
+          "reid_scope": "shared cached OSNet evidence",
+          "reid_cached_ms": {
+            "n": 515,
+            "p50": 34.08087299976614,
+            "p95": 46.08911930117756,
+            "max": 70.74348400055896
+          },
+          "age_ms": {
+            "n": 515,
+            "p50": 73.02313199761556,
+            "p95": 203.74075460022138,
+            "max": 281.09985700211837
+          },
+          "gap_s": {
+            "n": 514,
+            "p50": 0.2655174104984326,
+            "p95": 0.36871135704950575,
+            "max": 0.528936826998688
+          },
+          "identity_accuracy": null,
+          "correct_target_tracking_time_s": null,
+          "wrong_target_tracking_time_s": null,
+          "false_acceptance": null,
+          "false_rejection": null,
+          "id_switches": null,
+          "fragmentation": null,
+          "recovery_latency_s": null,
+          "live_cpu_gpu_contention": null,
+          "physical_commands": 0,
+          "hold_episodes_after_first_selection": 8,
+          "reacquired_episodes": 7,
+          "reacquisition_fraction": 0.875,
+          "policy_recovery_latency_s": {
+            "n": 7,
+            "p50": 11.668387560002884,
+            "p95": 18.99862882559864,
+            "max": 20.36778095399859
+          },
+          "association_conflicts": 0
+        },
+        "E1": {
+          "samples": 515,
+          "selected": 261,
+          "provisional": 6,
+          "localization": 267,
+          "reasons": {
+            "UNCERTAIN_CROP_QUALITY": 69,
+            "LOW_REFERENCE_SIMILARITY": 102,
+            "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 29,
+            "CONFIRMED_MULTI_CUE": 261,
+            "NO_OBSERVATION_UNKNOWN": 16,
+            "LOW_DETECTION_CONFIDENCE": 1,
+            "PERSON_OVERLAP": 37
+          },
+          "continuation_reasons": {
+            "NO_TRUSTED_ANCHOR": 8,
+            "null": 261,
+            "BOUNDED_QUALITY_CONTINUATION": 6,
+            "GATE_NOT_IN_ABLATION": 5,
+            "ANCHOR_EXPIRED": 3,
+            "REVERIFY_AFTER_ANCHOR_EXPIRED": 41,
+            "NO_OBSERVED_LOCALIZATION": 16,
+            "TRACK_ID_CHANGED_OR_DUPLICATED": 71,
+            "APPROACHING_COMPETITOR": 18,
+            "OVERLAP_RISK": 40,
+            "REVERIFY_AFTER_OVERLAP_RISK": 41,
+            "GEOMETRY_OR_MOTION_CONFLICT": 1,
+            "REVERIFY_AFTER_GEOMETRY_OR_MOTION_CONFLICT": 2,
+            "REVERIFY_AFTER_APPROACHING_COMPETITOR": 2
+          },
+          "anchor_age_s": {
+            "n": 506,
+            "p50": 0.3664492905008956,
+            "p95": 15.008193409748856,
+            "max": 20.63369266099835
+          },
+          "policy_ms": {
+            "n": 515,
+            "p50": 1.2341170004219748,
+            "p95": 2.2498637001262978,
+            "max": 4.866554001637269
+          },
+          "identity_hold_interval_s": 66.66322842199952,
+          "localization_hold_interval_s": 65.25992032499562,
+          "provisional_interval_s": 1.403308097003901,
+          "ambiguous_interval_s": 63.16467343499971,
+          "reid_invocations_this_replay": 0,
+          "reid_scope": "shared cached OSNet evidence",
+          "reid_cached_ms": {
+            "n": 515,
+            "p50": 34.08087299976614,
+            "p95": 46.08911930117756,
+            "max": 70.74348400055896
+          },
+          "age_ms": {
+            "n": 515,
+            "p50": 73.02313199761556,
+            "p95": 203.74075460022138,
+            "max": 281.09985700211837
+          },
+          "gap_s": {
+            "n": 514,
+            "p50": 0.2655174104984326,
+            "p95": 0.36871135704950575,
+            "max": 0.528936826998688
+          },
+          "identity_accuracy": null,
+          "correct_target_tracking_time_s": null,
+          "wrong_target_tracking_time_s": null,
+          "false_acceptance": null,
+          "false_rejection": null,
+          "id_switches": null,
+          "fragmentation": null,
+          "recovery_latency_s": null,
+          "live_cpu_gpu_contention": null,
+          "physical_commands": 0,
+          "hold_episodes_after_first_selection": 8,
+          "reacquired_episodes": 7,
+          "reacquisition_fraction": 0.875,
+          "policy_recovery_latency_s": {
+            "n": 7,
+            "p50": 11.668387560002884,
+            "p95": 18.99862882559864,
+            "max": 20.36778095399859
+          },
+          "association_conflicts": 84
+        },
+        "E2": {
+          "samples": 515,
+          "selected": 261,
+          "provisional": 1,
+          "localization": 262,
+          "reasons": {
+            "UNCERTAIN_CROP_QUALITY": 69,
+            "LOW_REFERENCE_SIMILARITY": 102,
+            "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 29,
+            "CONFIRMED_MULTI_CUE": 261,
+            "NO_OBSERVATION_UNKNOWN": 16,
+            "LOW_DETECTION_CONFIDENCE": 1,
+            "PERSON_OVERLAP": 37
+          },
+          "continuation_reasons": {
+            "NO_TRUSTED_ANCHOR": 8,
+            "null": 261,
+            "GATE_NOT_IN_ABLATION": 10,
+            "ANCHOR_EXPIRED": 3,
+            "REVERIFY_AFTER_ANCHOR_EXPIRED": 41,
+            "NO_OBSERVED_LOCALIZATION": 16,
+            "TRACK_ID_CHANGED_OR_DUPLICATED": 71,
+            "APPROACHING_COMPETITOR": 18,
+            "OVERLAP_RISK": 40,
+            "REVERIFY_AFTER_OVERLAP_RISK": 41,
+            "GEOMETRY_OR_MOTION_CONFLICT": 1,
+            "REVERIFY_AFTER_GEOMETRY_OR_MOTION_CONFLICT": 2,
+            "REVERIFY_AFTER_APPROACHING_COMPETITOR": 2,
+            "BOUNDED_SIMILARITY_CONTINUATION": 1
+          },
+          "anchor_age_s": {
+            "n": 506,
+            "p50": 0.3664492905008956,
+            "p95": 15.008193409748856,
+            "max": 20.63369266099835
+          },
+          "policy_ms": {
+            "n": 515,
+            "p50": 1.236210999195464,
+            "p95": 2.108704396960092,
+            "max": 3.9372989995172247
+          },
+          "identity_hold_interval_s": 66.66322842199952,
+          "localization_hold_interval_s": 66.39303305099747,
+          "provisional_interval_s": 0.27019537100204616,
+          "ambiguous_interval_s": 63.16467343499971,
+          "reid_invocations_this_replay": 0,
+          "reid_scope": "shared cached OSNet evidence",
+          "reid_cached_ms": {
+            "n": 515,
+            "p50": 34.08087299976614,
+            "p95": 46.08911930117756,
+            "max": 70.74348400055896
+          },
+          "age_ms": {
+            "n": 515,
+            "p50": 73.02313199761556,
+            "p95": 203.74075460022138,
+            "max": 281.09985700211837
+          },
+          "gap_s": {
+            "n": 514,
+            "p50": 0.2655174104984326,
+            "p95": 0.36871135704950575,
+            "max": 0.528936826998688
+          },
+          "identity_accuracy": null,
+          "correct_target_tracking_time_s": null,
+          "wrong_target_tracking_time_s": null,
+          "false_acceptance": null,
+          "false_rejection": null,
+          "id_switches": null,
+          "fragmentation": null,
+          "recovery_latency_s": null,
+          "live_cpu_gpu_contention": null,
+          "physical_commands": 0,
+          "hold_episodes_after_first_selection": 8,
+          "reacquired_episodes": 7,
+          "reacquisition_fraction": 0.875,
+          "policy_recovery_latency_s": {
+            "n": 7,
+            "p50": 11.668387560002884,
+            "p95": 18.99862882559864,
+            "max": 20.36778095399859
+          },
+          "association_conflicts": 84
+        },
+        "E3": {
+          "samples": 515,
+          "selected": 261,
+          "provisional": 7,
+          "localization": 268,
+          "reasons": {
+            "UNCERTAIN_CROP_QUALITY": 69,
+            "LOW_REFERENCE_SIMILARITY": 102,
+            "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 29,
+            "CONFIRMED_MULTI_CUE": 261,
+            "NO_OBSERVATION_UNKNOWN": 16,
+            "LOW_DETECTION_CONFIDENCE": 1,
+            "PERSON_OVERLAP": 37
+          },
+          "continuation_reasons": {
+            "NO_TRUSTED_ANCHOR": 8,
+            "null": 261,
+            "BOUNDED_QUALITY_CONTINUATION": 6,
+            "GATE_NOT_IN_ABLATION": 4,
+            "ANCHOR_EXPIRED": 3,
+            "REVERIFY_AFTER_ANCHOR_EXPIRED": 41,
+            "NO_OBSERVED_LOCALIZATION": 16,
+            "TRACK_ID_CHANGED_OR_DUPLICATED": 71,
+            "APPROACHING_COMPETITOR": 18,
+            "OVERLAP_RISK": 40,
+            "REVERIFY_AFTER_OVERLAP_RISK": 41,
+            "GEOMETRY_OR_MOTION_CONFLICT": 1,
+            "REVERIFY_AFTER_GEOMETRY_OR_MOTION_CONFLICT": 2,
+            "REVERIFY_AFTER_APPROACHING_COMPETITOR": 2,
+            "BOUNDED_SIMILARITY_CONTINUATION": 1
+          },
+          "anchor_age_s": {
+            "n": 506,
+            "p50": 0.3664492905008956,
+            "p95": 15.008193409748856,
+            "max": 20.63369266099835
+          },
+          "policy_ms": {
+            "n": 515,
+            "p50": 1.2369109972496517,
+            "p95": 2.0964406983694053,
+            "max": 4.547093994915485
+          },
+          "identity_hold_interval_s": 66.66322842199952,
+          "localization_hold_interval_s": 64.98972495399357,
+          "provisional_interval_s": 1.673503468005947,
+          "ambiguous_interval_s": 63.16467343499971,
+          "reid_invocations_this_replay": 0,
+          "reid_scope": "shared cached OSNet evidence",
+          "reid_cached_ms": {
+            "n": 515,
+            "p50": 34.08087299976614,
+            "p95": 46.08911930117756,
+            "max": 70.74348400055896
+          },
+          "age_ms": {
+            "n": 515,
+            "p50": 73.02313199761556,
+            "p95": 203.74075460022138,
+            "max": 281.09985700211837
+          },
+          "gap_s": {
+            "n": 514,
+            "p50": 0.2655174104984326,
+            "p95": 0.36871135704950575,
+            "max": 0.528936826998688
+          },
+          "identity_accuracy": null,
+          "correct_target_tracking_time_s": null,
+          "wrong_target_tracking_time_s": null,
+          "false_acceptance": null,
+          "false_rejection": null,
+          "id_switches": null,
+          "fragmentation": null,
+          "recovery_latency_s": null,
+          "live_cpu_gpu_contention": null,
+          "physical_commands": 0,
+          "hold_episodes_after_first_selection": 8,
+          "reacquired_episodes": 7,
+          "reacquisition_fraction": 0.875,
+          "policy_recovery_latency_s": {
+            "n": 7,
+            "p50": 11.668387560002884,
+            "p95": 18.99862882559864,
+            "max": 20.36778095399859
+          },
+          "association_conflicts": 84
+        }
+      }
+    },
+    "retrospective_holdout": {
+      "all": {
+        "A": {
+          "samples": 1081,
+          "selected": 810,
+          "provisional": 0,
+          "localization": 810,
+          "reasons": {
+            "RESET": 221,
+            "PERIODIC_VERIFY": 771,
+            "PERSON_OVERLAP": 49,
+            "MOTION_DISCONTINUITY": 1,
+            "TARGET_REACQUIRED": 1,
+            "TRACK_MISSING": 38
+          },
+          "continuation_reasons": {
+            "null": 1081
+          },
+          "anchor_age_s": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          },
+          "policy_ms": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          },
+          "identity_hold_interval_s": 42.17198929300139,
+          "localization_hold_interval_s": 42.17198929300139,
+          "provisional_interval_s": 0,
+          "ambiguous_interval_s": 0,
+          "reid_invocations_this_replay": 0,
+          "reid_scope": "shared cached OSNet evidence",
+          "reid_cached_ms": {
+            "n": 1081,
+            "p50": 33.22605599896633,
+            "p95": 39.485792000050424,
+            "max": 402.2978590001003
+          },
+          "age_ms": {
+            "n": 1081,
+            "p50": 72.33645200176397,
+            "p95": 187.08503599918913,
+            "max": 355.02546100178733
+          },
+          "gap_s": {
+            "n": 1080,
+            "p50": 0.1029368030031037,
+            "p95": 0.23250105434890428,
+            "max": 0.43005065100078355
+          },
+          "identity_accuracy": null,
+          "correct_target_tracking_time_s": null,
+          "wrong_target_tracking_time_s": null,
+          "false_acceptance": null,
+          "false_rejection": null,
+          "id_switches": null,
+          "fragmentation": null,
+          "recovery_latency_s": null,
+          "live_cpu_gpu_contention": null,
+          "physical_commands": 0,
+          "hold_episodes_after_first_selection": 4,
+          "reacquired_episodes": 4,
+          "reacquisition_fraction": 1.0,
+          "policy_recovery_latency_s": {
+            "n": 4,
+            "p50": 7.661375918998601,
+            "p95": 20.262414413100117,
+            "max": 21.99145940100061
+          },
+          "association_conflicts": 0
+        },
+        "B": {
+          "samples": 1081,
+          "selected": 758,
+          "provisional": 0,
+          "localization": 758,
+          "reasons": {
+            "LOW_REFERENCE_SIMILARITY": 167,
+            "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 15,
+            "CONFIRMED_MULTI_CUE": 758,
+            "PERSON_OVERLAP": 107,
+            "AMBIGUOUS_MARGIN": 1,
+            "LOW_DETECTION_CONFIDENCE": 27,
+            "NO_OBSERVATION_UNKNOWN": 6
+          },
+          "continuation_reasons": {
+            "null": 1081
+          },
+          "anchor_age_s": {
+            "n": 1055,
+            "p50": 0.13292840399662964,
+            "p95": 14.66619417439905,
+            "max": 23.42886169800113
+          },
+          "policy_ms": {
+            "n": 1081,
+            "p50": 0.5395330008468591,
+            "p95": 0.8555009990232065,
+            "max": 1.5234739985316992
+          },
+          "identity_hold_interval_s": 47.74786799800495,
+          "localization_hold_interval_s": 47.74786799800495,
+          "provisional_interval_s": 0,
+          "ambiguous_interval_s": 47.28027291900071,
+          "reid_invocations_this_replay": 0,
+          "reid_scope": "shared cached OSNet evidence",
+          "reid_cached_ms": {
+            "n": 1081,
+            "p50": 33.22605599896633,
+            "p95": 39.485792000050424,
+            "max": 402.2978590001003
+          },
+          "age_ms": {
+            "n": 1081,
+            "p50": 72.33645200176397,
+            "p95": 187.08503599918913,
+            "max": 355.02546100178733
+          },
+          "gap_s": {
+            "n": 1080,
+            "p50": 0.1029368030031037,
+            "p95": 0.23250105434890428,
+            "max": 0.43005065100078355
+          },
+          "identity_accuracy": null,
+          "correct_target_tracking_time_s": null,
+          "wrong_target_tracking_time_s": null,
+          "false_acceptance": null,
+          "false_rejection": null,
+          "id_switches": null,
+          "fragmentation": null,
+          "recovery_latency_s": null,
+          "live_cpu_gpu_contention": null,
+          "physical_commands": 0,
+          "hold_episodes_after_first_selection": 6,
+          "reacquired_episodes": 6,
+          "reacquisition_fraction": 1.0,
+          "policy_recovery_latency_s": {
+            "n": 6,
+            "p50": 5.047058690000995,
+            "p95": 20.03847163925093,
+            "max": 23.22979791400212
+          },
+          "association_conflicts": 0
+        },
+        "C": {
+          "samples": 1081,
+          "selected": 457,
+          "provisional": 0,
+          "localization": 457,
+          "reasons": {
+            "LOW_REFERENCE_SIMILARITY": 348,
+            "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 32,
+            "CONFIRMED_MULTI_CUE": 457,
+            "UNCERTAIN_CROP_QUALITY": 103,
+            "PERSON_OVERLAP": 107,
+            "AMBIGUOUS_MARGIN": 1,
+            "LOW_DETECTION_CONFIDENCE": 27,
+            "NO_OBSERVATION_UNKNOWN": 6
+          },
+          "continuation_reasons": {
+            "null": 1081
+          },
+          "anchor_age_s": {
+            "n": 1055,
+            "p50": 1.1642562050001288,
+            "p95": 21.299921023397825,
+            "max": 30.062588546999905
+          },
+          "policy_ms": {
+            "n": 1081,
+            "p50": 1.1123809963464737,
+            "p95": 1.9400839955778793,
+            "max": 6.223524003871717
+          },
+          "identity_hold_interval_s": 83.54824085099972,
+          "localization_hold_interval_s": 83.54824085099972,
+          "provisional_interval_s": 0,
+          "ambiguous_interval_s": 83.08064577199548,
+          "reid_invocations_this_replay": 0,
+          "reid_scope": "shared cached OSNet evidence",
+          "reid_cached_ms": {
+            "n": 1081,
+            "p50": 33.22605599896633,
+            "p95": 39.485792000050424,
+            "max": 402.2978590001003
+          },
+          "age_ms": {
+            "n": 1081,
+            "p50": 72.33645200176397,
+            "p95": 187.08503599918913,
+            "max": 355.02546100178733
+          },
+          "gap_s": {
+            "n": 1080,
+            "p50": 0.1029368030031037,
+            "p95": 0.23250105434890428,
+            "max": 0.43005065100078355
+          },
+          "identity_accuracy": null,
+          "correct_target_tracking_time_s": null,
+          "wrong_target_tracking_time_s": null,
+          "false_acceptance": null,
+          "false_rejection": null,
+          "id_switches": null,
+          "fragmentation": null,
+          "recovery_latency_s": null,
+          "live_cpu_gpu_contention": null,
+          "physical_commands": 0,
+          "hold_episodes_after_first_selection": 11,
+          "reacquired_episodes": 11,
+          "reacquisition_fraction": 1.0,
+          "policy_recovery_latency_s": {
+            "n": 11,
+            "p50": 0.8973097400012193,
+            "p95": 24.298004619498897,
+            "max": 29.99416169200049
+          },
+          "association_conflicts": 0
+        },
+        "E1": {
+          "samples": 1081,
+          "selected": 457,
+          "provisional": 23,
+          "localization": 480,
+          "reasons": {
+            "LOW_REFERENCE_SIMILARITY": 348,
+            "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 32,
+            "CONFIRMED_MULTI_CUE": 457,
+            "UNCERTAIN_CROP_QUALITY": 103,
+            "PERSON_OVERLAP": 107,
+            "AMBIGUOUS_MARGIN": 1,
+            "LOW_DETECTION_CONFIDENCE": 27,
+            "NO_OBSERVATION_UNKNOWN": 6
+          },
+          "continuation_reasons": {
+            "NO_TRUSTED_ANCHOR": 25,
+            "null": 457,
+            "APPROACHING_COMPETITOR": 69,
+            "OVERLAP_RISK": 100,
+            "REVERIFY_AFTER_OVERLAP_RISK": 3,
+            "TRACK_ID_CHANGED_OR_DUPLICATED": 199,
+            "BOUNDED_QUALITY_CONTINUATION": 23,
+            "GATE_NOT_IN_ABLATION": 12,
+            "ANCHOR_EXPIRED": 3,
+            "REVERIFY_AFTER_ANCHOR_EXPIRED": 147,
+            "COMPETITOR_APPEARANCE_CONFLICT": 1,
+            "REVERIFY_AFTER_COMPETITOR_APPEARANCE_CONFLICT": 2,
+            "GEOMETRY_OR_MOTION_CONFLICT": 1,
+            "REVERIFY_AFTER_GEOMETRY_OR_MOTION_CONFLICT": 27,
+            "REVERIFY_AFTER_APPROACHING_COMPETITOR": 6,
+            "NO_OBSERVED_LOCALIZATION": 6
+          },
+          "anchor_age_s": {
+            "n": 1055,
+            "p50": 1.1642562050001288,
+            "p95": 21.299921023397825,
+            "max": 30.062588546999905
+          },
+          "policy_ms": {
+            "n": 1081,
+            "p50": 1.2504589976742864,
+            "p95": 2.0514830030151643,
+            "max": 9.478462001425214
+          },
+          "identity_hold_interval_s": 83.54824085099972,
+          "localization_hold_interval_s": 80.74741395500314,
+          "provisional_interval_s": 2.800826895996579,
+          "ambiguous_interval_s": 83.08064577199548,
+          "reid_invocations_this_replay": 0,
+          "reid_scope": "shared cached OSNet evidence",
+          "reid_cached_ms": {
+            "n": 1081,
+            "p50": 33.22605599896633,
+            "p95": 39.485792000050424,
+            "max": 402.2978590001003
+          },
+          "age_ms": {
+            "n": 1081,
+            "p50": 72.33645200176397,
+            "p95": 187.08503599918913,
+            "max": 355.02546100178733
+          },
+          "gap_s": {
+            "n": 1080,
+            "p50": 0.1029368030031037,
+            "p95": 0.23250105434890428,
+            "max": 0.43005065100078355
+          },
+          "identity_accuracy": null,
+          "correct_target_tracking_time_s": null,
+          "wrong_target_tracking_time_s": null,
+          "false_acceptance": null,
+          "false_rejection": null,
+          "id_switches": null,
+          "fragmentation": null,
+          "recovery_latency_s": null,
+          "live_cpu_gpu_contention": null,
+          "physical_commands": 0,
+          "hold_episodes_after_first_selection": 11,
+          "reacquired_episodes": 11,
+          "reacquisition_fraction": 1.0,
+          "policy_recovery_latency_s": {
+            "n": 11,
+            "p50": 0.8973097400012193,
+            "p95": 24.298004619498897,
+            "max": 29.99416169200049
+          },
+          "association_conflicts": 134
+        },
+        "E2": {
+          "samples": 1081,
+          "selected": 457,
+          "provisional": 1,
+          "localization": 458,
+          "reasons": {
+            "LOW_REFERENCE_SIMILARITY": 348,
+            "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 32,
+            "CONFIRMED_MULTI_CUE": 457,
+            "UNCERTAIN_CROP_QUALITY": 103,
+            "PERSON_OVERLAP": 107,
+            "AMBIGUOUS_MARGIN": 1,
+            "LOW_DETECTION_CONFIDENCE": 27,
+            "NO_OBSERVATION_UNKNOWN": 6
+          },
+          "continuation_reasons": {
+            "NO_TRUSTED_ANCHOR": 25,
+            "null": 457,
+            "APPROACHING_COMPETITOR": 69,
+            "OVERLAP_RISK": 100,
+            "REVERIFY_AFTER_OVERLAP_RISK": 3,
+            "TRACK_ID_CHANGED_OR_DUPLICATED": 199,
+            "GATE_NOT_IN_ABLATION": 34,
+            "ANCHOR_EXPIRED": 3,
+            "REVERIFY_AFTER_ANCHOR_EXPIRED": 147,
+            "COMPETITOR_APPEARANCE_CONFLICT": 1,
+            "REVERIFY_AFTER_COMPETITOR_APPEARANCE_CONFLICT": 2,
+            "GEOMETRY_OR_MOTION_CONFLICT": 1,
+            "REVERIFY_AFTER_GEOMETRY_OR_MOTION_CONFLICT": 27,
+            "REVERIFY_AFTER_APPROACHING_COMPETITOR": 6,
+            "NO_OBSERVED_LOCALIZATION": 6,
+            "BOUNDED_SIMILARITY_CONTINUATION": 1
+          },
+          "anchor_age_s": {
+            "n": 1055,
+            "p50": 1.1642562050001288,
+            "p95": 21.299921023397825,
+            "max": 30.062588546999905
+          },
+          "policy_ms": {
+            "n": 1081,
+            "p50": 1.2450120048015378,
+            "p95": 2.0319969989941455,
+            "max": 5.321227996319067
+          },
+          "identity_hold_interval_s": 83.54824085099972,
+          "localization_hold_interval_s": 83.47815348199947,
+          "provisional_interval_s": 0.07008736900024815,
+          "ambiguous_interval_s": 83.08064577199548,
+          "reid_invocations_this_replay": 0,
+          "reid_scope": "shared cached OSNet evidence",
+          "reid_cached_ms": {
+            "n": 1081,
+            "p50": 33.22605599896633,
+            "p95": 39.485792000050424,
+            "max": 402.2978590001003
+          },
+          "age_ms": {
+            "n": 1081,
+            "p50": 72.33645200176397,
+            "p95": 187.08503599918913,
+            "max": 355.02546100178733
+          },
+          "gap_s": {
+            "n": 1080,
+            "p50": 0.1029368030031037,
+            "p95": 0.23250105434890428,
+            "max": 0.43005065100078355
+          },
+          "identity_accuracy": null,
+          "correct_target_tracking_time_s": null,
+          "wrong_target_tracking_time_s": null,
+          "false_acceptance": null,
+          "false_rejection": null,
+          "id_switches": null,
+          "fragmentation": null,
+          "recovery_latency_s": null,
+          "live_cpu_gpu_contention": null,
+          "physical_commands": 0,
+          "hold_episodes_after_first_selection": 11,
+          "reacquired_episodes": 11,
+          "reacquisition_fraction": 1.0,
+          "policy_recovery_latency_s": {
+            "n": 11,
+            "p50": 0.8973097400012193,
+            "p95": 24.298004619498897,
+            "max": 29.99416169200049
+          },
+          "association_conflicts": 134
+        },
+        "E3": {
+          "samples": 1081,
+          "selected": 457,
+          "provisional": 24,
+          "localization": 481,
+          "reasons": {
+            "LOW_REFERENCE_SIMILARITY": 348,
+            "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 32,
+            "CONFIRMED_MULTI_CUE": 457,
+            "UNCERTAIN_CROP_QUALITY": 103,
+            "PERSON_OVERLAP": 107,
+            "AMBIGUOUS_MARGIN": 1,
+            "LOW_DETECTION_CONFIDENCE": 27,
+            "NO_OBSERVATION_UNKNOWN": 6
+          },
+          "continuation_reasons": {
+            "NO_TRUSTED_ANCHOR": 25,
+            "null": 457,
+            "APPROACHING_COMPETITOR": 69,
+            "OVERLAP_RISK": 100,
+            "REVERIFY_AFTER_OVERLAP_RISK": 3,
+            "TRACK_ID_CHANGED_OR_DUPLICATED": 199,
+            "BOUNDED_QUALITY_CONTINUATION": 23,
+            "GATE_NOT_IN_ABLATION": 11,
+            "ANCHOR_EXPIRED": 3,
+            "REVERIFY_AFTER_ANCHOR_EXPIRED": 147,
+            "COMPETITOR_APPEARANCE_CONFLICT": 1,
+            "REVERIFY_AFTER_COMPETITOR_APPEARANCE_CONFLICT": 2,
+            "GEOMETRY_OR_MOTION_CONFLICT": 1,
+            "REVERIFY_AFTER_GEOMETRY_OR_MOTION_CONFLICT": 27,
+            "REVERIFY_AFTER_APPROACHING_COMPETITOR": 6,
+            "NO_OBSERVED_LOCALIZATION": 6,
+            "BOUNDED_SIMILARITY_CONTINUATION": 1
+          },
+          "anchor_age_s": {
+            "n": 1055,
+            "p50": 1.1642562050001288,
+            "p95": 21.299921023397825,
+            "max": 30.062588546999905
+          },
+          "policy_ms": {
+            "n": 1081,
+            "p50": 1.2456399999791756,
+            "p95": 1.9995900001958944,
+            "max": 4.338545004429761
+          },
+          "identity_hold_interval_s": 83.54824085099972,
+          "localization_hold_interval_s": 80.67732658600289,
+          "provisional_interval_s": 2.870914264996827,
+          "ambiguous_interval_s": 83.08064577199548,
+          "reid_invocations_this_replay": 0,
+          "reid_scope": "shared cached OSNet evidence",
+          "reid_cached_ms": {
+            "n": 1081,
+            "p50": 33.22605599896633,
+            "p95": 39.485792000050424,
+            "max": 402.2978590001003
+          },
+          "age_ms": {
+            "n": 1081,
+            "p50": 72.33645200176397,
+            "p95": 187.08503599918913,
+            "max": 355.02546100178733
+          },
+          "gap_s": {
+            "n": 1080,
+            "p50": 0.1029368030031037,
+            "p95": 0.23250105434890428,
+            "max": 0.43005065100078355
+          },
+          "identity_accuracy": null,
+          "correct_target_tracking_time_s": null,
+          "wrong_target_tracking_time_s": null,
+          "false_acceptance": null,
+          "false_rejection": null,
+          "id_switches": null,
+          "fragmentation": null,
+          "recovery_latency_s": null,
+          "live_cpu_gpu_contention": null,
+          "physical_commands": 0,
+          "hold_episodes_after_first_selection": 11,
+          "reacquired_episodes": 11,
+          "reacquisition_fraction": 1.0,
+          "policy_recovery_latency_s": {
+            "n": 11,
+            "p50": 0.8973097400012193,
+            "p95": 24.298004619498897,
+            "max": 29.99416169200049
+          },
+          "association_conflicts": 134
+        }
+      },
+      "fixed200": {
+        "A": {
+          "samples": 486,
+          "selected": 344,
+          "provisional": 0,
+          "localization": 344,
+          "reasons": {
+            "RESET": 127,
+            "PERIODIC_VERIFY": 325,
+            "PERSON_OVERLAP": 15,
+            "MOTION_DISCONTINUITY": 1,
+            "TRACK_MISSING": 18
+          },
+          "continuation_reasons": {
+            "null": 486
+          },
+          "anchor_age_s": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          },
+          "policy_ms": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          },
+          "identity_hold_interval_s": 42.158906169002876,
+          "localization_hold_interval_s": 42.158906169002876,
+          "provisional_interval_s": 0,
+          "ambiguous_interval_s": 0,
+          "reid_invocations_this_replay": 0,
+          "reid_scope": "shared cached OSNet evidence",
+          "reid_cached_ms": {
+            "n": 486,
+            "p50": 33.15911299978325,
+            "p95": 38.91617099998257,
+            "max": 53.54836900005466
+          },
+          "age_ms": {
+            "n": 486,
+            "p50": 74.7730214989133,
+            "p95": 219.02125575070386,
+            "max": 355.02546100178733
+          },
+          "gap_s": {
+            "n": 485,
+            "p50": 0.26652437099983217,
+            "p95": 0.3992680502007715,
+            "max": 0.6346621759985283
+          },
+          "identity_accuracy": null,
+          "correct_target_tracking_time_s": null,
+          "wrong_target_tracking_time_s": null,
+          "false_acceptance": null,
+          "false_rejection": null,
+          "id_switches": null,
+          "fragmentation": null,
+          "recovery_latency_s": null,
+          "live_cpu_gpu_contention": null,
+          "physical_commands": 0,
+          "hold_episodes_after_first_selection": 3,
+          "reacquired_episodes": 3,
+          "reacquisition_fraction": 1.0,
+          "policy_recovery_latency_s": {
+            "n": 3,
+            "p50": 12.496596168002725,
+            "p95": 21.286873561800167,
+            "max": 22.263571049999882
+          },
+          "association_conflicts": 0
+        },
+        "B": {
+          "samples": 486,
+          "selected": 323,
+          "provisional": 0,
+          "localization": 323,
+          "reasons": {
+            "LOW_REFERENCE_SIMILARITY": 92,
+            "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 12,
+            "CONFIRMED_MULTI_CUE": 323,
+            "PERSON_OVERLAP": 41,
+            "LOW_DETECTION_CONFIDENCE": 16,
+            "NO_OBSERVATION_UNKNOWN": 2
+          },
+          "continuation_reasons": {
+            "null": 486
+          },
+          "anchor_age_s": {
+            "n": 476,
+            "p50": 0.29670905050079455,
+            "p95": 16.197338468250564,
+            "max": 23.7009733470004
+          },
+          "policy_ms": {
+            "n": 486,
+            "p50": 0.5485424990183674,
+            "p95": 0.9186552506434964,
+            "max": 1.4143799999146722
+          },
+          "identity_hold_interval_s": 47.89392256600331,
+          "localization_hold_interval_s": 47.89392256600331,
+          "provisional_interval_s": 0,
+          "ambiguous_interval_s": 47.594540845002484,
+          "reid_invocations_this_replay": 0,
+          "reid_scope": "shared cached OSNet evidence",
+          "reid_cached_ms": {
+            "n": 486,
+            "p50": 33.15911299978325,
+            "p95": 38.91617099998257,
+            "max": 53.54836900005466
+          },
+          "age_ms": {
+            "n": 486,
+            "p50": 74.7730214989133,
+            "p95": 219.02125575070386,
+            "max": 355.02546100178733
+          },
+          "gap_s": {
+            "n": 485,
+            "p50": 0.26652437099983217,
+            "p95": 0.3992680502007715,
+            "max": 0.6346621759985283
+          },
+          "identity_accuracy": null,
+          "correct_target_tracking_time_s": null,
+          "wrong_target_tracking_time_s": null,
+          "false_acceptance": null,
+          "false_rejection": null,
+          "id_switches": null,
+          "fragmentation": null,
+          "recovery_latency_s": null,
+          "live_cpu_gpu_contention": null,
+          "physical_commands": 0,
+          "hold_episodes_after_first_selection": 4,
+          "reacquired_episodes": 4,
+          "reacquisition_fraction": 1.0,
+          "policy_recovery_latency_s": {
+            "n": 4,
+            "p50": 10.545376786001725,
+            "p95": 21.76644279744923,
+            "max": 23.40229808499862
+          },
+          "association_conflicts": 0
+        },
+        "C": {
+          "samples": 486,
+          "selected": 178,
+          "provisional": 0,
+          "localization": 178,
+          "reasons": {
+            "LOW_REFERENCE_SIMILARITY": 177,
+            "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 23,
+            "CONFIRMED_MULTI_CUE": 178,
+            "UNCERTAIN_CROP_QUALITY": 49,
+            "PERSON_OVERLAP": 41,
+            "LOW_DETECTION_CONFIDENCE": 16,
+            "NO_OBSERVATION_UNKNOWN": 2
+          },
+          "continuation_reasons": {
+            "null": 486
+          },
+          "anchor_age_s": {
+            "n": 476,
+            "p50": 3.3823128855001414,
+            "p95": 22.63053930324986,
+            "max": 30.134174181999697
+          },
+          "policy_ms": {
+            "n": 486,
+            "p50": 1.145417001680471,
+            "p95": 2.0461405019887025,
+            "max": 150.70945999468677
+          },
+          "identity_hold_interval_s": 86.90512182900056,
+          "localization_hold_interval_s": 86.90512182900056,
+          "provisional_interval_s": 0,
+          "ambiguous_interval_s": 86.60574010799974,
+          "reid_invocations_this_replay": 0,
+          "reid_scope": "shared cached OSNet evidence",
+          "reid_cached_ms": {
+            "n": 486,
+            "p50": 33.15911299978325,
+            "p95": 38.91617099998257,
+            "max": 53.54836900005466
+          },
+          "age_ms": {
+            "n": 486,
+            "p50": 74.7730214989133,
+            "p95": 219.02125575070386,
+            "max": 355.02546100178733
+          },
+          "gap_s": {
+            "n": 485,
+            "p50": 0.26652437099983217,
+            "p95": 0.3992680502007715,
+            "max": 0.6346621759985283
+          },
+          "identity_accuracy": null,
+          "correct_target_tracking_time_s": null,
+          "wrong_target_tracking_time_s": null,
+          "false_acceptance": null,
+          "false_rejection": null,
+          "id_switches": null,
+          "fragmentation": null,
+          "recovery_latency_s": null,
+          "live_cpu_gpu_contention": null,
+          "physical_commands": 0,
+          "hold_episodes_after_first_selection": 8,
+          "reacquired_episodes": 8,
+          "reacquisition_fraction": 1.0,
+          "policy_recovery_latency_s": {
+            "n": 8,
+            "p50": 7.249299170502127,
+            "p95": 25.96424539754916,
+            "max": 29.837383836998924
+          },
+          "association_conflicts": 0
+        },
+        "E1": {
+          "samples": 486,
+          "selected": 178,
+          "provisional": 7,
+          "localization": 185,
+          "reasons": {
+            "LOW_REFERENCE_SIMILARITY": 177,
+            "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 23,
+            "CONFIRMED_MULTI_CUE": 178,
+            "UNCERTAIN_CROP_QUALITY": 49,
+            "PERSON_OVERLAP": 41,
+            "LOW_DETECTION_CONFIDENCE": 16,
+            "NO_OBSERVATION_UNKNOWN": 2
+          },
+          "continuation_reasons": {
+            "NO_TRUSTED_ANCHOR": 9,
+            "null": 178,
+            "APPROACHING_COMPETITOR": 32,
+            "OVERLAP_RISK": 40,
+            "REVERIFY_AFTER_OVERLAP_RISK": 1,
+            "TRACK_ID_CHANGED_OR_DUPLICATED": 118,
+            "BOUNDED_QUALITY_CONTINUATION": 7,
+            "GATE_NOT_IN_ABLATION": 5,
+            "ANCHOR_EXPIRED": 6,
+            "REVERIFY_AFTER_ANCHOR_EXPIRED": 84,
+            "UNSTABLE_TRUSTED_MOTION": 2,
+            "REVERIFY_AFTER_APPROACHING_COMPETITOR": 2,
+            "NO_OBSERVED_LOCALIZATION": 2
+          },
+          "anchor_age_s": {
+            "n": 476,
+            "p50": 3.3823128855001414,
+            "p95": 22.63053930324986,
+            "max": 30.134174181999697
+          },
+          "policy_ms": {
+            "n": 486,
+            "p50": 1.2770349967468064,
+            "p95": 2.301605749380542,
+            "max": 7.468465999409091
+          },
+          "identity_hold_interval_s": 86.90512182900056,
+          "localization_hold_interval_s": 85.17210614000214,
+          "provisional_interval_s": 1.733015688998421,
+          "ambiguous_interval_s": 86.60574010799974,
+          "reid_invocations_this_replay": 0,
+          "reid_scope": "shared cached OSNet evidence",
+          "reid_cached_ms": {
+            "n": 486,
+            "p50": 33.15911299978325,
+            "p95": 38.91617099998257,
+            "max": 53.54836900005466
+          },
+          "age_ms": {
+            "n": 486,
+            "p50": 74.7730214989133,
+            "p95": 219.02125575070386,
+            "max": 355.02546100178733
+          },
+          "gap_s": {
+            "n": 485,
+            "p50": 0.26652437099983217,
+            "p95": 0.3992680502007715,
+            "max": 0.6346621759985283
+          },
+          "identity_accuracy": null,
+          "correct_target_tracking_time_s": null,
+          "wrong_target_tracking_time_s": null,
+          "false_acceptance": null,
+          "false_rejection": null,
+          "id_switches": null,
+          "fragmentation": null,
+          "recovery_latency_s": null,
+          "live_cpu_gpu_contention": null,
+          "physical_commands": 0,
+          "hold_episodes_after_first_selection": 8,
+          "reacquired_episodes": 8,
+          "reacquisition_fraction": 1.0,
+          "policy_recovery_latency_s": {
+            "n": 8,
+            "p50": 7.249299170502127,
+            "p95": 25.96424539754916,
+            "max": 29.837383836998924
+          },
+          "association_conflicts": 41
+        },
+        "E2": {
+          "samples": 486,
+          "selected": 178,
+          "provisional": 1,
+          "localization": 179,
+          "reasons": {
+            "LOW_REFERENCE_SIMILARITY": 177,
+            "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 23,
+            "CONFIRMED_MULTI_CUE": 178,
+            "UNCERTAIN_CROP_QUALITY": 49,
+            "PERSON_OVERLAP": 41,
+            "LOW_DETECTION_CONFIDENCE": 16,
+            "NO_OBSERVATION_UNKNOWN": 2
+          },
+          "continuation_reasons": {
+            "NO_TRUSTED_ANCHOR": 9,
+            "null": 178,
+            "APPROACHING_COMPETITOR": 32,
+            "OVERLAP_RISK": 40,
+            "REVERIFY_AFTER_OVERLAP_RISK": 1,
+            "TRACK_ID_CHANGED_OR_DUPLICATED": 118,
+            "GATE_NOT_IN_ABLATION": 11,
+            "ANCHOR_EXPIRED": 6,
+            "REVERIFY_AFTER_ANCHOR_EXPIRED": 84,
+            "UNSTABLE_TRUSTED_MOTION": 2,
+            "REVERIFY_AFTER_APPROACHING_COMPETITOR": 2,
+            "NO_OBSERVED_LOCALIZATION": 2,
+            "BOUNDED_SIMILARITY_CONTINUATION": 1
+          },
+          "anchor_age_s": {
+            "n": 476,
+            "p50": 3.3823128855001414,
+            "p95": 22.63053930324986,
+            "max": 30.134174181999697
+          },
+          "policy_ms": {
+            "n": 486,
+            "p50": 1.2800730000890326,
+            "p95": 2.2933482450753218,
+            "max": 6.160386001283769
+          },
+          "identity_hold_interval_s": 86.90512182900056,
+          "localization_hold_interval_s": 86.63704681699892,
+          "provisional_interval_s": 0.2680750120016455,
+          "ambiguous_interval_s": 86.60574010799974,
+          "reid_invocations_this_replay": 0,
+          "reid_scope": "shared cached OSNet evidence",
+          "reid_cached_ms": {
+            "n": 486,
+            "p50": 33.15911299978325,
+            "p95": 38.91617099998257,
+            "max": 53.54836900005466
+          },
+          "age_ms": {
+            "n": 486,
+            "p50": 74.7730214989133,
+            "p95": 219.02125575070386,
+            "max": 355.02546100178733
+          },
+          "gap_s": {
+            "n": 485,
+            "p50": 0.26652437099983217,
+            "p95": 0.3992680502007715,
+            "max": 0.6346621759985283
+          },
+          "identity_accuracy": null,
+          "correct_target_tracking_time_s": null,
+          "wrong_target_tracking_time_s": null,
+          "false_acceptance": null,
+          "false_rejection": null,
+          "id_switches": null,
+          "fragmentation": null,
+          "recovery_latency_s": null,
+          "live_cpu_gpu_contention": null,
+          "physical_commands": 0,
+          "hold_episodes_after_first_selection": 8,
+          "reacquired_episodes": 8,
+          "reacquisition_fraction": 1.0,
+          "policy_recovery_latency_s": {
+            "n": 8,
+            "p50": 7.249299170502127,
+            "p95": 25.96424539754916,
+            "max": 29.837383836998924
+          },
+          "association_conflicts": 41
+        },
+        "E3": {
+          "samples": 486,
+          "selected": 178,
+          "provisional": 8,
+          "localization": 186,
+          "reasons": {
+            "LOW_REFERENCE_SIMILARITY": 177,
+            "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 23,
+            "CONFIRMED_MULTI_CUE": 178,
+            "UNCERTAIN_CROP_QUALITY": 49,
+            "PERSON_OVERLAP": 41,
+            "LOW_DETECTION_CONFIDENCE": 16,
+            "NO_OBSERVATION_UNKNOWN": 2
+          },
+          "continuation_reasons": {
+            "NO_TRUSTED_ANCHOR": 9,
+            "null": 178,
+            "APPROACHING_COMPETITOR": 32,
+            "OVERLAP_RISK": 40,
+            "REVERIFY_AFTER_OVERLAP_RISK": 1,
+            "TRACK_ID_CHANGED_OR_DUPLICATED": 118,
+            "BOUNDED_QUALITY_CONTINUATION": 7,
+            "GATE_NOT_IN_ABLATION": 4,
+            "ANCHOR_EXPIRED": 6,
+            "REVERIFY_AFTER_ANCHOR_EXPIRED": 84,
+            "UNSTABLE_TRUSTED_MOTION": 2,
+            "REVERIFY_AFTER_APPROACHING_COMPETITOR": 2,
+            "NO_OBSERVED_LOCALIZATION": 2,
+            "BOUNDED_SIMILARITY_CONTINUATION": 1
+          },
+          "anchor_age_s": {
+            "n": 476,
+            "p50": 3.3823128855001414,
+            "p95": 22.63053930324986,
+            "max": 30.134174181999697
+          },
+          "policy_ms": {
+            "n": 486,
+            "p50": 1.2735425007122103,
+            "p95": 2.3101969964045566,
+            "max": 3.3571189997019246
+          },
+          "identity_hold_interval_s": 86.90512182900056,
+          "localization_hold_interval_s": 84.9040311280005,
+          "provisional_interval_s": 2.0010907010000665,
+          "ambiguous_interval_s": 86.60574010799974,
+          "reid_invocations_this_replay": 0,
+          "reid_scope": "shared cached OSNet evidence",
+          "reid_cached_ms": {
+            "n": 486,
+            "p50": 33.15911299978325,
+            "p95": 38.91617099998257,
+            "max": 53.54836900005466
+          },
+          "age_ms": {
+            "n": 486,
+            "p50": 74.7730214989133,
+            "p95": 219.02125575070386,
+            "max": 355.02546100178733
+          },
+          "gap_s": {
+            "n": 485,
+            "p50": 0.26652437099983217,
+            "p95": 0.3992680502007715,
+            "max": 0.6346621759985283
+          },
+          "identity_accuracy": null,
+          "correct_target_tracking_time_s": null,
+          "wrong_target_tracking_time_s": null,
+          "false_acceptance": null,
+          "false_rejection": null,
+          "id_switches": null,
+          "fragmentation": null,
+          "recovery_latency_s": null,
+          "live_cpu_gpu_contention": null,
+          "physical_commands": 0,
+          "hold_episodes_after_first_selection": 8,
+          "reacquired_episodes": 8,
+          "reacquisition_fraction": 1.0,
+          "policy_recovery_latency_s": {
+            "n": 8,
+            "p50": 7.249299170502127,
+            "p95": 25.96424539754916,
+            "max": 29.837383836998924
+          },
+          "association_conflicts": 41
+        }
+      }
+    }
+  },
+  "frozen_source_sha256": {
+    "tools/identity_continuity.py": "115551929909d518b5f0433b8266b6f21ded8cc5aff4bc8cf7324d269196e952",
+    "tools/benchmark_identity_phase2b.py": "48b751e2842974713486b6e34ee2fd4af4696e5a1de5c74ff8983e6841ea783c",
+    "ai/target_identity.py": "8376b7da84d5617154231da1518af3334714c305d87be5ac35a4bc1fc686ac2a",
+    "config.py": "3814e6250f48a5be0370556893da32536edb5dd9e5dbbc8cdbe4b08570732fdb"
+  },
+  "ground_truth": false,
+  "physical_commands": 0,
+  "split": "Separate recordings; retrospective holdout previously inspected, not unseen validation",
+  "E3": "Exploratory combination only; not endorsed without independent GT"
+}

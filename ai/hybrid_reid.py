@@ -5,10 +5,12 @@ from concurrent.futures import Future
 import threading
 import math
 import time
+import traceback
 from uuid import uuid4
 from ai.reid_target import ReIDTargetSelector, iou
 from telemetry import latency
-from ai.overlap_policy import OverlapMemory, overlap_geometry
+from ai.overlap_policy import OverlapMemory, overlap_geometry, minor_contact
+from ai.approach_risk import ApproachRisk
 
 
 class HybridReIDTargetSelector(ReIDTargetSelector):
@@ -25,7 +27,12 @@ class HybridReIDTargetSelector(ReIDTargetSelector):
         self.pending_id = None
         self.pending_box = None
         self.pending_count = 0
+        self._confirmation_track = None
+        self._confirmation_time = None
+        self._pending_time = None
         self._overlap_memory = OverlapMemory()
+        self._approach_risk = ApproachRisk()
+        self._preoverlap_risk = False
         self._hold_scan_at = float("-inf")
         self._weak_overlap_active = False
         self._previous_observation_time = None
@@ -44,7 +51,7 @@ class HybridReIDTargetSelector(ReIDTargetSelector):
         # One bounded job. The background scorer sees a snapshot, never live state.
         if getattr(self, '_verification', None) is not None:
             return
-        if getattr(self.cfg,'REID_CANDIDATE_AWARE',False):
+        if getattr(self.cfg,'REID_CANDIDATE_AWARE',False) and not self._preoverlap_risk:
             target = next((p for p in persons if p.get('track_id')==self.track_id),None)
             if target is None:return
             persons = [p for p in persons if p is target or
@@ -74,6 +81,13 @@ class HybridReIDTargetSelector(ReIDTargetSelector):
                     inference_timestamp=time.monotonic())
                 future.set_result(scores)
             except Exception as exc:
+                # Log at the producer, even if a later session rejects the future.
+                latency.profiler.event('REID_VERIFICATION_EXCEPTION',
+                    frame_id=scorer.frame_id, lock_session_id=token[1],
+                    target_track_id=token[2], reid_phase='TARGET_LOCKED_PERIODIC_VERIFY',
+                    error_type=type(exc).__name__, error_message=str(exc),
+                    traceback=traceback.format_exc(),
+                    superseded=self.verification_epoch != token[0])
                 future.set_exception(exc)
         context = copy_context()
         threading.Thread(target=lambda: context.run(run), name='reid-verification', daemon=True).start()
@@ -137,7 +151,8 @@ class HybridReIDTargetSelector(ReIDTargetSelector):
             # Only identical copies of one tracker observation are redundant.
             same = p is candidate or (p.get('track_id') == candidate.get('track_id')
                                      and tuple(b) == tuple(box))
-            unsafe |= not same and overlap >= self.cfg.REID_CROSSING_OVERLAP
+            unsafe |= (not same and overlap >= self.cfg.REID_CROSSING_OVERLAP
+                       and not minor_contact(overlap_geometry(box, b), self.cfg))
             rows.append(dict(track_id=p.get('track_id'), bbox=b, iou=iou(box,b),
                 overlap_ratio=overlap, similarity=p.get('reid_score'), confidence=p.get('confidence')))
         now = getattr(self, '_diagnostic_observation_time', self.observation_time) or 0.
@@ -157,16 +172,59 @@ class HybridReIDTargetSelector(ReIDTargetSelector):
             if unsafe:
                 latency.profiler.count('overlap_policy_'+reason)
             return blocked
+        self.overlap_reason = 'GEOMETRY_OVERLAP' if unsafe else 'NO_AMBIGUOUS_OVERLAP'
         return bool(unsafe)
 
     def acquisition_allowed(self, candidate, persons):
         # Same geometry gate before confirmation as during continuity/recovery.
         allowed = not self._candidate_overlap(candidate, self._observed_persons)
+        if allowed:
+            now = self._diagnostic_observation_time
+            if (candidate.get('track_id') != self._confirmation_track
+                    or self._confirmation_time is None
+                    or not 0 <= now-self._confirmation_time <= self.cfg.REID_CONFIRM_MAX_GAP):
+                self.confirm = 0
+                self.candidate_box = None
+            self._confirmation_track = candidate.get('track_id')
+            self._confirmation_time = now
         if not allowed:
             self.transition_reason = 'ACQUISITION_OVERLAP'
         return allowed
 
     def select_person(self, frame, persons, now):
+        before = self.stage
+        counts = dict(acquire=self.confirm, recovery=self.pending_count)
+        result = self._select_person(frame, persons, now)
+        if getattr(self.cfg, 'REID_OVERLAP_DIAGNOSTICS', False):
+            # Bounded sampling; decisions remain independent of diagnostics.
+            if now-getattr(self, '_last_decision_log', float('-inf')) >= .5:
+                self._last_decision_log = now
+                target = result or next((p for p in persons if p.get('track_id') == self.track_id), None)
+                if target is None and persons:
+                    target = max(persons, key=lambda p: p.get('reid_score', float('-inf')))
+                pairs = [] if target is None else [dict(track_id=p.get('track_id'), bbox=p['bbox'],
+                    **overlap_geometry(target['bbox'], p['bbox'])) for p in persons if p is not target]
+                latency.profiler.event('OVERLAP_DECISION', frame_id=self.frame_id,
+                    observation_timestamp=now, target_track_id=self.track_id,
+                    candidate_track_id=target.get('track_id') if target else None,
+                    target_bbox=target['bbox'] if target else None, competitors=pairs,
+                    continuity_confidence='trusted' if result is not None and self.locked else 'unconfirmed',
+                    previous_observation_timestamp=self._previous_observation_time,
+                    last_positive_verify=self.last_positive_verify,
+                    negative_verifications=self.negative_verifications,
+                    confirmation_admitted=(self.confirm > counts['acquire'] or self.pending_count > counts['recovery']),
+                    similarity=self.top1, margin=self.margin,
+                    confirmation_before=counts,
+                    confirmation_after=dict(acquire=self.confirm, recovery=self.pending_count),
+                    candidate_accepted=result is not None, overlap_reason=getattr(self, 'overlap_reason', None),
+                    decision_reason=self.transition_reason, previous_state=before, new_state=self.stage,
+                    detection_exists=bool(persons), target_track_exists=any(p.get('track_id')==self.track_id for p in persons),
+                    identity_confirmed=self.locked and not self.crossing_hold,
+                    predicted_only=False, genuinely_lost=not self.locked and self.reacquiring,
+                    ptz_control_allowed=result is not None and self.locked and not self.crossing_hold)
+        return result
+
+    def _select_person(self, frame, persons, now):
         # Low-score detections maintain ByteTrack motion, never authorize a target.
         eligible = [p for p in persons if p.get('confidence', 1.) >= self.cfg.PERSON_CONF_THRESHOLD]
         if self.observation_time is not None and now <= self.observation_time:
@@ -210,6 +268,8 @@ class HybridReIDTargetSelector(ReIDTargetSelector):
         self.observation_time = now
         self.just_locked = False
         current = next((p for p in persons if p.get('track_id') == self.track_id), None)
+        self._preoverlap_risk = self._approach_risk.assess(current,persons,
+            (self.lock_session_id,self.track_id),now)
         overlapping = current is not None and self._candidate_overlap(current, persons)
         jump = (current is not None and self.person_box is not None
                 and iou(current['bbox'], self.person_box) < self.cfg.REID_TRACK_IOU)
@@ -224,7 +284,12 @@ class HybridReIDTargetSelector(ReIDTargetSelector):
             self.tracking_status = 'TRACKED'
             weak_due = (getattr(self,'_weak_overlap_active',False) and self._overlap_memory.since is not None
                         and self.last_verify < self._overlap_memory.since)
-            if weak_due or now-self.last_verify >= self.cfg.REID_VERIFY_INTERVAL:
+            approach_due = self._preoverlap_risk and now-self.last_verify >= .2
+            if approach_due:
+                latency.profiler.event('TARGET_APPROACH_REVERIFY',frame_id=self.frame_id,
+                    target_track_id=self.track_id,lock_session_id=self.lock_session_id,
+                    evidence='geometry_risk_not_identity_truth')
+            if weak_due or approach_due or now-self.last_verify >= self.cfg.REID_VERIFY_INTERVAL:
                 self._start_verification(frame, persons, now)
             return current
         recovering = True
@@ -256,9 +321,12 @@ class HybridReIDTargetSelector(ReIDTargetSelector):
         changed = candidate.get('track_id') != self.track_id
         if recovering or changed:
             continuous = (self.pending_id == candidate.get('track_id') and self.pending_box is not None
-                          and iou(self.pending_box, candidate['bbox']) >= self.cfg.REID_CONFIRM_IOU)
+                          and iou(self.pending_box, candidate['bbox']) >= self.cfg.REID_CONFIRM_IOU
+                          and self._pending_time is not None
+                          and 0 <= now-self._pending_time <= self.cfg.REID_CONFIRM_MAX_GAP)
             self.pending_count = self.pending_count+1 if continuous else 1
             self.pending_id, self.pending_box = candidate.get('track_id'), candidate['bbox']
+            self._pending_time = now
             if self.pending_count < self.cfg.REID_CONFIRM_FRAMES:
                 return None
             # Rotate authorization even when a recovered ByteTrack ID is unchanged.

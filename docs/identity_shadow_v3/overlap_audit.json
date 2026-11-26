@@ -1,0 +1,76 @@
+{
+  "counts": {
+    "overlap_baseline_only": 196,
+    "all_conflicts_minor_by_current_baseline_config": 92,
+    "top_reference_at_least_reacquire": 119
+  },
+  "examples": [
+    {
+      "frame_id": 1844,
+      "best": {
+        "candidate_id": "1844:0",
+        "track_id": 19,
+        "reference_similarity": 0.7192507963905354,
+        "gallery_similarity": null,
+        "reason": "PERSON_OVERLAP",
+        "accepted": false,
+        "reference_threshold": 0.5,
+        "continuity_mode": "continuing"
+      },
+      "conflicts": [
+        {
+          "candidate_id": "1844:1",
+          "iou": 0.021603549154503954,
+          "overlap": 0.1679160419790105,
+          "target_cover": 0.024193548387096774,
+          "competitor_cover": 0.1679160419790105
+        }
+      ]
+    },
+    {
+      "frame_id": 5355,
+      "best": {
+        "candidate_id": "5355:0",
+        "track_id": 40,
+        "reference_similarity": 0.6369308757672056,
+        "gallery_similarity": null,
+        "reason": "PERSON_OVERLAP",
+        "accepted": false,
+        "reference_threshold": 0.5,
+        "continuity_mode": "continuing"
+      },
+      "conflicts": [
+        {
+          "candidate_id": "5355:3",
+          "iou": 0.06563923832344025,
+          "overlap": 0.515908118133828,
+          "target_cover": 0.06994738471061591,
+          "competitor_cover": 0.515908118133828
+        }
+      ]
+    },
+    {
+      "frame_id": 5683,
+      "best": {
+        "candidate_id": "5683:0",
+        "track_id": 53,
+        "reference_similarity": 0.6602344276089991,
+        "gallery_similarity": null,
+        "reason": "PERSON_OVERLAP",
+        "accepted": false,
+        "reference_threshold": 0.7,
+        "continuity_mode": "reacquire"
+      },
+      "conflicts": [
+        {
+          "candidate_id": "5683:1",
+          "iou": 0.0580255298399596,
+          "overlap": 0.258776017396707,
+          "target_cover": 0.06959209674387519,
+          "competitor_cover": 0.258776017396707
+        }
+      ]
+    }
+  ],
+  "note": "Read-only geometry audit. No threshold/policy change; temporal baseline exceptions require more than geometry."
+}

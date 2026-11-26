@@ -1,0 +1,13 @@
+{
+  "original_files_checked": 167,
+  "original_files_changed": [],
+  "new_files": {
+    "tools/identity_continuity.py": "115551929909d518b5f0433b8266b6f21ded8cc5aff4bc8cf7324d269196e952",
+    "tools/phase2b_audit.py": "6b5f188fa6f1ce9fa92c1cfae86c2bacd406f426f4938a366d7783a44bc4e58f",
+    "tools/phase2b_review.py": "66618c573f0c27aa1660673866eb11e7c8759d9800c35b380ef4cfa39b45264a",
+    "tools/phase2b_review_template.html": "f92d3549531fa6f705d1160fd8f7e62376252df70a395b598ece3bbaa87dcc46",
+    "tools/phase2b_evaluate.py": "e75b6f786968188cb19e2ae542bbeb574beebca6eea274734b8e5a0319d96e52",
+    "tools/benchmark_identity_phase2b.py": "48b751e2842974713486b6e34ee2fd4af4696e5a1de5c74ff8983e6841ea783c",
+    "test/test_identity_continuity.py": "a5c0d77c364f569e146d54a131cfb194e3c8e5678e4b0283951c0c64b2c492ee"
+  }
+}

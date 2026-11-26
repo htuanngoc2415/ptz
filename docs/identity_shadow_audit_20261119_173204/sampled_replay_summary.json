@@ -1,0 +1,38 @@
+{
+  "sampled_counts": {
+    "replayed": 255,
+    "selected": 10,
+    "waiting_count_1": 41,
+    "new_chain_no_pending": 22,
+    "broken_pending_chain": 19,
+    "broken_gap": 19,
+    "broken_iou": 13,
+    "broken_appearance": 0,
+    "waiting_count_2": 13
+  },
+  "mismatches": [],
+  "reset_boundaries": {
+    "1889": 1,
+    "2768": 2,
+    "3575": 3,
+    "4866": 4,
+    "5192": 5
+  },
+  "dense_reasons": {
+    "LOW_REFERENCE_SIMILARITY": 254,
+    "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 41,
+    "CONFIRMED_MULTI_CUE": 1055,
+    "LOW_DETECTION_CONFIDENCE": 8,
+    "PERSON_OVERLAP": 142,
+    "AMBIGUOUS_MARGIN": 5
+  },
+  "dense_at_recorded_samples": {
+    "same_choice": 176,
+    "dense_selected_at_actual_hold": 79,
+    "dense_hold_at_actual_selected": 0,
+    "both_select_different": 0
+  },
+  "scope": "255 available PNG sample times; four missing images are outside capture bounds and logged LOW_REFERENCE_SIMILARITY. Dense counterfactual resets at first completed frame of each new serial; not exact live reset/scheduler replay.",
+  "ground_truth": false,
+  "physical_commands": 0
+}

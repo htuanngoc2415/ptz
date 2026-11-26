@@ -1,0 +1,1528 @@
+{
+  "provenance": "Scripted boxes and appearance with synthetic identity labels; no model accuracy or live stability claims.",
+  "scenarios": {
+    "rotation_dip": {
+      "branches": {
+        "legacy": {
+          "metrics": {
+            "selected_observation_seconds": 8.8,
+            "loss_count": 1,
+            "recovery_count": 1,
+            "recovery_durations_s": [
+              0.8999999999999995
+            ],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 8.8,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 21,
+          "reid_candidate_evaluations": 21,
+          "configuration": {
+            "gmc": false,
+            "corrected": false,
+            "optimized": false
+          },
+          "tracker_mean_ms": 0.41413562996240216,
+          "tracker_p95_ms": 0.573019000239583,
+          "unreliable_observations": 0,
+          "provisional_observations": 0,
+          "gmc_applied_frames": 0,
+          "denial_reasons": null,
+          "association_selection_mean_ms": 0.5262489299639128,
+          "association_selection_p95_ms": 0.9867339495031044
+        },
+        "identity_baseline": {
+          "metrics": {
+            "selected_observation_seconds": 9.2,
+            "loss_count": 0,
+            "recovery_count": 0,
+            "recovery_durations_s": [],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 9.2,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 20,
+          "reid_candidate_evaluations": 20,
+          "configuration": {
+            "gmc": true,
+            "corrected": false,
+            "optimized": false
+          },
+          "tracker_mean_ms": 9.319400610002049,
+          "tracker_p95_ms": 10.527786648981419,
+          "unreliable_observations": 1,
+          "provisional_observations": 0,
+          "gmc_applied_frames": 99,
+          "denial_reasons": {
+            "RESET": 1,
+            "CONFIRMING_IDENTITY": 6
+          },
+          "association_selection_mean_ms": 9.54277444005129,
+          "association_selection_p95_ms": 10.704472849465674
+        },
+        "identity_no_gmc": {
+          "metrics": {
+            "selected_observation_seconds": 9.2,
+            "loss_count": 0,
+            "recovery_count": 0,
+            "recovery_durations_s": [],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 9.2,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 34,
+          "reid_candidate_evaluations": 34,
+          "configuration": {
+            "gmc": false,
+            "corrected": false,
+            "optimized": false
+          },
+          "tracker_mean_ms": 0.5668090800645587,
+          "tracker_p95_ms": 0.780785749793722,
+          "unreliable_observations": 1,
+          "provisional_observations": 0,
+          "gmc_applied_frames": 0,
+          "denial_reasons": {
+            "RESET": 1,
+            "CONFIRMING_IDENTITY": 6
+          },
+          "association_selection_mean_ms": 0.8110478700473323,
+          "association_selection_p95_ms": 1.1709345995768672
+        },
+        "identity_corrected": {
+          "metrics": {
+            "selected_observation_seconds": 9.2,
+            "loss_count": 0,
+            "recovery_count": 0,
+            "recovery_durations_s": [],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 9.2,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 20,
+          "reid_candidate_evaluations": 20,
+          "configuration": {
+            "gmc": true,
+            "corrected": true,
+            "optimized": false
+          },
+          "tracker_mean_ms": 9.459365340044315,
+          "tracker_p95_ms": 12.228325649994076,
+          "unreliable_observations": 1,
+          "provisional_observations": 0,
+          "gmc_applied_frames": 99,
+          "denial_reasons": {
+            "RESET": 1,
+            "CONFIRMING_IDENTITY": 6
+          },
+          "association_selection_mean_ms": 9.692154669955926,
+          "association_selection_p95_ms": 12.417949898826919
+        },
+        "identity": {
+          "metrics": {
+            "selected_observation_seconds": 9.2,
+            "loss_count": 0,
+            "recovery_count": 0,
+            "recovery_durations_s": [],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 9.2,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 20,
+          "reid_candidate_evaluations": 20,
+          "configuration": {
+            "gmc": true,
+            "corrected": true,
+            "optimized": true
+          },
+          "tracker_mean_ms": 9.10510300001988,
+          "tracker_p95_ms": 11.471164300201053,
+          "unreliable_observations": 1,
+          "provisional_observations": 0,
+          "gmc_applied_frames": 99,
+          "denial_reasons": {
+            "RESET": 1,
+            "CONFIRMING_IDENTITY": 6
+          },
+          "association_selection_mean_ms": 9.342212169995037,
+          "association_selection_p95_ms": 11.69514414978039
+        }
+      },
+      "physical_ptz_commands": 0,
+      "timing_scope": "Cached evidence association/selection and optional image GMC; excludes YOLO/OSNet and real async contention",
+      "production_acceptance": false
+    },
+    "weak_contact": {
+      "branches": {
+        "legacy": {
+          "metrics": {
+            "selected_observation_seconds": 9.7,
+            "loss_count": 0,
+            "recovery_count": 0,
+            "recovery_durations_s": [],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 9.7,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 12,
+          "reid_candidate_evaluations": 17,
+          "configuration": {
+            "gmc": false,
+            "corrected": false,
+            "optimized": false
+          },
+          "tracker_mean_ms": 0.39969271989320987,
+          "tracker_p95_ms": 0.5591806992015332,
+          "unreliable_observations": 0,
+          "provisional_observations": 0,
+          "gmc_applied_frames": 0,
+          "denial_reasons": null,
+          "association_selection_mean_ms": 0.48855439003091305,
+          "association_selection_p95_ms": 0.8509892004440188
+        },
+        "identity_baseline": {
+          "metrics": {
+            "selected_observation_seconds": 3.6,
+            "loss_count": 1,
+            "recovery_count": 1,
+            "recovery_durations_s": [
+              5.6
+            ],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 3.6,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 26,
+          "reid_candidate_evaluations": 43,
+          "configuration": {
+            "gmc": true,
+            "corrected": false,
+            "optimized": false
+          },
+          "tracker_mean_ms": 9.109594519850361,
+          "tracker_p95_ms": 10.662293648601917,
+          "unreliable_observations": 3,
+          "provisional_observations": 1,
+          "gmc_applied_frames": 99,
+          "denial_reasons": {
+            "RESET": 20,
+            "CONFIRMING_IDENTITY": 12,
+            "PERSON_OVERLAP": 21,
+            "AMBIGUOUS_IDENTITY": 10
+          },
+          "association_selection_mean_ms": 9.368167250049737,
+          "association_selection_p95_ms": 10.879883900906862
+        },
+        "identity_no_gmc": {
+          "metrics": {
+            "selected_observation_seconds": 3.6,
+            "loss_count": 1,
+            "recovery_count": 1,
+            "recovery_durations_s": [
+              5.6
+            ],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 3.6,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 34,
+          "reid_candidate_evaluations": 51,
+          "configuration": {
+            "gmc": false,
+            "corrected": false,
+            "optimized": false
+          },
+          "tracker_mean_ms": 0.6770560498807754,
+          "tracker_p95_ms": 0.8760068991250591,
+          "unreliable_observations": 3,
+          "provisional_observations": 1,
+          "gmc_applied_frames": 0,
+          "denial_reasons": {
+            "RESET": 20,
+            "CONFIRMING_IDENTITY": 12,
+            "PERSON_OVERLAP": 21,
+            "AMBIGUOUS_IDENTITY": 10
+          },
+          "association_selection_mean_ms": 0.9324167199156363,
+          "association_selection_p95_ms": 1.405642751160485
+        },
+        "identity_corrected": {
+          "metrics": {
+            "selected_observation_seconds": 9.2,
+            "loss_count": 0,
+            "recovery_count": 0,
+            "recovery_durations_s": [],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 9.2,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 25,
+          "reid_candidate_evaluations": 43,
+          "configuration": {
+            "gmc": true,
+            "corrected": true,
+            "optimized": false
+          },
+          "tracker_mean_ms": 9.521216520024609,
+          "tracker_p95_ms": 10.853063700324128,
+          "unreliable_observations": 3,
+          "provisional_observations": 1,
+          "gmc_applied_frames": 99,
+          "denial_reasons": {
+            "RESET": 1,
+            "CONFIRMING_IDENTITY": 6
+          },
+          "association_selection_mean_ms": 9.830133070063312,
+          "association_selection_p95_ms": 11.146444399491884
+        },
+        "identity": {
+          "metrics": {
+            "selected_observation_seconds": 9.2,
+            "loss_count": 0,
+            "recovery_count": 0,
+            "recovery_durations_s": [],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 9.2,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 25,
+          "reid_candidate_evaluations": 43,
+          "configuration": {
+            "gmc": true,
+            "corrected": true,
+            "optimized": true
+          },
+          "tracker_mean_ms": 9.58355806000327,
+          "tracker_p95_ms": 10.906609400080924,
+          "unreliable_observations": 3,
+          "provisional_observations": 1,
+          "gmc_applied_frames": 99,
+          "denial_reasons": {
+            "RESET": 1,
+            "CONFIRMING_IDENTITY": 6
+          },
+          "association_selection_mean_ms": 9.877297660186741,
+          "association_selection_p95_ms": 11.470186951191863
+        }
+      },
+      "physical_ptz_commands": 0,
+      "timing_scope": "Cached evidence association/selection and optional image GMC; excludes YOLO/OSNet and real async contention",
+      "production_acceptance": false
+    },
+    "crossing": {
+      "branches": {
+        "legacy": {
+          "metrics": {
+            "selected_observation_seconds": 7.6,
+            "loss_count": 1,
+            "recovery_count": 1,
+            "recovery_durations_s": [
+              2.1
+            ],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 7.6,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 12,
+          "reid_candidate_evaluations": 12,
+          "configuration": {
+            "gmc": false,
+            "corrected": false,
+            "optimized": false
+          },
+          "tracker_mean_ms": 0.41071327001191094,
+          "tracker_p95_ms": 0.6089012498705415,
+          "unreliable_observations": 0,
+          "provisional_observations": 0,
+          "gmc_applied_frames": 0,
+          "denial_reasons": null,
+          "association_selection_mean_ms": 0.4930453800261603,
+          "association_selection_p95_ms": 0.7960677487062638
+        },
+        "identity_baseline": {
+          "metrics": {
+            "selected_observation_seconds": 6.3999999999999995,
+            "loss_count": 1,
+            "recovery_count": 1,
+            "recovery_durations_s": [
+              2.8000000000000007
+            ],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 6.3999999999999995,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 19,
+          "reid_candidate_evaluations": 26,
+          "configuration": {
+            "gmc": true,
+            "corrected": false,
+            "optimized": false
+          },
+          "tracker_mean_ms": 9.425574269989738,
+          "tracker_p95_ms": 10.580133449911955,
+          "unreliable_observations": 3,
+          "provisional_observations": 1,
+          "gmc_applied_frames": 99,
+          "denial_reasons": {
+            "RESET": 1,
+            "CONFIRMING_IDENTITY": 6,
+            "PERSON_OVERLAP": 13,
+            "AMBIGUOUS_IDENTITY": 7,
+            "AWAITING_IDENTITY_RECONFIRMATION": 8
+          },
+          "association_selection_mean_ms": 9.655062880156038,
+          "association_selection_p95_ms": 10.70445830009703
+        },
+        "identity_no_gmc": {
+          "metrics": {
+            "selected_observation_seconds": 6.3999999999999995,
+            "loss_count": 1,
+            "recovery_count": 1,
+            "recovery_durations_s": [
+              2.8000000000000007
+            ],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 6.3999999999999995,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 34,
+          "reid_candidate_evaluations": 41,
+          "configuration": {
+            "gmc": false,
+            "corrected": false,
+            "optimized": false
+          },
+          "tracker_mean_ms": 0.598136680018797,
+          "tracker_p95_ms": 0.7968611500473344,
+          "unreliable_observations": 3,
+          "provisional_observations": 1,
+          "gmc_applied_frames": 0,
+          "denial_reasons": {
+            "RESET": 1,
+            "CONFIRMING_IDENTITY": 6,
+            "PERSON_OVERLAP": 13,
+            "AMBIGUOUS_IDENTITY": 7,
+            "AWAITING_IDENTITY_RECONFIRMATION": 8
+          },
+          "association_selection_mean_ms": 0.8391682299770764,
+          "association_selection_p95_ms": 1.2075889511834246
+        },
+        "identity_corrected": {
+          "metrics": {
+            "selected_observation_seconds": 6.3999999999999995,
+            "loss_count": 1,
+            "recovery_count": 1,
+            "recovery_durations_s": [
+              2.8000000000000007
+            ],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 6.3999999999999995,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 19,
+          "reid_candidate_evaluations": 26,
+          "configuration": {
+            "gmc": true,
+            "corrected": true,
+            "optimized": false
+          },
+          "tracker_mean_ms": 9.575634260072547,
+          "tracker_p95_ms": 13.276720299018052,
+          "unreliable_observations": 3,
+          "provisional_observations": 1,
+          "gmc_applied_frames": 99,
+          "denial_reasons": {
+            "RESET": 1,
+            "CONFIRMING_IDENTITY": 6,
+            "PERSON_OVERLAP": 13,
+            "AMBIGUOUS_IDENTITY": 7,
+            "AWAITING_IDENTITY_RECONFIRMATION": 8
+          },
+          "association_selection_mean_ms": 9.846942269996362,
+          "association_selection_p95_ms": 13.481665299423183
+        },
+        "identity": {
+          "metrics": {
+            "selected_observation_seconds": 6.3999999999999995,
+            "loss_count": 1,
+            "recovery_count": 1,
+            "recovery_durations_s": [
+              2.8000000000000007
+            ],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 6.3999999999999995,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 19,
+          "reid_candidate_evaluations": 26,
+          "configuration": {
+            "gmc": true,
+            "corrected": true,
+            "optimized": true
+          },
+          "tracker_mean_ms": 9.62265630996626,
+          "tracker_p95_ms": 12.378509499558277,
+          "unreliable_observations": 3,
+          "provisional_observations": 1,
+          "gmc_applied_frames": 99,
+          "denial_reasons": {
+            "RESET": 1,
+            "CONFIRMING_IDENTITY": 6,
+            "PERSON_OVERLAP": 13,
+            "AMBIGUOUS_IDENTITY": 7,
+            "AWAITING_IDENTITY_RECONFIRMATION": 8
+          },
+          "association_selection_mean_ms": 9.874714110010245,
+          "association_selection_p95_ms": 12.637719399936032
+        }
+      },
+      "physical_ptz_commands": 0,
+      "timing_scope": "Cached evidence association/selection and optional image GMC; excludes YOLO/OSNet and real async contention",
+      "production_acceptance": false
+    },
+    "ambiguous_candidates": {
+      "branches": {
+        "legacy": {
+          "metrics": {
+            "selected_observation_seconds": 7.1,
+            "loss_count": 1,
+            "recovery_count": 1,
+            "recovery_durations_s": [
+              2.6
+            ],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 7.1,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 12,
+          "reid_candidate_evaluations": 12,
+          "configuration": {
+            "gmc": false,
+            "corrected": false,
+            "optimized": false
+          },
+          "tracker_mean_ms": 0.4261632901034318,
+          "tracker_p95_ms": 0.6291526014138071,
+          "unreliable_observations": 0,
+          "provisional_observations": 0,
+          "gmc_applied_frames": 0,
+          "denial_reasons": null,
+          "association_selection_mean_ms": 0.5142400399927283,
+          "association_selection_p95_ms": 0.8344054484950902
+        },
+        "identity_baseline": {
+          "metrics": {
+            "selected_observation_seconds": 5.3999999999999995,
+            "loss_count": 1,
+            "recovery_count": 1,
+            "recovery_durations_s": [
+              3.8000000000000007
+            ],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 5.3999999999999995,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 22,
+          "reid_candidate_evaluations": 31,
+          "configuration": {
+            "gmc": true,
+            "corrected": false,
+            "optimized": false
+          },
+          "tracker_mean_ms": 9.836687850020098,
+          "tracker_p95_ms": 12.614050050342485,
+          "unreliable_observations": 3,
+          "provisional_observations": 1,
+          "gmc_applied_frames": 99,
+          "denial_reasons": {
+            "RESET": 2,
+            "CONFIRMING_IDENTITY": 12,
+            "PERSON_OVERLAP": 17,
+            "AMBIGUOUS_IDENTITY": 9,
+            "AWAITING_IDENTITY_RECONFIRMATION": 5
+          },
+          "association_selection_mean_ms": 10.107526529991446,
+          "association_selection_p95_ms": 12.837719050367014
+        },
+        "identity_no_gmc": {
+          "metrics": {
+            "selected_observation_seconds": 5.3999999999999995,
+            "loss_count": 1,
+            "recovery_count": 1,
+            "recovery_durations_s": [
+              3.8000000000000007
+            ],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 5.3999999999999995,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 34,
+          "reid_candidate_evaluations": 43,
+          "configuration": {
+            "gmc": false,
+            "corrected": false,
+            "optimized": false
+          },
+          "tracker_mean_ms": 0.7236955200096418,
+          "tracker_p95_ms": 1.0631561499394593,
+          "unreliable_observations": 3,
+          "provisional_observations": 1,
+          "gmc_applied_frames": 0,
+          "denial_reasons": {
+            "RESET": 2,
+            "CONFIRMING_IDENTITY": 12,
+            "PERSON_OVERLAP": 17,
+            "AMBIGUOUS_IDENTITY": 9,
+            "AWAITING_IDENTITY_RECONFIRMATION": 5
+          },
+          "association_selection_mean_ms": 1.0019368598841538,
+          "association_selection_p95_ms": 1.598251350242208
+        },
+        "identity_corrected": {
+          "metrics": {
+            "selected_observation_seconds": 5.3999999999999995,
+            "loss_count": 1,
+            "recovery_count": 1,
+            "recovery_durations_s": [
+              3.8000000000000007
+            ],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 5.3999999999999995,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 22,
+          "reid_candidate_evaluations": 31,
+          "configuration": {
+            "gmc": true,
+            "corrected": true,
+            "optimized": false
+          },
+          "tracker_mean_ms": 9.523071560161043,
+          "tracker_p95_ms": 11.625817900039692,
+          "unreliable_observations": 3,
+          "provisional_observations": 1,
+          "gmc_applied_frames": 99,
+          "denial_reasons": {
+            "RESET": 2,
+            "CONFIRMING_IDENTITY": 12,
+            "PERSON_OVERLAP": 17,
+            "AMBIGUOUS_IDENTITY": 9,
+            "AWAITING_IDENTITY_RECONFIRMATION": 5
+          },
+          "association_selection_mean_ms": 9.795283990079042,
+          "association_selection_p95_ms": 11.776288750843376
+        },
+        "identity": {
+          "metrics": {
+            "selected_observation_seconds": 5.3999999999999995,
+            "loss_count": 1,
+            "recovery_count": 1,
+            "recovery_durations_s": [
+              3.8000000000000007
+            ],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 5.3999999999999995,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 22,
+          "reid_candidate_evaluations": 31,
+          "configuration": {
+            "gmc": true,
+            "corrected": true,
+            "optimized": true
+          },
+          "tracker_mean_ms": 9.345005769955606,
+          "tracker_p95_ms": 11.446931899899937,
+          "unreliable_observations": 3,
+          "provisional_observations": 1,
+          "gmc_applied_frames": 99,
+          "denial_reasons": {
+            "RESET": 2,
+            "CONFIRMING_IDENTITY": 12,
+            "PERSON_OVERLAP": 17,
+            "AMBIGUOUS_IDENTITY": 9,
+            "AWAITING_IDENTITY_RECONFIRMATION": 5
+          },
+          "association_selection_mean_ms": 9.615335960024822,
+          "association_selection_p95_ms": 12.05153104983765
+        }
+      },
+      "physical_ptz_commands": 0,
+      "timing_scope": "Cached evidence association/selection and optional image GMC; excludes YOLO/OSNet and real async contention",
+      "production_acceptance": false
+    },
+    "occlusion_reentry": {
+      "branches": {
+        "legacy": {
+          "metrics": {
+            "selected_observation_seconds": 8.0,
+            "loss_count": 1,
+            "recovery_count": 1,
+            "recovery_durations_s": [
+              1.7000000000000002
+            ],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 8.0,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 2,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 13,
+          "reid_candidate_evaluations": 13,
+          "configuration": {
+            "gmc": false,
+            "corrected": false,
+            "optimized": false
+          },
+          "tracker_mean_ms": 0.2910484899075527,
+          "tracker_p95_ms": 0.413923399446503,
+          "unreliable_observations": 0,
+          "provisional_observations": 0,
+          "gmc_applied_frames": 0,
+          "denial_reasons": null,
+          "association_selection_mean_ms": 0.3479072898699087,
+          "association_selection_p95_ms": 0.6105986990405654
+        },
+        "identity_baseline": {
+          "metrics": {
+            "selected_observation_seconds": 7.0,
+            "loss_count": 1,
+            "recovery_count": 1,
+            "recovery_durations_s": [
+              2.2
+            ],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 7.0,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 2,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 12,
+          "reid_candidate_evaluations": 12,
+          "configuration": {
+            "gmc": true,
+            "corrected": false,
+            "optimized": false
+          },
+          "tracker_mean_ms": 8.881950539980608,
+          "tracker_p95_ms": 10.912092899889103,
+          "unreliable_observations": 2,
+          "provisional_observations": 0,
+          "gmc_applied_frames": 84,
+          "denial_reasons": {
+            "RESET": 1,
+            "CONFIRMING_IDENTITY": 6,
+            "TRACK_MISSING": 15,
+            "MOTION_AMBIGUOUS": 1,
+            "AWAITING_IDENTITY_RECONFIRMATION": 6
+          },
+          "association_selection_mean_ms": 9.060966039942286,
+          "association_selection_p95_ms": 11.136264549622865
+        },
+        "identity_no_gmc": {
+          "metrics": {
+            "selected_observation_seconds": 7.0,
+            "loss_count": 1,
+            "recovery_count": 1,
+            "recovery_durations_s": [
+              2.2
+            ],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 7.0,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 2,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 29,
+          "reid_candidate_evaluations": 29,
+          "configuration": {
+            "gmc": false,
+            "corrected": false,
+            "optimized": false
+          },
+          "tracker_mean_ms": 0.4928477699832001,
+          "tracker_p95_ms": 0.8443222503046853,
+          "unreliable_observations": 2,
+          "provisional_observations": 0,
+          "gmc_applied_frames": 0,
+          "denial_reasons": {
+            "RESET": 1,
+            "CONFIRMING_IDENTITY": 6,
+            "TRACK_MISSING": 15,
+            "MOTION_AMBIGUOUS": 1,
+            "AWAITING_IDENTITY_RECONFIRMATION": 6
+          },
+          "association_selection_mean_ms": 0.6881822300420026,
+          "association_selection_p95_ms": 1.072246300009283
+        },
+        "identity_corrected": {
+          "metrics": {
+            "selected_observation_seconds": 7.0,
+            "loss_count": 1,
+            "recovery_count": 1,
+            "recovery_durations_s": [
+              2.2
+            ],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 7.0,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 2,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 12,
+          "reid_candidate_evaluations": 12,
+          "configuration": {
+            "gmc": true,
+            "corrected": true,
+            "optimized": false
+          },
+          "tracker_mean_ms": 9.203602260040498,
+          "tracker_p95_ms": 11.850681999476365,
+          "unreliable_observations": 2,
+          "provisional_observations": 0,
+          "gmc_applied_frames": 84,
+          "denial_reasons": {
+            "RESET": 1,
+            "CONFIRMING_IDENTITY": 6,
+            "TRACK_MISSING": 15,
+            "MOTION_AMBIGUOUS": 1,
+            "AWAITING_IDENTITY_RECONFIRMATION": 6
+          },
+          "association_selection_mean_ms": 9.415972199967655,
+          "association_selection_p95_ms": 12.289832449278038
+        },
+        "identity": {
+          "metrics": {
+            "selected_observation_seconds": 7.0,
+            "loss_count": 1,
+            "recovery_count": 1,
+            "recovery_durations_s": [
+              2.2
+            ],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 7.0,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 2,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 12,
+          "reid_candidate_evaluations": 12,
+          "configuration": {
+            "gmc": true,
+            "corrected": true,
+            "optimized": true
+          },
+          "tracker_mean_ms": 9.193065660001594,
+          "tracker_p95_ms": 11.218701198868075,
+          "unreliable_observations": 2,
+          "provisional_observations": 0,
+          "gmc_applied_frames": 84,
+          "denial_reasons": {
+            "RESET": 1,
+            "CONFIRMING_IDENTITY": 6,
+            "TRACK_MISSING": 15,
+            "MOTION_AMBIGUOUS": 1,
+            "AWAITING_IDENTITY_RECONFIRMATION": 6
+          },
+          "association_selection_mean_ms": 9.389625910098403,
+          "association_selection_p95_ms": 11.379938799655063
+        }
+      },
+      "physical_ptz_commands": 0,
+      "timing_scope": "Cached evidence association/selection and optional image GMC; excludes YOLO/OSNet and real async contention",
+      "production_acceptance": false
+    },
+    "boundary": {
+      "branches": {
+        "legacy": {
+          "metrics": {
+            "selected_observation_seconds": 9.2,
+            "loss_count": 2,
+            "recovery_count": 2,
+            "recovery_durations_s": [
+              0.30000000000000027,
+              0.20000000000000018
+            ],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 9.2,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 2,
+            "target_track_fragments": 2,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 17,
+          "reid_candidate_evaluations": 17,
+          "configuration": {
+            "gmc": false,
+            "corrected": false,
+            "optimized": false
+          },
+          "tracker_mean_ms": 0.36511048007014324,
+          "tracker_p95_ms": 0.49866754989125184,
+          "unreliable_observations": 0,
+          "provisional_observations": 0,
+          "gmc_applied_frames": 0,
+          "denial_reasons": null,
+          "association_selection_mean_ms": 0.4388706699501199,
+          "association_selection_p95_ms": 0.7559601495813694
+        },
+        "identity_baseline": {
+          "metrics": {
+            "selected_observation_seconds": 6.9,
+            "loss_count": 2,
+            "recovery_count": 2,
+            "recovery_durations_s": [
+              1.2999999999999998,
+              1.0
+            ],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 6.9,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 2,
+            "target_track_fragments": 2,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 21,
+          "reid_candidate_evaluations": 21,
+          "configuration": {
+            "gmc": true,
+            "corrected": false,
+            "optimized": false
+          },
+          "tracker_mean_ms": 9.597667659945728,
+          "tracker_p95_ms": 11.225328850468939,
+          "unreliable_observations": 4,
+          "provisional_observations": 1,
+          "gmc_applied_frames": 99,
+          "denial_reasons": {
+            "RESET": 1,
+            "CONFIRMING_IDENTITY": 6,
+            "TRACK_MISSING": 23
+          },
+          "association_selection_mean_ms": 9.84269774002314,
+          "association_selection_p95_ms": 11.66728694934136
+        },
+        "identity_no_gmc": {
+          "metrics": {
+            "selected_observation_seconds": 6.9,
+            "loss_count": 2,
+            "recovery_count": 2,
+            "recovery_durations_s": [
+              1.2999999999999998,
+              1.0
+            ],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 6.9,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 2,
+            "target_track_fragments": 2,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 34,
+          "reid_candidate_evaluations": 34,
+          "configuration": {
+            "gmc": false,
+            "corrected": false,
+            "optimized": false
+          },
+          "tracker_mean_ms": 0.6847584400384221,
+          "tracker_p95_ms": 1.040736699997069,
+          "unreliable_observations": 4,
+          "provisional_observations": 1,
+          "gmc_applied_frames": 0,
+          "denial_reasons": {
+            "RESET": 1,
+            "CONFIRMING_IDENTITY": 6,
+            "TRACK_MISSING": 23
+          },
+          "association_selection_mean_ms": 0.9417430500980117,
+          "association_selection_p95_ms": 1.4768272996661835
+        },
+        "identity_corrected": {
+          "metrics": {
+            "selected_observation_seconds": 6.9,
+            "loss_count": 2,
+            "recovery_count": 2,
+            "recovery_durations_s": [
+              1.2999999999999998,
+              1.0
+            ],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 6.9,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 2,
+            "target_track_fragments": 2,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 21,
+          "reid_candidate_evaluations": 21,
+          "configuration": {
+            "gmc": true,
+            "corrected": true,
+            "optimized": false
+          },
+          "tracker_mean_ms": 9.793339460011339,
+          "tracker_p95_ms": 12.029037800220976,
+          "unreliable_observations": 4,
+          "provisional_observations": 1,
+          "gmc_applied_frames": 99,
+          "denial_reasons": {
+            "RESET": 1,
+            "CONFIRMING_IDENTITY": 6,
+            "TRACK_MISSING": 23
+          },
+          "association_selection_mean_ms": 10.051015419867326,
+          "association_selection_p95_ms": 12.636277149522357
+        },
+        "identity": {
+          "metrics": {
+            "selected_observation_seconds": 6.9,
+            "loss_count": 2,
+            "recovery_count": 2,
+            "recovery_durations_s": [
+              1.2999999999999998,
+              1.0
+            ],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 6.9,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 2,
+            "target_track_fragments": 2,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 21,
+          "reid_candidate_evaluations": 21,
+          "configuration": {
+            "gmc": true,
+            "corrected": true,
+            "optimized": true
+          },
+          "tracker_mean_ms": 9.472381859977759,
+          "tracker_p95_ms": 11.186855499090596,
+          "unreliable_observations": 4,
+          "provisional_observations": 1,
+          "gmc_applied_frames": 99,
+          "denial_reasons": {
+            "RESET": 1,
+            "CONFIRMING_IDENTITY": 6,
+            "TRACK_MISSING": 23
+          },
+          "association_selection_mean_ms": 9.721031239860167,
+          "association_selection_p95_ms": 12.037426549613883
+        }
+      },
+      "physical_ptz_commands": 0,
+      "timing_scope": "Cached evidence association/selection and optional image GMC; excludes YOLO/OSNet and real async contention",
+      "production_acceptance": false
+    },
+    "pan_zoom": {
+      "branches": {
+        "legacy": {
+          "metrics": {
+            "selected_observation_seconds": 9.7,
+            "loss_count": 0,
+            "recovery_count": 0,
+            "recovery_durations_s": [],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 9.7,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 12,
+          "reid_candidate_evaluations": 12,
+          "configuration": {
+            "gmc": false,
+            "corrected": false,
+            "optimized": false
+          },
+          "tracker_mean_ms": 0.32663792007951997,
+          "tracker_p95_ms": 0.44633035113292857,
+          "unreliable_observations": 0,
+          "provisional_observations": 0,
+          "gmc_applied_frames": 0,
+          "denial_reasons": null,
+          "association_selection_mean_ms": 0.4035739300525165,
+          "association_selection_p95_ms": 0.679356349792215
+        },
+        "identity_baseline": {
+          "metrics": {
+            "selected_observation_seconds": 9.2,
+            "loss_count": 0,
+            "recovery_count": 0,
+            "recovery_durations_s": [],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 9.2,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 12,
+          "reid_candidate_evaluations": 12,
+          "configuration": {
+            "gmc": true,
+            "corrected": false,
+            "optimized": false
+          },
+          "tracker_mean_ms": 14.134984820029786,
+          "tracker_p95_ms": 16.31157959909615,
+          "unreliable_observations": 1,
+          "provisional_observations": 0,
+          "gmc_applied_frames": 99,
+          "denial_reasons": {
+            "RESET": 1,
+            "CONFIRMING_IDENTITY": 6
+          },
+          "association_selection_mean_ms": 14.316989669950999,
+          "association_selection_p95_ms": 16.463408549680025
+        },
+        "identity_no_gmc": {
+          "metrics": {
+            "selected_observation_seconds": 9.2,
+            "loss_count": 0,
+            "recovery_count": 0,
+            "recovery_durations_s": [],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 9.2,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 34,
+          "reid_candidate_evaluations": 34,
+          "configuration": {
+            "gmc": false,
+            "corrected": false,
+            "optimized": false
+          },
+          "tracker_mean_ms": 0.55499571004475,
+          "tracker_p95_ms": 0.6786642995393776,
+          "unreliable_observations": 1,
+          "provisional_observations": 0,
+          "gmc_applied_frames": 0,
+          "denial_reasons": {
+            "RESET": 1,
+            "CONFIRMING_IDENTITY": 6
+          },
+          "association_selection_mean_ms": 0.7752733000052103,
+          "association_selection_p95_ms": 1.0805603503285965
+        },
+        "identity_corrected": {
+          "metrics": {
+            "selected_observation_seconds": 9.2,
+            "loss_count": 0,
+            "recovery_count": 0,
+            "recovery_durations_s": [],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 9.2,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 12,
+          "reid_candidate_evaluations": 12,
+          "configuration": {
+            "gmc": true,
+            "corrected": true,
+            "optimized": false
+          },
+          "tracker_mean_ms": 14.048024840030848,
+          "tracker_p95_ms": 16.143364699473747,
+          "unreliable_observations": 1,
+          "provisional_observations": 0,
+          "gmc_applied_frames": 99,
+          "denial_reasons": {
+            "RESET": 1,
+            "CONFIRMING_IDENTITY": 6
+          },
+          "association_selection_mean_ms": 14.241573419949418,
+          "association_selection_p95_ms": 16.673534999426916
+        },
+        "identity": {
+          "metrics": {
+            "selected_observation_seconds": 9.2,
+            "loss_count": 0,
+            "recovery_count": 0,
+            "recovery_durations_s": [],
+            "unresolved_recovery": false,
+            "correct_target_observation_seconds": 9.2,
+            "identity_switches": 0,
+            "false_reacquisitions": 0,
+            "annotated_frames": 100,
+            "incorrect_target_observation_seconds": 0.0,
+            "native_target_id_changes": 0,
+            "target_track_fragments": 1,
+            "unnecessary_holds": null,
+            "legitimate_holds": null,
+            "detection_fps": null,
+            "ptz_stability": null,
+            "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+            "annotation_coverage": 1.0
+          },
+          "reid_invocations": 12,
+          "reid_candidate_evaluations": 12,
+          "configuration": {
+            "gmc": true,
+            "corrected": true,
+            "optimized": true
+          },
+          "tracker_mean_ms": 13.612588290015992,
+          "tracker_p95_ms": 15.654527200968003,
+          "unreliable_observations": 1,
+          "provisional_observations": 0,
+          "gmc_applied_frames": 99,
+          "denial_reasons": {
+            "RESET": 1,
+            "CONFIRMING_IDENTITY": 6
+          },
+          "association_selection_mean_ms": 13.803425559999596,
+          "association_selection_p95_ms": 15.770034900378958
+        }
+      },
+      "physical_ptz_commands": 0,
+      "timing_scope": "Cached evidence association/selection and optional image GMC; excludes YOLO/OSNet and real async contention",
+      "production_acceptance": false
+    }
+  }
+}

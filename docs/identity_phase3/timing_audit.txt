@@ -1,0 +1,6 @@
+gui/cctv_app.py:1042:            self.latest_frame_time = packet.receive_timestamp
+gui/cctv_app.py:1217:                                    display_received=packet.receive_timestamp)
+runtime/frame_manager.py:11:    receive_timestamp: float
+runtime/frame_manager.py:12:    capture_timestamp: float | None = None  # Unknown without a synchronized sensor clock.
+runtime/frame_manager.py:17:        return max(0., ((time.monotonic() if now is None else now)-self.receive_timestamp)*1000)
+runtime/frame_manager.py:40:                                       capture_timestamp=captured, status='unavailable' if captured is None else 'unsynchronized')

@@ -1,0 +1,58 @@
+{
+  "source": "/mnt/files/Project/ptz/ptz/docs/identity_phase3/recorder_paced_smoke/video.avi",
+  "source_sha256": "09e0210b0601b378b942347e1c751990f0c9d632582ee41a7ffe07c088ab485f",
+  "coordinate_width": 960,
+  "frame_count": 5,
+  "media_seconds": 0.09460585199849447,
+  "source_type": "unknown",
+  "capture_timestamp_available": false,
+  "independent_gt": false,
+  "flags": {
+    "enabled": false
+  },
+  "anchor_input": {},
+  "pts_basis": "recorder_host_receive_relative_not_camera_capture",
+  "threads": 1,
+  "opencv": "4.13.0",
+  "decode_resize_write_included_in_wall": true,
+  "wall_seconds": 0.09841423699981533,
+  "cpu_seconds": 0.3969624409999999,
+  "cpu_percent_one_core": 403.35875489310024,
+  "pipeline_throughput_fps": 50.8056573157132,
+  "rss_peak_mb": 109.765625,
+  "gpu": "not used by this CPU-only experiment; other-process GPU load not measured",
+  "decode_ms_p95": 18.36196960211964,
+  "frame_gap_p95": 0.033346702498965895,
+  "C_status": "UNAVAILABLE: no synchronized independently trusted YOLO corrections",
+  "accuracy_metrics": null,
+  "wrong_direction_time": null,
+  "takeover_count": null,
+  "recovery_accuracy": null,
+  "static_vs_ptz": null,
+  "variants": {
+    "A": {
+      "valid_frames": 0,
+      "invalid_frames": 5,
+      "valid_updates_per_media_second": 0.0,
+      "latency_ms_p50": 0.010896001185756177,
+      "latency_ms_p95": 0.01977920182980597,
+      "active_attempt_latency_p95": null,
+      "observation_age_p95": null,
+      "states": {
+        "NO_VALID_ANCHOR": 5
+      }
+    },
+    "B": {
+      "valid_frames": 0,
+      "invalid_frames": 5,
+      "valid_updates_per_media_second": 0.0,
+      "latency_ms_p50": 0.016343001334462315,
+      "latency_ms_p95": 0.019025200163014233,
+      "active_attempt_latency_p95": null,
+      "observation_age_p95": null,
+      "states": {
+        "DISABLED": 5
+      }
+    }
+  }
+}

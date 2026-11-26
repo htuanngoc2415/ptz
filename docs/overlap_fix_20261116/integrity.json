@@ -1,0 +1,25 @@
+{
+  "backup": "/mnt/files/Project/ptz_baseline_0838_before_overlap_fix_20261116_122024",
+  "verified_backup_entries": 8798,
+  "exclusions": [],
+  "changed_tracked_files": [
+    "ai/hybrid_reid.py",
+    "ai/overlap_policy.py",
+    "config.py"
+  ],
+  "unchanged_runtime_asset_files": 51,
+  "branch": "fix/minor-overlap-20261116",
+  "historical_commit": "ede31989fe6a39b04d7cd4d31675ebd811a28397",
+  "sha256": {
+    "ptz/ai/hybrid_reid.py": "2de845b6a76cc117424eea39d05e3ec000ecc919c74f5dec9b45bbb8a0ef2a50",
+    "ptz/ai/overlap_policy.py": "e76e3ec4762bdf47b4c444be771858323ce009dbaef42721775529fdbcd9d464",
+    "ptz/config.py": "b87663f165c9cf3a891f557ad10baac8b2be90bc798154d17dbf7291555e4bde",
+    "ptz/test/test_minor_overlap.py": "250b2ae876429fddfa9fb8828ccf0b3b479ed4883af104b8d6e13637b60ee78a",
+    "ptz/logs/latency/latency_trace_20261116_115349_764314.jsonl.1": "4bdafd0514097b37c75767542ac5a03ac555e098edc84c60d8f49545b60d72bf",
+    "ptz/logs/latency/latency_trace_20261116_115349_764314.jsonl": "7539226a3939fd814a6290e545c634cad90236c96b5d59fc324dee174a84d204",
+    "ptz/logs/latency/latency_trace_20261116_115349_764314.jsonl.2": "05f3960dcc34c0213994e62dfc871332d6a9532c957acafeb49b68924feece6b",
+    "ptz/logs/latency/latency_trace_20261116_115349_764314.jsonl.3": "5781385ff5f568966c9909db74136ec21d703db31b4864461b56d23615e5c1b2",
+    "ptz/logs/ptz_20261116_115346.log": "95c2167fd1e99deda911687a915f5d6908d5da042e46dce1a64ee099ac6bc7ea",
+    "ptz/logs/ptz_20261116_115346.jsonl": "7752067431fe1a28b67b86305768749df228d4233d49f6651c3653aa4ad9e205"
+  }
+}

@@ -1,0 +1,374 @@
+{
+  "status": "AWAITING_LIVE_EVIDENCE",
+  "sessions": [
+    {
+      "status": "AWAITING_LIVE_EVIDENCE",
+      "status_scope": "v4 operational log only; no GT or live performance acceptance",
+      "path": "logs/identity_shadow/shadow_5660ef2737454217807c15be0d38a41b.jsonl",
+      "sha256": "d6c29485361fc4b7f8f0f138b7b9dea8100a24b7042487f60260b4ecb66a1126",
+      "runtime": "v3_or_earlier",
+      "source_sha256": {
+        "ai/target_identity.py": "224c24aea786fb0f16902fad6dc182c80a24002542a31bbd906da2211ae94254",
+        "runtime/identity_shadow.py": "8a837ae8a84770d7a8f4ec0d41a2d72e972b42af1346fca9741d19a5f14cd27a"
+      },
+      "start": {
+        "event": "SHADOW_START",
+        "source": "identity_shadow",
+        "ground_truth": false,
+        "physical_commands": 0,
+        "interval_s": 0.2,
+        "max_age_s": 0.8,
+        "comparison": "same sampled frame; baseline proposal before final motor gates",
+        "additional_inference": true,
+        "wall_time_ns": 1795052982608092029
+      },
+      "stop": {
+        "event": "SHADOW_STOP",
+        "saved": 471,
+        "skipped": 1063,
+        "stale": 10,
+        "different": 70,
+        "physical_commands": 0
+      },
+      "errors": [],
+      "comparisons": 471,
+      "comparison_per_session_second": 2.855010124469457,
+      "comparison_per_sample_span_second": 2.855010124469457,
+      "gap_s": {
+        "n": 470,
+        "p50": 0.29993584199974066,
+        "p95": 0.6515963005999753,
+        "max": 1.5334338470001967
+      },
+      "gaps_above_1s": 6,
+      "age_ms": {
+        "n": 471,
+        "p50": 336.59692000037467,
+        "p95": 622.2421594998195,
+        "max": 790.0183330002619
+      },
+      "windows": {
+        "OFF_before": {
+          "requested_duration_s": 20.0,
+          "retained_span_s": 0,
+          "retained_first": null,
+          "retained_last": null,
+          "detection_results": 0,
+          "detection_hz": null,
+          "foreground_wait_ms": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          },
+          "receive_to_gui_submit_ms": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          }
+        },
+        "ON": {
+          "requested_duration_s": 164.97314526599985,
+          "retained_span_s": 0,
+          "retained_first": null,
+          "retained_last": null,
+          "detection_results": 0,
+          "detection_hz": null,
+          "foreground_wait_ms": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          },
+          "receive_to_gui_submit_ms": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          }
+        },
+        "OFF_after": {
+          "requested_duration_s": 20.0,
+          "retained_span_s": 0,
+          "retained_first": null,
+          "retained_last": null,
+          "detection_results": 0,
+          "detection_hz": null,
+          "foreground_wait_ms": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          },
+          "receive_to_gui_submit_ms": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          }
+        }
+      },
+      "trace_sha256": {},
+      "limitations": [
+        "ON/OFF scene and workload may differ; not causal A/B",
+        "Retained span does not prove complete trace coverage",
+        "GUI-submit is not glass-to-glass; no identity accuracy claim"
+      ]
+    },
+    {
+      "status": "AWAITING_LIVE_EVIDENCE",
+      "status_scope": "v4 operational log only; no GT or live performance acceptance",
+      "path": "logs/identity_shadow/shadow_7e81325d4adf4f7b8b5fbf7734a18f10.jsonl",
+      "sha256": "43e64f4355048bcccf9499396da81aa4eac3620fa8d050f1375cc80c5cff3771",
+      "runtime": "v3_or_earlier",
+      "source_sha256": {
+        "ai/target_identity.py": "d80813f00fab13b863a21d64c53c784e99672b04ac0a25ade5454e0d3c717e39",
+        "runtime/identity_shadow.py": "acebca6297f1770766c107d9cc7527f893bc62b8aace6c7ec7ecb05035980f4e",
+        "runtime/scheduling.py": "24a40a059934a81ea2cd94fa99d7a6a1603ee16c790b0d698d9e4a6db4e50be7"
+      },
+      "start": {
+        "event": "SHADOW_START",
+        "source": "identity_shadow",
+        "ground_truth": false,
+        "physical_commands": 0,
+        "interval_s": 0.2,
+        "max_age_s": 0.8,
+        "comparison": "same sampled frame; baseline proposal before final motor gates",
+        "additional_inference": true,
+        "wall_time_ns": 1795053828352125163,
+        "monotonic_ts": 5292.377957351,
+        "admission": "opportunistic_no_wait"
+      },
+      "stop": {
+        "event": "SHADOW_STOP",
+        "saved": 4,
+        "skipped": 1488,
+        "stale": 0,
+        "different": 4,
+        "physical_commands": 0,
+        "monotonic_ts": 5461.18849136,
+        "closed_monotonic_ts": 5461.215508802,
+        "rejection_reasons": {
+          "ACCELERATOR_BUSY": 653,
+          "RATE_LIMIT": 835
+        }
+      },
+      "errors": [],
+      "comparisons": 4,
+      "comparison_per_session_second": 0.0236952037589476,
+      "comparison_per_sample_span_second": 2.797808499263739,
+      "gap_s": {
+        "n": 3,
+        "p50": 0.4002422319999823,
+        "p95": 0.7041468070004157,
+        "max": 0.7379139820004639
+      },
+      "gaps_above_1s": 0,
+      "age_ms": {
+        "n": 4,
+        "p50": 133.952465499533,
+        "p95": 155.23327085038545,
+        "max": 156.67268900051567
+      },
+      "windows": {
+        "OFF_before": {
+          "requested_duration_s": 20.0,
+          "retained_span_s": 0,
+          "retained_first": null,
+          "retained_last": null,
+          "detection_results": 0,
+          "detection_hz": null,
+          "foreground_wait_ms": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          },
+          "receive_to_gui_submit_ms": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          }
+        },
+        "ON": {
+          "requested_duration_s": 168.81053400899964,
+          "retained_span_s": 0,
+          "retained_first": null,
+          "retained_last": null,
+          "detection_results": 0,
+          "detection_hz": null,
+          "foreground_wait_ms": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          },
+          "receive_to_gui_submit_ms": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          }
+        },
+        "OFF_after": {
+          "requested_duration_s": 20.0,
+          "retained_span_s": 0,
+          "retained_first": null,
+          "retained_last": null,
+          "detection_results": 0,
+          "detection_hz": null,
+          "foreground_wait_ms": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          },
+          "receive_to_gui_submit_ms": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          }
+        }
+      },
+      "trace_sha256": {},
+      "limitations": [
+        "ON/OFF scene and workload may differ; not causal A/B",
+        "Retained span does not prove complete trace coverage",
+        "GUI-submit is not glass-to-glass; no identity accuracy claim"
+      ]
+    },
+    {
+      "status": "AWAITING_LIVE_EVIDENCE",
+      "status_scope": "v4 operational log only; no GT or live performance acceptance",
+      "path": "logs/identity_shadow/shadow_d3b836c5ae5c492ba7ddb95282250359.jsonl",
+      "sha256": "7c7a1a665d6e310eb2fdb106e86459ccbad7e9b7522e27949d7f318ae6e448f7",
+      "runtime": "v3_or_earlier",
+      "source_sha256": {
+        "ai/target_identity.py": "d80813f00fab13b863a21d64c53c784e99672b04ac0a25ade5454e0d3c717e39",
+        "runtime/identity_shadow.py": "fd2c2168d6fd7802aeb851d04db9924b8b5be313cbb0b4119e642cde3b87e2e1",
+        "runtime/scheduling.py": "24a40a059934a81ea2cd94fa99d7a6a1603ee16c790b0d698d9e4a6db4e50be7"
+      },
+      "start": {
+        "event": "SHADOW_START",
+        "source": "identity_shadow",
+        "ground_truth": false,
+        "physical_commands": 0,
+        "interval_s": 0.2,
+        "max_age_s": 0.8,
+        "comparison": "same sampled frame; baseline proposal before final motor gates",
+        "additional_inference": true,
+        "wall_time_ns": 1795084360070343316,
+        "monotonic_ts": 24852.902382282,
+        "admission": "opportunistic_resumable_until_frame_deadline"
+      },
+      "stop": {
+        "event": "SHADOW_STOP",
+        "saved": 259,
+        "skipped": 1177,
+        "stale": 84,
+        "different": 87,
+        "physical_commands": 0,
+        "monotonic_ts": 25010.37070278,
+        "closed_monotonic_ts": 25010.370785194,
+        "rejection_reasons": {
+          "WORKER_BUSY": 1124,
+          "RATE_LIMIT": 53,
+          "RESULT_AGE": 79,
+          "SUPERSEDED": 4,
+          "STOPPED": 1
+        },
+        "admission_retries": 9236,
+        "completed_passes": 565,
+        "discarded_passes": 60
+      },
+      "errors": [],
+      "comparisons": 259,
+      "comparison_per_session_second": 1.6447752740418085,
+      "comparison_per_sample_span_second": 1.6521266911712789,
+      "gap_s": {
+        "n": 258,
+        "p50": 0.3659438159993442,
+        "p95": 1.9667286304495064,
+        "max": 4.636803179997514
+      },
+      "gaps_above_1s": 44,
+      "age_ms": {
+        "n": 259,
+        "p50": 382.226094003272,
+        "p95": 704.4886821007822,
+        "max": 787.2600919981778
+      },
+      "windows": {
+        "OFF_before": {
+          "requested_duration_s": 20.0,
+          "retained_span_s": 0,
+          "retained_first": null,
+          "retained_last": null,
+          "detection_results": 0,
+          "detection_hz": null,
+          "foreground_wait_ms": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          },
+          "receive_to_gui_submit_ms": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          }
+        },
+        "ON": {
+          "requested_duration_s": 157.46832049799923,
+          "retained_span_s": 0,
+          "retained_first": null,
+          "retained_last": null,
+          "detection_results": 0,
+          "detection_hz": null,
+          "foreground_wait_ms": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          },
+          "receive_to_gui_submit_ms": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          }
+        },
+        "OFF_after": {
+          "requested_duration_s": 20.0,
+          "retained_span_s": 0,
+          "retained_first": null,
+          "retained_last": null,
+          "detection_results": 0,
+          "detection_hz": null,
+          "foreground_wait_ms": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          },
+          "receive_to_gui_submit_ms": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "max": null
+          }
+        }
+      },
+      "trace_sha256": {},
+      "limitations": [
+        "ON/OFF scene and workload may differ; not causal A/B",
+        "Retained span does not prove complete trace coverage",
+        "GUI-submit is not glass-to-glass; no identity accuracy claim"
+      ]
+    }
+  ]
+}

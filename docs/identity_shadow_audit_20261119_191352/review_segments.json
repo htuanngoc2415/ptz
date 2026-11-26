@@ -1,0 +1,199 @@
+[
+  {
+    "name": "hold1",
+    "first": 2765,
+    "last": 3381,
+    "span_s": 20.533384460002708,
+    "reviewed_frames": [
+      2765,
+      2818,
+      2869,
+      2932,
+      2994,
+      3046,
+      3108,
+      3158,
+      3214,
+      3275,
+      3327,
+      3381
+    ],
+    "reasons": {
+      "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 8,
+      "LOW_REFERENCE_SIMILARITY": 26
+    }
+  },
+  {
+    "name": "hold2",
+    "first": 3488,
+    "last": 4040,
+    "span_s": 18.399291162000736,
+    "reviewed_frames": [
+      3488,
+      3529,
+      3570,
+      3620,
+      3679,
+      3722,
+      3770,
+      3821,
+      3878,
+      3926,
+      3985,
+      4040
+    ],
+    "reasons": {
+      "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 9,
+      "LOW_REFERENCE_SIMILARITY": 23,
+      "PERSON_OVERLAP": 1
+    }
+  },
+  {
+    "name": "hold3",
+    "first": 1420,
+    "last": 1962,
+    "span_s": 18.066366685001412,
+    "reviewed_frames": [
+      1420,
+      1473,
+      1527,
+      1578,
+      1624,
+      1655,
+      1686,
+      1717,
+      1770,
+      1851,
+      1909,
+      1962
+    ],
+    "reasons": {
+      "LOW_REFERENCE_SIMILARITY": 32,
+      "NO_OBSERVATION_UNKNOWN": 18,
+      "LOW_DETECTION_CONFIDENCE": 1,
+      "PERSON_OVERLAP": 8,
+      "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 2
+    }
+  },
+  {
+    "name": "hold4",
+    "first": 4589,
+    "last": 5068,
+    "span_s": 15.961736151999503,
+    "reviewed_frames": [
+      4589,
+      4625,
+      4681,
+      4725,
+      4772,
+      4814,
+      4855,
+      4902,
+      4943,
+      4977,
+      5024,
+      5068
+    ],
+    "reasons": {
+      "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 4,
+      "LOW_REFERENCE_SIMILARITY": 29
+    }
+  },
+  {
+    "name": "hold5",
+    "first": 2089,
+    "last": 2522,
+    "span_s": 14.44632356400325,
+    "reviewed_frames": [
+      2089,
+      2126,
+      2174,
+      2208,
+      2231,
+      2254,
+      2272,
+      2295,
+      2326,
+      2392,
+      2454,
+      2522
+    ],
+    "reasons": {
+      "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 6,
+      "PERSON_OVERLAP": 18,
+      "LOW_REFERENCE_SIMILARITY": 19
+    }
+  },
+  {
+    "name": "hold6",
+    "first": 4118,
+    "last": 4520,
+    "span_s": 13.400289588000305,
+    "reviewed_frames": [
+      4118,
+      4150,
+      4186,
+      4226,
+      4263,
+      4297,
+      4336,
+      4371,
+      4398,
+      4435,
+      4480,
+      4520
+    ],
+    "reasons": {
+      "LOW_REFERENCE_SIMILARITY": 18,
+      "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 5
+    }
+  },
+  {
+    "name": "all_selected",
+    "first": 1246,
+    "last": 4555,
+    "span_s": 110.29958129500301,
+    "reviewed_frames": [
+      1246,
+      1325,
+      1333,
+      1341,
+      1358,
+      1365,
+      1373,
+      1386,
+      1394,
+      1404,
+      1970,
+      1977,
+      1991,
+      1998,
+      2009,
+      2024,
+      2035,
+      2536,
+      2707,
+      2727,
+      3400,
+      3408,
+      3425,
+      3432,
+      3462,
+      3468,
+      4047,
+      4054,
+      4076,
+      4530,
+      4547,
+      4555
+    ],
+    "reasons": {
+      "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 48,
+      "LOW_REFERENCE_SIMILARITY": 150,
+      "CONFIRMED_MULTI_CUE": 32,
+      "NO_OBSERVATION_UNKNOWN": 18,
+      "LOW_DETECTION_CONFIDENCE": 1,
+      "PERSON_OVERLAP": 27
+    }
+  }
+]

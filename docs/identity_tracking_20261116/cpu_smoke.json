@@ -1,0 +1,67 @@
+{
+  "branches": {
+    "legacy": {
+      "metrics": {
+        "selected_observation_seconds": 0,
+        "loss_count": 0,
+        "recovery_count": 0,
+        "recovery_durations_s": [],
+        "unresolved_recovery": false,
+        "correct_target_observation_seconds": null,
+        "identity_switches": null,
+        "false_reacquisitions": null,
+        "annotated_frames": 0,
+        "ptz_stability": null,
+        "note": "Selected dwell is not proof of correct identity. Predictions excluded."
+      },
+      "reid_invocations": 3,
+      "association_selection_mean_ms": 1.4047116666612662,
+      "association_selection_p95_ms": 1.4838767000128428,
+      "decisions_path": "ptz/docs/identity_tracking_20261116/cpu_smoke_legacy_decisions.jsonl"
+    },
+    "identity": {
+      "metrics": {
+        "selected_observation_seconds": 0,
+        "loss_count": 0,
+        "recovery_count": 0,
+        "recovery_durations_s": [],
+        "unresolved_recovery": false,
+        "correct_target_observation_seconds": null,
+        "identity_switches": null,
+        "false_reacquisitions": null,
+        "annotated_frames": 0,
+        "ptz_stability": null,
+        "note": "Selected dwell is not proof of correct identity. Predictions excluded."
+      },
+      "reid_invocations": 3,
+      "association_selection_mean_ms": 4.428436999963499,
+      "association_selection_p95_ms": 4.9656975997550035,
+      "decisions_path": "ptz/docs/identity_tracking_20261116/cpu_smoke_identity_decisions.jsonl"
+    }
+  },
+  "physical_ptz_commands": 0,
+  "timing_scope": "Cached evidence association/selection and optional image GMC; excludes YOLO/OSNet and real async contention",
+  "production_acceptance": false,
+  "provenance": {
+    "video": "/mnt/files/Project/ptz/16_11(1).mov",
+    "source_kind": "monitor_recording",
+    "reference": "/mnt/files/Project/ptz/ptz/person_search/targets/aded02f5-dc45-41cc-a9e8-61dabd31b3a9.jpeg",
+    "start": 113.0,
+    "end": 114.0,
+    "original_fps": 29.97389698860381,
+    "sample_fps": 2.0,
+    "roi": null,
+    "sensor_timestamps_available": false,
+    "ground_truth_available": false
+  },
+  "model_cache_timings": {
+    "detection_ms": {
+      "mean_ms": 84.70617933335234,
+      "p95_ms": 86.56794069997886
+    },
+    "reid_ms": {
+      "mean_ms": 51.818205999855614,
+      "p95_ms": 59.01653570003873
+    }
+  }
+}

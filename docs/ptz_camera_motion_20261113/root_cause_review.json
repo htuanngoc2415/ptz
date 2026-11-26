@@ -1,0 +1,123 @@
+[
+  {
+    "wall_time": "2026-11-13 11:21:25.174",
+    "monotonic": 8162.206798553467,
+    "previous": "OCCLUDED_HOLD",
+    "state": "SEARCHING",
+    "preceding_hold_time": "2026-11-13 11:21:22.091",
+    "hold_to_loss_s": 3.0829999446868896,
+    "hold_onset_command_exposure": "command_active",
+    "recovery_s": 5.2809998989105225,
+    "confirmed_mechanism": "HOLD timeout",
+    "root_causes": [
+      "UNKNOWN"
+    ],
+    "root_certainty": "UNKNOWN",
+    "camera_motion_association_failure": "UNVERIFIED",
+    "limitation": "Detailed latency trace/raw frames unavailable"
+  },
+  {
+    "wall_time": "2026-11-13 11:21:45.336",
+    "monotonic": 8182.368798494339,
+    "previous": "OCCLUDED_HOLD",
+    "state": "SEARCHING",
+    "preceding_hold_time": "2026-11-13 11:21:42.178",
+    "hold_to_loss_s": 3.1579999923706055,
+    "hold_onset_command_exposure": "command_active",
+    "recovery_s": 0.6579999923706055,
+    "confirmed_mechanism": "HOLD timeout",
+    "root_causes": [
+      "UNKNOWN"
+    ],
+    "root_certainty": "UNKNOWN",
+    "camera_motion_association_failure": "UNVERIFIED",
+    "limitation": "Detailed latency trace/raw frames unavailable"
+  },
+  {
+    "wall_time": "2026-11-13 11:22:04.258",
+    "monotonic": 8201.290798425674,
+    "previous": "OCCLUDED_HOLD",
+    "state": "SEARCHING",
+    "preceding_hold_time": "2026-11-13 11:22:01.113",
+    "hold_to_loss_s": 3.1449999809265137,
+    "hold_onset_command_exposure": "command_active",
+    "recovery_s": 13.22100019454956,
+    "confirmed_mechanism": "HOLD timeout",
+    "root_causes": [
+      "UNKNOWN"
+    ],
+    "root_certainty": "UNKNOWN",
+    "camera_motion_association_failure": "UNVERIFIED",
+    "limitation": "Detailed latency trace/raw frames unavailable"
+  },
+  {
+    "wall_time": "2026-11-13 11:22:20.750",
+    "monotonic": 8217.782798528671,
+    "previous": "OCCLUDED_HOLD",
+    "state": "SEARCHING",
+    "preceding_hold_time": "2026-11-13 11:22:17.733",
+    "hold_to_loss_s": 3.0169999599456787,
+    "hold_onset_command_exposure": "post_stop_0_300ms",
+    "recovery_s": 0.6440000534057617,
+    "confirmed_mechanism": "HOLD timeout",
+    "root_causes": [
+      "UNKNOWN"
+    ],
+    "root_certainty": "UNKNOWN",
+    "camera_motion_association_failure": "UNVERIFIED",
+    "limitation": "Detailed latency trace/raw frames unavailable"
+  },
+  {
+    "wall_time": "2026-11-13 11:22:53.575",
+    "monotonic": 8250.607798576355,
+    "previous": "OCCLUDED_HOLD",
+    "state": "SEARCHING",
+    "preceding_hold_time": "2026-11-13 11:22:50.548",
+    "hold_to_loss_s": 3.0269999504089355,
+    "hold_onset_command_exposure": "post_stop_0_300ms",
+    "recovery_s": 4.016000032424927,
+    "confirmed_mechanism": "HOLD timeout",
+    "root_causes": [
+      "UNKNOWN"
+    ],
+    "root_certainty": "UNKNOWN",
+    "camera_motion_association_failure": "UNVERIFIED",
+    "limitation": "Detailed latency trace/raw frames unavailable"
+  },
+  {
+    "wall_time": "2026-11-13 11:24:20.427",
+    "monotonic": 8337.459798574448,
+    "previous": "OCCLUDED_HOLD",
+    "state": "SEARCHING",
+    "preceding_hold_time": "2026-11-13 11:24:17.207",
+    "hold_to_loss_s": 3.2200000286102295,
+    "hold_onset_command_exposure": "command_active",
+    "recovery_s": 0.3959999084472656,
+    "confirmed_mechanism": "PERSON_OVERLAP gate -> UNCERTAIN -> HOLD timeout",
+    "root_causes": [
+      "TRUE_PERSON_OVERLAP",
+      "REID_IDENTITY_AMBIGUITY"
+    ],
+    "root_certainty": "PROBABLE",
+    "camera_motion_association_failure": "UNVERIFIED",
+    "limitation": "Sparse monitor annotations, no aligned raw-frame identity GT"
+  },
+  {
+    "wall_time": "2026-11-13 11:24:24.145",
+    "monotonic": 8341.177798509598,
+    "previous": "OCCLUDED_HOLD",
+    "state": "SEARCHING",
+    "preceding_hold_time": "2026-11-13 11:24:21.089",
+    "hold_to_loss_s": 3.055999994277954,
+    "hold_onset_command_exposure": "post_stop_0_300ms",
+    "recovery_s": null,
+    "confirmed_mechanism": "PERSON_OVERLAP gate -> UNCERTAIN -> HOLD timeout",
+    "root_causes": [
+      "TRUE_PERSON_OVERLAP",
+      "REID_IDENTITY_AMBIGUITY"
+    ],
+    "root_certainty": "PROBABLE",
+    "camera_motion_association_failure": "UNVERIFIED",
+    "limitation": "Sparse monitor annotations, no aligned raw-frame identity GT"
+  }
+]

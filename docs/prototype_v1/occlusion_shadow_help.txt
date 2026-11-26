@@ -1,0 +1,17 @@
+usage: occlusion_shadow.py [-h] (--video VIDEO | --live-shadow) --reference
+                           REFERENCE --out OUT [--camera-config CAMERA_CONFIG]
+                           [--seconds SECONDS] [--seg-model SEG_MODEL]
+                           [--device DEVICE]
+
+Read-only A/B/C diagnostic observer. Does not instantiate a motor controller.
+
+options:
+  -h, --help            show this help message and exit
+  --video VIDEO
+  --live-shadow
+  --reference REFERENCE
+  --out OUT
+  --camera-config CAMERA_CONFIG
+  --seconds SECONDS
+  --seg-model SEG_MODEL
+  --device DEVICE

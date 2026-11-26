@@ -1,0 +1,15 @@
+[
+  "ai/hybrid_reid.py",
+  "ai/detector.py",
+  "ai/reid_target.py",
+  "runtime/byte_tracking.py",
+  "runtime/inference_worker.py",
+  "control/auto_zoom.py",
+  "telemetry/latency.py",
+  "config.py",
+  "ai/overlap_policy.py",
+  "runtime/tracking_snapshots.py",
+  "tools/replay_p0_overlap.py",
+  "tools/benchmark_p0_scenarios.py",
+  "test/test_target_tracking_p0.py"
+]

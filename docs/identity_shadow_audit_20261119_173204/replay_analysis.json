@@ -1,0 +1,90 @@
+{
+  "scope": "all-frame offline policy replay; no live scheduling or resets reproduced",
+  "categories": {
+    "both_hold": 378,
+    "same_candidate": 1044,
+    "baseline_only": 72,
+    "identity_only": 11
+  },
+  "baseline_only_reasons": {
+    "LOW_DETECTION_CONFIDENCE": 7,
+    "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 8,
+    "PERSON_OVERLAP": 33,
+    "LOW_REFERENCE_SIMILARITY": 19,
+    "AMBIGUOUS_MARGIN": 5
+  },
+  "longest_identity_holds": [
+    {
+      "start": 24936.755972197,
+      "first_frame": 3475,
+      "samples": 91,
+      "reasons": {
+        "PERSON_OVERLAP": 2,
+        "LOW_REFERENCE_SIMILARITY": 78,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 10,
+        "LOW_DETECTION_CONFIDENCE": 1
+      },
+      "closed": true,
+      "end": 24950.315908167,
+      "last_frame": 3882,
+      "duration_s": 13.55993596999906
+    },
+    {
+      "start": 24880.683480085,
+      "first_frame": 1793,
+      "samples": 71,
+      "reasons": {
+        "PERSON_OVERLAP": 5,
+        "LOW_REFERENCE_SIMILARITY": 64,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 2
+      },
+      "closed": true,
+      "end": 24892.08445522,
+      "last_frame": 2135,
+      "duration_s": 11.400975134998589
+    },
+    {
+      "start": 24990.683683207,
+      "first_frame": 5093,
+      "samples": 61,
+      "reasons": {
+        "PERSON_OVERLAP": 30,
+        "LOW_REFERENCE_SIMILARITY": 29,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 2
+      },
+      "closed": true,
+      "end": 24998.118091075,
+      "last_frame": 5316,
+      "duration_s": 7.434407868000562
+    },
+    {
+      "start": 24909.523576439,
+      "first_frame": 2658,
+      "samples": 49,
+      "reasons": {
+        "PERSON_OVERLAP": 17,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 5,
+        "LOW_REFERENCE_SIMILARITY": 27
+      },
+      "closed": true,
+      "end": 24915.884570741,
+      "last_frame": 2849,
+      "duration_s": 6.360994301998289
+    },
+    {
+      "start": 24979.364549045,
+      "first_frame": 4753,
+      "samples": 38,
+      "reasons": {
+        "PERSON_OVERLAP": 15,
+        "LOW_REFERENCE_SIMILARITY": 19,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 4
+      },
+      "closed": true,
+      "end": 24984.552054074,
+      "last_frame": 4909,
+      "duration_s": 5.187505029000022
+    }
+  ],
+  "ground_truth": false
+}

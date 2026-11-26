@@ -1,0 +1,27 @@
+{
+  "source_python_files": 198,
+  "source_matches_baseline": true,
+  "config_matches_baseline": true,
+  "main_import": true,
+  "gui_launched": false,
+  "network_calls": 0,
+  "execution": "original pre-async pan worker",
+  "assets": {
+    "PERSON_MODEL_PATH": {
+      "path": "/mnt/files/Project/ptz/ptz/models/person/person.pt",
+      "exists": true
+    },
+    "REID_MODEL_PATH": {
+      "path": "/mnt/files/Project/ptz/ptz/person_search/models/osnet_ain_x1_0_msmt17.pth",
+      "exists": true
+    },
+    "TARGET_IMAGE_PATH": {
+      "path": "/mnt/files/Project/ptz/ptz/person_search/targets/target.jpg",
+      "exists": true
+    },
+    "FACE_MODEL_PATH": {
+      "path": "/mnt/files/Project/ptz/ptz/models/face/det_2.5g.onnx",
+      "exists": true
+    }
+  }
+}

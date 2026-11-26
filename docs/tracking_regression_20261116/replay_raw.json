@@ -1,0 +1,242 @@
+{
+  "branches": {
+    "legacy": {
+      "metrics": {
+        "selected_observation_seconds": 4.799999999999999,
+        "loss_count": 1,
+        "recovery_count": 0,
+        "recovery_durations_s": [],
+        "unresolved_recovery": true,
+        "correct_target_observation_seconds": null,
+        "identity_switches": null,
+        "false_reacquisitions": null,
+        "annotated_frames": 0,
+        "incorrect_target_observation_seconds": null,
+        "native_target_id_changes": null,
+        "target_track_fragments": null,
+        "unnecessary_holds": null,
+        "legitimate_holds": null,
+        "detection_fps": null,
+        "ptz_stability": null,
+        "note": "Selected dwell is not proof of correct identity. Predictions excluded."
+      },
+      "reid_invocations": 75,
+      "reid_candidate_evaluations": 98,
+      "configuration": {
+        "gmc": false,
+        "corrected": false,
+        "optimized": false
+      },
+      "tracker_mean_ms": 1.0177033199033758,
+      "tracker_p95_ms": 1.3333730002159427,
+      "unreliable_observations": 0,
+      "provisional_observations": 0,
+      "gmc_applied_frames": 0,
+      "denial_reasons": null,
+      "association_selection_mean_ms": 1.4475921399207436,
+      "association_selection_p95_ms": 2.0251964999260936,
+      "decisions_path": "ptz/docs/tracking_regression_20261116/replay_raw_legacy_decisions.jsonl"
+    },
+    "identity_baseline": {
+      "metrics": {
+        "selected_observation_seconds": 4.199999999999999,
+        "loss_count": 1,
+        "recovery_count": 0,
+        "recovery_durations_s": [],
+        "unresolved_recovery": true,
+        "correct_target_observation_seconds": null,
+        "identity_switches": null,
+        "false_reacquisitions": null,
+        "annotated_frames": 0,
+        "incorrect_target_observation_seconds": null,
+        "native_target_id_changes": null,
+        "target_track_fragments": null,
+        "unnecessary_holds": null,
+        "legitimate_holds": null,
+        "detection_fps": null,
+        "ptz_stability": null,
+        "note": "Selected dwell is not proof of correct identity. Predictions excluded."
+      },
+      "reid_invocations": 44,
+      "reid_candidate_evaluations": 68,
+      "configuration": {
+        "gmc": true,
+        "corrected": false,
+        "optimized": false
+      },
+      "tracker_mean_ms": 28.191743749957823,
+      "tracker_p95_ms": 35.560863600403536,
+      "unreliable_observations": 41,
+      "provisional_observations": 24,
+      "gmc_applied_frames": 79,
+      "denial_reasons": {
+        "RESET": 2,
+        "CONFIRMING_IDENTITY": 4,
+        "PERSON_OVERLAP": 1,
+        "AMBIGUOUS_IDENTITY": 5,
+        "TRACK_MISSING": 10,
+        "BELOW_CONFIRMATION_THRESHOLD": 57
+      },
+      "association_selection_mean_ms": 30.037381669881142,
+      "association_selection_p95_ms": 37.80892225013304,
+      "decisions_path": "ptz/docs/tracking_regression_20261116/replay_raw_identity_baseline_decisions.jsonl"
+    },
+    "identity_no_gmc": {
+      "metrics": {
+        "selected_observation_seconds": 4.199999999999999,
+        "loss_count": 1,
+        "recovery_count": 0,
+        "recovery_durations_s": [],
+        "unresolved_recovery": true,
+        "correct_target_observation_seconds": null,
+        "identity_switches": null,
+        "false_reacquisitions": null,
+        "annotated_frames": 0,
+        "incorrect_target_observation_seconds": null,
+        "native_target_id_changes": null,
+        "target_track_fragments": null,
+        "unnecessary_holds": null,
+        "legitimate_holds": null,
+        "detection_fps": null,
+        "ptz_stability": null,
+        "note": "Selected dwell is not proof of correct identity. Predictions excluded."
+      },
+      "reid_invocations": 50,
+      "reid_candidate_evaluations": 81,
+      "configuration": {
+        "gmc": false,
+        "corrected": false,
+        "optimized": false
+      },
+      "tracker_mean_ms": 4.650309969892987,
+      "tracker_p95_ms": 7.134039598440721,
+      "unreliable_observations": 41,
+      "provisional_observations": 24,
+      "gmc_applied_frames": 0,
+      "denial_reasons": {
+        "RESET": 2,
+        "CONFIRMING_IDENTITY": 4,
+        "PERSON_OVERLAP": 1,
+        "AMBIGUOUS_IDENTITY": 5,
+        "TRACK_MISSING": 10,
+        "BELOW_CONFIRMATION_THRESHOLD": 57
+      },
+      "association_selection_mean_ms": 6.8817941899942525,
+      "association_selection_p95_ms": 12.330440549339983,
+      "decisions_path": "ptz/docs/tracking_regression_20261116/replay_raw_identity_no_gmc_decisions.jsonl"
+    },
+    "identity_corrected": {
+      "metrics": {
+        "selected_observation_seconds": 4.199999999999999,
+        "loss_count": 1,
+        "recovery_count": 0,
+        "recovery_durations_s": [],
+        "unresolved_recovery": true,
+        "correct_target_observation_seconds": null,
+        "identity_switches": null,
+        "false_reacquisitions": null,
+        "annotated_frames": 0,
+        "incorrect_target_observation_seconds": null,
+        "native_target_id_changes": null,
+        "target_track_fragments": null,
+        "unnecessary_holds": null,
+        "legitimate_holds": null,
+        "detection_fps": null,
+        "ptz_stability": null,
+        "note": "Selected dwell is not proof of correct identity. Predictions excluded."
+      },
+      "reid_invocations": 44,
+      "reid_candidate_evaluations": 68,
+      "configuration": {
+        "gmc": true,
+        "corrected": true,
+        "optimized": false
+      },
+      "tracker_mean_ms": 32.95857996992709,
+      "tracker_p95_ms": 49.851098349518,
+      "unreliable_observations": 41,
+      "provisional_observations": 24,
+      "gmc_applied_frames": 79,
+      "denial_reasons": {
+        "RESET": 2,
+        "CONFIRMING_IDENTITY": 4,
+        "PERSON_OVERLAP": 1,
+        "AMBIGUOUS_IDENTITY": 5,
+        "TRACK_MISSING": 10,
+        "BELOW_CONFIRMATION_THRESHOLD": 57
+      },
+      "association_selection_mean_ms": 34.97829694990287,
+      "association_selection_p95_ms": 51.91229895044671,
+      "decisions_path": "ptz/docs/tracking_regression_20261116/replay_raw_identity_corrected_decisions.jsonl"
+    },
+    "identity": {
+      "metrics": {
+        "selected_observation_seconds": 4.199999999999999,
+        "loss_count": 1,
+        "recovery_count": 0,
+        "recovery_durations_s": [],
+        "unresolved_recovery": true,
+        "correct_target_observation_seconds": null,
+        "identity_switches": null,
+        "false_reacquisitions": null,
+        "annotated_frames": 0,
+        "incorrect_target_observation_seconds": null,
+        "native_target_id_changes": null,
+        "target_track_fragments": null,
+        "unnecessary_holds": null,
+        "legitimate_holds": null,
+        "detection_fps": null,
+        "ptz_stability": null,
+        "note": "Selected dwell is not proof of correct identity. Predictions excluded."
+      },
+      "reid_invocations": 44,
+      "reid_candidate_evaluations": 64,
+      "configuration": {
+        "gmc": true,
+        "corrected": true,
+        "optimized": true
+      },
+      "tracker_mean_ms": 30.23264007000762,
+      "tracker_p95_ms": 37.049710298924765,
+      "unreliable_observations": 41,
+      "provisional_observations": 24,
+      "gmc_applied_frames": 79,
+      "denial_reasons": {
+        "RESET": 2,
+        "CONFIRMING_IDENTITY": 4,
+        "PERSON_OVERLAP": 1,
+        "AMBIGUOUS_IDENTITY": 5,
+        "TRACK_MISSING": 10,
+        "BELOW_CONFIRMATION_THRESHOLD": 57
+      },
+      "association_selection_mean_ms": 32.165152659981686,
+      "association_selection_p95_ms": 39.65795179938141,
+      "decisions_path": "ptz/docs/tracking_regression_20261116/replay_raw_identity_decisions.jsonl"
+    }
+  },
+  "physical_ptz_commands": 0,
+  "timing_scope": "Cached evidence association/selection and optional image GMC; excludes YOLO/OSNet and real async contention",
+  "production_acceptance": false,
+  "provenance": {
+    "video": "/mnt/files/Project/ptz/ptz/test/recordings/camera_20261001_103938.mp4",
+    "source_kind": "raw_camera",
+    "reference": "/mnt/files/Project/ptz/ptz/docs/tracking_regression_20261116/raw_reference.jpg",
+    "start": 10.0,
+    "end": 30.0,
+    "original_fps": 25.0,
+    "sample_fps": 5.0,
+    "roi": null,
+    "sensor_timestamps_available": false,
+    "ground_truth_available": false
+  },
+  "model_cache_timings": {
+    "detection_ms": {
+      "mean_ms": 13.490636220012675,
+      "p95_ms": 16.33346340031494
+    },
+    "reid_ms": {
+      "mean_ms": 61.35017423998761,
+      "p95_ms": 150.0616768003965
+    }
+  }
+}

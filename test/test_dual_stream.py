@@ -54,3 +54,20 @@ class DualStreamTests(unittest.TestCase):
         _,transform=controller.render(np.zeros((300,800,3),dtype=np.uint8))
         self.assertEqual((transform['crop_x1'],transform['crop_y1']),(200,75))
         self.assertEqual((controller.center_x,controller.center_y),(100,50))
+
+    def test_frozen_main_hides_fresh_sub_boxes_and_identity_panels(self):
+        detection = {'bbox': (10,20,30,40)}
+        original = dict(frame_shape=(100,200,3), frame_received=12.9,
+                        persons=[detection], person_target=detection,
+                        face_panel={'identity':'target'}, recognition={'identity':'target'})
+        for main_received in (10., 13.1, float('nan')):
+            mapped = display_result(original, (300,800,3), 13., .8,
+                                    display_received=main_received)
+            self.assertEqual(mapped['persons'], [])
+            self.assertIsNone(mapped['person_target'])
+            self.assertIsNone(mapped['face_panel'])
+            self.assertIsNone(mapped['recognition'])
+        recovered = display_result(original, (300,800,3), 13., .8,
+                                   display_received=12.95)
+        self.assertEqual(recovered['person_target']['bbox'], (40,60,120,120))
+        self.assertEqual(original['persons'], [detection])

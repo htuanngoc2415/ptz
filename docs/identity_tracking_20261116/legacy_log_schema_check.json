@@ -1,0 +1,18 @@
+{
+  "runs": {
+    "0e718986139c441caea8009648d6436a": {
+      "latest_metrics": {},
+      "statuses": {},
+      "reasons": {},
+      "stale_events": {},
+      "dispatches_with_uncertain_identity": 0,
+      "dispatches_without_identity_context": 0,
+      "dispatches": 0,
+      "gmc_samples": 0,
+      "gmc_applied": 0
+    }
+  },
+  "malformed_lines": 0,
+  "ground_truth_identity_switches": null,
+  "note": "Dispatch correlation uses latest logged identity state; includes bounded recovery zoom, not necessarily unsafe commands. Rotated or dropped logs limit coverage. Tracker rebindings are not ground-truth identity switches."
+}

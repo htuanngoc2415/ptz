@@ -1,0 +1,331 @@
+[
+  {
+    "capture": 1,
+    "frame_id": 1344,
+    "reason": "UNCERTAIN_CROP_QUALITY",
+    "prior_accepted_frame": 1341,
+    "candidates": [
+      {
+        "candidate_id": "1344:0",
+        "reference_similarity": 0.6565718152520403,
+        "quality": {
+          "focus": null,
+          "interior_bbox": false,
+          "full_body_like": false,
+          "full_body_visibility": "unknown"
+        },
+        "identity_class": "IDENTITY_UNCERTAIN",
+        "reason": "UNCERTAIN_CROP_QUALITY",
+        "anchor_similarity": 0.9348308585567925
+      }
+    ]
+  },
+  {
+    "capture": 1,
+    "frame_id": 1354,
+    "reason": "APPEARANCE_HISTORY_CONFLICT",
+    "prior_accepted_frame": 1341,
+    "candidates": [
+      {
+        "candidate_id": "1354:0",
+        "reference_similarity": 0.7215284590834479,
+        "quality": {
+          "focus": {
+            "laplacian": 346.29059066180696,
+            "tenengrad": 15349.91015625,
+            "edge_density": 0.15116525423728813,
+            "good": true
+          },
+          "interior_bbox": true,
+          "full_body_like": true,
+          "full_body_visibility": "unknown"
+        },
+        "identity_class": "TARGET_CANDIDATE",
+        "reason": "APPEARANCE_HISTORY_CONFLICT",
+        "anchor_similarity": 0.6993296592834595
+      }
+    ]
+  },
+  {
+    "capture": 2,
+    "frame_id": 2639,
+    "reason": "UNCERTAIN_CROP_QUALITY",
+    "prior_accepted_frame": 2636,
+    "candidates": [
+      {
+        "candidate_id": "2639:0",
+        "reference_similarity": 0.7157339791637818,
+        "quality": {
+          "focus": null,
+          "interior_bbox": false,
+          "full_body_like": false,
+          "full_body_visibility": "unknown"
+        },
+        "identity_class": "IDENTITY_UNCERTAIN",
+        "reason": "UNCERTAIN_CROP_QUALITY",
+        "anchor_similarity": 0.9377039917961049
+      },
+      {
+        "candidate_id": "2639:1",
+        "reference_similarity": 0.43288797385652095,
+        "quality": {
+          "focus": {
+            "laplacian": 233.56850114788512,
+            "tenengrad": 12300.3662109375,
+            "edge_density": 0.14783119389210506,
+            "good": true
+          },
+          "interior_bbox": true,
+          "full_body_like": true,
+          "full_body_visibility": "unknown"
+        },
+        "identity_class": "CONFIRMED_DISTRACTOR",
+        "reason": "CONFIRMED_DISTRACTOR",
+        "anchor_similarity": 0.49845333855044827
+      },
+      {
+        "candidate_id": "2639:2",
+        "reference_similarity": 0.4884528414919675,
+        "quality": {
+          "focus": {
+            "laplacian": 361.2931825968809,
+            "tenengrad": 18220.58984375,
+            "edge_density": 0.16277173913043477,
+            "good": true
+          },
+          "interior_bbox": true,
+          "full_body_like": true,
+          "full_body_visibility": "unknown"
+        },
+        "identity_class": "CONFIRMED_DISTRACTOR",
+        "reason": "CONFIRMED_DISTRACTOR",
+        "anchor_similarity": 0.4764152174239624
+      },
+      {
+        "candidate_id": "2639:3",
+        "reference_similarity": 0.38192852827817325,
+        "quality": {
+          "focus": {
+            "laplacian": 981.0543722566271,
+            "tenengrad": 23358.279296875,
+            "edge_density": 0.18566543174693645,
+            "good": true
+          },
+          "interior_bbox": true,
+          "full_body_like": true,
+          "full_body_visibility": "unknown"
+        },
+        "identity_class": "CONFIRMED_DISTRACTOR",
+        "reason": "CONFIRMED_DISTRACTOR",
+        "anchor_similarity": 0.40613128945227883
+      }
+    ]
+  },
+  {
+    "capture": 2,
+    "frame_id": 2674,
+    "reason": "LOW_REFERENCE_SIMILARITY",
+    "prior_accepted_frame": 2636,
+    "candidates": [
+      {
+        "candidate_id": "2674:0",
+        "reference_similarity": 0.6347610397220051,
+        "quality": {
+          "focus": {
+            "laplacian": 377.4854293921314,
+            "tenengrad": 16235.7294921875,
+            "edge_density": 0.13546195652173912,
+            "good": true
+          },
+          "interior_bbox": true,
+          "full_body_like": true,
+          "full_body_visibility": "unknown"
+        },
+        "identity_class": "IDENTITY_UNCERTAIN",
+        "reason": "LOW_REFERENCE_SIMILARITY",
+        "anchor_similarity": 0.7621606485750679
+      },
+      {
+        "candidate_id": "2674:1",
+        "reference_similarity": 0.44675791095163253,
+        "quality": {
+          "focus": {
+            "laplacian": 356.2499929845625,
+            "tenengrad": 14811.7099609375,
+            "edge_density": 0.1684894053315106,
+            "good": true
+          },
+          "interior_bbox": true,
+          "full_body_like": true,
+          "full_body_visibility": "unknown"
+        },
+        "identity_class": "IDENTITY_UNCERTAIN",
+        "reason": "LOW_REFERENCE_SIMILARITY",
+        "anchor_similarity": 0.4695081181496884
+      },
+      {
+        "candidate_id": "2674:2",
+        "reference_similarity": 0.46112255456466644,
+        "quality": {
+          "focus": {
+            "laplacian": 1108.728383161159,
+            "tenengrad": 30564.017578125,
+            "edge_density": 0.2020582329317269,
+            "good": true
+          },
+          "interior_bbox": true,
+          "full_body_like": true,
+          "full_body_visibility": "unknown"
+        },
+        "identity_class": "IDENTITY_UNCERTAIN",
+        "reason": "LOW_REFERENCE_SIMILARITY",
+        "anchor_similarity": 0.45725217719060496
+      },
+      {
+        "candidate_id": "2674:3",
+        "reference_similarity": 0.38427207771211647,
+        "quality": {
+          "focus": {
+            "laplacian": 681.3111347733334,
+            "tenengrad": 21200.359375,
+            "edge_density": 0.18213333333333334,
+            "good": true
+          },
+          "interior_bbox": true,
+          "full_body_like": true,
+          "full_body_visibility": "unknown"
+        },
+        "identity_class": "IDENTITY_UNCERTAIN",
+        "reason": "LOW_REFERENCE_SIMILARITY",
+        "anchor_similarity": 0.40432283215201736
+      }
+    ]
+  },
+  {
+    "capture": 2,
+    "frame_id": 6058,
+    "reason": "CONFIRMED_DISTRACTOR",
+    "prior_accepted_frame": 6056,
+    "candidates": [
+      {
+        "candidate_id": "6058:0",
+        "reference_similarity": 0.44226831672445405,
+        "quality": {
+          "focus": {
+            "laplacian": 226.77415755948383,
+            "tenengrad": 9801.0771484375,
+            "edge_density": 0.13676096630642084,
+            "good": true
+          },
+          "interior_bbox": true,
+          "full_body_like": true,
+          "full_body_visibility": "unknown"
+        },
+        "identity_class": "CONFIRMED_DISTRACTOR",
+        "reason": "CONFIRMED_DISTRACTOR",
+        "anchor_similarity": 0.512232784931403
+      },
+      {
+        "candidate_id": "6058:1",
+        "reference_similarity": 0.46812981677686405,
+        "quality": {
+          "focus": {
+            "laplacian": 398.661570852083,
+            "tenengrad": 16709.609375,
+            "edge_density": 0.17301204819277108,
+            "good": true
+          },
+          "interior_bbox": true,
+          "full_body_like": true,
+          "full_body_visibility": "unknown"
+        },
+        "identity_class": "CONFIRMED_DISTRACTOR",
+        "reason": "CONFIRMED_DISTRACTOR",
+        "anchor_similarity": 0.49164877279959424
+      },
+      {
+        "candidate_id": "6058:2",
+        "reference_similarity": 0.38777067402270216,
+        "quality": {
+          "focus": {
+            "laplacian": 317.33096915199457,
+            "tenengrad": 16736.251953125,
+            "edge_density": 0.1290054099042863,
+            "good": true
+          },
+          "interior_bbox": true,
+          "full_body_like": true,
+          "full_body_visibility": "unknown"
+        },
+        "identity_class": "CONFIRMED_DISTRACTOR",
+        "reason": "PERSON_OVERLAP",
+        "anchor_similarity": 0.45026935377771693
+      },
+      {
+        "candidate_id": "6058:3",
+        "reference_similarity": 0.36483133419844194,
+        "quality": {
+          "focus": {
+            "laplacian": 400.9413404126204,
+            "tenengrad": 17622.458984375,
+            "edge_density": 0.16897001303780965,
+            "good": true
+          },
+          "interior_bbox": true,
+          "full_body_like": true,
+          "full_body_visibility": "unknown"
+        },
+        "identity_class": "IDENTITY_UNCERTAIN",
+        "reason": "LOW_DETECTION_CONFIDENCE",
+        "anchor_similarity": 0.4115936155515215
+      }
+    ]
+  },
+  {
+    "capture": 3,
+    "frame_id": 1439,
+    "reason": "UNCERTAIN_CROP_QUALITY",
+    "prior_accepted_frame": 1436,
+    "candidates": [
+      {
+        "candidate_id": "1439:0",
+        "reference_similarity": 0.8012552818689622,
+        "quality": {
+          "focus": null,
+          "interior_bbox": false,
+          "full_body_like": false,
+          "full_body_visibility": "unknown"
+        },
+        "identity_class": "IDENTITY_UNCERTAIN",
+        "reason": "UNCERTAIN_CROP_QUALITY",
+        "anchor_similarity": 0.9638229581508019
+      }
+    ]
+  },
+  {
+    "capture": 3,
+    "frame_id": 1620,
+    "reason": "LOW_REFERENCE_SIMILARITY",
+    "prior_accepted_frame": 1609,
+    "candidates": [
+      {
+        "candidate_id": "1620:0",
+        "reference_similarity": 0.6980384351803413,
+        "quality": {
+          "focus": {
+            "laplacian": 399.792455620678,
+            "tenengrad": 13037.4990234375,
+            "edge_density": 0.14569805194805194,
+            "good": true
+          },
+          "interior_bbox": true,
+          "full_body_like": true,
+          "full_body_visibility": "unknown"
+        },
+        "identity_class": "TARGET_CANDIDATE",
+        "reason": "LOW_REFERENCE_SIMILARITY",
+        "anchor_similarity": 0.8912192531289197
+      }
+    ]
+  }
+]

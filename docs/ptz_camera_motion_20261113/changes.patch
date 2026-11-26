@@ -1,0 +1,796 @@
+diff --git a/config.py b/config.py
+index 76b4aad..57811a7 100644
+--- a/config.py
++++ b/config.py
+@@ -852,6 +852,18 @@ FACE_TRACKING_ENABLED = False
+ # ByteTrack sees weak detections; identity acquisition still requires PERSON_CONF_THRESHOLD.
+ BYTE_TRACK_LOW_THRESHOLD = 0.10
+ 
++# Observation-only sidecar. GMC and control experiments remain offline.
++CAMERA_MOTION_DIAGNOSTICS_ENABLED = os.environ.get('PTZ_CAMERA_MOTION_DIAGNOSTICS', '0') == '1'
++CAMERA_MOTION_GMC_ENABLED = False  # Offline replay only; never applied in runtime.
++CAMERA_MOTION_AWARE_CONTROL_ENABLED = False  # No runtime behavior wired to this flag.
++CAMERA_MOTION_METHOD = 'sparse_optical_flow'
++CAMERA_MOTION_DOWNSCALE = 2
++CAMERA_MOTION_OSD_BOXES = ()  # Original frame coordinates; configure for a capture session.
++CAMERA_MOTION_RECORD_ENABLED = os.environ.get('PTZ_CAMERA_MOTION_RECORD', '0') == '1'
++CAMERA_MOTION_RECORD_DIRECTORY = str(PROJECT_ROOT / 'logs' / 'motion_capture')
++CAMERA_MOTION_RECORD_MAX_BYTES = 256_000_000
++CAMERA_MOTION_RECORD_MAX_FRAMES = 600
++
+ # Physical body centering, independent of optical/digital zoom toggles.
+ AUTO_PAN_TILT_ENABLED = True
+ AUTO_PAN_TILT_DEADZONE = 0.08  # Fraction of full image width/height from center.
+diff --git a/runtime/byte_tracking.py b/runtime/byte_tracking.py
+index deed9bc..5b91a98 100644
+--- a/runtime/byte_tracking.py
++++ b/runtime/byte_tracking.py
+@@ -47,8 +47,14 @@ class ByteTrackPersonTracker:
+         self._snapshot_context = None
+         self._last_selection = None
+         self._last_reacquired = None
++        self.motion_observer = None
++        if getattr(cfg, 'CAMERA_MOTION_DIAGNOSTICS_ENABLED', False) or getattr(cfg, 'CAMERA_MOTION_RECORD_ENABLED', False):
++            from .camera_motion import MotionObserver
++            self.motion_observer = MotionObserver(cfg)
+ 
+     def reset(self):
++        if self.motion_observer is not None:
++            self.motion_observer.reset()
+         self.tracker.reset()
+         self.ids.clear()
+         self.last_received = None
+@@ -73,6 +79,18 @@ class ByteTrackPersonTracker:
+             else:
+                 latency.profiler.count('repeated_detection_aliases')
+         persons = unique
++        if self.motion_observer is not None:
++            try:
++                context = latency.context.get()
++                metadata = self.motion_observer.observe(frame, received, frame_id,
++                    [p['bbox'] for p in persons],
++                    (context.get('lock_session_id'), context.get('track_generation')),
++                    detections=persons)
++                if metadata is not None:
++                    latency.profiler.event('CAMERA_MOTION_OBSERVATION', **metadata)
++            except Exception as exc:
++                # Optional diagnostics must not change association or admission.
++                latency.profiler.event('CAMERA_MOTION_DIAGNOSTIC_FAILED', error_type=type(exc).__name__)
+         rows = np.asarray([[*p['bbox'], p.get('confidence', 1.), i]
+                            for i, p in enumerate(persons)], dtype=np.float32).reshape(-1, 6)
+         output = []
+diff --git a/runtime/camera_motion.py b/runtime/camera_motion.py
+new file mode 100644
+index 0000000..83935fb
+--- /dev/null
++++ b/runtime/camera_motion.py
+@@ -0,0 +1,140 @@
++"""CPU-only observational camera motion. No tracker, identity or motor decisions."""
++from dataclasses import dataclass,asdict
++import datetime,math,time
++import cv2
++import numpy as np
++
++
++@dataclass
++class MotionEstimate:
++    valid: bool = False
++    reason: str = 'UNINITIALIZED'
++    transform: object = None  # previous -> current, original-image pixels
++    dx: float | None = None
++    dy: float | None = None
++    matches: int = 0
++    inliers: int = 0
++    inlier_ratio: float = 0.
++    reprojection_error: float | None = None
++    confidence: float = 0.  # quality heuristic, not a calibrated probability
++    classification: str = 'UNKNOWN'
++    scale: float | None = None
++    rotation_degrees: float | None = None
++    latency_ms: float = 0.
++
++    def payload(self):return asdict(self)
++
++
++class CameraMotionEstimator:
++    def __init__(self, downscale=2, max_gap=.5):
++        self.downscale=max(1,int(downscale));self.max_gap=float(max_gap)
++
++    @staticmethod
++    def mask(shape, boxes, osd_boxes=()):
++        h,w=shape;mask=np.full((h,w),255,np.uint8)
++        mask[:max(2,h//30)]=0;mask[-max(2,h//30):]=0
++        mask[:,:max(2,w//50)]=0;mask[:,-max(2,w//50):]=0
++        for box in list(boxes)+list(osd_boxes):
++            if len(box)!=4 or not np.isfinite(box).all():continue
++            x1,y1,x2,y2=box
++            pad=5
++            x1,x2=np.clip([int(x1)-pad,int(x2)+pad+1],0,w)
++            y1,y2=np.clip([int(y1)-pad,int(y2)+pad+1],0,h)
++            if x2>x1 and y2>y1:mask[y1:y2,x1:x2]=0
++        return mask
++
++    def estimate(self, previous,current,previous_time,current_time,previous_boxes=(),current_boxes=(),osd_boxes=()):
++        begin=time.perf_counter();result=MotionEstimate()
++        try:
++            self._estimate(result,previous,current,previous_time,current_time,previous_boxes,current_boxes,osd_boxes)
++        except (cv2.error,ValueError,TypeError,OverflowError) as exc:
++            result=MotionEstimate(reason='ESTIMATION_ERROR_'+type(exc).__name__)
++        result.latency_ms=(time.perf_counter()-begin)*1000
++        return result
++
++    def _estimate(self,r,previous,current,pt,ct,pboxes,cboxes,osd):
++        if not math.isfinite(pt) or not math.isfinite(ct) or not 0<ct-pt<=self.max_gap:
++            r.reason='INVALID_TIME_GAP';return
++        if previous is None or current is None or previous.shape!=current.shape or min(previous.shape[:2])<32:
++            r.reason='INVALID_FRAME_SHAPE';return
++        h,w=previous.shape[:2];factor=max(self.downscale,w/640)
++        size=(max(16,round(w/factor)),max(16,round(h/factor)))
++        sx,sy=size[0]/w,size[1]/h
++        gray=lambda im:cv2.resize(cv2.cvtColor(im,cv2.COLOR_BGR2GRAY) if im.ndim==3 else im,size)
++        a,b=gray(previous),gray(current)
++        if a.dtype!=np.uint8 or b.dtype!=np.uint8:r.reason='INVALID_FRAME_TYPE';return
++        ma=cv2.resize(self.mask((h,w),pboxes,osd),size,interpolation=cv2.INTER_NEAREST)
++        mb=cv2.resize(self.mask((h,w),cboxes,osd),size,interpolation=cv2.INTER_NEAREST)
++        if min(cv2.Laplacian(a,cv2.CV_64F).var(),cv2.Laplacian(b,cv2.CV_64F).var())<8:
++            r.reason='LOW_TEXTURE_OR_BLUR';return
++        points=cv2.goodFeaturesToTrack(a,400,.01,7,mask=ma,blockSize=7)
++        if points is None or len(points)<16:r.reason='TOO_FEW_FEATURES';return
++        q,ok,_=cv2.calcOpticalFlowPyrLK(a,b,points,None,winSize=(21,21),maxLevel=3)
++        if q is None:r.reason='FLOW_FAILED';return
++        back,okback,_=cv2.calcOpticalFlowPyrLK(b,a,q,None,winSize=(21,21),maxLevel=3)
++        if back is None:r.reason='FLOW_FAILED';return
++        pp=points[:,0];qq=q[:,0];good=(ok[:,0]>0)&(okback[:,0]>0)&(np.linalg.norm(back[:,0]-pp,axis=1)<1.2)
++        good &= np.isfinite(qq).all(axis=1)
++        inside=(qq[:,0]>=0)&(qq[:,0]<size[0])&(qq[:,1]>=0)&(qq[:,1]<size[1])
++        for i in np.flatnonzero(good&inside):
++            if mb[int(qq[i,1]),int(qq[i,0])]==0:good[i]=False
++        good &= inside;pp,qq=pp[good],qq[good];r.matches=len(pp)
++        if len(pp)<16:r.reason='TOO_FEW_MATCHES';return
++        H,inliers=cv2.estimateAffinePartial2D(pp,qq,method=cv2.RANSAC,ransacReprojThreshold=2.,maxIters=1000,confidence=.99)
++        if H is None or not np.isfinite(H).all():r.reason='INVALID_TRANSFORM';return
++        keep=inliers.ravel().astype(bool);r.inliers=int(keep.sum());r.inlier_ratio=r.inliers/r.matches
++        # Convert an affine warp in resized coordinates back to original pixels.
++        D=np.diag([sx,sy,1.]);full=np.vstack([H,[0,0,1.]])
++        H=(np.linalg.inv(D)@full@D)[:2]
++        predicted=(pp@full[:2,:2].T+full[:2,2]);residual=(predicted-qq)/np.array([sx,sy])
++        r.reprojection_error=float(np.median(np.linalg.norm(residual[keep],axis=1))) if keep.any() else None
++        r.scale=float(np.sqrt(np.linalg.det(H[:,:2]))) if np.linalg.det(H[:,:2])>0 else 0.
++        r.rotation_degrees=float(np.degrees(np.arctan2(H[1,0],H[0,0])))
++        grid={(min(3,int(x/size[0]*4)),min(2,int(y/size[1]*3))) for x,y in pp[keep]}
++        spread=np.ptp(pp[keep],axis=0)/np.array(size) if keep.any() else np.zeros(2)
++        if r.inliers<12 or r.inlier_ratio<.55:r.reason='LOW_INLIER_SUPPORT';return
++        if len(grid)<4 or min(spread)<.2:r.reason='LOCALIZED_FEATURES';return
++        if r.reprojection_error is None or r.reprojection_error>2.5:r.reason='HIGH_RESIDUAL';return
++        if not .85<=r.scale<=1.18 or abs(r.rotation_degrees)>12 or abs(H[0,2])>w*.35 or abs(H[1,2])>h*.35:
++            r.reason='IMPLAUSIBLE_GEOMETRY';return
++        r.valid=True;r.reason='VALID';r.transform=H.tolist();r.dx=float(H[0,2]);r.dy=float(H[1,2])
++        r.confidence=float(r.inlier_ratio*min(1,r.inliers/60)*max(0,1-r.reprojection_error/3))
++        r.classification=('SCALE_CHANGE' if abs(r.scale-1)>.015 else 'ROTATION' if abs(r.rotation_degrees)>1. else
++                          'TRANSLATION' if math.hypot(r.dx,r.dy)>2 else 'LOW_IMAGE_MOTION')
++
++
++class MotionObserver:
++    """Opt-in diagnostic sidecar; resets on session/frame discontinuity."""
++    def __init__(self,cfg):
++        self.estimator=CameraMotionEstimator(getattr(cfg,'CAMERA_MOTION_DOWNSCALE',2))
++        self.osd=getattr(cfg,'CAMERA_MOTION_OSD_BOXES',())
++        self.previous=None;self.recorder=None
++        if getattr(cfg,'CAMERA_MOTION_RECORD_ENABLED',False):
++            from .motion_recording import MotionRecorder
++            self.recorder=MotionRecorder(cfg)
++
++    def reset(self):self.previous=None
++
++    def observe(self,frame,received,frame_id,boxes,session,command=None,capture_timestamp=None,detections=None):
++        if frame is None:return None
++        previous=self.previous
++        self.previous=(frame.copy(),received,frame_id,[list(b) for b in boxes],session)
++        if previous is None:result=MotionEstimate(reason='FIRST_FRAME')
++        elif session!=previous[4]:result=MotionEstimate(reason='SESSION_CHANGED')
++        elif frame_id is None or previous[2] is None or frame_id<=previous[2]:result=MotionEstimate(reason='FRAME_ORDER')
++        else:result=self.estimator.estimate(previous[0],frame,previous[1],received,previous[3],boxes,self.osd)
++        metadata=dict(frame_id=frame_id,previous_frame_id=previous[2] if previous else None,
++            capture_timestamp=capture_timestamp,receive_timestamp=received,session=session,
++            observation_monotonic=time.monotonic(),
++            observation_wall_time=datetime.datetime.now(datetime.timezone.utc).isoformat(),
++            ptz_command_active=None,expected_camera_moving=None,zoom_transition=None,settling_estimate=None,
++            observed_global_motion=result.payload(),motion_estimation_confidence=result.confidence,
++            timestamp_basis='decoded_frame_arrival_monotonic',capture_clock='unavailable' if capture_timestamp is None else 'caller_supplied')
++        if command:
++            for k in ('ptz_command_active','expected_camera_moving','zoom_transition','settling_estimate'):metadata[k]=command.get(k)
++        if self.recorder:
++            self.recorder.submit(frame,detections if detections is not None else [{'bbox':b} for b in boxes],metadata)
++        return metadata
++
++    def close(self):
++        if self.recorder:self.recorder.close()
+diff --git a/runtime/camera_motion_shadow.py b/runtime/camera_motion_shadow.py
+new file mode 100644
+index 0000000..ee46de2
+--- /dev/null
++++ b/runtime/camera_motion_shadow.py
+@@ -0,0 +1,68 @@
++"""Offline-only ByteTrack experiment. Never imported by the application pipeline.
++
++Current STrack is XYAH, not BoT-SORT XYWH. Only translation is admitted:
++mean[x,y] += t; Jacobian is I; covariance is propagated with I P I^T plus
++bounded image-fit uncertainty on position. Aspect/height/velocities are unchanged.
++Scale/rotation estimates fall back; no generic R-kron warp of XYAH is used.
++"""
++import numpy as np
++from .byte_tracking import ByteTrackPersonTracker,IndexedByteTracker
++
++
++def translation_for(estimate):
++    if estimate is None or not estimate.valid or not np.isfinite(estimate.confidence) or estimate.confidence<.35:return None
++    try:H=np.asarray(estimate.transform,dtype=float)
++    except (ValueError,TypeError):return None
++    if H.shape!=(2,3) or not np.isfinite(H).all():return None
++    if not np.allclose(H[:,:2],np.eye(2),atol=.01,rtol=0):return None
++    return H[:,2].copy()
++
++
++def warp_xyah(track,translation,error=0.):
++    t=np.asarray(translation,dtype=float)
++    if t.shape!=(2,) or not np.isfinite(t).all() or not np.isfinite(error):raise ValueError('invalid translation')
++    mean=track.mean.copy();cov=track.covariance.copy()
++    mean[:2]+=t
++    cov[:2,:2]+=np.eye(2)*min(4.,max(0.,float(error))**2)
++    track.mean=mean;track.covariance=(cov+cov.T)/2
++
++
++class TranslationByteTracker(IndexedByteTracker):
++    def __init__(self,*args,**kwargs):
++        super().__init__(*args,**kwargs);self.estimate=None;self.applied=0
++
++    def multi_predict(self,stracks):
++        super().multi_predict(stracks)
++        translation=translation_for(self.estimate)
++        if translation is None:return
++        # This hook runs exactly once after prediction, before high/low-score
++        # association. Unconfirmed tracks also need the same coordinate change.
++        seen=set()
++        for track in list(stracks)+[t for t in self.tracked_stracks if not t.is_activated]:
++            if id(track) in seen or track.mean is None:continue
++            seen.add(id(track));warp_xyah(track,translation,self.estimate.reprojection_error or 0.)
++        self.applied+=1
++
++
++class ShadowBranch:
++    def __init__(self,cfg,enabled=False):
++        self.adapter=ByteTrackPersonTracker(cfg)
++        self.enabled=enabled
++        if enabled:self.adapter.tracker=TranslationByteTracker(self.adapter.tracker.args,frame_rate=cfg.AI_MAX_FPS)
++
++    def update(self,detections,received,frame_id,estimate=None):
++        if self.enabled:self.adapter.tracker.estimate=estimate
++        # No image is passed to native BYTETracker.update: native GMC cannot run
++        # a second warp. No GT labels/identity data enter this call.
++        return self.adapter.update(detections,received,frame_id=frame_id)
++
++
++def safe_handling_proposal(*,age_s,session_valid,image_quality_good,gmc_valid,prediction_age_s,
++                           reject_stale=False,gate_gallery=False,reject_invalid_gmc=True,bound_prediction=False,
++                           max_age=.8,max_prediction_age=1.):
++    """Independent offline decisions only; does not call control or mutate gallery."""
++    fresh=bool(session_valid and np.isfinite(age_s) and 0<=age_s<=max_age)
++    return {'allow_new_ptz_observation':fresh if reject_stale else None,
++            'allow_gallery_update':bool(fresh and image_quality_good) if gate_gallery else None,
++            'allow_gmc':bool(session_valid and gmc_valid) if reject_invalid_gmc else None,
++            'allow_predicted_target':bool(session_valid and np.isfinite(prediction_age_s) and 0<=prediction_age_s<=max_prediction_age) if bound_prediction else None}
+diff --git a/runtime/motion_recording.py b/runtime/motion_recording.py
+new file mode 100644
+index 0000000..a18a4fd
+--- /dev/null
++++ b/runtime/motion_recording.py
+@@ -0,0 +1,47 @@
++"""Bounded opt-in raw decoded frame recorder. Never opens a camera or motor."""
++import atexit,json,queue,threading,time
++from pathlib import Path
++from uuid import uuid4
++import cv2
++
++
++class MotionRecorder:
++    def __init__(self,cfg):
++        self.root=Path(cfg.CAMERA_MOTION_RECORD_DIRECTORY)/('capture_'+uuid4().hex)
++        self.max_bytes=int(getattr(cfg,'CAMERA_MOTION_RECORD_MAX_BYTES',256_000_000))
++        self.max_frames=int(getattr(cfg,'CAMERA_MOTION_RECORD_MAX_FRAMES',600))
++        self.pending=queue.Queue(maxsize=2);self.stop=threading.Event();self.dropped=0;self.written=0;self.bytes=0;self.errors=0
++        self.thread=threading.Thread(target=self._run,name='motion-recorder',daemon=True);self.thread.start();atexit.register(self.close)
++
++    def submit(self,frame,detections,metadata):
++        if self.stop.is_set() or self.written>=self.max_frames or frame.nbytes>24_000_000 or self.pending.full():
++            self.dropped+=1;return False
++        item=(frame.copy(),json.loads(json.dumps(dict(metadata,detections=[
++            {'bbox':[float(v) for v in d['bbox']], 'confidence':float(d['confidence']) if d.get('confidence') is not None else None}
++            for d in detections]))))
++        try:self.pending.put_nowait(item);return True
++        except queue.Full:self.dropped+=1;return False
++
++    def close(self):
++        self.stop.set()
++        if self.thread is not threading.current_thread():self.thread.join(timeout=2)
++        return not self.thread.is_alive()
++
++    def _run(self):
++        while not self.stop.is_set() or not self.pending.empty():
++            try:frame,meta=self.pending.get(timeout=.1)
++            except queue.Empty:continue
++            try:
++                ok,buf=cv2.imencode('.png',frame)
++                if not ok:raise ValueError('encode failed')
++                # Lossless decoded image, not raw sensor/encoded RTSP or capture PTS.
++                meta.update(source_kind='decoded_rtsp_frame',image=f'{self.written:06d}.png',color='BGR',
++                            recording_gaps_possible=True,dropped_before=self.dropped)
++                encoded=(json.dumps(meta)+'\n').encode()
++                if self.written>=self.max_frames or self.bytes+len(buf)+len(encoded)>self.max_bytes:self.dropped+=1;continue
++                self.root.mkdir(parents=True,exist_ok=True)
++                (self.root/meta['image']).write_bytes(buf.tobytes())
++                with (self.root/'frames.jsonl').open('ab') as f:f.write(encoded)
++                self.bytes+=len(buf)+len(encoded);self.written+=1
++            except Exception:self.errors+=1
++            finally:self.pending.task_done()
+diff --git a/test/test_camera_motion.py b/test/test_camera_motion.py
+new file mode 100644
+index 0000000..ca352f5
+--- /dev/null
++++ b/test/test_camera_motion.py
+@@ -0,0 +1,177 @@
++"""Offline camera-motion tests. No live camera, motor, detector or ReID inference."""
++import json,sys,tempfile,time,unittest
++from pathlib import Path
++from types import SimpleNamespace
++from unittest.mock import patch
++import cv2,numpy as np
++sys.path[:0]=[str(Path(__file__).resolve().parents[1]),str(Path(__file__).resolve().parents[1]/'tools')]
++from runtime.camera_motion import CameraMotionEstimator,MotionEstimate,MotionObserver
++from runtime.camera_motion_shadow import ShadowBranch,translation_for,warp_xyah,safe_handling_proposal
++from runtime.motion_recording import MotionRecorder
++from runtime.byte_tracking import ByteTrackPersonTracker
++from camera_motion_replay import synthetic,replay,cfg_copy,load_bundle
++from camera_motion_audit import exposure_seconds,exposure_at
++from camera_motion_metadata import enrich
++
++
++class MotionTests(unittest.TestCase):
++    @classmethod
++    def setUpClass(cls):cv2.setNumThreads(1)
++    def setUp(self):
++        rng=np.random.default_rng(5)
++        self.frame=cv2.GaussianBlur(rng.integers(0,256,(360,640,3),dtype=np.uint8),(3,3),0)
++        self.est=CameraMotionEstimator()
++    def pair(self,H):return cv2.warpAffine(self.frame,np.array(H,dtype=float),(640,360))
++    def test_static_camera_moving_foreground_masked(self):
++        a=self.frame.copy();b=a.copy();a[100:220,200:270]=220;b[100:220,240:310]=220
++        r=self.est.estimate(a,b,0,.1,[[200,100,270,220]],[[240,100,310,220]])
++        self.assertTrue(r.valid,r);self.assertLess(abs(r.dx)+abs(r.dy),1)
++    def test_pan_left_right_and_tilt(self):
++        for dx,dy in ((-20,0),(20,0),(0,-18),(0,18)):
++            with self.subTest(dx=dx,dy=dy):
++                r=self.est.estimate(self.frame,self.pair([[1,0,dx],[0,1,dy]]),0,.1)
++                self.assertTrue(r.valid,r);self.assertAlmostEqual(r.dx,dx,delta=.8);self.assertAlmostEqual(r.dy,dy,delta=.8)
++    def test_fast_pan_reliable_or_fallback_never_nan(self):
++        r=self.est.estimate(self.frame,self.pair([[1,0,260],[0,1,0]]),0,.1)
++        self.assertFalse(r.valid,r);self.assertIsNone(r.transform)
++    def test_time_gap_and_reversed_time(self):
++        for t in (0,-.1,1,float('nan')):
++            self.assertFalse(self.est.estimate(self.frame,self.frame,0,t).valid)
++    def test_zoom_and_pan_zoom_detected_not_warped_as_translation(self):
++        for dx in (0,8):
++            H=cv2.getRotationMatrix2D((320,180),0,1.05);H[0,2]+=dx
++            r=self.est.estimate(self.frame,self.pair(H),0,.1)
++            self.assertTrue(r.valid,r);self.assertAlmostEqual(r.scale,1.05,delta=.01)
++            self.assertEqual(r.classification,'SCALE_CHANGE');self.assertIsNone(translation_for(r))
++    def test_blur_and_textureless_rejected(self):
++        for a,b in ((np.zeros_like(self.frame),np.zeros_like(self.frame)),(self.frame,cv2.GaussianBlur(self.frame,(61,61),20))):
++            self.assertFalse(self.est.estimate(a,b,0,.1).valid)
++    def test_nan_transform_rejected(self):
++        with patch('cv2.estimateAffinePartial2D',return_value=(np.full((2,3),np.nan),None)):
++            self.assertFalse(self.est.estimate(self.frame,self.frame,0,.1).valid)
++    def test_occluded_osd_mask_and_all_masked_fallback(self):
++        r=self.est.estimate(self.frame,self.frame,0,.1,osd_boxes=[[0,0,640,360]])
++        self.assertFalse(r.valid)
++    def test_invalid_frame_shape(self):
++        self.assertFalse(self.est.estimate(self.frame,self.frame[:200],0,.1).valid)
++    def test_session_reset_prevents_cross_session_estimate(self):
++        observer=MotionObserver(cfg_copy())
++        observer.observe(self.frame,0,1,[],'a')
++        r=observer.observe(self.frame,.1,2,[],'b')
++        self.assertEqual(r['observed_global_motion']['reason'],'SESSION_CHANGED')
++        r=observer.observe(self.frame,.2,2,[],'b')
++        self.assertEqual(r['observed_global_motion']['reason'],'FRAME_ORDER')
++        self.assertIsNone(r['capture_timestamp']);self.assertIsNone(r['expected_camera_moving'])
++    def test_xyah_translation_preserves_aspect_velocities_and_psd_covariance(self):
++        t=SimpleNamespace(mean=np.array([10,20,.5,80,2,3,.01,4.]),covariance=np.eye(8))
++        old=t.mean.copy();warp_xyah(t,[15,-8],.2)
++        np.testing.assert_allclose(t.mean[:2],[25,12]);np.testing.assert_array_equal(t.mean[2:],old[2:])
++        self.assertGreaterEqual(np.linalg.eigvalsh(t.covariance).min(),0)
++        self.assertEqual(t.covariance[2,2],1)
++    def test_invalid_confidence_and_geometry_fallback(self):
++        for r in (MotionEstimate(),MotionEstimate(valid=True,confidence=.8,transform=[[float('nan'),0,0],[0,1,0]]),
++                  MotionEstimate(valid=True,confidence=float('nan'),transform=[[1,0,3],[0,1,0]]),
++                  MotionEstimate(valid=True,confidence=.9,transform='malformed'),
++                  MotionEstimate(valid=True,confidence=.1,transform=[[1,0,3],[0,1,0]])):
++            self.assertIsNone(translation_for(r))
++    def test_flags_off_and_invalid_transform_are_baseline_identical(self):
++        frames,rows,truth=synthetic(0,2,10)
++        a=ShadowBranch(cfg_copy(),False);outa=[a.update(r['detections'],r['receive_timestamp'],r['frame_id']) for r in rows]
++        b=ShadowBranch(cfg_copy(),True);outb=[b.update(r['detections'],r['receive_timestamp'],r['frame_id'],MotionEstimate()) for r in rows]
++        self.assertEqual(outa,outb)
++        with patch('runtime.camera_motion.MotionObserver',side_effect=AssertionError('OFF path instantiated observer')):
++            tracker=ByteTrackPersonTracker(cfg_copy());tracker.update([],0,frame=self.frame,frame_id=1)
++            self.assertIsNone(tracker.motion_observer)
++    def test_diagnostics_exception_does_not_change_tracking(self):
++        cfg=cfg_copy();cfg.CAMERA_MOTION_DIAGNOSTICS_ENABLED=True
++        tracker=ByteTrackPersonTracker(cfg)
++        with patch.object(tracker.motion_observer,'observe',side_effect=RuntimeError('synthetic')):
++            self.assertEqual(tracker.update([],0,frame=self.frame,frame_id=1),[])
++    def test_diagnostics_on_preserves_tracking_outputs(self):
++        frames,rows,_=synthetic(0,2,8)
++        baseline=ByteTrackPersonTracker(cfg_copy())
++        expected=[baseline.update(r['detections'],r['receive_timestamp'],frame=f,frame_id=r['frame_id']) for f,r in zip(frames,rows)]
++        cfg=cfg_copy();cfg.CAMERA_MOTION_DIAGNOSTICS_ENABLED=True
++        diagnostic=ByteTrackPersonTracker(cfg)
++        actual=[diagnostic.update(r['detections'],r['receive_timestamp'],frame=f,frame_id=r['frame_id']) for f,r in zip(frames,rows)]
++        self.assertEqual(actual,expected)
++    def test_warp_exactly_once_at_association_boundary(self):
++        b=ShadowBranch(cfg_copy(),True)
++        b.update([dict(bbox=[100,40,140,140],confidence=.95)],0,1)
++        estimate=MotionEstimate(valid=True,confidence=.9,transform=[[1,0,10],[0,1,0]],reprojection_error=0)
++        with patch('runtime.camera_motion_shadow.warp_xyah',wraps=warp_xyah) as warp:
++            b.update([dict(bbox=[110,40,150,140],confidence=.95)],.1,2,estimate)
++            self.assertEqual(warp.call_count,1)
++        self.assertEqual(b.adapter.tracker.applied,1)
++    def test_mask_outside_image_does_not_hide_background(self):
++        normal=self.est.mask((360,640),[])
++        clipped=self.est.mask((360,640),[[-100,-100,-20,-20],[700,400,800,500]])
++        np.testing.assert_array_equal(normal,clipped)
++    def test_command_metadata_requires_verified_clock_and_keeps_capture_unknown(self):
++        events=[dict(monotonic_ns=1_000_000_000,event='PAN_TILT_START_SENT',rpc_code='Left'),
++                dict(monotonic_ns=2_000_000_000,event='PAN_TILT_STOP_SENT',rpc_code='Left')]
++        row=dict(receive_timestamp=1.5,capture_timestamp=None,observation_monotonic=1.6,
++                 observation_wall_time='1970-01-01T00:16:41.600000+00:00')
++        result=enrich(row,events,[(1,2,'Left')],1000)
++        self.assertTrue(result['ptz_command_active']);self.assertIsNone(result['capture_timestamp'])
++        self.assertIsNone(enrich(row,events,[(1,2,'Left')],2000)['ptz_command_active'])
++    def test_single_target_pan_fragmentation_experiment(self):
++        result=replay(*synthetic(25,0,10))
++        self.assertGreater(result['gmc_success_rate'],.5)
++        self.assertLessEqual(result['branches']['gmc']['metrics']['id_switches'],result['branches']['baseline']['metrics']['id_switches'])
++    def test_person_walking_with_pan_same_observations(self):
++        result=replay(*synthetic(25,2,8));self.assertEqual(len(result['branches']['baseline']['outputs']),len(result['branches']['gmc']['outputs']))
++    def test_out_of_fov_and_return_do_not_extrapolate_output(self):
++        b=ShadowBranch(cfg_copy(),True);r=MotionEstimate(valid=True,confidence=.9,transform=[[1,0,5],[0,1,0]],reprojection_error=.1)
++        b.update([{'bbox':[10,20,40,100],'confidence':.9}],0,1,r)
++        for i in range(1,10):self.assertEqual(b.update([],i*.1,i+1,r),[])
++        out=b.update([{'bbox':[60,20,90,100],'confidence':.9}],1.,11,r)
++        self.assertLessEqual(len(out),1)
++    def test_duplicate_alias_handling_unchanged(self):
++        person={'bbox':[30,30,60,120],'confidence':.95}
++        b=ShadowBranch(cfg_copy(),True);out=b.update([person,person],0,1)
++        self.assertEqual(len(out),1)
++    def test_crossing_and_overlap_do_not_claim_identity(self):
++        b=ShadowBranch(cfg_copy(),True)
++        for i in range(12):
++            persons=[dict(bbox=[100+i*4,40,130+i*4,140],confidence=.95),dict(bbox=[190-i*4,40,220-i*4,140],confidence=.95)]
++            out=b.update(persons,i*.1,i+1)
++            self.assertTrue(all('identity' not in row for row in out))
++    def test_motion_after_reacquisition_and_session_gap_is_bounded(self):
++        b=ShadowBranch(cfg_copy(),True)
++        p=[dict(bbox=[100,40,140,140],confidence=.95)]
++        b.update(p,0,1)
++        self.assertLessEqual(len(b.update(p,10,2,MotionEstimate())),1)
++    def test_independent_safe_handling_experiments(self):
++        base=dict(age_s=2,session_valid=True,image_quality_good=False,gmc_valid=False,prediction_age_s=10)
++        result=safe_handling_proposal(**base,reject_stale=True,gate_gallery=True,bound_prediction=True)
++        self.assertTrue(all(v is False for v in result.values()))
++        base.update(age_s=.1,session_valid=False,prediction_age_s=.1)
++        self.assertFalse(safe_handling_proposal(**base,reject_stale=True)['allow_new_ptz_observation'])
++        base['gmc_valid']=True
++        self.assertFalse(safe_handling_proposal(**base)['allow_gmc'])
++    def test_exposure_union_not_double_counted(self):
++        intervals=[(1,2,'pan'),(1.5,2.5,'zoom')]
++        result=exposure_seconds(0,4,intervals)
++        self.assertAlmostEqual(sum(result.values()),4)
++        self.assertAlmostEqual(result['command_active'],1.5)
++        self.assertEqual(exposure_at(2.6,intervals),'post_stop_0_300ms')
++    def test_recorder_bounded_and_retains_confidence_and_unknown_capture_time(self):
++        with tempfile.TemporaryDirectory() as d:
++            cfg=cfg_copy();cfg.CAMERA_MOTION_RECORD_DIRECTORY=d;cfg.CAMERA_MOTION_RECORD_MAX_FRAMES=2
++            rec=MotionRecorder(cfg)
++            for i in range(8):rec.submit(self.frame,[dict(bbox=[1,2,3,4],confidence=.73)],dict(frame_id=i,receive_timestamp=i*.1,capture_timestamp=None,session='x'))
++            self.assertTrue(rec.close());self.assertLessEqual(rec.written,2);self.assertGreater(rec.dropped,0)
++            rows=[json.loads(l) for l in (rec.root/'frames.jsonl').read_text().splitlines()]
++            self.assertEqual(rows[0]['detections'][0]['confidence'],.73);self.assertIsNone(rows[0]['capture_timestamp'])
++            frames,loaded=load_bundle(rec.root);self.assertEqual(len(frames),len(rows))
++    def test_recorder_error_closes_without_deadlock(self):
++        with tempfile.TemporaryDirectory() as d:
++            cfg=cfg_copy();cfg.CAMERA_MOTION_RECORD_DIRECTORY=d
++            with patch('cv2.imencode',side_effect=ValueError('synthetic')):
++                rec=MotionRecorder(cfg);rec.submit(self.frame,[],{});self.assertTrue(rec.close());self.assertEqual(rec.errors,1)
++
++
++if __name__=='__main__':
++    with patch('socket.create_connection',side_effect=AssertionError('NO NETWORK')),patch('requests.sessions.Session.request',side_effect=AssertionError('NO HTTP')):
++        unittest.main()
+diff --git a/tools/camera_motion_audit.py b/tools/camera_motion_audit.py
+new file mode 100644
+index 0000000..b224831
+--- /dev/null
++++ b/tools/camera_motion_audit.py
+@@ -0,0 +1,95 @@
++#!/usr/bin/env python3
++"""Read-only offline temporal audit. Command exposure is NOT observed camera motion."""
++import argparse,bisect,collections,csv,datetime,hashlib,json,re,statistics
++from pathlib import Path
++
++
++def load_camera(paths):
++    rows=[json.loads(line[line.index('{'):]) for path in paths for line in path.read_text().splitlines() if '{' in line]
++    return sorted(rows,key=lambda r:r['monotonic_ns'])
++
++
++def command_intervals(rows):
++    active={};intervals=[]
++    for r in rows:
++        event=r['event'];code=r.get('rpc_code');t=r['monotonic_ns']/1e9
++        if event=='PAN_TILT_START_SENT':active[code]=t
++        elif event=='PAN_TILT_STOP_SENT' and code in active:
++            intervals.append((active.pop(code),t,code))
++    return sorted(intervals),active
++
++
++def exposure_at(t, intervals):
++    if any(a<=t<b for a,b,_ in intervals):return 'command_active'
++    ends=[b for a,b,_ in intervals if b<=t]
++    gap=t-max(ends) if ends else float('inf')
++    if gap<.3:return 'post_stop_0_300ms'
++    if gap<.8:return 'post_stop_300_800ms'
++    return 'command_quiet_gt800ms'  # not measured standstill
++
++
++def exposure_seconds(start,end,intervals):
++    cuts=sorted({start,end}|{max(start,min(end,t)) for a,b,_ in intervals for t in (a,b,b+.3,b+.8)})
++    seconds=collections.defaultdict(float)
++    for a,b in zip(cuts,cuts[1:]):seconds[exposure_at((a+b)/2,intervals)]+=b-a
++    return dict(seconds)
++
++
++def audit(root,stamp,appstamp,out):
++    cameras=sorted((root/'logs/camera').glob('camera_control_'+stamp+'.log*'))
++    traces=sorted((root/'logs/latency').glob('latency_trace_'+stamp+'.jsonl*'))
++    app=root/'logs'/('ptz_'+appstamp+'.log')
++    rows=load_camera(cameras);trace=[json.loads(l) for p in traces for l in p.read_text().splitlines()]
++    trace.sort(key=lambda r:r['monotonic_ns'])
++    offsets=[datetime.datetime.fromisoformat(r['timestamp']).timestamp()-r['monotonic_ns']/1e9 for r in rows]
++    offset=statistics.median(offsets)
++    wall=lambda s:datetime.datetime.strptime(s[:23],'%Y-%m-%d %H:%M:%S.%f').replace(tzinfo=datetime.timezone(datetime.timedelta(hours=7))).timestamp()
++    lines=app.read_text().splitlines();start=wall(lines[0])-offset
++    end=next(r['monotonic_ns']/1e9 for r in rows if r['event']=='SHUTDOWN_REQUESTED' and r.get('shutdown_phase')=='gui')
++    intervals,unfinished=command_intervals(rows);exposures=exposure_seconds(start,end,intervals)
++    transitions=[]
++    for l in lines:
++        m=re.search(r'\[STATE\] (\w+) -> (\w+)',l)
++        if m:transitions.append(dict(wall_time=l[:23],monotonic=wall(l)-offset,previous=m[1],state=m[2]))
++    counts={k:collections.Counter() for k in ('HOLD','FULL_LOSS')};events=[]
++    decisions=[r for r in rows if r['event']=='PAN_TILT_DECISION'];times=[r['monotonic_ns']/1e9 for r in decisions]
++    detail_events={'TRACKER_OVERLAP_DIAGNOSTICS','PERSON_DETECTION_RESULT','REID_RESULT_REJECTED','TARGET_ID_CHANGED','STALE_RESULT','TARGET_STATE'}
++    for tr in transitions:
++        kind='HOLD' if tr['state']=='OCCLUDED_HOLD' else 'FULL_LOSS' if tr['previous']=='OCCLUDED_HOLD' and tr['state']=='SEARCHING' else None
++        if kind is None:continue
++        t=tr['monotonic'];bucket=exposure_at(t,intervals);counts[kind][bucket]+=1
++        i=bisect.bisect_right(times,t)-1;obs=decisions[i] if i>=0 else {}
++        frame_t=obs.get('received_ns',0)/1e9 or obs.get('observation_time')
++        dt=t-times[i] if i>=0 else None
++        details=[r for r in trace if abs(r['monotonic_ns']/1e9-t)<=.8 and (r['event'] in detail_events or 'STALE' in r['event'] or 'OVERLAP' in r['event'])]
++        event=dict(tr,kind=kind,command_exposure=bucket,observed_motion=None,root_cause='UNKNOWN',certainty='UNVERIFIED',
++                   previous_pan_decision_age_s=dt,frame_receive_time=frame_t,
++                   frame_exposure=exposure_at(frame_t,intervals) if frame_t is not None else None,
++                   previous_pan_decision={k:obs.get(k) for k in ('frame_id','target_bbox','decision_reason','tracking_state','identity_state','observation_age_ms','normalized_error_x','normalized_error_y','target_track_id')},
++                   nearby_trace_events=details,
++                   zoom_command_within_800ms=any('Zoom' in c and a<=t and b>=t-.8 for a,b,c in intervals))
++        events.append(event)
++    rates={k:{name:{'events':counts[k][name],'exposure_s':seconds,'rate_per_s':counts[k][name]/seconds if seconds else None} for name,seconds in exposures.items()} for k in counts}
++    loss=[t for t in transitions if t['previous']=='OCCLUDED_HOLD' and t['state']=='SEARCHING']
++    for t in loss:
++        hold=next((r for r in reversed(transitions) if r['monotonic']<t['monotonic'] and r['state']=='OCCLUDED_HOLD'),None)
++        t['preceding_hold_time']=hold['wall_time'] if hold else None
++        t['hold_to_loss_s']=t['monotonic']-hold['monotonic'] if hold else None
++        t['hold_onset_command_exposure']=exposure_at(hold['monotonic'],intervals) if hold else None
++        later=next((r for r in transitions if r['monotonic']>t['monotonic'] and r['state']=='TARGET_LOCKED'),None)
++        t['recovery_s']=later['monotonic']-t['monotonic'] if later else None
++    result=dict(clock_mapping={'wall_epoch_minus_monotonic_median':offset,'pair_offset_range_ms':(max(offsets)-min(offsets))*1000,'app_timestamp_resolution_ms':1,'capture_sensor_timestamp':'unavailable','video_clock_mapping':'OSD approximate only; unsynchronized monitor recording'},
++        window=[start,end],exposure_seconds=exposures,rates=rates,events=events,losses=loss,command_intervals=intervals,unfinished=unfinished,
++        latency_retained=[trace[0]['timestamp'],trace[-1]['timestamp']],
++        observed_motion_rates=None,fragmentation_rate=None,ground_truth_available=False,
++        source_sha256={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in [app,*cameras,*traces]})
++    out.mkdir(parents=True,exist_ok=True);(out/'timeline.json').write_text(json.dumps(result,ensure_ascii=False,indent=2))
++    with (out/'loss_events.csv').open('w') as f:
++        w=csv.writer(f);w.writerow(['wall_time','monotonic','kind','command_exposure','zoom_nearby','root_cause'])
++        w.writerows([e['wall_time'],e['monotonic'],e['kind'],e['command_exposure'],e['zoom_command_within_800ms'],e['root_cause']] for e in events)
++    print(json.dumps({'exposure_seconds':exposures,'rates':rates,'losses':loss,'offset_range_ms':result['clock_mapping']['pair_offset_range_ms']},indent=2))
++
++
++if __name__=='__main__':
++    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--root',type=Path,default=Path(__file__).resolve().parents[1]);p.add_argument('--stamp',default='20261113_112028_272959');p.add_argument('--appstamp',default='20261113_112025');p.add_argument('--out',type=Path,required=True)
++    a=p.parse_args();audit(a.root,a.stamp,a.appstamp,a.out)
+diff --git a/tools/camera_motion_metadata.py b/tools/camera_motion_metadata.py
+new file mode 100644
+index 0000000..1c55f37
+--- /dev/null
++++ b/tools/camera_motion_metadata.py
+@@ -0,0 +1,46 @@
++#!/usr/bin/env python3
++"""Offline join of decoded frame arrivals to same-session PTZ command logs.
++
++Writes a separate JSONL sidecar. No camera connection and no control decisions.
++Expected motion/settling are command proxies, never physical motor telemetry.
++"""
++import argparse,datetime,json,statistics,sys
++from pathlib import Path
++sys.path.insert(0,str(Path(__file__).resolve().parent))
++from camera_motion_audit import load_camera,command_intervals,exposure_at
++
++
++def enrich(row,events,intervals,clock_offset):
++    result=dict(row)
++    result.update(ptz_command_active=None,expected_camera_moving=None,zoom_transition=None,
++                  settling_estimate=None,command_join_reason='CLOCK_OR_COVERAGE_UNVERIFIED')
++    observed=row.get('observation_monotonic');wall=row.get('observation_wall_time')
++    if observed is None or wall is None or not events:return result
++    offset=datetime.datetime.fromisoformat(wall).timestamp()-observed
++    t=row['receive_timestamp']
++    if abs(offset-clock_offset)>1 or not events[0]['monotonic_ns']/1e9<=t<=events[-1]['monotonic_ns']/1e9:return result
++    # Unmatched starts are not silently treated as standstill.
++    _,pending=command_intervals([e for e in events if e['monotonic_ns']/1e9<=t])
++    active=bool(pending)
++    bucket='command_active' if active else exposure_at(t,intervals)
++    zoom=any('Zoom' in c for c in pending) or any('Zoom' in c and b<=t<b+.8 for _,b,c in intervals)
++    result.update(ptz_command_active=active,expected_camera_moving=active or bucket=='post_stop_0_300ms',
++                  zoom_transition=zoom,settling_estimate=bucket,command_join_reason='ARRIVAL_TIME_JOIN',
++                  command_time_basis='same_boot_monotonic; capture time unknown',
++                  expected_motion_is_proxy=True,settling_thresholds_seconds=[.3,.8])
++    return result
++
++
++def main():
++    p=argparse.ArgumentParser(description=__doc__)
++    p.add_argument('--bundle',type=Path,required=True);p.add_argument('--camera-logs',type=Path,nargs='+',required=True)
++    p.add_argument('--out',type=Path,required=True);a=p.parse_args()
++    source=a.bundle/'frames.jsonl'
++    if a.out.resolve()==source.resolve():p.error('output must be a separate sidecar')
++    events=load_camera(a.camera_logs);intervals,_=command_intervals(events)
++    offset=statistics.median(datetime.datetime.fromisoformat(r['timestamp']).timestamp()-r['monotonic_ns']/1e9 for r in events)
++    with source.open() as src,a.out.open('w') as dst:
++        for line in src:dst.write(json.dumps(enrich(json.loads(line),events,intervals,offset))+'\n')
++
++
++if __name__=='__main__':main()
+diff --git a/tools/camera_motion_replay.py b/tools/camera_motion_replay.py
+new file mode 100644
+index 0000000..72ff36b
+--- /dev/null
++++ b/tools/camera_motion_replay.py
+@@ -0,0 +1,120 @@
++#!/usr/bin/env python3
++"""Local decoded-frame bundle replay. No network, motors, YOLO, OSNet or GPU.
++
++Two branches use identical cached detections; synthetic GT is evaluated only
++AFTER both runs. Screen recordings are not accepted as raw replay bundles.
++"""
++import argparse,json,time,sys
++from pathlib import Path
++from types import SimpleNamespace
++import cv2,numpy as np
++sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
++import config
++from runtime.camera_motion import CameraMotionEstimator
++from runtime.camera_motion_shadow import ShadowBranch
++
++
++def cfg_copy():
++    c=SimpleNamespace(**{k:getattr(config,k) for k in dir(config) if k.isupper()})
++    c.CAMERA_MOTION_DIAGNOSTICS_ENABLED=c.CAMERA_MOTION_RECORD_ENABLED=c.TRACK_SNAPSHOT_ENABLED=False
++    return c
++
++
++def evaluate(outputs,truth):
++    last={};was_visible={};seen_ids={};switches=0;fragments=0;misses=0;visible=0
++    for out,gt in zip(outputs,truth):
++        assigned=set()
++        for person in gt:
++            ident=person['identity'];box=np.asarray(person['bbox']);visible+=1
++            candidates=[]
++            for i,row in enumerate(out):
++                a=np.asarray(row['bbox']);lo=np.maximum(a[:2],box[:2]);hi=np.minimum(a[2:],box[2:]);inter=np.maximum(hi-lo,0).prod()
++                union=np.maximum(a[2:]-a[:2],0).prod()+np.maximum(box[2:]-box[:2],0).prod()-inter
++                if i not in assigned and union>0:candidates.append((inter/union,i,row['track_id']))
++            match=max(candidates,default=(0,None,None))
++            if match[0]<.5:misses+=1;was_visible[ident]=False;continue
++            _,i,tid=match;assigned.add(i)
++            if ident in last and last[ident]!=tid:switches+=1
++            if ident in last and not was_visible.get(ident,True):fragments+=1
++            last[ident]=tid;was_visible[ident]=True;seen_ids.setdefault(ident,set()).add(tid)
++    return dict(id_switches=switches,track_fragmentations=fragments,missing_visible_observations=misses,
++                visible_observations=visible,unique_track_ids={k:len(v) for k,v in seen_ids.items()},
++                wrong_target_follow_rate=None,false_hold=None,full_loss=None,target_selected_dwell=None,
++                note='Spatial tracker metrics only; no selector/identity-follow inference in shadow branch')
++
++
++def replay(frames,records,truth=None):
++    estimates=[];estimator=CameraMotionEstimator();previous=None
++    for frame,row in zip(frames,records):
++        if previous is None or row.get('session')!=previous[1].get('session'):
++            estimates.append(None)
++        else:
++            estimates.append(estimator.estimate(previous[0],frame,previous[1]['receive_timestamp'],row['receive_timestamp'],
++                [d['bbox'] for d in previous[1]['detections']],[d['bbox'] for d in row['detections']],row.get('osd_boxes',())))
++        previous=(frame,row)
++    branches={}
++    for enabled in (False,True):
++        branch=ShadowBranch(cfg_copy(),enabled);outputs=[];timings=[]
++        previous_session=None
++        for row,estimate in zip(records,estimates):
++            if previous_session is not None and row.get('session')!=previous_session:
++                branch.adapter.reset()
++            previous_session=row.get('session')
++            detections=[{'bbox':list(d['bbox']),'confidence':float(d['confidence'])} for d in row['detections']]
++            t=time.perf_counter();outputs.append(branch.update(detections,row['receive_timestamp'],row['frame_id'],estimate));timings.append((time.perf_counter()-t)*1000)
++        branches['gmc' if enabled else 'baseline']=dict(outputs=outputs,tracker_mean_ms=float(np.mean(timings)),tracker_p95_ms=float(np.percentile(timings,95)),
++            metrics=evaluate(outputs,truth) if truth is not None else None)
++    valid=[e for e in estimates if e is not None];lat=[e.latency_ms for e in valid]
++    return dict(branches=branches,estimates=[e.payload() if e else None for e in estimates],
++        gmc_success_rate=sum(e.valid for e in valid)/len(valid) if valid else None,
++        gmc_mean_ms=float(np.mean(lat)) if lat else None,gmc_p95_ms=float(np.percentile(lat,95)) if lat else None,
++        raw_rtsp_benchmark=False,wrong_target_follow_acceptance='NOT_MEASURED',production_enable_recommended=False)
++
++
++def synthetic(camera_dx=0,person_dx=0,frames_count=16):
++    rng=np.random.default_rng(12);background=rng.integers(0,256,(360,1024,3),dtype=np.uint8)
++    background=cv2.GaussianBlur(background,(3,3),0);frames=[];records=[];truth=[]
++    for i in range(frames_count):
++        shift=i*camera_dx
++        H=np.array([[1.,0,shift],[0,1.,0.]])
++        frame=cv2.warpAffine(background,H,(1024,360))
++        x=150+shift+i*person_dx;box=[x,140,x+24,230]
++        detections=[];gt=[]
++        if 0<=x and x+24<1024:
++            cv2.rectangle(frame,(int(x),140),(int(x+24),230),(20,40,180),-1)
++            detections=[dict(bbox=box,confidence=.95)];gt=[dict(identity='synthetic_person_A',bbox=box)]
++        frames.append(frame);records.append(dict(frame_id=i,receive_timestamp=100+i*.1,detections=detections,session='synthetic'));truth.append(gt)
++    return frames,records,truth
++
++
++def load_bundle(directory):
++    records=[json.loads(l) for l in (directory/'frames.jsonl').read_text().splitlines()]
++    frames=[];previous=-float('inf')
++    for row in records:
++        if row.get('source_kind')!='decoded_rtsp_frame':raise ValueError('Replay requires decoded RTSP images, not monitor recording')
++        if not np.isfinite(row['receive_timestamp']) or row['receive_timestamp']<=previous:raise ValueError('timestamps must be finite and increase')
++        previous=row['receive_timestamp']
++        p=(directory/row['image']).resolve()
++        if directory.resolve() not in p.parents or not p.is_file():raise ValueError('invalid image path')
++        frame=cv2.imread(str(p))
++        if frame is None:raise ValueError('unreadable frame')
++        if any(d.get('confidence') is None for d in row['detections']):raise ValueError('Missing original detection confidence')
++        frames.append(frame)
++    return frames,records
++
++
++def main():
++    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--bundle',type=Path);p.add_argument('--synthetic',action='store_true');p.add_argument('--out',type=Path,required=True)
++    a=p.parse_args();cv2.setNumThreads(1)
++    if a.synthetic:
++        result={}
++        for name,dx,px in [('stationary',0,2),('pan',25,0),('pan_and_walking',25,2)]:
++            frames,rows,truth=synthetic(dx,px);result[name]=replay(frames,rows,truth)
++        result['provenance']='SYNTHETIC stress test, same cached detections per branch; not real tracking acceptance'
++    elif a.bundle:
++        frames,rows=load_bundle(a.bundle);result=replay(frames,rows);result['provenance']='decoded frames; ground truth absent; cannot accept production GMC'
++    else:p.error('choose --synthetic or --bundle')
++    a.out.parent.mkdir(parents=True,exist_ok=True);a.out.write_text(json.dumps(result,indent=2))
++
++
++if __name__=='__main__':main()

@@ -1,0 +1,276 @@
+{
+  "retained_trace_start": "2026-11-19T08:19:54.546+07:00",
+  "retained_trace_end": "2026-11-19T08:21:05.957799+07:00",
+  "gui_record": {
+    "n": 39,
+    "median": 1155.470221,
+    "p95": 2302.7010133,
+    "max": 2429.800809
+  },
+  "gui_outside_record": {
+    "n": 548,
+    "median": 102.15860699999999,
+    "p95": 129.41999479999998,
+    "max": 3025.582514
+  },
+  "slow_gui": [
+    {
+      "timestamp": "2026-11-19T08:20:59.891+07:00",
+      "frame_id": 6548,
+      "duration_ms": 515.704269,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:20:59.968+07:00",
+      "frame_id": 6548,
+      "duration_ms": 592.496353,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:00.040+07:00",
+      "frame_id": 6548,
+      "duration_ms": 664.609256,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:00.115+07:00",
+      "frame_id": 6548,
+      "duration_ms": 739.593629,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:00.181+07:00",
+      "frame_id": 6548,
+      "duration_ms": 805.842488,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:00.256+07:00",
+      "frame_id": 6548,
+      "duration_ms": 880.616149,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:00.326+07:00",
+      "frame_id": 6548,
+      "duration_ms": 951.085538,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:00.391+07:00",
+      "frame_id": 6548,
+      "duration_ms": 1015.549035,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:00.456+07:00",
+      "frame_id": 6548,
+      "duration_ms": 1081.096054,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:00.531+07:00",
+      "frame_id": 6548,
+      "duration_ms": 1155.470221,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:00.599+07:00",
+      "frame_id": 6548,
+      "duration_ms": 1223.666335,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:00.671+07:00",
+      "frame_id": 6548,
+      "duration_ms": 1296.10917,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:00.733+07:00",
+      "frame_id": 6548,
+      "duration_ms": 1357.500472,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:00.803+07:00",
+      "frame_id": 6548,
+      "duration_ms": 1427.559472,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:00.866+07:00",
+      "frame_id": 6548,
+      "duration_ms": 1491.004467,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:00.931+07:00",
+      "frame_id": 6548,
+      "duration_ms": 1555.375633,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:01.000+07:00",
+      "frame_id": 6548,
+      "duration_ms": 1624.417878,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:01.066+07:00",
+      "frame_id": 6548,
+      "duration_ms": 1691.078872,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:01.131+07:00",
+      "frame_id": 6548,
+      "duration_ms": 1755.273059,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:01.199+07:00",
+      "frame_id": 6548,
+      "duration_ms": 1824.224021,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:01.276+07:00",
+      "frame_id": 6548,
+      "duration_ms": 1900.416306,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:01.338+07:00",
+      "frame_id": 6548,
+      "duration_ms": 1963.20004,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:01.405+07:00",
+      "frame_id": 6548,
+      "duration_ms": 2029.894559,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:01.468+07:00",
+      "frame_id": 6548,
+      "duration_ms": 2092.987622,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:01.536+07:00",
+      "frame_id": 6548,
+      "duration_ms": 2161.237165,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:01.604+07:00",
+      "frame_id": 6548,
+      "duration_ms": 2228.910583,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:01.671+07:00",
+      "frame_id": 6548,
+      "duration_ms": 2296.032672,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:01.738+07:00",
+      "frame_id": 6548,
+      "duration_ms": 2362.716085,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:01.805+07:00",
+      "frame_id": 6548,
+      "duration_ms": 2429.800809,
+      "recording": true
+    },
+    {
+      "timestamp": "2026-11-19T08:21:01.867+07:00",
+      "frame_id": 6548,
+      "duration_ms": 2491.784787,
+      "recording": false
+    },
+    {
+      "timestamp": "2026-11-19T08:21:01.931+07:00",
+      "frame_id": 6548,
+      "duration_ms": 2556.203515,
+      "recording": false
+    },
+    {
+      "timestamp": "2026-11-19T08:21:02.001+07:00",
+      "frame_id": 6548,
+      "duration_ms": 2625.879224,
+      "recording": false
+    },
+    {
+      "timestamp": "2026-11-19T08:21:02.071+07:00",
+      "frame_id": 6548,
+      "duration_ms": 2696.012815,
+      "recording": false
+    },
+    {
+      "timestamp": "2026-11-19T08:21:02.136+07:00",
+      "frame_id": 6548,
+      "duration_ms": 2761.013184,
+      "recording": false
+    },
+    {
+      "timestamp": "2026-11-19T08:21:02.203+07:00",
+      "frame_id": 6548,
+      "duration_ms": 2827.669149,
+      "recording": false
+    },
+    {
+      "timestamp": "2026-11-19T08:21:02.265+07:00",
+      "frame_id": 6548,
+      "duration_ms": 2889.33856,
+      "recording": false
+    },
+    {
+      "timestamp": "2026-11-19T08:21:02.334+07:00",
+      "frame_id": 6548,
+      "duration_ms": 2958.561207,
+      "recording": false
+    },
+    {
+      "timestamp": "2026-11-19T08:21:02.401+07:00",
+      "frame_id": 6548,
+      "duration_ms": 3025.582514,
+      "recording": false
+    }
+  ],
+  "phase1": {
+    "capture_9b6f72b28e284599a83a2ca918947993": {
+      "selected": {
+        "baseline": 0,
+        "identity": 0
+      },
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 26
+      },
+      "first_selected": {
+        "baseline": null,
+        "identity": null
+      }
+    },
+    "capture_eb68f45a3a914ba897f811ba3c0129b5": {
+      "selected": {
+        "baseline": 80,
+        "identity": 59
+      },
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 53,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 2,
+        "CONFIRMED_MULTI_CUE": 59
+      },
+      "first_selected": {
+        "baseline": 4.26156958699994,
+        "identity": 4.26156958699994
+      }
+    }
+  }
+}

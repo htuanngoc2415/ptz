@@ -1,0 +1,4228 @@
+{
+  "schedules": {
+    "fixed200": {
+      "frames": 515,
+      "mismatches": [],
+      "total_outer_hold_ms": 9773.585556027683,
+      "wall_ms": {
+        "n": 515,
+        "p50": 21.93531000011717,
+        "p95": 42.1717429999262,
+        "max": 409.6520309976768
+      },
+      "passes": 592
+    },
+    "adaptive": {
+      "frames": 391,
+      "mismatches": [],
+      "total_outer_hold_ms": 7382.791313022608,
+      "wall_ms": {
+        "n": 391,
+        "p50": 21.93531000011717,
+        "p95": 42.51242650207132,
+        "max": 409.6520309976768
+      },
+      "passes": 442
+    }
+  },
+  "unique_inference_frames": 599,
+  "max_score_difference": 2.980232238769531e-07,
+  "costs": [
+    {
+      "frame_id": 1004,
+      "wall_ms": 409.6520309976768,
+      "held_ms": 291.1631030001445,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 1009,
+      "wall_ms": 40.25961800289224,
+      "held_ms": 30.816627004242036,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 1018,
+      "wall_ms": 40.478785002051154,
+      "held_ms": 31.35455400115461,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 1025,
+      "wall_ms": 38.49378999802866,
+      "held_ms": 31.195733005006332,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 1033,
+      "wall_ms": 36.83363200252643,
+      "held_ms": 29.879620000428986,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 1041,
+      "wall_ms": 36.19101099684485,
+      "held_ms": 27.670498999214033,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 1049,
+      "wall_ms": 35.51786800016998,
+      "held_ms": 28.34461999736959,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 1058,
+      "wall_ms": 61.230122002598364,
+      "held_ms": 52.93457399966428,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 1064,
+      "wall_ms": 42.13139900093665,
+      "held_ms": 31.789672997547314,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 1074,
+      "wall_ms": 41.24153500015382,
+      "held_ms": 29.881924005167093,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 1081,
+      "wall_ms": 38.65638299976126,
+      "held_ms": 29.350703000091016,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 1090,
+      "wall_ms": 39.472422999097034,
+      "held_ms": 28.447497003071476,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 1098,
+      "wall_ms": 40.50392800127156,
+      "held_ms": 31.38549499999499,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 1109,
+      "wall_ms": 41.75962699810043,
+      "held_ms": 32.820479002111824,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 1116,
+      "wall_ms": 41.55352200177731,
+      "held_ms": 32.65153100073803,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 1122,
+      "wall_ms": 40.644172000611434,
+      "held_ms": 31.564291999529814,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 1126,
+      "wall_ms": 41.717651998624206,
+      "held_ms": 30.219612999644596,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 1130,
+      "wall_ms": 45.356867001828505,
+      "held_ms": 34.21586500189733,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 1138,
+      "wall_ms": 46.387604001211,
+      "held_ms": 34.732279997115256,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 1140,
+      "wall_ms": 42.6680690034118,
+      "held_ms": 32.28220299934037,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 1145,
+      "wall_ms": 39.0568600014376,
+      "held_ms": 29.912375001003966,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 1153,
+      "wall_ms": 39.47542700188933,
+      "held_ms": 27.960905001236824,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 1158,
+      "wall_ms": 40.64333399946918,
+      "held_ms": 30.648375999589916,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 1161,
+      "wall_ms": 21.840253997652326,
+      "held_ms": 15.351253001426812,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1164,
+      "wall_ms": 21.37426400076947,
+      "held_ms": 13.696752001123969,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1170,
+      "wall_ms": 22.368821999407373,
+      "held_ms": 15.477946002647514,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1172,
+      "wall_ms": 22.122137997939717,
+      "held_ms": 16.529496002476662,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1177,
+      "wall_ms": 20.621081999706803,
+      "held_ms": 15.161489998718025,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1181,
+      "wall_ms": 19.98376899791765,
+      "held_ms": 15.158207999775186,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1185,
+      "wall_ms": 19.59837799950037,
+      "held_ms": 15.341684000304667,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1189,
+      "wall_ms": 21.44124299957184,
+      "held_ms": 15.945682000165107,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1195,
+      "wall_ms": 20.416512998053804,
+      "held_ms": 17.078667999157915,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1197,
+      "wall_ms": 20.4230089984776,
+      "held_ms": 16.528168998775072,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1202,
+      "wall_ms": 21.214395001152297,
+      "held_ms": 15.9460319991922,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1205,
+      "wall_ms": 19.186306999472436,
+      "held_ms": 15.669315002014628,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1210,
+      "wall_ms": 19.243018999986816,
+      "held_ms": 15.444213000591844,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1215,
+      "wall_ms": 19.854211001074873,
+      "held_ms": 16.145920002600178,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1220,
+      "wall_ms": 21.756302001449512,
+      "held_ms": 16.591167001024587,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1223,
+      "wall_ms": 21.158310999453533,
+      "held_ms": 16.14766700004111,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1228,
+      "wall_ms": 17.666393003310077,
+      "held_ms": 14.069431999814697,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1230,
+      "wall_ms": 22.01995799987344,
+      "held_ms": 16.565185997023946,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1233,
+      "wall_ms": 20.832495003560325,
+      "held_ms": 15.657302999898093,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1239,
+      "wall_ms": 21.44634199794382,
+      "held_ms": 16.93018300284166,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1243,
+      "wall_ms": 20.439492000150494,
+      "held_ms": 16.23936999749276,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1246,
+      "wall_ms": 20.527982000203338,
+      "held_ms": 16.20444899890572,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1249,
+      "wall_ms": 20.13253399854875,
+      "held_ms": 15.612672999850474,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1253,
+      "wall_ms": 21.633030999510083,
+      "held_ms": 16.13146399904508,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1256,
+      "wall_ms": 21.606001999316504,
+      "held_ms": 17.471672003011918,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1266,
+      "wall_ms": 24.30318100232398,
+      "held_ms": 19.33597999959602,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1268,
+      "wall_ms": 20.692740999948,
+      "held_ms": 16.101639997941675,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1271,
+      "wall_ms": 19.270048000180395,
+      "held_ms": 14.015443000971572,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1278,
+      "wall_ms": 24.057475002337014,
+      "held_ms": 19.219202997192042,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1284,
+      "wall_ms": 20.25971699913498,
+      "held_ms": 15.469635000044946,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1290,
+      "wall_ms": 20.05822100181831,
+      "held_ms": 14.309969003079459,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1297,
+      "wall_ms": 21.464151999680325,
+      "held_ms": 16.434719000244513,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1303,
+      "wall_ms": 21.99376800126629,
+      "held_ms": 17.58069599964074,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1305,
+      "wall_ms": 19.998085997940507,
+      "held_ms": 15.073558999574743,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1311,
+      "wall_ms": 20.776201999979094,
+      "held_ms": 15.730357001302764,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1319,
+      "wall_ms": 22.613409997575218,
+      "held_ms": 16.548773000977235,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1325,
+      "wall_ms": 20.170037998468615,
+      "held_ms": 16.04632499947911,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1333,
+      "wall_ms": 21.8501710005512,
+      "held_ms": 16.82227600031183,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1336,
+      "wall_ms": 20.030284002132248,
+      "held_ms": 13.845307999872603,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1341,
+      "wall_ms": 20.66012400246109,
+      "held_ms": 16.162054002052173,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1351,
+      "wall_ms": 20.494317999691702,
+      "held_ms": 15.436390000104439,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1358,
+      "wall_ms": 24.135628998919856,
+      "held_ms": 17.66890799990506,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1365,
+      "wall_ms": 21.598668001388432,
+      "held_ms": 17.161641000711825,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1368,
+      "wall_ms": 19.81027999863727,
+      "held_ms": 15.154924996750196,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1373,
+      "wall_ms": 20.9389360024943,
+      "held_ms": 15.480949998163851,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1382,
+      "wall_ms": 19.435225000052014,
+      "held_ms": 15.195642998151015,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1386,
+      "wall_ms": 20.096774002013262,
+      "held_ms": 15.13976900241687,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1390,
+      "wall_ms": 22.501174000353785,
+      "held_ms": 16.780440000729868,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1398,
+      "wall_ms": 21.028753002610756,
+      "held_ms": 16.347696000593714,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1404,
+      "wall_ms": 20.584554000379285,
+      "held_ms": 15.700675001426134,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1410,
+      "wall_ms": 20.508355999481864,
+      "held_ms": 15.413062999868998,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1416,
+      "wall_ms": 21.445225000206847,
+      "held_ms": 16.59612599905813,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1420,
+      "wall_ms": 19.326270998135442,
+      "held_ms": 14.868919999571517,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1424,
+      "wall_ms": 23.96898500228417,
+      "held_ms": 17.63873500021873,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1427,
+      "wall_ms": 22.581282999453833,
+      "held_ms": 16.2669579985959,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1433,
+      "wall_ms": 23.818403999030124,
+      "held_ms": 16.573357999732252,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1442,
+      "wall_ms": 24.403126000834163,
+      "held_ms": 16.756066001107683,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1448,
+      "wall_ms": 20.88801999707357,
+      "held_ms": 15.042407998407725,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1456,
+      "wall_ms": 19.28792800026713,
+      "held_ms": 15.053443999931915,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1462,
+      "wall_ms": 20.792195999092655,
+      "held_ms": 15.526626997598214,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1473,
+      "wall_ms": 20.353514999442268,
+      "held_ms": 14.735520002432168,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1480,
+      "wall_ms": 21.977424999931827,
+      "held_ms": 16.195858999708435,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1487,
+      "wall_ms": 23.209586001030402,
+      "held_ms": 17.378152999299346,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1498,
+      "wall_ms": 24.018852000153856,
+      "held_ms": 15.925846997561166,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1502,
+      "wall_ms": 23.356395999144297,
+      "held_ms": 17.623091000132263,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1512,
+      "wall_ms": 21.857575000467477,
+      "held_ms": 16.320247999829007,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1520,
+      "wall_ms": 21.31329099938739,
+      "held_ms": 15.699137999035884,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1527,
+      "wall_ms": 23.859471002651844,
+      "held_ms": 17.36201899984735,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1533,
+      "wall_ms": 21.760633997473633,
+      "held_ms": 16.024046002712566,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1544,
+      "wall_ms": 22.04391399936867,
+      "held_ms": 16.554778998397524,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1550,
+      "wall_ms": 21.67458799885935,
+      "held_ms": 16.228684999077814,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1561,
+      "wall_ms": 23.90046900109155,
+      "held_ms": 17.872218999400502,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1568,
+      "wall_ms": 18.5210570016352,
+      "held_ms": 13.752766000834526,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1576,
+      "wall_ms": 19.69371299855993,
+      "held_ms": 14.638090000516968,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1581,
+      "wall_ms": 20.243373000994325,
+      "held_ms": 14.582006999262376,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1589,
+      "wall_ms": 20.167803999356693,
+      "held_ms": 15.345386000262806,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1598,
+      "wall_ms": 19.90966599987587,
+      "held_ms": 14.941277000616537,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1606,
+      "wall_ms": 17.891775001771748,
+      "held_ms": 13.842723001289414,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1614,
+      "wall_ms": 0.07661699783056974,
+      "held_ms": 0,
+      "passes": 0,
+      "candidates": 0
+    },
+    {
+      "frame_id": 1622,
+      "wall_ms": 0.05866799983778037,
+      "held_ms": 0,
+      "passes": 0,
+      "candidates": 0
+    },
+    {
+      "frame_id": 1628,
+      "wall_ms": 16.36285199856502,
+      "held_ms": 14.84650099882856,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1636,
+      "wall_ms": 0.07780499799991958,
+      "held_ms": 0,
+      "passes": 0,
+      "candidates": 0
+    },
+    {
+      "frame_id": 1642,
+      "wall_ms": 0.06628100163652562,
+      "held_ms": 0,
+      "passes": 0,
+      "candidates": 0
+    },
+    {
+      "frame_id": 1649,
+      "wall_ms": 0.061461996665457264,
+      "held_ms": 0,
+      "passes": 0,
+      "candidates": 0
+    },
+    {
+      "frame_id": 1655,
+      "wall_ms": 0.04770200030179694,
+      "held_ms": 0,
+      "passes": 0,
+      "candidates": 0
+    },
+    {
+      "frame_id": 1663,
+      "wall_ms": 0.0590859999647364,
+      "held_ms": 0,
+      "passes": 0,
+      "candidates": 0
+    },
+    {
+      "frame_id": 1670,
+      "wall_ms": 0.07563999679405242,
+      "held_ms": 0,
+      "passes": 0,
+      "candidates": 0
+    },
+    {
+      "frame_id": 1676,
+      "wall_ms": 0.054337000619852915,
+      "held_ms": 0,
+      "passes": 0,
+      "candidates": 0
+    },
+    {
+      "frame_id": 1682,
+      "wall_ms": 0.10643999848980457,
+      "held_ms": 0,
+      "passes": 0,
+      "candidates": 0
+    },
+    {
+      "frame_id": 1690,
+      "wall_ms": 0.07054099842207506,
+      "held_ms": 0,
+      "passes": 0,
+      "candidates": 0
+    },
+    {
+      "frame_id": 1697,
+      "wall_ms": 0.08625500049674883,
+      "held_ms": 0,
+      "passes": 0,
+      "candidates": 0
+    },
+    {
+      "frame_id": 1704,
+      "wall_ms": 0.05810899892821908,
+      "held_ms": 0,
+      "passes": 0,
+      "candidates": 0
+    },
+    {
+      "frame_id": 1711,
+      "wall_ms": 0.057411001762375236,
+      "held_ms": 0,
+      "passes": 0,
+      "candidates": 0
+    },
+    {
+      "frame_id": 1717,
+      "wall_ms": 0.07068099876050837,
+      "held_ms": 0,
+      "passes": 0,
+      "candidates": 0
+    },
+    {
+      "frame_id": 1723,
+      "wall_ms": 0.06153199865366332,
+      "held_ms": 0,
+      "passes": 0,
+      "candidates": 0
+    },
+    {
+      "frame_id": 1727,
+      "wall_ms": 19.636511999124195,
+      "held_ms": 14.871014998789178,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1736,
+      "wall_ms": 18.02566299738828,
+      "held_ms": 14.672313001938164,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1741,
+      "wall_ms": 18.29832800285658,
+      "held_ms": 14.549809002346592,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1751,
+      "wall_ms": 18.37669199812808,
+      "held_ms": 15.006649999122601,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1764,
+      "wall_ms": 19.927895002183504,
+      "held_ms": 16.16694300173549,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 1771,
+      "wall_ms": 22.259937002672814,
+      "held_ms": 15.221205998386722,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1776,
+      "wall_ms": 21.597062001092127,
+      "held_ms": 16.102198998851236,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1783,
+      "wall_ms": 23.58554899910814,
+      "held_ms": 18.925375003163936,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1795,
+      "wall_ms": 22.960458001762163,
+      "held_ms": 16.59724300043308,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1803,
+      "wall_ms": 20.57694199902471,
+      "held_ms": 14.318978999654064,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1810,
+      "wall_ms": 22.724669997842284,
+      "held_ms": 15.285740002582315,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1823,
+      "wall_ms": 24.452156001643743,
+      "held_ms": 16.978095001832116,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1829,
+      "wall_ms": 27.990238999336725,
+      "held_ms": 21.652307998010656,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1834,
+      "wall_ms": 26.027383999462472,
+      "held_ms": 17.968533000384923,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1847,
+      "wall_ms": 44.82417899998836,
+      "held_ms": 40.162539000448305,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1851,
+      "wall_ms": 21.93531000011717,
+      "held_ms": 17.259910000575474,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1864,
+      "wall_ms": 22.922394000488566,
+      "held_ms": 17.55597200099146,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1869,
+      "wall_ms": 21.152793000510428,
+      "held_ms": 15.69166500121355,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1881,
+      "wall_ms": 21.529174999159295,
+      "held_ms": 16.65283799957251,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1891,
+      "wall_ms": 24.749475000135135,
+      "held_ms": 17.579089999344433,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1900,
+      "wall_ms": 23.78858100200887,
+      "held_ms": 16.261231001408305,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1906,
+      "wall_ms": 25.509850998787442,
+      "held_ms": 16.760047001298517,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1913,
+      "wall_ms": 24.076543002593098,
+      "held_ms": 16.878498998266878,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1921,
+      "wall_ms": 27.10617300181184,
+      "held_ms": 17.801608999434393,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1927,
+      "wall_ms": 24.047208000411047,
+      "held_ms": 16.001836000214098,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1932,
+      "wall_ms": 20.442634999199072,
+      "held_ms": 14.075019000301836,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1939,
+      "wall_ms": 21.487478999915766,
+      "held_ms": 14.532347999193007,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1945,
+      "wall_ms": 30.7838009975967,
+      "held_ms": 20.714391001092736,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1957,
+      "wall_ms": 23.517174002336105,
+      "held_ms": 15.550652999081649,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1964,
+      "wall_ms": 26.172446996497456,
+      "held_ms": 18.097391999617685,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1975,
+      "wall_ms": 26.53032099988195,
+      "held_ms": 17.7122800014331,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1983,
+      "wall_ms": 27.040660002967343,
+      "held_ms": 18.239800996525446,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1991,
+      "wall_ms": 25.149323999357875,
+      "held_ms": 17.214720999618294,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 1998,
+      "wall_ms": 24.87288699921919,
+      "held_ms": 16.8799660023069,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2009,
+      "wall_ms": 27.793702996859793,
+      "held_ms": 17.02488900264143,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2020,
+      "wall_ms": 25.819742997555295,
+      "held_ms": 16.572868000366725,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2026,
+      "wall_ms": 27.053581001382554,
+      "held_ms": 18.34484400023939,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2035,
+      "wall_ms": 23.346897000010358,
+      "held_ms": 15.964400001394097,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2042,
+      "wall_ms": 27.475639999465784,
+      "held_ms": 18.082653998135356,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2050,
+      "wall_ms": 31.197968000924448,
+      "held_ms": 21.690931000193814,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2058,
+      "wall_ms": 26.22811200126307,
+      "held_ms": 17.54710200111731,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2066,
+      "wall_ms": 26.08339799917303,
+      "held_ms": 17.79567199992016,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2073,
+      "wall_ms": 26.56161000049906,
+      "held_ms": 17.59417599896551,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2079,
+      "wall_ms": 27.360259999113623,
+      "held_ms": 19.005483998626005,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2082,
+      "wall_ms": 25.54735699959565,
+      "held_ms": 17.157799997221446,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2085,
+      "wall_ms": 28.143265000835527,
+      "held_ms": 19.617794001533184,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2092,
+      "wall_ms": 24.20540199818788,
+      "held_ms": 16.63824099887279,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2100,
+      "wall_ms": 27.997013999993214,
+      "held_ms": 18.29532599731465,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2110,
+      "wall_ms": 22.52520000183722,
+      "held_ms": 15.282108997780597,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2119,
+      "wall_ms": 24.89928700015298,
+      "held_ms": 16.58383399990271,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2126,
+      "wall_ms": 24.686965996806975,
+      "held_ms": 16.644736999296583,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2136,
+      "wall_ms": 27.342450001015095,
+      "held_ms": 19.54858000317472,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2146,
+      "wall_ms": 19.076374999713153,
+      "held_ms": 12.973742999747628,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2153,
+      "wall_ms": 20.19504300187691,
+      "held_ms": 15.458251000382006,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2159,
+      "wall_ms": 21.783542000775924,
+      "held_ms": 16.11931099978392,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2168,
+      "wall_ms": 20.85966500089853,
+      "held_ms": 16.79762200001278,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2178,
+      "wall_ms": 23.917651000374462,
+      "held_ms": 18.67980800307123,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2183,
+      "wall_ms": 26.988486999471206,
+      "held_ms": 21.118921002198476,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2193,
+      "wall_ms": 27.417600998887792,
+      "held_ms": 17.544938000355614,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2198,
+      "wall_ms": 24.874912000086624,
+      "held_ms": 18.088312001054874,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2208,
+      "wall_ms": 24.498251998011256,
+      "held_ms": 16.507285999978194,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2215,
+      "wall_ms": 25.769526000658516,
+      "held_ms": 19.0897140018933,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2222,
+      "wall_ms": 23.823223997169407,
+      "held_ms": 16.90105899979244,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2229,
+      "wall_ms": 23.40626300065196,
+      "held_ms": 15.832677003345452,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2236,
+      "wall_ms": 24.58234299774631,
+      "held_ms": 15.623080002114875,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2242,
+      "wall_ms": 22.493491000204813,
+      "held_ms": 15.129223000258207,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2249,
+      "wall_ms": 21.58756299832021,
+      "held_ms": 15.227840998704778,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2256,
+      "wall_ms": 24.52709700082778,
+      "held_ms": 18.661020996660227,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2262,
+      "wall_ms": 26.508809998631477,
+      "held_ms": 16.927040000155102,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2270,
+      "wall_ms": 23.816240001906408,
+      "held_ms": 16.555966998566873,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2277,
+      "wall_ms": 22.91422300186241,
+      "held_ms": 15.987519000191242,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2283,
+      "wall_ms": 23.300521999772172,
+      "held_ms": 17.010152998409467,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2290,
+      "wall_ms": 22.044613000616664,
+      "held_ms": 16.940658999374136,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2297,
+      "wall_ms": 38.35396599970409,
+      "held_ms": 30.709418999322224,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2302,
+      "wall_ms": 37.35242400216521,
+      "held_ms": 30.081117005465785,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2308,
+      "wall_ms": 40.615606998471776,
+      "held_ms": 32.225979997747345,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2318,
+      "wall_ms": 42.45672700199066,
+      "held_ms": 34.58819399747881,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2320,
+      "wall_ms": 41.17064599995501,
+      "held_ms": 33.38969700052985,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2326,
+      "wall_ms": 41.56609399797162,
+      "held_ms": 33.4711339964997,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2338,
+      "wall_ms": 44.58084799989592,
+      "held_ms": 37.51522699894849,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2351,
+      "wall_ms": 40.085152999381535,
+      "held_ms": 32.059266999567626,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2357,
+      "wall_ms": 40.88282500015339,
+      "held_ms": 33.12806799658574,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2370,
+      "wall_ms": 40.85132600084762,
+      "held_ms": 33.52875299970037,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2376,
+      "wall_ms": 40.882336001232034,
+      "held_ms": 33.73248499701731,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2384,
+      "wall_ms": 42.568126002151985,
+      "held_ms": 33.68513100213022,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2396,
+      "wall_ms": 43.21256299954257,
+      "held_ms": 34.43642699858174,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2407,
+      "wall_ms": 42.12280899810139,
+      "held_ms": 33.81783299846575,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2416,
+      "wall_ms": 42.90378899895586,
+      "held_ms": 34.03189900200232,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2421,
+      "wall_ms": 39.94323300139513,
+      "held_ms": 32.52651299771969,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2433,
+      "wall_ms": 55.989349999435944,
+      "held_ms": 45.02351000337512,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2440,
+      "wall_ms": 61.25191499813809,
+      "held_ms": 46.31231500025024,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2447,
+      "wall_ms": 44.20292999930098,
+      "held_ms": 31.387659997562878,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2454,
+      "wall_ms": 42.62399999788613,
+      "held_ms": 34.0024259967322,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2461,
+      "wall_ms": 42.97013899849844,
+      "held_ms": 34.26929499983089,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2473,
+      "wall_ms": 41.70626899940544,
+      "held_ms": 33.24875500402413,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2481,
+      "wall_ms": 43.20481100148754,
+      "held_ms": 34.286265003174776,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2488,
+      "wall_ms": 40.56643899821211,
+      "held_ms": 33.15446799751953,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2501,
+      "wall_ms": 41.111419999651844,
+      "held_ms": 32.47427100359346,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2514,
+      "wall_ms": 39.79621500184294,
+      "held_ms": 30.804334997810656,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2530,
+      "wall_ms": 37.100501998793334,
+      "held_ms": 29.920408000180032,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2536,
+      "wall_ms": 40.448125000693835,
+      "held_ms": 32.13804900224204,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2543,
+      "wall_ms": 38.83385399967665,
+      "held_ms": 29.92529699622537,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2552,
+      "wall_ms": 36.7520580002747,
+      "held_ms": 28.12098499998683,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2559,
+      "wall_ms": 36.546859999361914,
+      "held_ms": 29.094031000568066,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2566,
+      "wall_ms": 38.836228999571176,
+      "held_ms": 30.43472799981828,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2569,
+      "wall_ms": 38.378550998459104,
+      "held_ms": 29.171066998969764,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2574,
+      "wall_ms": 18.767320998449577,
+      "held_ms": 14.327640001283726,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2582,
+      "wall_ms": 21.771039999293862,
+      "held_ms": 15.998763003153726,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2587,
+      "wall_ms": 21.310707998054568,
+      "held_ms": 15.823248999367934,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2592,
+      "wall_ms": 20.166477999737253,
+      "held_ms": 16.332890001649503,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2598,
+      "wall_ms": 21.46520000314922,
+      "held_ms": 16.906158001802396,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2603,
+      "wall_ms": 20.593075998476706,
+      "held_ms": 15.059868997923331,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2605,
+      "wall_ms": 18.82906299942988,
+      "held_ms": 14.721831001224928,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2611,
+      "wall_ms": 41.6794500015385,
+      "held_ms": 33.06786399480188,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2619,
+      "wall_ms": 42.95470400029444,
+      "held_ms": 34.80219300399767,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2627,
+      "wall_ms": 40.75913400083664,
+      "held_ms": 31.207746997097274,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2635,
+      "wall_ms": 42.4142629999551,
+      "held_ms": 32.32452900192584,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2643,
+      "wall_ms": 41.55450100006419,
+      "held_ms": 31.30887799852644,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2651,
+      "wall_ms": 21.60607199766673,
+      "held_ms": 14.764294999622507,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2658,
+      "wall_ms": 22.434056001657154,
+      "held_ms": 16.15388299978804,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2665,
+      "wall_ms": 22.50899700084119,
+      "held_ms": 15.97012700221967,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2669,
+      "wall_ms": 23.28494700122974,
+      "held_ms": 14.427795002120547,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2674,
+      "wall_ms": 22.84689500083914,
+      "held_ms": 15.405800000735326,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2684,
+      "wall_ms": 23.985327999980655,
+      "held_ms": 15.571326999634039,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2690,
+      "wall_ms": 20.679402001405833,
+      "held_ms": 14.931428999261698,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2700,
+      "wall_ms": 21.722708999732276,
+      "held_ms": 15.150455001275986,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2707,
+      "wall_ms": 23.284110000531655,
+      "held_ms": 15.84643599926494,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2714,
+      "wall_ms": 40.651505998539506,
+      "held_ms": 31.139370003074873,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2718,
+      "wall_ms": 39.00196500035236,
+      "held_ms": 31.139998998696683,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2723,
+      "wall_ms": 39.701158999378094,
+      "held_ms": 29.743078997853445,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2730,
+      "wall_ms": 41.619245002948446,
+      "held_ms": 31.28087100049015,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2735,
+      "wall_ms": 42.95337699659285,
+      "held_ms": 31.85211299933144,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2740,
+      "wall_ms": 40.628388996992726,
+      "held_ms": 30.769625001994427,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2743,
+      "wall_ms": 37.11901000133366,
+      "held_ms": 26.973193998856004,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2748,
+      "wall_ms": 42.789667000761256,
+      "held_ms": 31.941371998982504,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2754,
+      "wall_ms": 40.444284000841435,
+      "held_ms": 32.20733299895073,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2761,
+      "wall_ms": 43.88472799837473,
+      "held_ms": 33.47706999920774,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2770,
+      "wall_ms": 43.04445200250484,
+      "held_ms": 33.552151999174384,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2778,
+      "wall_ms": 42.23050799919292,
+      "held_ms": 33.80805400229292,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2787,
+      "wall_ms": 38.872895998792956,
+      "held_ms": 30.629938999481965,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2792,
+      "wall_ms": 44.5134510009666,
+      "held_ms": 31.767743999807863,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2800,
+      "wall_ms": 41.83268400083762,
+      "held_ms": 31.846457000938244,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2806,
+      "wall_ms": 38.099670000519836,
+      "held_ms": 30.00003000124707,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2809,
+      "wall_ms": 40.687824999622535,
+      "held_ms": 33.807844996772474,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2816,
+      "wall_ms": 38.98073299933458,
+      "held_ms": 31.06847999515594,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2823,
+      "wall_ms": 43.15466400294099,
+      "held_ms": 34.329778001847444,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2831,
+      "wall_ms": 41.54723700048635,
+      "held_ms": 34.08602900162805,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2839,
+      "wall_ms": 40.83624000122654,
+      "held_ms": 31.72730599908391,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2842,
+      "wall_ms": 45.246797999425326,
+      "held_ms": 34.47288599636522,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2851,
+      "wall_ms": 40.717927000514464,
+      "held_ms": 32.67388200038113,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2858,
+      "wall_ms": 41.147109997837106,
+      "held_ms": 32.46533200217527,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2865,
+      "wall_ms": 22.047128000849625,
+      "held_ms": 16.51531899915426,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2875,
+      "wall_ms": 40.87542200068128,
+      "held_ms": 32.71969799970975,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2885,
+      "wall_ms": 39.593670997419395,
+      "held_ms": 31.457224002224393,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2890,
+      "wall_ms": 42.695518997788895,
+      "held_ms": 32.715018998715095,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2894,
+      "wall_ms": 44.220741001481656,
+      "held_ms": 31.57427999758511,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2901,
+      "wall_ms": 43.517776000953745,
+      "held_ms": 33.708040002238704,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2909,
+      "wall_ms": 38.46040600183187,
+      "held_ms": 28.157652999652782,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2917,
+      "wall_ms": 25.290616002166644,
+      "held_ms": 16.476556000270648,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2924,
+      "wall_ms": 36.46416700212285,
+      "held_ms": 27.22756000366644,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2932,
+      "wall_ms": 21.673958999599563,
+      "held_ms": 14.909707999322563,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2941,
+      "wall_ms": 21.35994799755281,
+      "held_ms": 14.103236000664765,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2947,
+      "wall_ms": 38.23509399808245,
+      "held_ms": 28.123429001425393,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2958,
+      "wall_ms": 40.4199089971371,
+      "held_ms": 29.14110599886044,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 2968,
+      "wall_ms": 20.933279000018956,
+      "held_ms": 14.7430639990489,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2976,
+      "wall_ms": 22.093223997217137,
+      "held_ms": 14.641372999903979,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2986,
+      "wall_ms": 20.685478000814328,
+      "held_ms": 14.124258999800077,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 2994,
+      "wall_ms": 22.262173999479273,
+      "held_ms": 15.750683000078425,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3003,
+      "wall_ms": 22.549855002580443,
+      "held_ms": 15.89993599918671,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3009,
+      "wall_ms": 20.209919999615522,
+      "held_ms": 13.467808999848785,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3014,
+      "wall_ms": 22.693800001434283,
+      "held_ms": 16.41278900206089,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3022,
+      "wall_ms": 20.112629001232563,
+      "held_ms": 13.817440998536767,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3030,
+      "wall_ms": 21.525403997657122,
+      "held_ms": 13.873733001673827,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3038,
+      "wall_ms": 21.316365997336106,
+      "held_ms": 15.295938002964249,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3046,
+      "wall_ms": 20.463449000089895,
+      "held_ms": 14.649404998635873,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3056,
+      "wall_ms": 19.506535998516483,
+      "held_ms": 14.704790999530815,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3065,
+      "wall_ms": 21.4880390012695,
+      "held_ms": 15.576984002109384,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3073,
+      "wall_ms": 22.868406998895807,
+      "held_ms": 16.207451997615863,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3082,
+      "wall_ms": 21.74526900125784,
+      "held_ms": 14.782315000047674,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3089,
+      "wall_ms": 22.685908003040822,
+      "held_ms": 16.569027000514325,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3097,
+      "wall_ms": 21.319020001101308,
+      "held_ms": 15.485908999835374,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3105,
+      "wall_ms": 21.43663400056539,
+      "held_ms": 15.871719999267953,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3115,
+      "wall_ms": 21.182198001042707,
+      "held_ms": 15.406987000460504,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3121,
+      "wall_ms": 19.526021998899523,
+      "held_ms": 15.07055599722662,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3128,
+      "wall_ms": 21.401712998340372,
+      "held_ms": 14.774213999771746,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3137,
+      "wall_ms": 21.697146999940742,
+      "held_ms": 16.651580997859128,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3144,
+      "wall_ms": 22.760708998248447,
+      "held_ms": 17.871871001261752,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3150,
+      "wall_ms": 22.93915700283833,
+      "held_ms": 15.267790997313568,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3158,
+      "wall_ms": 20.835079998505535,
+      "held_ms": 16.04562799911946,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3167,
+      "wall_ms": 19.82376000160002,
+      "held_ms": 15.008394999313168,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3173,
+      "wall_ms": 21.224523003184004,
+      "held_ms": 15.558406001218827,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3178,
+      "wall_ms": 21.675495998351835,
+      "held_ms": 16.499394001584733,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3186,
+      "wall_ms": 23.36826900136657,
+      "held_ms": 16.518950997124193,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3197,
+      "wall_ms": 21.239329002128216,
+      "held_ms": 15.433737000421388,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3204,
+      "wall_ms": 20.809797999390867,
+      "held_ms": 14.69075199929648,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3212,
+      "wall_ms": 22.218311998585705,
+      "held_ms": 16.418656003224896,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3218,
+      "wall_ms": 20.803651997994166,
+      "held_ms": 15.067133001139155,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3228,
+      "wall_ms": 23.46772600139957,
+      "held_ms": 16.11414400031208,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3236,
+      "wall_ms": 20.921755000017583,
+      "held_ms": 15.575446999719134,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3243,
+      "wall_ms": 21.38124900011462,
+      "held_ms": 15.546463000646327,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3251,
+      "wall_ms": 23.590298998897197,
+      "held_ms": 18.095645998982945,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3260,
+      "wall_ms": 21.932726001978153,
+      "held_ms": 15.381914003228303,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3269,
+      "wall_ms": 20.578199000738095,
+      "held_ms": 15.354326002125163,
+      "passes": 1,
+      "candidates": 3
+    },
+    {
+      "frame_id": 3278,
+      "wall_ms": 21.8996209987381,
+      "held_ms": 16.51105800192454,
+      "passes": 1,
+      "candidates": 3
+    },
+    {
+      "frame_id": 3285,
+      "wall_ms": 40.91600099854986,
+      "held_ms": 31.811395998374792,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 3291,
+      "wall_ms": 40.22651500054053,
+      "held_ms": 32.05479800089961,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 3298,
+      "wall_ms": 21.568775999185164,
+      "held_ms": 16.04681499884464,
+      "passes": 1,
+      "candidates": 3
+    },
+    {
+      "frame_id": 3306,
+      "wall_ms": 23.11627800008864,
+      "held_ms": 17.275205998885212,
+      "passes": 1,
+      "candidates": 3
+    },
+    {
+      "frame_id": 3310,
+      "wall_ms": 20.866509003099054,
+      "held_ms": 15.617492001183564,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3312,
+      "wall_ms": 19.9914520017046,
+      "held_ms": 16.09696199739119,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3317,
+      "wall_ms": 21.1509090004256,
+      "held_ms": 14.776797997910762,
+      "passes": 1,
+      "candidates": 3
+    },
+    {
+      "frame_id": 3322,
+      "wall_ms": 38.52473199731321,
+      "held_ms": 30.079929005296435,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 3325,
+      "wall_ms": 37.75974599921028,
+      "held_ms": 31.2805230023514,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 3330,
+      "wall_ms": 22.820774000138044,
+      "held_ms": 16.449737002403708,
+      "passes": 1,
+      "candidates": 3
+    },
+    {
+      "frame_id": 3335,
+      "wall_ms": 20.595311998476973,
+      "held_ms": 15.182373001152882,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3338,
+      "wall_ms": 25.31114999874262,
+      "held_ms": 21.500958999240538,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3342,
+      "wall_ms": 18.928379002318252,
+      "held_ms": 14.703254000778543,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3345,
+      "wall_ms": 19.200416001694975,
+      "held_ms": 14.591924998967443,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3354,
+      "wall_ms": 20.042297001054976,
+      "held_ms": 16.172322000784334,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3360,
+      "wall_ms": 22.401019999961136,
+      "held_ms": 17.931236001459183,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3367,
+      "wall_ms": 20.455347003007773,
+      "held_ms": 15.175388998613926,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3370,
+      "wall_ms": 20.007655999506824,
+      "held_ms": 14.990306997788139,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3375,
+      "wall_ms": 19.503252999129472,
+      "held_ms": 14.621746999182506,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3381,
+      "wall_ms": 20.840738001425052,
+      "held_ms": 14.826176000497071,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3386,
+      "wall_ms": 20.660054997279076,
+      "held_ms": 16.196207998291356,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3391,
+      "wall_ms": 19.094046001555398,
+      "held_ms": 14.664001999335596,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3400,
+      "wall_ms": 21.245406001980882,
+      "held_ms": 16.916425000090385,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3403,
+      "wall_ms": 19.050672999583185,
+      "held_ms": 13.840278999850852,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3408,
+      "wall_ms": 22.242967002966907,
+      "held_ms": 16.733087999455165,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3417,
+      "wall_ms": 19.01868500135606,
+      "held_ms": 14.918717999535147,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3422,
+      "wall_ms": 21.473650998814264,
+      "held_ms": 16.55198599837604,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3425,
+      "wall_ms": 19.610321996879065,
+      "held_ms": 14.184741998178652,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3432,
+      "wall_ms": 20.714322999992874,
+      "held_ms": 15.560361000098055,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3439,
+      "wall_ms": 21.71565500248107,
+      "held_ms": 15.17532000070787,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3445,
+      "wall_ms": 20.697141000709962,
+      "held_ms": 14.081166002142709,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3453,
+      "wall_ms": 20.529659999738215,
+      "held_ms": 14.567550002539065,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3455,
+      "wall_ms": 20.79694700296386,
+      "held_ms": 15.094372000021394,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3462,
+      "wall_ms": 21.007521001592977,
+      "held_ms": 14.173289000609657,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3468,
+      "wall_ms": 23.541688999102917,
+      "held_ms": 16.09137500054203,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3471,
+      "wall_ms": 24.138004999258555,
+      "held_ms": 17.878995000501163,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3474,
+      "wall_ms": 22.35136200033594,
+      "held_ms": 15.189498000836466,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3484,
+      "wall_ms": 23.174317997472826,
+      "held_ms": 15.76409300105297,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3488,
+      "wall_ms": 23.943841999425786,
+      "held_ms": 17.69901000079699,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3491,
+      "wall_ms": 23.139954002544982,
+      "held_ms": 16.150112001923844,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3500,
+      "wall_ms": 22.180667001521215,
+      "held_ms": 16.164779000973795,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3505,
+      "wall_ms": 21.486153000296326,
+      "held_ms": 15.109597999980906,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3508,
+      "wall_ms": 21.697147996746935,
+      "held_ms": 15.9418419971189,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3517,
+      "wall_ms": 21.971908001432894,
+      "held_ms": 14.932127996871714,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3524,
+      "wall_ms": 23.736479997751303,
+      "held_ms": 14.450424001552165,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3532,
+      "wall_ms": 20.88075799838407,
+      "held_ms": 14.6181849995628,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3539,
+      "wall_ms": 18.88207299998612,
+      "held_ms": 14.435338001931086,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3549,
+      "wall_ms": 19.245953000790905,
+      "held_ms": 14.253468001697911,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3555,
+      "wall_ms": 18.797703996824566,
+      "held_ms": 14.515307000692701,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3562,
+      "wall_ms": 21.331241998268524,
+      "held_ms": 16.626508000626927,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3567,
+      "wall_ms": 20.304975998442387,
+      "held_ms": 16.436257003078936,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3570,
+      "wall_ms": 24.25834400128224,
+      "held_ms": 19.626874000095995,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3575,
+      "wall_ms": 18.91238500320469,
+      "held_ms": 14.267016998928739,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3583,
+      "wall_ms": 18.630918999406276,
+      "held_ms": 14.57209000000148,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3587,
+      "wall_ms": 17.650469999352936,
+      "held_ms": 13.176425996789476,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3592,
+      "wall_ms": 17.27038599710795,
+      "held_ms": 13.66958399739815,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3600,
+      "wall_ms": 18.57218200166244,
+      "held_ms": 14.491909998469055,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3603,
+      "wall_ms": 16.84357900012401,
+      "held_ms": 12.659241001529153,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3610,
+      "wall_ms": 20.264536997274263,
+      "held_ms": 15.63725800224347,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3619,
+      "wall_ms": 18.676456998946378,
+      "held_ms": 14.57153099909192,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3620,
+      "wall_ms": 22.760779997042846,
+      "held_ms": 17.999124000198208,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3625,
+      "wall_ms": 23.46192900222377,
+      "held_ms": 16.257948998827487,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3630,
+      "wall_ms": 18.590899999253452,
+      "held_ms": 13.967113001854159,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3640,
+      "wall_ms": 20.378659002744826,
+      "held_ms": 15.881147999607492,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3646,
+      "wall_ms": 20.641127997805597,
+      "held_ms": 15.281340998626547,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3654,
+      "wall_ms": 20.859805001236964,
+      "held_ms": 16.811940000479808,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3661,
+      "wall_ms": 19.505837000906467,
+      "held_ms": 15.010770999651868,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3671,
+      "wall_ms": 21.880065000004834,
+      "held_ms": 17.25166899996111,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3679,
+      "wall_ms": 20.439701998839155,
+      "held_ms": 16.27296600054251,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3684,
+      "wall_ms": 19.751961997826584,
+      "held_ms": 15.360123001300963,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3692,
+      "wall_ms": 22.044894001737703,
+      "held_ms": 16.38562100197305,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3700,
+      "wall_ms": 17.807406999054365,
+      "held_ms": 15.220926998154027,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3708,
+      "wall_ms": 20.619686001737136,
+      "held_ms": 16.903084000659874,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3716,
+      "wall_ms": 17.7038289984921,
+      "held_ms": 15.231613000651123,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3722,
+      "wall_ms": 19.309299997985363,
+      "held_ms": 16.591027997492347,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3730,
+      "wall_ms": 19.59593400169979,
+      "held_ms": 17.186365999805275,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 3735,
+      "wall_ms": 19.080355999903986,
+      "held_ms": 15.152271997067146,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3746,
+      "wall_ms": 24.32469400082482,
+      "held_ms": 17.63510399905499,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3752,
+      "wall_ms": 19.432432996836724,
+      "held_ms": 16.08753399705165,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3759,
+      "wall_ms": 23.209937000501668,
+      "held_ms": 16.733087999455165,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3767,
+      "wall_ms": 21.964573999866843,
+      "held_ms": 16.400846998294583,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3775,
+      "wall_ms": 23.98449100292055,
+      "held_ms": 18.235679999634158,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3784,
+      "wall_ms": 20.71285599959083,
+      "held_ms": 16.29838799999561,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3791,
+      "wall_ms": 24.260718000732595,
+      "held_ms": 18.359440997301135,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3800,
+      "wall_ms": 24.773432000074536,
+      "held_ms": 15.962794001097791,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3808,
+      "wall_ms": 22.978198998316657,
+      "held_ms": 17.390725999575807,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3816,
+      "wall_ms": 20.053961001394782,
+      "held_ms": 14.66546900337562,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3824,
+      "wall_ms": 22.722155998053495,
+      "held_ms": 16.472365998197347,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3832,
+      "wall_ms": 24.4978339978843,
+      "held_ms": 14.67685299940058,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3842,
+      "wall_ms": 21.57122199787409,
+      "held_ms": 14.770511999813607,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3850,
+      "wall_ms": 20.325858997239266,
+      "held_ms": 13.536883998312987,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3859,
+      "wall_ms": 22.030365998944035,
+      "held_ms": 15.577333000692306,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3868,
+      "wall_ms": 26.560772999800975,
+      "held_ms": 18.291553999006283,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3878,
+      "wall_ms": 22.455637001257855,
+      "held_ms": 15.900914000667399,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3885,
+      "wall_ms": 24.900964999687858,
+      "held_ms": 17.098574000556255,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3894,
+      "wall_ms": 22.031483000318985,
+      "held_ms": 15.093465000973083,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3900,
+      "wall_ms": 24.869954999303445,
+      "held_ms": 17.923763996805064,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3907,
+      "wall_ms": 23.386987999401754,
+      "held_ms": 15.974108999216696,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3917,
+      "wall_ms": 22.8000310016796,
+      "held_ms": 15.748867001093458,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3923,
+      "wall_ms": 23.407452001265483,
+      "held_ms": 15.370459997939179,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3929,
+      "wall_ms": 23.750936998112593,
+      "held_ms": 15.246768001816235,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3939,
+      "wall_ms": 22.182971999427537,
+      "held_ms": 15.922216000035405,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3947,
+      "wall_ms": 24.710784000490094,
+      "held_ms": 16.800416000478435,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3955,
+      "wall_ms": 25.02891699987231,
+      "held_ms": 17.209344998263987,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3962,
+      "wall_ms": 24.167898001905996,
+      "held_ms": 17.225339001015527,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3968,
+      "wall_ms": 22.940973001823295,
+      "held_ms": 15.936603002046468,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3977,
+      "wall_ms": 24.763306002569152,
+      "held_ms": 16.7879839973466,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3985,
+      "wall_ms": 21.547964002820663,
+      "held_ms": 14.897625998855801,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 3995,
+      "wall_ms": 21.689534001779975,
+      "held_ms": 14.113434001046699,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4002,
+      "wall_ms": 22.925818000658182,
+      "held_ms": 14.331832000607392,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4011,
+      "wall_ms": 22.598675001063384,
+      "held_ms": 14.869200000248384,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4020,
+      "wall_ms": 38.8354620008613,
+      "held_ms": 30.13859799830243,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 4028,
+      "wall_ms": 24.869256998499623,
+      "held_ms": 16.919287998462096,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4037,
+      "wall_ms": 22.387401000742102,
+      "held_ms": 14.73475300008431,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4045,
+      "wall_ms": 22.80296499884571,
+      "held_ms": 14.411242998903617,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4050,
+      "wall_ms": 19.836401999782538,
+      "held_ms": 13.422829997580266,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4061,
+      "wall_ms": 21.27941899743746,
+      "held_ms": 15.1160940004047,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4069,
+      "wall_ms": 21.041046999016544,
+      "held_ms": 13.333432001672918,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4076,
+      "wall_ms": 20.730176998768002,
+      "held_ms": 13.926674000686035,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4082,
+      "wall_ms": 20.847302999754902,
+      "held_ms": 13.930516000982607,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4091,
+      "wall_ms": 22.534070998517564,
+      "held_ms": 15.464467996935127,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4095,
+      "wall_ms": 23.60112599853892,
+      "held_ms": 16.791127000033157,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4098,
+      "wall_ms": 22.229346999665722,
+      "held_ms": 15.875142002187204,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4107,
+      "wall_ms": 22.58603399968706,
+      "held_ms": 15.761858001496876,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4109,
+      "wall_ms": 20.657191998907365,
+      "held_ms": 14.249348001612816,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4113,
+      "wall_ms": 20.459328003198607,
+      "held_ms": 13.94958299715654,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4123,
+      "wall_ms": 22.496566001791507,
+      "held_ms": 14.947493000363465,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4125,
+      "wall_ms": 25.073545999475755,
+      "held_ms": 17.132936998677906,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4130,
+      "wall_ms": 22.385097003279952,
+      "held_ms": 14.66358399920864,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4138,
+      "wall_ms": 41.9550500009791,
+      "held_ms": 33.823838999524014,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 4142,
+      "wall_ms": 22.825522999482928,
+      "held_ms": 15.361800000391668,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4144,
+      "wall_ms": 37.574455000140006,
+      "held_ms": 28.655350997723872,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 4154,
+      "wall_ms": 41.06602400133852,
+      "held_ms": 31.70334999958868,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 4159,
+      "wall_ms": 41.85706100179232,
+      "held_ms": 31.021686998428777,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 4162,
+      "wall_ms": 22.888172999955714,
+      "held_ms": 16.407133000029717,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4170,
+      "wall_ms": 23.037285998725565,
+      "held_ms": 15.962863999448018,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4177,
+      "wall_ms": 25.45265099979588,
+      "held_ms": 15.906501997960731,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4186,
+      "wall_ms": 25.364580000314163,
+      "held_ms": 17.19593500092742,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4194,
+      "wall_ms": 22.353947002557106,
+      "held_ms": 15.195504001894733,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4202,
+      "wall_ms": 22.031483000318985,
+      "held_ms": 15.145358000154374,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4207,
+      "wall_ms": 23.434411999915028,
+      "held_ms": 17.121552999014966,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4212,
+      "wall_ms": 24.489382998581277,
+      "held_ms": 16.58132000011392,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4218,
+      "wall_ms": 21.335503002774203,
+      "held_ms": 14.602121998905204,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4226,
+      "wall_ms": 23.243810999701964,
+      "held_ms": 14.832952001597732,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4232,
+      "wall_ms": 42.38479099876713,
+      "held_ms": 31.333812996308552,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 4234,
+      "wall_ms": 42.146558000240475,
+      "held_ms": 32.01386900036596,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 4242,
+      "wall_ms": 37.69325699977344,
+      "held_ms": 29.128675003448734,
+      "passes": 2,
+      "candidates": 3
+    },
+    {
+      "frame_id": 4247,
+      "wall_ms": 22.989583998423768,
+      "held_ms": 16.30055300120148,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4249,
+      "wall_ms": 23.02562199838576,
+      "held_ms": 15.325480999308638,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4257,
+      "wall_ms": 20.309095998527482,
+      "held_ms": 13.929119999374961,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4263,
+      "wall_ms": 22.21922099852236,
+      "held_ms": 15.5526100024872,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4269,
+      "wall_ms": 24.068301998340758,
+      "held_ms": 15.030467002361547,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4277,
+      "wall_ms": 24.13109000190161,
+      "held_ms": 15.548280000075465,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4285,
+      "wall_ms": 22.76566799991997,
+      "held_ms": 14.65471399933449,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4291,
+      "wall_ms": 22.165861002577003,
+      "held_ms": 16.150041999935638,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4297,
+      "wall_ms": 22.4802919983631,
+      "held_ms": 16.18475400027819,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 4300,
+      "wall_ms": 21.030780000728555,
+      "held_ms": 15.98367699989467,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4308,
+      "wall_ms": 18.413290999887977,
+      "held_ms": 14.003641001181677,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4314,
+      "wall_ms": 18.845127000531647,
+      "held_ms": 14.655551000032574,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4316,
+      "wall_ms": 19.757549998757895,
+      "held_ms": 15.05239700054517,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4325,
+      "wall_ms": 20.5486570011999,
+      "held_ms": 15.904266998404637,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4329,
+      "wall_ms": 19.921610000892542,
+      "held_ms": 16.327233002812136,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4336,
+      "wall_ms": 18.932918999780668,
+      "held_ms": 15.664078000554582,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4342,
+      "wall_ms": 19.691339999553747,
+      "held_ms": 15.663099999073893,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4345,
+      "wall_ms": 20.73059600297711,
+      "held_ms": 15.653323000151431,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4349,
+      "wall_ms": 19.850510001560906,
+      "held_ms": 16.083971000625752,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4358,
+      "wall_ms": 21.754418001364684,
+      "held_ms": 18.193705000157934,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4363,
+      "wall_ms": 18.31474199934746,
+      "held_ms": 13.91368400072679,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4368,
+      "wall_ms": 18.986838000273565,
+      "held_ms": 15.241529999912018,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4374,
+      "wall_ms": 20.601388001523446,
+      "held_ms": 15.86501500059967,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4379,
+      "wall_ms": 20.075333999557188,
+      "held_ms": 16.5274720020534,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4382,
+      "wall_ms": 20.66019499761751,
+      "held_ms": 16.084180999314412,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4388,
+      "wall_ms": 22.648613001365447,
+      "held_ms": 18.870618998334976,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4395,
+      "wall_ms": 17.504569001175696,
+      "held_ms": 13.876876997528598,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4402,
+      "wall_ms": 20.236529999237973,
+      "held_ms": 15.252705001330469,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4411,
+      "wall_ms": 18.995149002876133,
+      "held_ms": 15.75731800039648,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4420,
+      "wall_ms": 21.31860100053018,
+      "held_ms": 17.87347699792008,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4425,
+      "wall_ms": 21.731092001573415,
+      "held_ms": 16.547655999602284,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4435,
+      "wall_ms": 19.389549001061823,
+      "held_ms": 16.31040199936251,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4444,
+      "wall_ms": 17.281492000620347,
+      "held_ms": 13.9030680002179,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4453,
+      "wall_ms": 20.050678998813964,
+      "held_ms": 16.906856999412412,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4456,
+      "wall_ms": 18.34337800028152,
+      "held_ms": 14.961392000259366,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4464,
+      "wall_ms": 17.993257999478374,
+      "held_ms": 14.101560002018232,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4467,
+      "wall_ms": 19.584898996981792,
+      "held_ms": 16.393095000239555,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4478,
+      "wall_ms": 18.653967999853194,
+      "held_ms": 13.816953000059584,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4480,
+      "wall_ms": 17.465597000409616,
+      "held_ms": 14.63075699939509,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4486,
+      "wall_ms": 18.52433999738423,
+      "held_ms": 14.036887001566356,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4493,
+      "wall_ms": 19.42076999694109,
+      "held_ms": 15.935415998683311,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4496,
+      "wall_ms": 23.834050000004936,
+      "held_ms": 19.116744999337243,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4499,
+      "wall_ms": 21.334665001631947,
+      "held_ms": 17.307473997789202,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4503,
+      "wall_ms": 21.749390001787106,
+      "held_ms": 17.784428000595653,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4508,
+      "wall_ms": 21.493346997885965,
+      "held_ms": 17.65040100144688,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4512,
+      "wall_ms": 33.08148399810307,
+      "held_ms": 27.128105000883806,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4517,
+      "wall_ms": 26.991701997758355,
+      "held_ms": 22.67515300263767,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4520,
+      "wall_ms": 30.200897999748122,
+      "held_ms": 23.5530040008598,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4522,
+      "wall_ms": 31.502273999649333,
+      "held_ms": 25.184106998494826,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4525,
+      "wall_ms": 22.191283998836298,
+      "held_ms": 17.641251000895863,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4530,
+      "wall_ms": 27.794123998319265,
+      "held_ms": 17.663950002315687,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4538,
+      "wall_ms": 30.93194000030053,
+      "held_ms": 25.407881999854,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4542,
+      "wall_ms": 27.161140998941846,
+      "held_ms": 21.776418998342706,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4547,
+      "wall_ms": 27.583129001868656,
+      "held_ms": 21.68813800017233,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4555,
+      "wall_ms": 20.969807999790646,
+      "held_ms": 16.911257000174373,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4558,
+      "wall_ms": 22.153499001433374,
+      "held_ms": 17.086630999983754,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4561,
+      "wall_ms": 22.471772001154022,
+      "held_ms": 16.50337599858176,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4570,
+      "wall_ms": 19.682329999341164,
+      "held_ms": 16.598362002696376,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4575,
+      "wall_ms": 23.357863999990514,
+      "held_ms": 18.362515002081636,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4577,
+      "wall_ms": 19.508771001710556,
+      "held_ms": 15.706194000813412,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4585,
+      "wall_ms": 20.536643998639192,
+      "held_ms": 16.076078998594312,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4594,
+      "wall_ms": 19.308532999275485,
+      "held_ms": 14.581448998796986,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4604,
+      "wall_ms": 16.922920000070008,
+      "held_ms": 13.131517000147142,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4612,
+      "wall_ms": 18.330107999645406,
+      "held_ms": 13.84942900040187,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4619,
+      "wall_ms": 16.329048998159124,
+      "held_ms": 12.526051999884658,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4625,
+      "wall_ms": 22.1196249985951,
+      "held_ms": 17.969860000448534,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4630,
+      "wall_ms": 16.437095000583213,
+      "held_ms": 12.641920999158174,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4634,
+      "wall_ms": 18.69901700047194,
+      "held_ms": 14.737407000211533,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4637,
+      "wall_ms": 17.167648999020457,
+      "held_ms": 12.468571996578248,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4644,
+      "wall_ms": 18.907705998572055,
+      "held_ms": 15.211010002531111,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4646,
+      "wall_ms": 18.954918999952497,
+      "held_ms": 14.404257999558467,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4661,
+      "wall_ms": 17.331498998828465,
+      "held_ms": 14.921932001016103,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4667,
+      "wall_ms": 18.410984997899504,
+      "held_ms": 15.354536000813823,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4671,
+      "wall_ms": 19.72311799909221,
+      "held_ms": 15.069858000060776,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4678,
+      "wall_ms": 19.552421999833314,
+      "held_ms": 16.706827998859808,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4681,
+      "wall_ms": 22.72676699794829,
+      "held_ms": 20.531964000838343,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4686,
+      "wall_ms": 20.161240001471015,
+      "held_ms": 17.47397800136241,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4695,
+      "wall_ms": 18.243433001771336,
+      "held_ms": 15.8235290000448,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4705,
+      "wall_ms": 17.048357000021497,
+      "held_ms": 14.547784998285351,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4712,
+      "wall_ms": 17.897712998092175,
+      "held_ms": 14.54338499752339,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4715,
+      "wall_ms": 18.984951999300392,
+      "held_ms": 16.408530002081534,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4720,
+      "wall_ms": 16.71681500010891,
+      "held_ms": 14.24906799729797,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4725,
+      "wall_ms": 20.14650400087703,
+      "held_ms": 17.480613001680467,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4735,
+      "wall_ms": 16.87039899843512,
+      "held_ms": 14.352573998621665,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4741,
+      "wall_ms": 18.99158699961845,
+      "held_ms": 16.435559002275113,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4750,
+      "wall_ms": 22.45556799971382,
+      "held_ms": 16.331144001014763,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4752,
+      "wall_ms": 18.034324999462115,
+      "held_ms": 13.486317999195307,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4754,
+      "wall_ms": 22.9642310005147,
+      "held_ms": 18.388844997389242,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4766,
+      "wall_ms": 24.062715001491597,
+      "held_ms": 19.662773996969918,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4772,
+      "wall_ms": 26.342237000790192,
+      "held_ms": 18.38500400117482,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4776,
+      "wall_ms": 19.82753300035256,
+      "held_ms": 15.569023002171889,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4786,
+      "wall_ms": 20.866579998255474,
+      "held_ms": 17.308940001385054,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4789,
+      "wall_ms": 20.527844000753248,
+      "held_ms": 15.742511001008097,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4796,
+      "wall_ms": 20.50828800201998,
+      "held_ms": 15.717367998149712,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4804,
+      "wall_ms": 19.589718998759054,
+      "held_ms": 15.943449001497356,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4809,
+      "wall_ms": 19.59789100146736,
+      "held_ms": 15.96461100052693,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4819,
+      "wall_ms": 21.377549001044827,
+      "held_ms": 15.97187400329858,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4827,
+      "wall_ms": 18.61059499788098,
+      "held_ms": 15.196342999843182,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4836,
+      "wall_ms": 18.4479330018803,
+      "held_ms": 15.315144999476615,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4844,
+      "wall_ms": 18.541172001278028,
+      "held_ms": 15.253124001901597,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4855,
+      "wall_ms": 16.80286100236117,
+      "held_ms": 13.403973000094993,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4867,
+      "wall_ms": 17.66367000163882,
+      "held_ms": 14.27260499986005,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4876,
+      "wall_ms": 17.908120000356575,
+      "held_ms": 14.466348999121692,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4884,
+      "wall_ms": 19.262156998593127,
+      "held_ms": 15.471872000489384,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4895,
+      "wall_ms": 17.282749999139924,
+      "held_ms": 13.975705001939787,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4902,
+      "wall_ms": 19.85784499993315,
+      "held_ms": 15.760881000460358,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4910,
+      "wall_ms": 20.927552999637555,
+      "held_ms": 17.048426998371724,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4918,
+      "wall_ms": 18.532791000325233,
+      "held_ms": 14.782804999413202,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4928,
+      "wall_ms": 18.532581001636572,
+      "held_ms": 15.662263002013788,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4935,
+      "wall_ms": 20.440470998437377,
+      "held_ms": 16.018738999264315,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4943,
+      "wall_ms": 20.537971002340782,
+      "held_ms": 17.14306400026544,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4948,
+      "wall_ms": 18.429075000312878,
+      "held_ms": 15.426683999976376,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4959,
+      "wall_ms": 19.099144999927375,
+      "held_ms": 16.438841998024145,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4967,
+      "wall_ms": 20.74260999870603,
+      "held_ms": 17.03348199953325,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4974,
+      "wall_ms": 18.559961001301417,
+      "held_ms": 16.73203999962425,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4979,
+      "wall_ms": 19.640005000837846,
+      "held_ms": 17.3180890014919,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4991,
+      "wall_ms": 16.870119998202426,
+      "held_ms": 14.602122002543183,
+      "passes": 1,
+      "candidates": 1
+    },
+    {
+      "frame_id": 4999,
+      "wall_ms": 20.46973500182503,
+      "held_ms": 16.69767799830879,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 5007,
+      "wall_ms": 18.150683001294965,
+      "held_ms": 13.3258889982244,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 5015,
+      "wall_ms": 17.743361000611912,
+      "held_ms": 13.550362997193588,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 5024,
+      "wall_ms": 19.455411998933414,
+      "held_ms": 13.921436999225989,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 5030,
+      "wall_ms": 17.449254002713133,
+      "held_ms": 13.498260999767808,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 5040,
+      "wall_ms": 21.0145070013823,
+      "held_ms": 15.288954000425292,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 5049,
+      "wall_ms": 19.463513999653514,
+      "held_ms": 15.25598800071748,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 5055,
+      "wall_ms": 19.849603002512595,
+      "held_ms": 15.705006000644062,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 5063,
+      "wall_ms": 17.475863998697605,
+      "held_ms": 13.710373001231346,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 5072,
+      "wall_ms": 18.37466799770482,
+      "held_ms": 14.496591000352055,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 5080,
+      "wall_ms": 17.03927799826488,
+      "held_ms": 13.47814600012498,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 5090,
+      "wall_ms": 18.228067998279585,
+      "held_ms": 14.460131998930592,
+      "passes": 1,
+      "candidates": 2
+    },
+    {
+      "frame_id": 5097,
+      "wall_ms": 18.622119998326525,
+      "held_ms": 14.675596998131368,
+      "passes": 1,
+      "candidates": 2
+    }
+  ],
+  "ground_truth": false,
+  "physical_commands": 0,
+  "scope": "Real OSNet on preselected schedule union, shared measurements on common frames. Policy age fixed to cached scenario for parity, not actual live completion time."
+}

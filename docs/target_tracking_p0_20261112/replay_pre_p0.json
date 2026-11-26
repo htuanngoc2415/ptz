@@ -1,0 +1,46 @@
+{
+  "kind": "Recorded gate-only replay; not full tracking/identity benchmark",
+  "results": [
+    {
+      "marker": "09:43:12.642",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": true,
+      "ground_truth_identity": null,
+      "evidence_age": 0.2680067480005164
+    },
+    {
+      "marker": "09:43:25.566",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": true,
+      "ground_truth_identity": null,
+      "evidence_age": 0.4672330190005596
+    },
+    {
+      "marker": "09:43:28.867",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": true,
+      "ground_truth_identity": null,
+      "evidence_age": 0.3968347079999148
+    },
+    {
+      "marker": "09:44:08.234",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": true,
+      "ground_truth_identity": null,
+      "evidence_age": 0.334669393000695
+    },
+    {
+      "marker": "09:44:28.974",
+      "geometry_gate": "HOLD",
+      "previous_observation_available": true,
+      "ground_truth_identity": null,
+      "evidence_age": 1.2388407049993475
+    }
+  ],
+  "hold_decisions": 5,
+  "false_holds": null,
+  "identity_switches": null,
+  "full_losses": null,
+  "reid_model_time": null,
+  "detection_throughput": null
+}

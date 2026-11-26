@@ -20,6 +20,7 @@ from telemetry import latency
 from runtime.scheduling import scheduler
 from runtime.face_worker import FaceWorker
 from runtime.target_session import TargetSession
+from runtime.target_prediction import TargetPrediction
 from runtime.byte_tracking import ByteTrackPersonTracker
 from ai.reid_target import iou, inside
 
@@ -37,6 +38,9 @@ class InferenceWorker:
 
     def reset_tracking_worker(self):
         """Only the AI thread mutates tracking state; UI requests resets via Event."""
+        shadow = getattr(self, 'identity_shadow', None)
+        if shadow is not None:
+            shadow.invalidate()
         if hasattr(self, 'auto_pan_tilt'):
             self.auto_pan_tilt.cancel()
         if hasattr(self, 'person_tracker'):
@@ -45,6 +49,7 @@ class InferenceWorker:
             self.target_session.publish(None)
         if hasattr(self, 'face_worker'):
             self.face_worker.invalidate()
+        self._pan_prediction = TargetPrediction()
         self._identity_logged_session = None
         self._usable_logged_session = None
         if hasattr(self, 'face_framing'):
@@ -425,6 +430,9 @@ class InferenceWorker:
                 report_perf("STALE_OBSERVATION")
                 continue
 
+            # Recorder preserves raw detections as well as returned MOT tracklets.
+            capture = getattr(self, 'identity_capture', None)
+            recording_detections = [dict(p) for p in persons] if capture is not None and capture.enabled else None
             if cfg.TARGET_CONTINUOUS_REID:
                 # Per-frame labels exclude neighbours; none represent spatial tracks.
                 for index, detection in enumerate(persons):
@@ -447,6 +455,12 @@ class InferenceWorker:
             try:
                 reid_started = time.perf_counter()
                 person = self.reid_target.select_person(frame_bgr, persons, frame_time)
+                shadow = getattr(self, 'identity_shadow', None)
+                if shadow is not None and shadow.enabled:
+                    shadow.submit(frame_bgr, persons, self.reid_target, person, frame_sequence, frame_time)
+                if recording_detections is not None:
+                    capture.record(frame_bgr, recording_detections, persons, self.reid_target,
+                                   person, frame_sequence, frame_time, yolo_ms)
                 if not cfg.TARGET_CONTINUOUS_REID:
                     self.person_tracker.record_selection(frame_bgr, self.reid_target, person, frame_time,
                         getattr(self.person_detector, 'postprocess_info', None))
@@ -484,9 +498,18 @@ class InferenceWorker:
                 self.auto_zoom.motion_feedback(person, frame_bgr.shape, frame_time,
                     self.reid_target.lock_session_id, self.reid_target.track_id)
                 if hasattr(self, 'auto_pan_tilt'):
+                    if not hasattr(self, '_pan_prediction'):
+                        self._pan_prediction = TargetPrediction()
+                    prediction = None
+                    if self.auto_pan_tilt.enabled and person is not None and not self.reid_target.crossing_hold:
+                        prediction = self._pan_prediction.observe(frame_bgr,person['bbox'],persons,
+                            frame_time,binding,time.monotonic())
+                    else:
+                        self._pan_prediction.reset()
                     pan_needed = self.auto_pan_tilt.submit(person, frame_bgr.shape, frame_time,
                         self.reid_target.lock_session_id, self.reid_target.track_id,
                         metadata=dict(frame_id=frame_sequence, detection_completed_timestamp=detection_completed,
+                            motion_prediction=prediction, track_generation=self.reid_target.track_generation,
                             target_uid=getattr(self.reid_target, 'target_uid', None),
                             tracking_state=getattr(self.reid_target, 'tracking_status', self.reid_target.stage),
                             identity_state=getattr(self.reid_target, 'identity_status', None),

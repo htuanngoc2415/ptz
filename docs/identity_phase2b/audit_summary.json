@@ -1,0 +1,38 @@
+{
+  "AWAITING_MULTI_OBSERVATION_CONFIRMATION": {
+    "n": 33,
+    "same_trusted_track": 28,
+    "different_trusted_track": 4,
+    "no_anchor": 1,
+    "anchor_within_1s": 21,
+    "anchor_age_median_s": 0.6158726995017787,
+    "anchor_age_max_s": 17.63994064399958,
+    "high_reference_ge_pending": 21,
+    "max_reference": 0.809082133513733,
+    "unknown_identity": 33
+  },
+  "LOW_REFERENCE_SIMILARITY": {
+    "n": 113,
+    "same_trusted_track": 113,
+    "different_trusted_track": 0,
+    "no_anchor": 0,
+    "anchor_within_1s": 3,
+    "anchor_age_median_s": 3.399649799001054,
+    "anchor_age_max_s": 7.069941227000527,
+    "high_reference_ge_pending": 0,
+    "max_reference": 0.69881828304786,
+    "unknown_identity": 113
+  },
+  "UNCERTAIN_CROP_QUALITY": {
+    "n": 59,
+    "same_trusted_track": 48,
+    "different_trusted_track": 11,
+    "no_anchor": 0,
+    "anchor_within_1s": 31,
+    "anchor_age_median_s": 0.9640810249984497,
+    "anchor_age_max_s": 17.399197432998335,
+    "high_reference_ge_pending": 26,
+    "max_reference": 0.8073192233399871,
+    "unknown_identity": 59
+  }
+}

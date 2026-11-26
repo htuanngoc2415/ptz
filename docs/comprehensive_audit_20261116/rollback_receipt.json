@@ -1,0 +1,32 @@
+{
+  "result": "ROLLBACK TO VERIFIED BASELINE",
+  "time": "2026-11-16T17:16:40.961268+07:00",
+  "active": "/mnt/files/Project/ptz/ptz",
+  "baseline": "/mnt/files/Project/ptz_before_async_control_20261116_162242/project/ptz",
+  "preserved_async": "/mnt/files/Project/ptz_performance_experiment_20261116/installed_async_before_rollback",
+  "candidate": "/mnt/files/Project/ptz_performance_experiment_20261116/ptz",
+  "verified_files": 2954,
+  "shutdown_evidence": {
+    "shutdown_phase": "controls",
+    "motor_owner": null,
+    "unconfirmed_motor": false,
+    "cleanup_failures": [],
+    "physical_motor_stopped": null,
+    "session_id": null,
+    "track_id": null,
+    "frame_id": null,
+    "track_generation": null,
+    "timestamp_monotonic": 22483.076183505,
+    "run_id": "cbec01eb4e3044fd9d3c96bf02126c31",
+    "scenario": "unknown",
+    "timestamp": "2026-11-16T16:39:41.949+07:00",
+    "monotonic_ns": 22483076183505,
+    "event": "SHUTDOWN_COMPLETED",
+    "thread": "close-camera"
+  },
+  "physical_stop_verified": false,
+  "stop_basis": "prior confirmed protocol shutdown + no application process + empty persisted active_codes; no new motor command",
+  "head": "ede31989fe6a39b04d7cd4d31675ebd811a28397",
+  "config_sha256": "b87663f165c9cf3a891f557ad10baac8b2be90bc798154d17dbf7291555e4bde",
+  "camera_config_sha256": "227a5813f0fe6411823dd44869da7d939645b4dfafd7b8c22e0bf49d3d34ce1f"
+}

@@ -1,0 +1,133 @@
+{
+  "synthetic": true,
+  "physical_commands": 0,
+  "warning": "Ground truth and part evidence are scripted. These metrics test policy contracts only; not detector, segmentation or OSNet accuracy.",
+  "scenarios": {
+    "front_clear": {
+      "A": {
+        "localization_recall": 0.0,
+        "confirmed_switch_episodes": 0,
+        "visible_target_unlocalized_s": 2.0,
+        "shadow_control_interruption_s": 2.0
+      },
+      "B": {
+        "localization_recall": 1.0,
+        "confirmed_switch_episodes": 0,
+        "visible_target_unlocalized_s": 0.0,
+        "shadow_control_interruption_s": 0.0
+      }
+    },
+    "stationary_front": {
+      "A": {
+        "localization_recall": 0.0,
+        "confirmed_switch_episodes": 0,
+        "visible_target_unlocalized_s": 2.0,
+        "shadow_control_interruption_s": 2.0
+      },
+      "B": {
+        "localization_recall": 1.0,
+        "confirmed_switch_episodes": 0,
+        "visible_target_unlocalized_s": 0.0,
+        "shadow_control_interruption_s": 0.0
+      }
+    },
+    "moving_front": {
+      "A": {
+        "localization_recall": 0.0,
+        "confirmed_switch_episodes": 0,
+        "visible_target_unlocalized_s": 2.0,
+        "shadow_control_interruption_s": 2.0
+      },
+      "B": {
+        "localization_recall": 1.0,
+        "confirmed_switch_episodes": 0,
+        "visible_target_unlocalized_s": 0.0,
+        "shadow_control_interruption_s": 0.0
+      }
+    },
+    "partial": {
+      "A": {
+        "localization_recall": 0.0,
+        "confirmed_switch_episodes": 0,
+        "visible_target_unlocalized_s": 2.0,
+        "shadow_control_interruption_s": 2.0
+      },
+      "B": {
+        "localization_recall": 1.0,
+        "confirmed_switch_episodes": 0,
+        "visible_target_unlocalized_s": 0.0,
+        "shadow_control_interruption_s": 0.0
+      }
+    },
+    "full_occlusion": {
+      "A": {
+        "localization_recall": null,
+        "confirmed_switch_episodes": 0,
+        "visible_target_unlocalized_s": 0.0,
+        "shadow_control_interruption_s": 2.0
+      },
+      "B": {
+        "localization_recall": null,
+        "confirmed_switch_episodes": 0,
+        "visible_target_unlocalized_s": 0.0,
+        "shadow_control_interruption_s": 2.0
+      }
+    },
+    "crossing_separation": {
+      "A": {
+        "localization_recall": 0.45,
+        "confirmed_switch_episodes": 0,
+        "visible_target_unlocalized_s": 1.1,
+        "shadow_control_interruption_s": 1.1
+      },
+      "B": {
+        "localization_recall": 0.9,
+        "confirmed_switch_episodes": 0,
+        "visible_target_unlocalized_s": 0.2,
+        "shadow_control_interruption_s": 0.2
+      }
+    },
+    "similar_clothing": {
+      "A": {
+        "localization_recall": 0.0,
+        "confirmed_switch_episodes": 0,
+        "visible_target_unlocalized_s": 2.0,
+        "shadow_control_interruption_s": 2.0
+      },
+      "B": {
+        "localization_recall": 0.0,
+        "confirmed_switch_episodes": 0,
+        "visible_target_unlocalized_s": 2.0,
+        "shadow_control_interruption_s": 2.0
+      }
+    },
+    "moving_ptz": {
+      "A": {
+        "localization_recall": 0.0,
+        "confirmed_switch_episodes": 0,
+        "visible_target_unlocalized_s": 2.0,
+        "shadow_control_interruption_s": 2.0
+      },
+      "B": {
+        "localization_recall": 1.0,
+        "confirmed_switch_episodes": 0,
+        "visible_target_unlocalized_s": 0.0,
+        "shadow_control_interruption_s": 0.0
+      }
+    },
+    "detection_missing": {
+      "A": {
+        "localization_recall": 0.0,
+        "confirmed_switch_episodes": 0,
+        "visible_target_unlocalized_s": 2.0,
+        "shadow_control_interruption_s": 2.0
+      },
+      "B": {
+        "localization_recall": 0.0,
+        "confirmed_switch_episodes": 0,
+        "visible_target_unlocalized_s": 2.0,
+        "shadow_control_interruption_s": 2.0
+      }
+    }
+  }
+}

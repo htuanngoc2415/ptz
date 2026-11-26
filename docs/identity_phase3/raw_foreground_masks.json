@@ -1,0 +1,27 @@
+{
+  "source_sha256": "12b3a673cc0a04d9421bb74c07a9f3a732abac15f940cb62e36977db2b89ff56",
+  "width": 960,
+  "reviewer": "coding_agent_conservative_entire_right_foreground_region",
+  "foreground_exclusion_boxes": [
+    [
+      780,
+      350,
+      960,
+      803
+    ]
+  ],
+  "osd_boxes": [
+    [
+      0,
+      0,
+      320,
+      35
+    ],
+    [
+      750,
+      730,
+      960,
+      803
+    ]
+  ]
+}

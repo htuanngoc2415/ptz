@@ -1,0 +1,16 @@
+{
+  "source_sha256": "12b3a673cc0a04d9421bb74c07a9f3a732abac15f940cb62e36977db2b89ff56",
+  "width": 960,
+  "rows": [
+    {
+      "frame_id": 0,
+      "bbox": [
+        865,
+        455,
+        948,
+        695
+      ],
+      "reviewer": "coding_agent_visible_partial_person_ROI_not_full_body_GT"
+    }
+  ]
+}

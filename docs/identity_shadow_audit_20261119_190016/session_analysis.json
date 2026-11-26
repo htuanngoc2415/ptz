@@ -1,0 +1,36 @@
+{
+  "within_session_gap_s": {
+    "n": 234,
+    "p50": 0.4060239955015277,
+    "p95": 2.177755342799355,
+    "max": 5.233747395999671
+  },
+  "within_session_gaps_above_1s": 52,
+  "sessions": [
+    {
+      "session_id": "7ac1694d139c4d1aa5e2f4fc84a44e0a",
+      "samples": 187,
+      "selected": 6,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 98,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 37,
+        "CONFIRMED_MULTI_CUE": 6,
+        "PERSON_OVERLAP": 29,
+        "LOW_DETECTION_CONFIDENCE": 15,
+        "NO_OBSERVATION_UNKNOWN": 2
+      }
+    },
+    {
+      "session_id": "79e5a1ae35b04815a1e1536cecded188",
+      "samples": 49,
+      "selected": 1,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 10,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 25,
+        "LOW_DETECTION_CONFIDENCE": 4,
+        "PERSON_OVERLAP": 9,
+        "CONFIRMED_MULTI_CUE": 1
+      }
+    }
+  ]
+}

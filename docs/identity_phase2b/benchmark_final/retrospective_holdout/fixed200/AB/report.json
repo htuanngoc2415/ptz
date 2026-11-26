@@ -1,0 +1,94 @@
+{
+  "kind": "same-evidence offline policy replay; not production scheduler benchmark",
+  "observations_sha256": "cd829e4773b25af1c4fa0e5325891d2202373d7ea085b5bc49c8380edffff09c",
+  "video": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_b4602881389f406b8db527c0bc96750d",
+  "reference": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_b4602881389f406b8db527c0bc96750d/target_reference.png",
+  "identity_enabled": true,
+  "gallery_enabled": false,
+  "ground_truth": false,
+  "physical_commands": 0,
+  "baseline_completion": "cached verification consumed on next sampled frame",
+  "timing_scope": "shared extraction measurements, NOT per-policy end-to-end FPS",
+  "metrics": {
+    "baseline": {
+      "samples": 486,
+      "duration_s": 133.20101767300002,
+      "ambiguous_state_duration_s": 9.418767946001026,
+      "target_correct_tracking_time_s": null,
+      "wrong_target_tracking_time_s": null,
+      "id_switches": null,
+      "fragmentation": null,
+      "target_loss": null,
+      "recovery_latency_s": null,
+      "annotated_duration_s": 0.0,
+      "annotation_coverage": 0.0,
+      "detection_latency_ms": {
+        "count": 486,
+        "mean": 78.67432534166491,
+        "p95": 135.38429199979873
+      },
+      "reid_latency_ms": {
+        "count": 486,
+        "mean": 32.85989135404301,
+        "p95": 38.960783000220545
+      },
+      "frame_age_ms": {
+        "count": 486,
+        "mean": 92.50426094028323,
+        "p95": 219.38679600134492
+      },
+      "detection_service_fps": 12.710626950497826,
+      "detection_sample_fps": 3.6411133223519654,
+      "selected_observations": 344
+    },
+    "identity": {
+      "samples": 486,
+      "duration_s": 133.20101767300002,
+      "ambiguous_state_duration_s": 47.594540845002484,
+      "target_correct_tracking_time_s": null,
+      "wrong_target_tracking_time_s": null,
+      "id_switches": null,
+      "fragmentation": null,
+      "target_loss": null,
+      "recovery_latency_s": null,
+      "annotated_duration_s": 0.0,
+      "annotation_coverage": 0.0,
+      "detection_latency_ms": {
+        "count": 486,
+        "mean": 78.67432534166491,
+        "p95": 135.38429199979873
+      },
+      "reid_latency_ms": {
+        "count": 486,
+        "mean": 32.85989135404301,
+        "p95": 38.960783000220545
+      },
+      "frame_age_ms": {
+        "count": 486,
+        "mean": 92.50426094028323,
+        "p95": 219.38679600134492
+      },
+      "detection_service_fps": 12.710626950497826,
+      "detection_sample_fps": 3.6411133223519654,
+      "selected_observations": 323
+    }
+  },
+  "dry_pan_config": {
+    "AUTO_PAN_SIGN": 1,
+    "AUTO_PAN_TILT_ADAPTIVE": false,
+    "AUTO_PAN_TILT_DEADZONE": 0.08,
+    "AUTO_PAN_TILT_ENABLED": true,
+    "AUTO_PAN_TILT_FAR_ERROR": 0.3,
+    "AUTO_PAN_TILT_MAX_PULSE": 0.24,
+    "AUTO_PAN_TILT_MAX_SPEED": 3,
+    "AUTO_PAN_TILT_PULSE": 0.12,
+    "AUTO_PAN_TILT_RELEASE": 0.04,
+    "AUTO_PAN_TILT_SETTLE": 0.15,
+    "AUTO_TILT_SIGN": 1
+  },
+  "candidate_source_sha256": {
+    "ai/target_identity.py": "8376b7da84d5617154231da1518af3334714c305d87be5ac35a4bc1fc686ac2a",
+    "tools/identity_metrics.py": "cf80f5fc240e1b963d711190d3b8babe06cad1e58fe1697ed8929b66cc141c39",
+    "tools/identity_replay.py": "c8542bd920dd5ac67a7d48a4fa141006c893e7b5a919a972e2f916d2f816687a"
+  }
+}

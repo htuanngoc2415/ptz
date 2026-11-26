@@ -1,0 +1,35 @@
+{
+  "sampled_counts": {
+    "replayed": 276,
+    "selected": 32,
+    "waiting_count_1": 31,
+    "new_chain_no_pending": 19,
+    "broken_pending_chain": 12,
+    "broken_gap": 9,
+    "broken_iou": 6,
+    "broken_appearance": 0,
+    "waiting_count_2": 17
+  },
+  "mismatches": [],
+  "reset_boundaries": {
+    "1706": 1,
+    "2292": 2
+  },
+  "dense_reasons": {
+    "LOW_REFERENCE_SIMILARITY": 151,
+    "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 26,
+    "CONFIRMED_MULTI_CUE": 786,
+    "LOW_DETECTION_CONFIDENCE": 6,
+    "NO_OBSERVATION_UNKNOWN": 53,
+    "PERSON_OVERLAP": 98
+  },
+  "dense_at_recorded_samples": {
+    "same_choice": 142,
+    "dense_selected_at_actual_hold": 134,
+    "dense_hold_at_actual_selected": 0,
+    "both_select_different": 0
+  },
+  "scope": "Available PNG sample times only; unmatched samples listed in capture_audit.json. Dense counterfactual resets at first completed frame of each new serial; not exact live reset/scheduler replay.",
+  "ground_truth": false,
+  "physical_commands": 0
+}

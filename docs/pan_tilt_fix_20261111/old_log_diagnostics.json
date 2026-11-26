@@ -1,0 +1,17 @@
+{
+  "run_id": "cdcae4f2981243d7a0607f6df9be9e05",
+  "malformed_lines": 0,
+  "retained_span_seconds": 73.666641221,
+  "retained_dispatch_count": 0,
+  "retained_command_rate_hz": 0.0,
+  "total_command_count": null,
+  "decision_scope": "sampled_retained_events",
+  "decision_counts": {},
+  "decision_ratio": {},
+  "detection_to_supervisor_dispatch_ms": null,
+  "detection_to_wire_dispatch_ms": null,
+  "host_active_duration_ms": null,
+  "inter_pulse_wait_ms": null,
+  "image_displacement_samples": 0,
+  "note": "Retained trace may omit rotated-away data; ACK/durations are not physical motor telemetry."
+}

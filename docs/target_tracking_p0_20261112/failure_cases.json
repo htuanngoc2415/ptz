@@ -1,0 +1,372 @@
+[
+  {
+    "marker": "09:43:12.642",
+    "frame_id": 2423,
+    "observation_time": 4491.046511753,
+    "persons": [
+      {
+        "track_id": 44,
+        "bbox": [
+          359,
+          178,
+          452,
+          479
+        ],
+        "confidence": 0.9387052655220032
+      },
+      {
+        "track_id": 46,
+        "bbox": [
+          247,
+          201,
+          316,
+          316
+        ],
+        "confidence": 0.8953760266304016
+      },
+      {
+        "track_id": 51,
+        "bbox": [
+          195,
+          130,
+          250,
+          228
+        ],
+        "confidence": 0.6183266043663025
+      },
+      {
+        "track_id": 49,
+        "bbox": [
+          153,
+          167,
+          196,
+          235
+        ],
+        "confidence": 0.616497814655304
+      },
+      {
+        "track_id": 52,
+        "bbox": [
+          318,
+          133,
+          372,
+          293
+        ],
+        "confidence": 0.8730631470680237
+      }
+    ],
+    "target_id": 44,
+    "session": "lock_e1dfe7aad0ca460fae1ce7b0495bcb95",
+    "previous_observation": [
+      4490.778591398999,
+      [
+        362,
+        174,
+        453,
+        478
+      ]
+    ],
+    "last_positive_evidence_timestamp": 4490.778505005,
+    "logged_similarity": 0.8228490948677063,
+    "logged_reason": "PERSON_OVERLAP",
+    "logged_state": "OCCLUDED_HOLD",
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "09:43:25.566",
+    "frame_id": 2812,
+    "observation_time": 4504.011480629,
+    "persons": [
+      {
+        "track_id": 53,
+        "bbox": [
+          280,
+          108,
+          335,
+          258
+        ],
+        "confidence": 0.902843713760376
+      },
+      {
+        "track_id": 54,
+        "bbox": [
+          325,
+          110,
+          398,
+          378
+        ],
+        "confidence": 0.9249093532562256
+      },
+      {
+        "track_id": 57,
+        "bbox": [
+          112,
+          150,
+          156,
+          222
+        ],
+        "confidence": 0.44011390209198
+      },
+      {
+        "track_id": 56,
+        "bbox": [
+          208,
+          173,
+          280,
+          293
+        ],
+        "confidence": 0.9241454601287842
+      },
+      {
+        "track_id": 58,
+        "bbox": [
+          156,
+          106,
+          217,
+          236
+        ],
+        "confidence": 0.8410673141479492
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_a44c21e3c26f426dbfe85fc446cb891e",
+    "previous_observation": [
+      4503.544300062001,
+      [
+        330,
+        110,
+        403,
+        378
+      ]
+    ],
+    "last_positive_evidence_timestamp": 4503.54424761,
+    "logged_similarity": 0.7956334352493286,
+    "logged_reason": "PERSON_OVERLAP",
+    "logged_state": "OCCLUDED_HOLD",
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "09:43:28.867",
+    "frame_id": 2910,
+    "observation_time": 4507.275570932,
+    "persons": [
+      {
+        "track_id": 53,
+        "bbox": [
+          281,
+          108,
+          334,
+          257
+        ],
+        "confidence": 0.9204094409942627
+      },
+      {
+        "track_id": 54,
+        "bbox": [
+          325,
+          119,
+          405,
+          420
+        ],
+        "confidence": 0.9185139536857605
+      },
+      {
+        "track_id": 57,
+        "bbox": [
+          112,
+          150,
+          155,
+          222
+        ],
+        "confidence": 0.48927807807922363
+      },
+      {
+        "track_id": 56,
+        "bbox": [
+          209,
+          171,
+          281,
+          294
+        ],
+        "confidence": 0.8992319107055664
+      },
+      {
+        "track_id": 58,
+        "bbox": [
+          156,
+          107,
+          216,
+          233
+        ],
+        "confidence": 0.7667135000228882
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_b7315d04d4304295ac61f8f4b78f81d6",
+    "previous_observation": [
+      4506.878798592,
+      [
+        332,
+        115,
+        410,
+        412
+      ]
+    ],
+    "last_positive_evidence_timestamp": 4506.878736224,
+    "logged_similarity": 0.8065773844718933,
+    "logged_reason": "PERSON_OVERLAP",
+    "logged_state": "OCCLUDED_HOLD",
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "09:44:08.234",
+    "frame_id": 4092,
+    "observation_time": 4546.67716566,
+    "persons": [
+      {
+        "track_id": 61,
+        "bbox": [
+          160,
+          86,
+          216,
+          199
+        ],
+        "confidence": 0.7074307799339294
+      },
+      {
+        "track_id": 63,
+        "bbox": [
+          116,
+          126,
+          159,
+          201
+        ],
+        "confidence": 0.5782784223556519
+      },
+      {
+        "track_id": 62,
+        "bbox": [
+          209,
+          151,
+          280,
+          270
+        ],
+        "confidence": 0.9273839592933655
+      },
+      {
+        "track_id": 64,
+        "bbox": [
+          280,
+          66,
+          367,
+          320
+        ],
+        "confidence": 0.9125329852104187
+      },
+      {
+        "track_id": 59,
+        "bbox": [
+          280,
+          82,
+          318,
+          238
+        ],
+        "confidence": 0.4469442069530487
+      }
+    ],
+    "target_id": 64,
+    "session": "lock_0fd367faa85448dab374855aab6c6042",
+    "previous_observation": [
+      4546.591761236999,
+      [
+        281,
+        65,
+        369,
+        321
+      ]
+    ],
+    "last_positive_evidence_timestamp": 4546.342496267,
+    "logged_similarity": 0.8166113495826721,
+    "logged_reason": "PERSON_OVERLAP",
+    "logged_state": "OCCLUDED_HOLD",
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "09:44:28.974",
+    "frame_id": 4714,
+    "observation_time": 4567.41555782,
+    "persons": [
+      {
+        "track_id": 70,
+        "bbox": [
+          209,
+          144,
+          280,
+          266
+        ],
+        "confidence": 0.9251706004142761
+      },
+      {
+        "track_id": 71,
+        "bbox": [
+          282,
+          79,
+          335,
+          231
+        ],
+        "confidence": 0.9103285074234009
+      },
+      {
+        "track_id": 72,
+        "bbox": [
+          324,
+          95,
+          412,
+          391
+        ],
+        "confidence": 0.926138699054718
+      },
+      {
+        "track_id": 73,
+        "bbox": [
+          115,
+          118,
+          156,
+          197
+        ],
+        "confidence": 0.7351725101470947
+      },
+      {
+        "track_id": 76,
+        "bbox": [
+          159,
+          81,
+          217,
+          188
+        ],
+        "confidence": 0.9075224995613098
+      }
+    ],
+    "target_id": 72,
+    "session": "lock_1b365e5a4a5e4702bff7cf2b701a6e46",
+    "previous_observation": [
+      4567.180521742001,
+      [
+        335,
+        105,
+        417,
+        409
+      ]
+    ],
+    "last_positive_evidence_timestamp": 4566.176717115,
+    "logged_similarity": 0.7705414295196533,
+    "logged_reason": "PERSON_OVERLAP",
+    "logged_state": "OCCLUDED_HOLD",
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "video": "../16_11(1).mov",
+  "frames": 180,
+  "video_seconds": 6.005225148683093,
+  "detector_stride": 3,
+  "detector_roi_updates": 56,
+  "local_observations": 164,
+  "local_updates_per_video_second": 27.3095505896168,
+  "local_cpu_mean_ms": 2.5144674220832206,
+  "local_cpu_p95_ms": 4.1356630483278405,
+  "detector_agreement_iou_mean": 0.8807852465002782,
+  "agreement_samples": 52,
+  "correct_target_time": null,
+  "id_switches": null,
+  "full_target_losses": null,
+  "physical_speed": null,
+  "exposure_to_actuation_ms": null,
+  "ground_truth": false,
+  "camera_motion_compensated": false,
+  "caveat": "ROI selected by geometry, no OSNet target annotations. Local flow measures feasibility only; no live integration."
+}

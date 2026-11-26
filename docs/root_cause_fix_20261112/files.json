@@ -1,0 +1,18 @@
+[
+  "ai/hybrid_reid.py",
+  "ai/reid_target.py",
+  "runtime/scheduling.py",
+  "runtime/byte_tracking.py",
+  "runtime/inference_worker.py",
+  "runtime/face_worker.py",
+  "control/auto_pan_tilt.py",
+  "control/auto_zoom.py",
+  "app/application.py",
+  "telemetry/latency.py",
+  "config.py",
+  "control/pan_policy.py",
+  "tools/pan_dynamics_benchmark.py",
+  "tools/tracking_logic_benchmark.py",
+  "tools/calibrate_pan_manual.py",
+  "test/test_root_cause_revision.py"
+]

@@ -1,0 +1,18 @@
+{
+  "before": {
+    "config.py": "fdf7a9d4ffd0b6e24a5680aa687905a8f23b4ef1d05be6d9ffd9b065c2fdcafc",
+    "gui/cctv_app.py": "0e01f63e644ac2447a7717b8165610dbc564b99719fbb4467146eb778a250448",
+    "runtime/inference_worker.py": "97c521432b75aa1b706a115c48d8aa07de8ee0fb6bf020eb4e1caa26cd138b29"
+  },
+  "after": {
+    "config.py": "3af7cf486b73543cf92264a6c52ea0c23f6250c69beb5a438af73b44a7669a32",
+    "gui/cctv_app.py": "37eb8b51ac78cdcb1ead4895fb42c5c944b880a7550529aeffb377bdeeb7c134",
+    "runtime/inference_worker.py": "91064101216f62b3cde12c78b8b5065d7d0e26a51b1cf99cf3179f6dd108c8cf",
+    "runtime/identity_shadow.py": "8a837ae8a84770d7a8f4ec0d41a2d72e972b42af1346fca9741d19a5f14cd27a",
+    "test/test_identity_shadow.py": "fd55769efb8c8d8a3c091244b163dfe07fcad8957abc947efbc8f5659d0c36a9"
+  },
+  "created": [
+    "runtime/identity_shadow.py",
+    "test/test_identity_shadow.py"
+  ]
+}

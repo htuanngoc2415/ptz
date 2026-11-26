@@ -1,0 +1,53 @@
+{
+  "branches": {
+    "legacy": {
+      "metrics": {
+        "selected_observation_seconds": 7.1000000000000005,
+        "loss_count": 2,
+        "recovery_count": 2,
+        "recovery_durations_s": [
+          1.9000000000000004,
+          0.6999999999999993
+        ],
+        "unresolved_recovery": false,
+        "correct_target_observation_seconds": 7.1000000000000005,
+        "identity_switches": 0,
+        "false_reacquisitions": 0,
+        "annotated_frames": 100,
+        "ptz_stability": null,
+        "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+        "annotation_coverage": 1.0
+      },
+      "reid_invocations": 32,
+      "association_selection_mean_ms": 0.4539402399677783,
+      "association_selection_p95_ms": 0.8417502004249399,
+      "decisions_path": "ptz/docs/identity_tracking_20261116/synthetic_replay_legacy_decisions.jsonl"
+    },
+    "identity": {
+      "metrics": {
+        "selected_observation_seconds": 8.0,
+        "loss_count": 1,
+        "recovery_count": 1,
+        "recovery_durations_s": [
+          1.1999999999999993
+        ],
+        "unresolved_recovery": false,
+        "correct_target_observation_seconds": 8.0,
+        "identity_switches": 0,
+        "false_reacquisitions": 0,
+        "annotated_frames": 100,
+        "ptz_stability": null,
+        "note": "Identity metrics apply only to annotated observations; use dense labels for acceptance.",
+        "annotation_coverage": 1.0
+      },
+      "reid_invocations": 32,
+      "association_selection_mean_ms": 1.8543656099882355,
+      "association_selection_p95_ms": 2.699839549586613,
+      "decisions_path": "ptz/docs/identity_tracking_20261116/synthetic_replay_identity_decisions.jsonl"
+    }
+  },
+  "physical_ptz_commands": 0,
+  "timing_scope": "Cached evidence association/selection and optional image GMC; excludes YOLO/OSNet and real async contention",
+  "production_acceptance": false,
+  "provenance": "Synthetic walking, appearance dip, temporary disappearance; scripted cosine evidence, not model accuracy"
+}

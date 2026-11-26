@@ -1,0 +1,88 @@
+{
+  "scope": "all-frame offline policy replay; no live scheduling or resets reproduced",
+  "categories": {
+    "both_hold": 368,
+    "same_candidate": 877,
+    "baseline_only": 240,
+    "identity_only": 17
+  },
+  "baseline_only_reasons": {
+    "PERSON_OVERLAP": 196,
+    "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 26,
+    "LOW_REFERENCE_SIMILARITY": 10,
+    "LOW_DETECTION_CONFIDENCE": 1,
+    "AMBIGUOUS_MARGIN": 7
+  },
+  "longest_identity_holds": [
+    {
+      "start": 5432.371307424,
+      "first_frame": 5355,
+      "samples": 123,
+      "reasons": {
+        "PERSON_OVERLAP": 79,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 3,
+        "LOW_REFERENCE_SIMILARITY": 41
+      },
+      "closed": true,
+      "end": 5449.901366216,
+      "last_frame": 5881,
+      "duration_s": 17.53005879199918
+    },
+    {
+      "start": 5315.331749762,
+      "first_frame": 1844,
+      "samples": 125,
+      "reasons": {
+        "PERSON_OVERLAP": 87,
+        "LOW_REFERENCE_SIMILARITY": 36,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 2
+      },
+      "closed": true,
+      "end": 5331.83198992,
+      "last_frame": 2339,
+      "duration_s": 16.500240157999542
+    },
+    {
+      "start": 5343.900384559,
+      "first_frame": 2701,
+      "samples": 90,
+      "reasons": {
+        "PERSON_OVERLAP": 63,
+        "LOW_REFERENCE_SIMILARITY": 25,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 2
+      },
+      "closed": true,
+      "end": 5355.632586113,
+      "last_frame": 3053,
+      "duration_s": 11.732201554000312
+    },
+    {
+      "start": 5307.170095008,
+      "first_frame": 1599,
+      "samples": 53,
+      "reasons": {
+        "PERSON_OVERLAP": 45,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 4,
+        "LOW_REFERENCE_SIMILARITY": 4
+      },
+      "closed": true,
+      "end": 5313.96368599,
+      "last_frame": 1803,
+      "duration_s": 6.7935909819998415
+    },
+    {
+      "start": 5291.730283083,
+      "first_frame": 1136,
+      "samples": 35,
+      "reasons": {
+        "PERSON_OVERLAP": 33,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 2
+      },
+      "closed": true,
+      "end": 5297.799081048,
+      "last_frame": 1318,
+      "duration_s": 6.0687979649992485
+    }
+  ],
+  "ground_truth": false
+}

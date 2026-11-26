@@ -1,0 +1,1 @@
+PASS: JavaScript mock-DOM smoke for navigation, reviewer requirement, UNKNOWN persistence, contradictory visibility rejection, JSON export/import, wrong-pack rejection. No real browser rendering test was available. Python annotation validator covered by unit tests.

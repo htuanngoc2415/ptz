@@ -1,0 +1,10 @@
+{
+  "camera/hanet_controller.py": true,
+  "camera/hanet_rpc.py": true,
+  "control/auto_pan_tilt.py": true,
+  "control/pan_policy.py": true,
+  "control/zoom_policy.py": true,
+  "control/orchestrator.py": true,
+  "app/application.py": true,
+  "control/auto_zoom.py_only_counter_change": true
+}

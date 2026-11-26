@@ -1,0 +1,11 @@
+{
+  "samples": 1120,
+  "held_with_current_track_observed": 12,
+  "reasons": {
+    "GEOMETRY_OVERLAP": 11,
+    "OVERLAP_WITHOUT_TRUSTED_CONTINUITY": 1
+  },
+  "strong_score_cases": [],
+  "limitation": "Cached OSNet evidence supports policy audit, not independent target visibility or identity ground truth",
+  "overlap_reason_scope": "Last examined candidate diagnostic; transition_reason and geometry must be read together. Not an independent visibility label."
+}

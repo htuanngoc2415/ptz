@@ -1,0 +1,35 @@
+{
+  "stop_count": 1731,
+  "all_unconfirmed": true,
+  "stop_reasons": {
+    "STOP_RETRY": 1731
+  },
+  "decisions": 106,
+  "source_sha256": {
+    "logs/latency/latency_trace_20261112_125530_057267.jsonl.1": "d64caed69c4e6758238603ebdea3b39ad4ce021c1f1ae267ef94252a3418cea4",
+    "logs/latency/latency_trace_20261112_125530_057267.jsonl": "d52729dbcc8bc876c9a55ea585c266fb481b013a65dd98d85996595ac2ea3d2f",
+    "logs/latency/latency_trace_20261112_125530_057267.jsonl.2": "8a1c3dacf5478c178b03d3e3c8ef1822ab97cf49a8344a08697766af38553e13",
+    "logs/latency/latency_trace_20261112_125530_057267.jsonl.3": "26aa0256da6d11d0291ec0c953d23da342f0d710285ac9b1a3ee0da50a18c6ae",
+    "logs/ptz_20261112_125526.log": "4d8a59a56d8049e364cc4f347936ab7436e3b5f630d75c3bc12155401ff4535f",
+    "logs/ptz_20261112_125526.jsonl": "6e532037f8746164b1fa35453c372b8d933994c0406d0b9abd6f9141e1eea4cb",
+    "logs/camera/camera_control_20261112_125530_057267.log.1": "84244d64d25013105ece01337f94945d8151e7a957d08605260465a54b77ad54",
+    "logs/camera/camera_control_20261112_125530_057267.log": "01816e68c4c1305395c6221ff49cb5deeac76cdd8e58b86e649775cc19d1a181",
+    "logs/latency/latency_readable_20261112_125530_057267.log": "96a683ca35d1f6fd74febe470b4fd5693d140a05e1d7c5f9d82d572710f81f53",
+    "logs/latency/latency_readable_20261112_125530_057267.log.1": "1c505a6e45b976ac6088c7d38555927c9ea3d50f08664c6dad2ebdb81bb9fae6"
+  },
+  "zoom_deferred_reasons": {
+    "OWNER_pan_tilt": 268,
+    "LENS_SETTLING": 2
+  },
+  "zoom_owner_pan_after_failure": 267,
+  "camera_log_event_counts": {
+    "logs/camera/camera_control_20261112_125530_057267.log.1": {
+      "camera_transaction": 2644,
+      "pan_tilt_wire_error": 0
+    },
+    "logs/camera/camera_control_20261112_125530_057267.log": {
+      "camera_transaction": 7476,
+      "pan_tilt_wire_error": 0
+    }
+  }
+}

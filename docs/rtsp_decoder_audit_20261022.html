@@ -1,0 +1,1239 @@
+<!doctype html><html lang="vi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RTSP decoder audit 22/10/2026</title><style>body{font:16px/1.55 system-ui,sans-serif;color:#172638;background:#f4f7fa;margin:0}main{max-width:1440px;margin:auto;padding:32px;background:white}img{max-width:100%;height:auto}h1,h2,h3{color:#174b70}table{display:block;overflow:auto;border-collapse:collapse;margin:20px 0;font-size:14px}th,td{border:1px solid #cad5df;padding:9px 12px;text-align:left}th{background:#eaf1f7}tr:nth-child(even){background:#f8fafc}pre{overflow:auto;padding:18px;background:#10283d;color:#f1f7ff;border-radius:6px}code{font-size:.92em}a{color:#0869a6}strong{color:#173d5e}@media print{body,main{background:white}main{padding:0}table{font-size:10px}pre{white-space:pre-wrap}}</style><main><h1>Audit RTSP latency và CPU/NVDEC — 22/10/2026</h1>
+<p>Đo trên Jetson tại chỗ, giờ Việt Nam (UTC+07). Báo cáo này phân biệt <strong>benchmark mới</strong>, <strong>trace production lịch sử</strong>, và <strong>giả thuyết</strong>. Không sửa camera.json, pipeline production, model, threshold hoặc thuật toán điều khiển. Không tạo PTZ controller, gọi camera RPC hay điều khiển motor trong các phép đo mới.</p>
+<p><strong>Ưu tiên đề xuất: GStreamer CPU low-latency 200 ms để thay mpv screenshot, sau acceptance full desktop.</strong> CPU candidate cấp gần 25 FPS và giữ ~4,97 vòng AI/s trong hai lượt stress đủ bốn model; NVDEC no-DPB cấp gần 25 FPS, giảm CPU/lateness nhưng chỉ ~4,18–4,32 vòng AI/s (giảm 13–16%). Chưa triển khai phương án nào vào production.</p>
+<p><img alt="So sánh hai lượt matched workload cho mỗi candidate" src="../logs/decoder_audit/fixed_workload_comparison.png" /></p>
+<h2>Kết luận kỹ thuật</h2>
+<p><strong>Đã tái hiện tích lũy trễ trước AI trên đường capture đang được cấu hình: mpv CPU → scale → screenshot.</strong> Cấu hình thực tế là <code>video_backend=mpv</code>, <code>video_hwdec=no</code>, không phải GStreamer. Camera phát <strong>H.264 High 3840×2160, 25 FPS</strong>. <code>video_max_width=1280</code>, <code>video_max_height=720</code>, <code>video_fps=15</code> chỉ giới hạn đầu ra lấy ảnh phía mpv; không làm camera phát 720p15 và không giảm khối lượng giải mã nguồn.</p>
+<ul>
+<li>
+<p><a href="../logs/decoder_audit/A_mpv.json">A_mpv</a>: yêu cầu 60.0 s, khoảng PTS hợp lệ <strong>58.532 s</strong>, video tiến <strong>50.880 s</strong>, tăng trễ tương đối <strong>7.652 s</strong>; screenshot p50/p90/p99 <strong>76.868 / 89.595 / 180.150 ms</strong>.</p>
+</li>
+<li>
+<p><a href="../logs/decoder_audit/A_mpv_repeat.json">A_mpv_repeat</a>: yêu cầu 60.0 s, khoảng PTS hợp lệ <strong>58.477 s</strong>, video tiến <strong>50.880 s</strong>, tăng trễ tương đối <strong>7.597 s</strong>; screenshot p50/p90/p99 <strong>81.233 / 107.449 / 155.221 ms</strong>.</p>
+</li>
+</ul>
+<p>Các pipeline GStreamer thử nghiệm cho thấy đường nhận có thể giữ PTS gần thời gian thực với cùng main stream 4K. Vì vậy chưa có cơ sở kết luận “CPU decoding luôn gây trễ 5–10 s”, hoặc “NVDEC dùng CUDA cores nên làm AI chậm”. NVDEC đã giải mã thực, xuất <code>video/x-raw(memory:NVMM), format=NV12</code>; không có decoder CPU dự phòng trong pipeline thử nghiệm.</p>
+<p><strong>Chưa đạt điều kiện triển khai NVDEC vào full AI.</strong> Lượt <code>nvdec_dpb_100_ai</code> dừng sau 29,312 s khi ArcFace thực sự có mặt để xử lý: <code>CUBLAS_STATUS_ALLOC_FAILED</code>, kèm NvMap allocation error. Video vẫn ~25 FPS trước khi dừng; AI không còn khỏe. Đây là lỗi cấp phát có log chứng minh, chưa xác định do tổng memory budget, fragmentation, allocator/provider hay NVDEC surfaces. <a href="../logs/decoder_audit/nvdec_dpb_100_ai_console.txt">Console đã redact</a>. Không thay allocator/model hoặc tắt bớt model để biến lượt thất bại thành thành công.</p>
+<p><strong>Camera→màn hình tuyệt đối vẫn N/A.</strong> PTS drift đo mức trễ tăng thêm, không đo trễ ban đầu. Timestamp FrameManager nằm sau giải mã/copy. Những số receive→GUI thấp không phủ nhận video đã cũ từ upstream. Kết quả này xác định đường gây trễ hiện tại; không xác định được thời điểm hay commit gây regression trước/sau profiling vì không có benchmark đối chứng tương ứng.</p>
+<h2>1. Hardware, codec và phạm vi đo</h2>
+<table>
+<thead>
+<tr>
+<th>Hạng mục</th>
+<th>Kết quả</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Board</td>
+<td>NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super</td>
+</tr>
+<tr>
+<td>CPU / GPU</td>
+<td>6× Cortex-A78AE; CUDA báo GPU Orin; snapshot CPU max 1728 MHz</td>
+</tr>
+<tr>
+<td>RAM / swap lúc preflight</td>
+<td>7619 MiB RAM, available 3058 MiB; swap used 1512 MiB; không coi swap đã dùng là bằng chứng đang thrash</td>
+</tr>
+<tr>
+<td>JetPack / L4T / OS</td>
+<td>6.2.1+b38 / 36.4.7 / Ubuntu 22.04.5, kernel 5.15.148-tegra</td>
+</tr>
+<tr>
+<td>Power mode</td>
+<td>MAXN_SUPER (chỉ đọc, không đổi clocks/power)</td>
+</tr>
+<tr>
+<td>GStreamer / PyTorch</td>
+<td>1.20.3 / 2.8.0, CUDA 12.6; thử cấp phát CUDA thành công</td>
+</tr>
+<tr>
+<td>CPU decoders</td>
+<td>avdec_h264, avdec_h265 có sẵn; chỉ H.264 được benchmark</td>
+</tr>
+<tr>
+<td>NVIDIA plugins</td>
+<td>nvv4l2decoder, nvvidconv, nvvideoconvert có sẵn; decode thực qua nvv4l2decoder; chỉ nvvidconv được benchmark chuyển đổi</td>
+</tr>
+<tr>
+<td>Main stream</td>
+<td>H.264 High, level 5.1 từ caps, 3840×2160 @ 25/1, 8-bit 4:2:0</td>
+</tr>
+<tr>
+<td>B-frames / GOP mẫu</td>
+<td>ffprobe: has_b_frames=0; 131 frames có 6 I, 125 P, 0 B; keyframes cách 25 frames (~1 s). Không bảo đảm cấu hình camera sẽ luôn giữ như vậy</td>
+</tr>
+<tr>
+<td>Ethernet / ping mới</td>
+<td>100 Mb/s Full Duplex; 5 ping, 0% loss, RTT min/avg/max 0.322/1.390/4.295 ms; mẫu ngắn không loại trừ mọi jitter/TCP stall</td>
+</tr>
+<tr>
+<td>Đồng thời</td>
+<td>Các probe camera chạy nối tiếp; preflight không thấy ứng dụng camera Python khác. Không quan sát được mọi client trên máy khác; desktop/IDE vẫn chạy</td>
+</tr>
+</tbody>
+</table>
+<p>Evidence: <a href="../logs/decoder_audit/host.json">host</a>, <a href="../logs/decoder_audit/decoder_cuda_preflight.json">plugins/CUDA</a>, <a href="../logs/decoder_audit/network.json">network</a>, <a href="../logs/decoder_audit/stream_ffprobe.json">ffprobe</a>. Plugin dumps nằm cạnh JSON. Sandbox ban đầu thiếu socket và <code>/dev/nvmap</code>; đã đo lại trên host có quyền truy cập. Các lỗi sandbox <strong>không phải lỗi hardware production</strong>.</p>
+<p>NVDEC là khối giải mã chuyên dụng; <code>nvvidconv</code> mặc định dùng VIC trên Jetson (plugin hiện tại ghi <code>compute-hw=Default, VIC for Jetson</code>). CUDA preprocessing và inference là công việc khác. Chuyển NVMM sang buffer CPU vẫn có chuyển layout/copy/synchronization và tiêu thụ băng thông RAM chung; không đồng nghĩa PCIe transfer của GPU rời. <a href="https://docs.nvidia.com/jetson/archives/r36.4.4/DeveloperGuide/SD/Multimedia/AcceleratedGstreamer.html">NVIDIA Accelerated GStreamer</a>.</p>
+<h2>2. Kiến trúc trích từ code</h2>
+<pre><code class="language-text">camera.json → camera/stream.py:4 chọn mpv
+RTSP TCP → libmpv/FFmpeg CPU (hwdec=no, vo=null)
+  → lavfi scale ≤1280×720 → screenshot_raw → NumPy RGB
+  → GUI.on_frame → FrameManager (1 slot, latest-only)
+      ├─ detection-tracking thread: RGB→BGR → YOLO → OSNet/tracking
+      │    └─ FaceWorker: spatial + recognition threads / scheduler
+      └─ Tk timer: latest RGB → BGR → digital PTZ/overlay
+                   → RGB → PIL/ImageTk → Tk image configure
+</code></pre>
+<p><code>camera/mpv_player.py:67–120</code>: <code>profile=low-latency</code>, <code>untimed</code>, <code>cache=no</code>, <code>fflags=nobuffer</code>, <code>flags=low_delay</code>, <code>reorder_queue_size=0</code>, analyzeduration=0.1. Screenshot và query <code>time_pos</code> là lời gọi đồng bộ vào player, có thể chờ công việc nội bộ. Chi phí screenshot không chỉ là memcpy. Backend này <strong>không có rtspsrc/appsink</strong>.</p>
+<p>Nhánh GStreamer có trong repository nhưng không được camera.json hiện tại chọn:</p>
+<pre><code class="language-text">playbin → tự chọn source/depay/parser/decoder bằng autoplug
+  → queue leaky=downstream max-size-buffers=2
+  → videoscale → video/x-raw width≤1280 height≤720 PAR=1/1
+  → videoconvert → RGB
+  → appsink emit-signals=true sync=false max-buffers=1 drop=true
+  → map → np.frombuffer → reshape.copy → on_frame
+</code></pre>
+<p><code>camera/rtsp_player.py:175,203,321,424</code>: source-setup đặt latency từ <code>latency_ms</code> (mặc định 200 ms), <code>drop-on-latency=true</code>, <strong>TCP bắt buộc protocols=4</strong>. <code>transport</code> trong config không thay lựa chọn TCP của nhánh này. Queue giữ default giới hạn bytes/time ngoài giới hạn 2 buffers; tại 4K giới hạn bytes có thể chạm trước. <code>video_fps=15</code> không được dùng bởi nhánh GStreamer. Decoder của playbin <strong>không được code cố định</strong>: không được suy ra CPU/NVDEC chỉ từ tên class hoặc plugin đã cài. Graph của production playbin chưa chạy trong audit; các benchmark dưới đây chọn decoder tường minh.</p>
+<p>Appsink chỉ giới hạn hàng đợi của nó. <code>new-sample</code> chạy trên streaming thread; callback chậm vẫn chặn thread đó. Queue raw sau decoder tách luồng nhưng không làm decoder, jitterbuffer, TCP socket hay camera encoder tự hết backlog. Chỉ drop sau decode để không tùy tiện bỏ reference frames H.264/H.265; drop-on-latency ở jitterbuffer vẫn có thể bỏ RTP và ảnh hưởng tính liên tục của bitstream. <a href="https://gstreamer.freedesktop.org/documentation/app/appsink.html">GStreamer appsink</a>, <a href="https://gstreamer.freedesktop.org/documentation/coreelements/queue.html">queue</a>, <a href="https://gstreamer.freedesktop.org/documentation/rtsp/rtspsrc.html">rtspsrc</a>.</p>
+<p><code>runtime/frame_manager.py:20</code>: một slot, không có FIFO frame cũ; publish và latest dùng lock ngắn nhưng emit telemetry bên trong lock. Callback <code>gui/cctv_app.py:975</code> chỉ publish và cập nhật tham chiếu; không gọi inference. <code>runtime/inference_worker.py:295,369</code> lấy frame mới nhất, refresh lần nữa sau khi được scheduler cấp quyền, bỏ stale observation. Scheduler ưu tiên detection, rồi face, rồi recognition; đây là nơi có thể gây AI wait, không phải RTSP queue. GUI lấy frame mới nhất độc lập với AI result; overlay có thể phản ánh quan sát cũ hơn ảnh.</p>
+<p><strong>Copy/memory boundary:</strong> GStreamer production có ít nhất một <code>.copy()</code> RGB sau map; PyGI <code>map_info.data</code> có thể materialize bytes, chưa đo số copy nội bộ. mpv screenshot tạo ảnh host; <code>np.asarray</code> không bảo đảm toàn bộ chuỗi zero-copy. GUI và AI có RGB↔BGR conversions riêng. YOLO có upload tensor và trả detection về CPU; OSNet upload mỗi batch, giữ embedding GPU rồi match chuyển score về CPU; SCRFD/ArcFace nhận NumPy qua ORT và trả output host. Số transfers phụ thuộc số batch/crop/face, không phải hằng số mỗi frame. Chưa có CUDA/Nsight trace để đếm bytes/copy chính xác. NVDEC candidate thêm NVMM→host BGRx trước RGB; không phải zero-copy tới AI.</p>
+<h2>3. Protocol và bảng A–E</h2>
+<p>A là capture <strong>đang cấu hình thật (mpv)</strong>, AI OFF. Các lượt GStreamer có 5 s warmup sau frame đầu, rồi <strong>60 s đo</strong>, source/codec/resolution giữ nguyên, đầu ra RGB 1280×720; không giới hạn còn 15 FPS. A/mpv dùng công cụ cũ, 60 s gồm startup, khoảng PTS hợp lệ báo riêng. Không lấy callback FPS của mpv làm source FPS.</p>
+<p><code>--ai</code> / <code>--ai-load</code> chỉ dùng lại model wrappers và PersonTracker trong worker latest-frame độc lập. Có YOLO, OSNet trên người phát hiện được, SCRFD full-frame, ArcFace khi có face align hợp lệ. Không có target gallery matching, production FaceWorker scheduler/gates, GUI hoặc auto zoom. <strong>Đây là phép đo tải perception bổ sung (B′/C′/E′), không được trình bày như benchmark full production B/C/E.</strong> Tải phụ thuộc cảnh; phải đọc call counts. Profiler bật khi AI ON, tắt ở capture OFF, nên chênh lệch bao gồm overhead profiler. Không gọi GPU synchronization mới để tạo số kernel time giả.</p>
+<p>Trong B′/C′ và NVDEC mặc định AI ON, live scene không có người/mặt được model phát hiện: <strong>OSNet/ArcFace = 0 inference calls</strong>, dù model đã được nạp. Lượt NVDEC no-DPB live có 24 OSNet calls rồi ArcFace gặp lỗi. Vì vậy các lượt live không phải matched full-model workload. Các run <code>*_fixed</code> là <strong>stress test riêng</strong>, AI dùng ảnh target có sẵn, letterbox 1280×720, yêu cầu phát hiện được người và mặt align hợp lệ trước khi chạy. Capture vẫn đọc cùng RTSP, nhưng nội dung AI cố định để workload so sánh được; không đánh giá tracking/recognition accuracy hay sensor latency. Các run <code>*_fixed</code> không thay thế B/C/E production.</p>
+<table>
+<thead>
+<tr>
+<th>Test yêu cầu</th>
+<th>Trạng thái / evidence</th>
+<th>Giới hạn</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A: CPU hiện tại, AI OFF</td>
+<td>MEASURED — A_mpv</td>
+<td>Không GUI; drift, screenshot và resource</td>
+</tr>
+<tr>
+<td>B: CPU hiện tại, full AI ON</td>
+<td>NOT_TESTED; B′: measured</td>
+<td>Có tải perception riêng nếu khởi tạo được; không full production</td>
+</tr>
+<tr>
+<td>C: CPU low latency, full AI ON</td>
+<td>NOT_TESTED; C′: PASS</td>
+<td>CPU 200 ms + perception riêng</td>
+</tr>
+<tr>
+<td>D: NVDEC low latency, AI OFF</td>
+<td>MEASURED — nvdec_50/100/200 và DPB candidate</td>
+<td>Không GUI</td>
+</tr>
+<tr>
+<td>E: NVDEC low latency, full AI ON</td>
+<td>NOT_TESTED; E′: FAILED</td>
+<td>Perception riêng; cần xác nhận production trước triển khai</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>MPV run</th>
+<th>AI</th>
+<th>s yêu cầu</th>
+<th>s PTS hợp lệ</th>
+<th>Callbacks</th>
+<th>Callback FPS ≈</th>
+<th>PTS/wall</th>
+<th>Drift tăng s</th>
+<th>Screenshot ms p50/p90/p99</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../logs/decoder_audit/A_mpv.json">A_mpv</a></td>
+<td>OFF</td>
+<td>60.0</td>
+<td>58.532</td>
+<td>496</td>
+<td>8.267</td>
+<td>0.869</td>
+<td>7.652</td>
+<td>76.868 / 89.595 / 180.150</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/A_mpv_repeat.json">A_mpv_repeat</a></td>
+<td>OFF</td>
+<td>60.0</td>
+<td>58.477</td>
+<td>472</td>
+<td>7.867</td>
+<td>0.870</td>
+<td>7.597</td>
+<td>81.233 / 107.449 / 155.221</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/B_mpv_ai.json">B_mpv_ai</a></td>
+<td>isolated_perception</td>
+<td>60.0</td>
+<td>58.601</td>
+<td>492</td>
+<td>8.200</td>
+<td>0.848</td>
+<td>8.921</td>
+<td>77.809 / 94.139 / 180.561</td>
+</tr>
+</tbody>
+</table>
+<p>Callback FPS của mpv = count / thời gian yêu cầu, gồm startup; không phải decoder FPS hay steady-state FPS tương đương cửa sổ GStreamer. PTS được hỏi từ player; chưa có per-screenshot source timestamp để chứng minh thời điểm capture của từng RGB frame.</p>
+<h3>GStreamer capture — số đo mới</h3>
+<p>FPS parser/decoder/appsink là số buffers qua từng boundary trong cửa sổ đo. Có thể chênh một buffer do ranh giới cửa sổ. Bitrate là payload compressed qua parser, không gồm RTP/TCP/IP overhead. Drift âm rất nhỏ là sai khác timestamp/nhịp lấy mẫu, không phải latency âm.</p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Status</th>
+<th>AI</th>
+<th>s đo</th>
+<th>Parser / decoder / app FPS</th>
+<th>Mbit/s</th>
+<th>Drift tăng (s)</th>
+<th>Parser→app p50/p90/p99 (ms)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../logs/decoder_audit/cpu_50.json">cpu_50</a></td>
+<td>PASS</td>
+<td>OFF</td>
+<td>60.000</td>
+<td>22.917/22.933/22.933</td>
+<td>11.891</td>
+<td>0.093</td>
+<td>92.408 / 107.276 / 258.809</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/cpu_100.json">cpu_100</a></td>
+<td>PASS</td>
+<td>OFF</td>
+<td>60.000</td>
+<td>23.850/23.850/23.833</td>
+<td>12.199</td>
+<td>-0.008</td>
+<td>88.714 / 106.017 / 262.851</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/cpu_200.json">cpu_200</a></td>
+<td>PASS</td>
+<td>OFF</td>
+<td>60.000</td>
+<td>24.967/24.967/24.983</td>
+<td>12.568</td>
+<td>0.076</td>
+<td>51.852 / 57.523 / 169.873</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/nvdec_50.json">nvdec_50</a></td>
+<td>PASS</td>
+<td>OFF</td>
+<td>60.000</td>
+<td>25.000/25.000/22.967</td>
+<td>12.557</td>
+<td>0.000</td>
+<td>223.956 / 234.810 / 283.671</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/nvdec_100.json">nvdec_100</a></td>
+<td>PASS</td>
+<td>OFF</td>
+<td>60.000</td>
+<td>25.000/25.000/23.000</td>
+<td>12.563</td>
+<td>0.000</td>
+<td>224.174 / 234.716 / 284.784</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/nvdec_200.json">nvdec_200</a></td>
+<td>PASS</td>
+<td>OFF</td>
+<td>60.000</td>
+<td>25.000/25.000/22.950</td>
+<td>12.559</td>
+<td>-0.009</td>
+<td>224.237 / 234.467 / 284.822</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/nvdec_dpb_100.json">nvdec_dpb_100</a></td>
+<td>PASS</td>
+<td>OFF</td>
+<td>60.000</td>
+<td>25.000/25.000/25.000</td>
+<td>12.561</td>
+<td>-0.004</td>
+<td>50.614 / 84.252 / 106.622</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/cpu_200_ai.json">cpu_200_ai</a></td>
+<td>PASS</td>
+<td>isolated_perception</td>
+<td>60.000</td>
+<td>25.000/25.000/25.000</td>
+<td>12.551</td>
+<td>-0.003</td>
+<td>86.193 / 106.093 / 255.902</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/nvdec_100_ai.json">nvdec_100_ai</a></td>
+<td>PASS</td>
+<td>isolated_perception</td>
+<td>60.000</td>
+<td>25.000/25.000/22.983</td>
+<td>12.560</td>
+<td>-0.013</td>
+<td>224.330 / 234.819 / 282.155</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/nvdec_dpb_100_ai.json">nvdec_dpb_100_ai</a></td>
+<td>FAILED</td>
+<td>isolated_perception</td>
+<td>29.312</td>
+<td>25.041/25.007/24.973</td>
+<td>12.495</td>
+<td>-0.010</td>
+<td>50.542 / 80.703 / 109.653</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/cpu_200_fixed.json">cpu_200_fixed</a></td>
+<td>PASS</td>
+<td>isolated_perception</td>
+<td>60.000</td>
+<td>25.000/25.000/25.000</td>
+<td>12.555</td>
+<td>-0.001</td>
+<td>86.421 / 104.919 / 258.709</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/nvdec_dpb_100_fixed.json">nvdec_dpb_100_fixed</a></td>
+<td>PASS</td>
+<td>isolated_perception</td>
+<td>60.000</td>
+<td>25.017/24.983/25.000</td>
+<td>12.573</td>
+<td>-0.012</td>
+<td>51.461 / 83.651 / 106.469</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/nvdec_dpb_100_fixed_repeat.json">nvdec_dpb_100_fixed_repeat</a></td>
+<td>PASS</td>
+<td>isolated_perception</td>
+<td>60.000</td>
+<td>25.000/24.983/25.000</td>
+<td>12.533</td>
+<td>-0.001</td>
+<td>50.734 / 83.185 / 108.459</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/cpu_200_fixed_repeat.json">cpu_200_fixed_repeat</a></td>
+<td>PASS</td>
+<td>isolated_perception</td>
+<td>60.000</td>
+<td>25.000/25.000/25.000</td>
+<td>12.578</td>
+<td>0.007</td>
+<td>94.811 / 110.423 / 208.054</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/nvdec_dpb_100_jitter.json">nvdec_dpb_100_jitter</a></td>
+<td>PASS</td>
+<td>OFF</td>
+<td>60.000</td>
+<td>25.000/25.000/25.017</td>
+<td>12.550</td>
+<td>0.003</td>
+<td>51.271 / 90.572 / 122.202</td>
+</tr>
+</tbody>
+</table>
+<h3>Model load — supplemental, không phải production</h3>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Calls / skipped</th>
+<th>YOLO total ms</th>
+<th>OSNet total ms</th>
+<th>SCRFD total ms</th>
+<th>ArcFace total ms</th>
+<th>App age ms</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../logs/decoder_audit/B_mpv_ai.json">B_mpv_ai</a> (live_frames)</td>
+<td>{"mailbox_skipped": 15, "yolo": 471, "tracking": 471, "scrfd": 471}</td>
+<td>49.910 / 65.335 / 77.479</td>
+<td>N/A</td>
+<td>44.205 / 52.936 / 61.650</td>
+<td>N/A</td>
+<td>5.024 / 23.517 / 84.131</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/cpu_200_ai.json">cpu_200_ai</a> (live_frames)</td>
+<td>{"mailbox_skipped": 917, "yolo": 583, "tracking": 583, "scrfd": 583}</td>
+<td>50.188 / 73.803 / 84.051</td>
+<td>N/A</td>
+<td>42.320 / 47.301 / 51.311</td>
+<td>N/A</td>
+<td>16.334 / 33.697 / 91.585</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/nvdec_100_ai.json">nvdec_100_ai</a> (live_frames)</td>
+<td>{"tracking": 548, "scrfd": 548, "mailbox_skipped": 832, "yolo": 547}</td>
+<td>62.815 / 79.005 / 84.916</td>
+<td>N/A</td>
+<td>44.341 / 48.576 / 57.183</td>
+<td>N/A</td>
+<td>20.083 / 53.733 / 97.386</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/nvdec_dpb_100_ai.json">nvdec_dpb_100_ai</a> (live_frames)</td>
+<td>{"tracking": 247, "scrfd": 247, "mailbox_skipped": 481, "yolo": 246, "osnet": 24}</td>
+<td>60.351 / 79.622 / 85.273</td>
+<td>82.428 / 101.387 / 294.060</td>
+<td>45.125 / 51.016 / 58.714</td>
+<td>N/A</td>
+<td>19.558 / 43.059 / 96.007</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/cpu_200_fixed.json">cpu_200_fixed</a> (fixed_image_stress)</td>
+<td>{"tracking": 299, "osnet": 299, "scrfd": 298, "arcface": 298, "mailbox_skipped": 1199, "yolo": 298}</td>
+<td>50.490 / 65.786 / 80.195</td>
+<td>69.535 / 79.164 / 96.093</td>
+<td>43.680 / 46.805 / 55.341</td>
+<td>33.291 / 35.216 / 38.962</td>
+<td>18.523 / 56.903 / 187.482</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/nvdec_dpb_100_fixed.json">nvdec_dpb_100_fixed</a> (fixed_image_stress)</td>
+<td>{"arcface": 259, "mailbox_skipped": 1245, "yolo": 259, "tracking": 259, "osnet": 259, "scrfd": 258}</td>
+<td>65.284 / 82.122 / 92.450</td>
+<td>81.527 / 101.244 / 111.382</td>
+<td>45.519 / 54.990 / 61.689</td>
+<td>33.507 / 36.268 / 46.659</td>
+<td>20.566 / 47.127 / 112.868</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/nvdec_dpb_100_fixed_repeat.json">nvdec_dpb_100_fixed_repeat</a> (fixed_image_stress)</td>
+<td>{"mailbox_skipped": 1253, "yolo": 251, "tracking": 251, "osnet": 251, "scrfd": 251, "arcface": 250}</td>
+<td>68.458 / 85.906 / 93.886</td>
+<td>84.182 / 106.464 / 115.291</td>
+<td>45.695 / 57.893 / 65.840</td>
+<td>33.476 / 43.426 / 49.505</td>
+<td>19.819 / 42.535 / 110.997</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/cpu_200_fixed_repeat.json">cpu_200_fixed_repeat</a> (fixed_image_stress)</td>
+<td>{"mailbox_skipped": 1206, "yolo": 298, "tracking": 297, "osnet": 297, "scrfd": 297, "arcface": 297}</td>
+<td>51.096 / 62.856 / 79.299</td>
+<td>69.548 / 77.429 / 95.975</td>
+<td>44.030 / 47.441 / 55.715</td>
+<td>33.679 / 35.729 / 40.440</td>
+<td>19.054 / 40.919 / 126.778</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Fixed input stress — thứ tự chạy</th>
+<th>Status</th>
+<th>s đo</th>
+<th>YOLO loops/s</th>
+<th>CPU % p50</th>
+<th>GPU MHz p50/p90/p99</th>
+<th>NVDEC MHz p50/p90/p99</th>
+<th>VIC MHz p50/p90/p99</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cpu_200_fixed</td>
+<td>PASS</td>
+<td>60.000</td>
+<td>4.967</td>
+<td>234.129</td>
+<td>408.000 / 816.000 / 816.000</td>
+<td>115.200 / 115.200 / 115.200</td>
+<td>115.200 / 115.200 / 115.200</td>
+</tr>
+<tr>
+<td>nvdec_dpb_100_fixed</td>
+<td>PASS</td>
+<td>60.000</td>
+<td>4.317</td>
+<td>120.017</td>
+<td>408.000 / 530.400 / 816.000</td>
+<td>307.200 / 371.200 / 402.048</td>
+<td>128.000 / 179.200 / 197.248</td>
+</tr>
+<tr>
+<td>nvdec_dpb_100_fixed_repeat</td>
+<td>PASS</td>
+<td>60.000</td>
+<td>4.183</td>
+<td>118.359</td>
+<td>408.000 / 816.000 / 816.000</td>
+<td>320.000 / 384.000 / 422.400</td>
+<td>140.800 / 179.200 / 207.744</td>
+</tr>
+<tr>
+<td>cpu_200_fixed_repeat</td>
+<td>PASS</td>
+<td>60.000</td>
+<td>4.967</td>
+<td>237.470</td>
+<td>408.000 / 510.000 / 816.000</td>
+<td>115.200 / 115.200 / 115.200</td>
+<td>115.200 / 115.200 / 115.200</td>
+</tr>
+</tbody>
+</table>
+<p>Hai run fixed đầu tiên có cùng input và đủ bốn model: CPU 298 YOLO calls/60 s (~4,967/s), NVDEC 259/60 s (~4,317/s), tức throughput workload này thấp hơn ~13,1% với NVDEC. Đây là kết quả đo, không phải ước tính full production. GPU clock mean của hai run lần lượt 486,2 và 443,7 MHz, nên DVFS là confounder thực; CPU/RAM/VIC traffic và Python probes cũng chưa được tách. Không khóa clocks hoặc đổi power mode. Lượt lặp theo thứ tự ngược ở bảng trên dùng để kiểm tra tính ổn định, không gộp percentile của các run. Capture CPU/NVDEC còn khác conversion path và jitter setting; đây là so sánh candidate pipelines, không cô lập execution cost của decoder silicon.</p>
+<p>Lượt lặp NVDEC→CPU ghi 251/60=4,183 và 298/60=4,967 vòng/s: NVDEC thấp hơn ~15,8%. Xu hướng không đảo khi đổi thứ tự chạy. Chỉ có hai lượt mỗi candidate trên một host/cảnh stress; không suy ra confidence interval hay chất lượng AI production.</p>
+<p>Việc fixed-image chạy được ArcFace không xóa lỗi cấp phát ở lượt live. Scene/crop batches và thời điểm lazy allocation khác nhau. Cần stress live có người/mặt xuất hiện muộn, nhiều người, target đổi và đủ worker production trước acceptance.</p>
+<p><strong>Breakdown model stress từ profiler sẵn có:</strong> toàn bộ trace giữ lại, gồm initialization/warmup; scope khác cửa sổ 60 s ở bảng total phía trên. Mỗi ô p50/p90/p99 ms; không gộp percentile giữa run. Host wall spans không phải CUDA kernel time. <a href="../logs/decoder_audit/fixed_inference_breakdown.json">JSON và sample counts</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>cpu_200_fixed</th>
+<th>nvdec_dpb_100_fixed</th>
+<th>nvdec_dpb_100_fixed_repeat</th>
+<th>cpu_200_fixed_repeat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>yolo_preprocess_ms</td>
+<td>3.954 / 5.524 / 7.211</td>
+<td>5.029 / 6.589 / 8.128</td>
+<td>5.171 / 6.704 / 9.005</td>
+<td>4.033 / 5.370 / 7.387</td>
+</tr>
+<tr>
+<td>yolo_inference_ms</td>
+<td>39.169 / 52.283 / 65.448</td>
+<td>52.479 / 66.789 / 79.839</td>
+<td>54.914 / 69.374 / 78.453</td>
+<td>39.544 / 50.443 / 66.028</td>
+</tr>
+<tr>
+<td>yolo_postprocess_ms</td>
+<td>1.893 / 3.142 / 5.092</td>
+<td>2.461 / 4.503 / 6.988</td>
+<td>2.556 / 4.271 / 7.806</td>
+<td>1.983 / 3.514 / 5.018</td>
+</tr>
+<tr>
+<td>reid_preprocess_ms</td>
+<td>5.084 / 7.651 / 9.568</td>
+<td>6.842 / 9.831 / 13.225</td>
+<td>7.021 / 9.680 / 13.481</td>
+<td>5.361 / 7.558 / 10.162</td>
+</tr>
+<tr>
+<td>reid_inference_ms</td>
+<td>60.453 / 69.917 / 86.283</td>
+<td>70.498 / 88.092 / 100.524</td>
+<td>73.845 / 92.446 / 101.397</td>
+<td>60.236 / 66.889 / 83.152</td>
+</tr>
+<tr>
+<td>reid_postprocess_ms</td>
+<td>1.897 / 3.145 / 4.315</td>
+<td>2.180 / 3.644 / 4.925</td>
+<td>2.149 / 3.656 / 5.373</td>
+<td>1.858 / 3.219 / 5.060</td>
+</tr>
+<tr>
+<td>scrfd_preprocess_ms</td>
+<td>3.197 / 3.888 / 5.690</td>
+<td>3.469 / 4.211 / 6.364</td>
+<td>3.553 / 4.202 / 6.330</td>
+<td>3.147 / 4.090 / 6.393</td>
+</tr>
+<tr>
+<td>scrfd_inference_ms</td>
+<td>36.354 / 38.792 / 48.735</td>
+<td>37.703 / 46.916 / 52.485</td>
+<td>37.569 / 49.152 / 57.859</td>
+<td>36.493 / 39.633 / 48.207</td>
+</tr>
+<tr>
+<td>scrfd_postprocess_ms</td>
+<td>2.618 / 3.718 / 6.922</td>
+<td>3.206 / 4.857 / 7.715</td>
+<td>3.206 / 4.940 / 6.768</td>
+<td>2.673 / 3.721 / 5.992</td>
+</tr>
+<tr>
+<td>arcface_preprocess_ms</td>
+<td>0.388 / 0.628 / 1.054</td>
+<td>0.491 / 0.786 / 1.301</td>
+<td>0.498 / 0.779 / 2.026</td>
+<td>0.390 / 0.601 / 1.454</td>
+</tr>
+<tr>
+<td>arcface_inference_ms</td>
+<td>31.965 / 33.562 / 38.939</td>
+<td>32.047 / 34.420 / 45.070</td>
+<td>32.045 / 41.798 / 47.692</td>
+<td>32.178 / 34.242 / 40.692</td>
+</tr>
+<tr>
+<td>arcface_postprocess_ms</td>
+<td>0.251 / 0.564 / 0.972</td>
+<td>0.279 / 0.364 / 0.880</td>
+<td>0.288 / 0.380 / 1.032</td>
+<td>0.250 / 0.611 / 0.929</td>
+</tr>
+</tbody>
+</table>
+<p>YOLO inference host p50 CPU ~39 ms, NVDEC ~52–55 ms; OSNet ~60 so với ~70–74 ms. ArcFace ~32 ms ở cả hai. Có regression theo model được log chứng minh, nhưng chưa tách được DVFS, memory traffic, host scheduling và async CUDA; GPU load riêng lẻ không đủ quy kết nguyên nhân.</p>
+<p>Các total host wall time gồm preprocessing/postprocessing; không so trực tiếp với inference-only của trace lịch sử. Trace <code>*_trace/</code> dùng profiler sẵn có để tách từng model/preprocess/postprocess/scheduler nếu đã chạy. Không gán giảm/tăng inference cho NVDEC khi workload/call counts, warmup, background load hoặc GUI chưa được giữ tương đương.</p>
+<h2>4. Latency breakdown theo boundary</h2>
+<p>Đơn vị ms, mỗi ô p50 / p90 / p99. Các span inclusive, overlapping và các percentile <strong>không cộng được</strong>. Thời gian decoder là residence theo matching PTS, gồm đợi/reorder/frame threading; không phải execution time riêng của NVDEC hoặc CPU.</p>
+<table>
+<thead>
+<tr>
+<th>Boundary</th>
+<th>cpu_200</th>
+<th>nvdec_100</th>
+<th>nvdec_dpb_100</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RTP cuối cùng cùng PTS → depay</td>
+<td>0.073 / 0.088 / 0.915</td>
+<td>0.115 / 0.139 / 0.969</td>
+<td>0.112 / 0.158 / 0.980</td>
+</tr>
+<tr>
+<td>Depay → parser AU</td>
+<td>0.077 / 0.087 / 0.273</td>
+<td>0.147 / 0.176 / 0.984</td>
+<td>0.144 / 0.209 / 0.937</td>
+</tr>
+<tr>
+<td>Decoder sink → src, cùng PTS</td>
+<td>28.817 / 33.232 / 143.928</td>
+<td>200.750 / 210.525 / 260.267</td>
+<td>26.116 / 58.765 / 76.094</td>
+</tr>
+<tr>
+<td>Raw queue wait</td>
+<td>0.178 / 0.382 / 2.500</td>
+<td>0.155 / 0.348 / 46.864</td>
+<td>0.188 / 11.090 / 24.954</td>
+</tr>
+<tr>
+<td>Resize; NVDEC gồm VIC + download/layout</td>
+<td>9.241 / 10.548 / 12.339</td>
+<td>17.941 / 18.458 / 18.875</td>
+<td>17.877 / 18.413 / 18.802</td>
+</tr>
+<tr>
+<td>Color conversion → RGB</td>
+<td>11.804 / 13.237 / 15.316</td>
+<td>4.894 / 4.973 / 5.189</td>
+<td>4.882 / 4.966 / 5.218</td>
+</tr>
+<tr>
+<td>Map call</td>
+<td>0.023 / 0.026 / 0.030</td>
+<td>0.027 / 0.030 / 0.048</td>
+<td>0.026 / 0.030 / 0.068</td>
+</tr>
+<tr>
+<td>Host image materialization/copy + unmap</td>
+<td>0.897 / 0.950 / 1.028</td>
+<td>1.096 / 1.168 / 1.404</td>
+<td>1.089 / 1.177 / 1.411</td>
+</tr>
+<tr>
+<td>FrameManager.publish</td>
+<td>0.115 / 0.138 / 0.167</td>
+<td>0.152 / 0.177 / 0.261</td>
+<td>0.150 / 0.174 / 0.243</td>
+</tr>
+<tr>
+<td>Appsink callback → publish xong</td>
+<td>1.151 / 1.233 / 1.356</td>
+<td>1.414 / 1.513 / 1.855</td>
+<td>1.414 / 1.534 / 1.834</td>
+</tr>
+<tr>
+<td>Parser → app (inclusive)</td>
+<td>51.852 / 57.523 / 169.873</td>
+<td>224.174 / 234.716 / 284.784</td>
+<td>50.614 / 84.252 / 106.622</td>
+</tr>
+<tr>
+<td>Pipeline running clock − buffer running PTS</td>
+<td>95.389 / 200.805 / 233.550</td>
+<td>230.038 / 239.324 / 291.134</td>
+<td>59.224 / 107.699 / 148.807</td>
+</tr>
+</tbody>
+</table>
+<p>Run jitter riêng: <strong>66325 RTP packets</strong>, jitterbuffer residence p50/p90/p99 <strong>0.497 / 4.786 / 13.566 ms</strong>. Process CPU p50 trong run thêm probes là <strong>58.193%</strong>, so với khoảng 35% ở candidate no-DPB không có extra jitter probes. Đây là observer overhead đáng lưu ý; không trộn run này vào ranking CPU overhead của các pipeline chính.</p>
+<p><strong>Socket/RTSP transport residence: N/A.</strong> Các lượt chính bắt đầu tại depay sink, tức sau jitterbuffer; <code>latency=50/100/200</code> là cấu hình, không phải số đo residence. Run riêng <code>nvdec_dpb_100_jitter</code> thêm hai pad probes của rtpjitterbuffer, ghép theo SSRC + RTP sequence để đo jitterbuffer sink→src cho video. Nó bao gồm đợi/scheduling bên trong receiver, không gồm thời gian mạng trước jitter sink; extra per-packet probes có observer overhead. Jitter stats avg-jitter không được đổi thành camera latency. Depay span bắt đầu ở RTP packet cuối cùng cùng PTS, không đo thời gian chờ nhận trọn frame. Decoder matching PTS loại mẫu không có cặp và mẫu bắt đầu trước cửa sổ đo; caps/source không có capture timestamp đồng bộ. Pipeline clock−PTS là lateness phía receiver; không bao gồm camera capture/encode tuyệt đối. Pure NVMM map/download và VIC processing chưa tách riêng; ghi chung đúng boundary đo được.</p>
+<h3>FrameManager, AI scheduler và GUI — trace production có sẵn</h3>
+<p>Trace 22/10 lúc 09:50:03 cùng các rotation, <strong>20.130 events</strong>, được dựng lại bằng profiler hiện có: <a href="../logs/decoder_audit/historical_095003/report.html">HTML tương tác</a>. Đây là phiên trước audit, <strong>không ghép clock hoặc cộng số với các probe mới</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>n</th>
+<th>p50 / p90 / p99 ms</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>detection_mailbox_wait_ms</td>
+<td>399</td>
+<td>13.593 / 75.133 / 142.647</td>
+</tr>
+<tr>
+<td>frame_age_since_receive_ms</td>
+<td>383</td>
+<td>13.844 / 76.680 / 148.442</td>
+</tr>
+<tr>
+<td>detection_queue_wait_ms</td>
+<td>767</td>
+<td>0.067 / 0.171 / 38.321</td>
+</tr>
+<tr>
+<td>face_queue_wait_ms</td>
+<td>52</td>
+<td>0.061 / 0.084 / 447.940</td>
+</tr>
+<tr>
+<td>recognition_queue_wait_ms</td>
+<td>2</td>
+<td>160.630 / 165.022 / 166.010</td>
+</tr>
+<tr>
+<td>yolo_preprocess_ms</td>
+<td>384</td>
+<td>4.538 / 9.353 / 17.798</td>
+</tr>
+<tr>
+<td>yolo_inference_ms</td>
+<td>384</td>
+<td>47.434 / 65.721 / 86.955</td>
+</tr>
+<tr>
+<td>yolo_postprocess_ms</td>
+<td>384</td>
+<td>2.414 / 5.120 / 12.418</td>
+</tr>
+<tr>
+<td>reid_preprocess_ms</td>
+<td>111</td>
+<td>9.548 / 18.024 / 38.720</td>
+</tr>
+<tr>
+<td>reid_inference_ms</td>
+<td>111</td>
+<td>83.137 / 110.464 / 224.893</td>
+</tr>
+<tr>
+<td>reid_postprocess_ms</td>
+<td>111</td>
+<td>2.835 / 5.507 / 13.709</td>
+</tr>
+<tr>
+<td>scrfd_preprocess_ms</td>
+<td>51</td>
+<td>8.581 / 18.259 / 20.280</td>
+</tr>
+<tr>
+<td>scrfd_inference_ms</td>
+<td>51</td>
+<td>38.067 / 42.545 / 254.941</td>
+</tr>
+<tr>
+<td>scrfd_postprocess_ms</td>
+<td>51</td>
+<td>3.126 / 13.455 / 17.837</td>
+</tr>
+<tr>
+<td>arcface_preprocess_ms</td>
+<td>2</td>
+<td>0.818 / 0.873 / 0.886</td>
+</tr>
+<tr>
+<td>arcface_inference_ms</td>
+<td>2</td>
+<td>389.136 / 663.740 / 725.526</td>
+</tr>
+<tr>
+<td>arcface_postprocess_ms</td>
+<td>2</td>
+<td>0.778 / 1.207 / 1.304</td>
+</tr>
+<tr>
+<td>gui_render_ms</td>
+<td>997</td>
+<td>25.022 / 39.759 / 58.001</td>
+</tr>
+<tr>
+<td>receive_to_gui_submit_ms</td>
+<td>997</td>
+<td>94.033 / 160.025 / 239.839</td>
+</tr>
+</tbody>
+</table>
+<p>Snapshot cuối phiên: receive <strong>7.548 FPS</strong>, AI detection <strong>5.724 FPS</strong>, GUI unique <strong>7.503 FPS</strong>; 997 GUI submissions nhưng chỉ 502 frame IDs khác nhau. Mailbox skipped=76, refreshed/superseded=16. Đây không phải network drops. ArcFace chỉ có <strong>2 mẫu</strong>, gồm startup outlier: p99 không đại diện steady-state. Trace 20/10 có 27 mẫu ArcFace, inference p50/p90/p99=36.622 / 40.260 / 605.116 ms, recognition wait=137.052 / 170.060 / 188.184 ms; là phiên khác, không gộp mẫu.</p>
+<p><code>gui_render_ms</code> chỉ đo show_frame/PIL/Tk; RGB conversion, digital PTZ và overlay trước đó không nằm toàn bộ trong span này. receive→GUI submit bao gồm thời gian đợi timer và công việc host, <strong>không đo physical scanout</strong>. Không có benchmark GUI mới vì khởi tạo desktop hiện tại còn khởi động worker image settings/backlight (<code>gui/cctv_app.py:261</code>), không phù hợp yêu cầu audit không thay cấu hình camera.</p>
+<h2>5. CPU/GPU/RAM, drops và nhiệt</h2>
+<p>Process CPU dùng quy ước 100%=1 core, tối đa khoảng 600% trên 6 cores. GR3D là CUDA/graphics GPU load toàn hệ thống, không phải NVDEC utilization. Tegrastats lấy mỗi giây, gồm startup/warmup; process resource trong JSON GStreamer chỉ cửa sổ đo. RAM tegrastats toàn máy khác RSS process. CPU p50/p90/p99 và RSS p50 bên dưới.</p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Process CPU %</th>
+<th>RSS MiB p50</th>
+<th>Host RAM MiB p50/p90/p99</th>
+<th>GR3D % p50/p90/p99</th>
+<th>CPU max °C</th>
+<th>GPU max °C</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../logs/decoder_audit/A_mpv.json">A_mpv</a></td>
+<td>117.885 / 120.221 / 121.350</td>
+<td>N/A</td>
+<td>4666.000 / 4673.000 / 4675.800</td>
+<td>7.000 / 12.000 / 32.200</td>
+<td>43.406</td>
+<td>41.843</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/B_mpv_ai.json">B_mpv_ai</a></td>
+<td>180.933 / 187.834 / 218.993</td>
+<td>N/A</td>
+<td>5809.000 / 5816.000 / 5819.320</td>
+<td>48.000 / 98.000 / 99.000</td>
+<td>46.000</td>
+<td>44.687</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/cpu_50.json">cpu_50</a></td>
+<td>141.298 / 144.555 / 157.211</td>
+<td>184.219</td>
+<td>4663.000 / 4668.000 / 4669.000</td>
+<td>8.000 / 11.600 / 14.080</td>
+<td>44.312</td>
+<td>43.156</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/cpu_100.json">cpu_100</a></td>
+<td>145.269 / 147.980 / 162.967</td>
+<td>186.699</td>
+<td>4669.000 / 4706.000 / 4796.840</td>
+<td>7.000 / 10.000 / 13.080</td>
+<td>44.156</td>
+<td>42.750</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/cpu_200.json">cpu_200</a></td>
+<td>149.553 / 152.689 / 158.358</td>
+<td>179.547</td>
+<td>4660.000 / 4662.000 / 4664.080</td>
+<td>7.000 / 10.000 / 21.120</td>
+<td>44.812</td>
+<td>43.375</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/nvdec_50.json">nvdec_50</a></td>
+<td>31.898 / 35.612 / 35.986</td>
+<td>332.416</td>
+<td>4600.000 / 4602.000 / 4603.000</td>
+<td>7.000 / 11.600 / 15.000</td>
+<td>44.062</td>
+<td>43.312</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/nvdec_100.json">nvdec_100</a></td>
+<td>32.834 / 34.578 / 35.350</td>
+<td>333.000</td>
+<td>4595.000 / 4601.000 / 4602.000</td>
+<td>7.000 / 12.000 / 15.360</td>
+<td>43.312</td>
+<td>42.375</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/nvdec_200.json">nvdec_200</a></td>
+<td>33.182 / 35.189 / 36.023</td>
+<td>336.641</td>
+<td>4600.000 / 4605.000 / 4606.000</td>
+<td>7.500 / 11.500 / 34.050</td>
+<td>43.375</td>
+<td>42.562</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/nvdec_dpb_100.json">nvdec_dpb_100</a></td>
+<td>35.011 / 36.743 / 36.911</td>
+<td>338.656</td>
+<td>4604.000 / 4607.000 / 4608.360</td>
+<td>7.000 / 11.000 / 17.320</td>
+<td>43.187</td>
+<td>42.312</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/cpu_200_ai.json">cpu_200_ai</a></td>
+<td>228.616 / 233.934 / 235.215</td>
+<td>2071.619</td>
+<td>5800.000 / 5807.000 / 5810.450</td>
+<td>43.500 / 98.000 / 99.000</td>
+<td>47.781</td>
+<td>46.468</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/nvdec_100_ai.json">nvdec_100_ai</a></td>
+<td>117.158 / 119.804 / 120.902</td>
+<td>2055.266</td>
+<td>5811.500 / 5815.000 / 5816.870</td>
+<td>39.500 / 90.900 / 98.290</td>
+<td>46.968</td>
+<td>46.093</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/nvdec_dpb_100_ai.json">nvdec_dpb_100_ai</a></td>
+<td>118.476 / 123.087 / 125.807</td>
+<td>2125.465</td>
+<td>5864.000 / 5956.800 / 5980.950</td>
+<td>34.500 / 89.400 / 98.590</td>
+<td>46.687</td>
+<td>45.531</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/cpu_200_fixed.json">cpu_200_fixed</a></td>
+<td>234.129 / 237.654 / 240.537</td>
+<td>2569.986</td>
+<td>6229.000 / 6233.700 / 6234.000</td>
+<td>38.500 / 97.700 / 99.000</td>
+<td>47.125</td>
+<td>45.812</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/nvdec_dpb_100_fixed.json">nvdec_dpb_100_fixed</a></td>
+<td>120.017 / 124.186 / 125.578</td>
+<td>2653.436</td>
+<td>6153.000 / 6166.700 / 6204.870</td>
+<td>36.500 / 98.000 / 99.000</td>
+<td>46.500</td>
+<td>45.406</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/nvdec_dpb_100_fixed_repeat.json">nvdec_dpb_100_fixed_repeat</a></td>
+<td>118.359 / 121.730 / 125.281</td>
+<td>2650.025</td>
+<td>6170.000 / 6176.000 / 6183.270</td>
+<td>39.500 / 98.000 / 99.000</td>
+<td>45.218</td>
+<td>44.281</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/cpu_200_fixed_repeat.json">cpu_200_fixed_repeat</a></td>
+<td>237.470 / 244.116 / 248.224</td>
+<td>2552.600</td>
+<td>6172.500 / 6206.100 / 6244.140</td>
+<td>47.500 / 98.000 / 98.270</td>
+<td>47.593</td>
+<td>46.250</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/nvdec_dpb_100_jitter.json">nvdec_dpb_100_jitter</a></td>
+<td>58.193 / 63.192 / 64.314</td>
+<td>335.613</td>
+<td>4617.000 / 4618.000 / 4618.360</td>
+<td>7.000 / 12.600 / 44.480</td>
+<td>45.843</td>
+<td>44.500</td>
+</tr>
+<tr>
+<td><a href="../logs/decoder_audit/A_mpv_repeat.json">A_mpv_repeat</a></td>
+<td>118.114 / 120.296 / 121.858</td>
+<td>N/A</td>
+<td>4613.000 / 4628.000 / 4635.000</td>
+<td>7.000 / 12.000 / 19.600</td>
+<td>46.593</td>
+<td>45.125</td>
+</tr>
+</tbody>
+</table>
+<p>Không có bộ đếm throttling đáng tin hoặc EMC/NVDEC/VIC utilization đầy đủ trong tegrastats được trả về: <strong>N/A</strong>. Nhiệt độ và clocks quan sát được không chứng minh nguyên nhân thermal throttling; không thay nvpmodel/jetson_clocks. GPU utilization tăng không tự chứng minh contention NVDEC↔CUDA. Swap occupancy không phải swap-in/out rate.</p>
+<h3>Frame / packet drop</h3>
+<p>Chênh decoder_out−queue_out chỉ là <strong>cân bằng boundary trong cửa sổ 60 s</strong>, có thể lệch ở ranh giới; không phải exact drop counter. Không suy ra packet loss từ appsink FPS. Jitter stats ở đây tính cả startup/warmup, đơn vị packet; num-lost không đồng nghĩa ICMP loss hay mất frame. Appsink synchronous pull không có exact drop counter trên GStreamer 1.20.3 được probe đọc; drop appsink riêng = N/A. JSON giữ toàn bộ jitter stats.</p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Decode frames</th>
+<th>Queue out</th>
+<th>App frames</th>
+<th>Boundary difference</th>
+<th>RTP lost</th>
+<th>RTP late</th>
+<th>Queue buffers p50/p90/p99</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cpu_50</td>
+<td>1376</td>
+<td>1376</td>
+<td>1376</td>
+<td>0</td>
+<td>26</td>
+<td>0</td>
+<td>0.000 / 0.000 / 0.000</td>
+</tr>
+<tr>
+<td>cpu_100</td>
+<td>1431</td>
+<td>1431</td>
+<td>1430</td>
+<td>0</td>
+<td>26</td>
+<td>0</td>
+<td>0.000 / 0.000 / 0.000</td>
+</tr>
+<tr>
+<td>cpu_200</td>
+<td>1498</td>
+<td>1498</td>
+<td>1499</td>
+<td>0</td>
+<td>25</td>
+<td>0</td>
+<td>0.000 / 0.000 / 0.000</td>
+</tr>
+<tr>
+<td>nvdec_50</td>
+<td>1500</td>
+<td>1378</td>
+<td>1378</td>
+<td>122</td>
+<td>0</td>
+<td>0</td>
+<td>0.000 / 0.000 / 0.000</td>
+</tr>
+<tr>
+<td>nvdec_100</td>
+<td>1500</td>
+<td>1380</td>
+<td>1380</td>
+<td>120</td>
+<td>28</td>
+<td>0</td>
+<td>0.000 / 0.000 / 0.000</td>
+</tr>
+<tr>
+<td>nvdec_200</td>
+<td>1500</td>
+<td>1377</td>
+<td>1377</td>
+<td>123</td>
+<td>24</td>
+<td>0</td>
+<td>0.000 / 0.000 / 0.000</td>
+</tr>
+<tr>
+<td>nvdec_dpb_100</td>
+<td>1500</td>
+<td>1500</td>
+<td>1500</td>
+<td>0</td>
+<td>25</td>
+<td>0</td>
+<td>0.000 / 0.000 / 0.410</td>
+</tr>
+<tr>
+<td>cpu_200_ai</td>
+<td>1500</td>
+<td>1500</td>
+<td>1500</td>
+<td>0</td>
+<td>27</td>
+<td>0</td>
+<td>0.000 / 0.000 / 0.000</td>
+</tr>
+<tr>
+<td>nvdec_100_ai</td>
+<td>1500</td>
+<td>1379</td>
+<td>1379</td>
+<td>121</td>
+<td>0</td>
+<td>0</td>
+<td>0.000 / 0.000 / 0.000</td>
+</tr>
+<tr>
+<td>nvdec_dpb_100_ai</td>
+<td>733</td>
+<td>733</td>
+<td>732</td>
+<td>0</td>
+<td>25</td>
+<td>0</td>
+<td>0.000 / 0.000 / 0.000</td>
+</tr>
+<tr>
+<td>cpu_200_fixed</td>
+<td>1500</td>
+<td>1500</td>
+<td>1500</td>
+<td>0</td>
+<td>26</td>
+<td>0</td>
+<td>0.000 / 0.000 / 0.000</td>
+</tr>
+<tr>
+<td>nvdec_dpb_100_fixed</td>
+<td>1499</td>
+<td>1499</td>
+<td>1500</td>
+<td>0</td>
+<td>30</td>
+<td>0</td>
+<td>0.000 / 0.000 / 0.000</td>
+</tr>
+<tr>
+<td>nvdec_dpb_100_fixed_repeat</td>
+<td>1499</td>
+<td>1499</td>
+<td>1500</td>
+<td>0</td>
+<td>25</td>
+<td>0</td>
+<td>0.000 / 0.000 / 0.410</td>
+</tr>
+<tr>
+<td>cpu_200_fixed_repeat</td>
+<td>1500</td>
+<td>1500</td>
+<td>1500</td>
+<td>0</td>
+<td>36</td>
+<td>0</td>
+<td>0.000 / 0.000 / 0.000</td>
+</tr>
+<tr>
+<td>nvdec_dpb_100_jitter</td>
+<td>1500</td>
+<td>1500</td>
+<td>1501</td>
+<td>0</td>
+<td>26</td>
+<td>0</td>
+<td>0.000 / 0.000 / 0.000</td>
+</tr>
+</tbody>
+</table>
+<h2>6. Top 5 điểm nghẽn / khoảng chờ có evidence</h2>
+<ol>
+<li><strong>Đường capture mpv scale+screenshot trước mailbox:</strong> đo mới tái hiện tăng trễ nhiều giây với AI OFF; screenshot p50 đã vượt budget 66,7 ms của 15 FPS. Probe lịch sử 25 s: main capture drift +8,244 s, chỉ decode+scale +1,214 s, decode native ~0 s. Các lượt không đồng thời, chỉ định vị đường xử lý; không trừ ra CPU time của từng kernel. <a href="camera_stream_review.md">Đối chứng trước đó</a>.</li>
+<li><strong>ArcFace allocation failure khi đủ workload:</strong> ít nhất một lượt AI live bị dừng; mức ảnh hưởng là mất chức năng inference, không chỉ chậm hơn vài ms. RAM/swap/LFB có dấu hiệu memory pressure nhưng chưa chứng minh riêng nguyên nhân fragmentation hay contention với NVDEC. Các lượt không gọi ArcFace không thể xác nhận AI khỏe. Giữ nguyên evidence thất bại và đối chứng fixed input, không gán lỗi này là nguyên nhân video drift khi AI OFF.</li>
+<li><strong>Buffering nội bộ NVDEC mặc định:</strong> decoder residence ~200 ms trong candidate có DPB, dù throughput 25 FPS. No-DPB candidate giảm parser→app p50 từ ~224 xuống ~51 ms và app output từ ~23 lên 25 FPS ở AI OFF. Đây là fixed buffering phía nhận, không giải thích 5–10 s của mpv CPU; không gán residence này cho execution time của NVDEC.</li>
+<li><strong>AI scheduler/model budget:</strong> recognition wait production p90 ~165 ms (trace 20/10 ~170 ms), OSNet inference p90 ~110 ms, YOLO ~66 ms; có outlier face queue. Tác động lên nhận diện, không có evidence chặn capture callback. Detection/ReID dùng lane ưu tiên cao; giữ nguyên chính sách trong audit. Không cộng các span/percentile.</li>
+<li><strong>GUI và chuyển đổi ảnh host:</strong> receive→Tk submit p90 ~160 ms, render p90 ~40 ms; capture CPU còn resize/RGB conversion ở bảng breakdown. GUI unique ~7,5 FPS khác GUI submissions và source 25 FPS. Nguồn video trước receive đã có thể cũ; cần benchmark renderer riêng nếu muốn latency display thấp hơn.</li>
+</ol>
+<p>Ranking này là thứ tự điều tra theo tác động quan sát được, không phải năm thành phần độc lập của một critical path. Chưa xác minh: trễ camera encoder tuyệt đối, TCP head-of-line trong đợt bất thường, regression do profiling toàn pipeline, EMC contention, physical display scanout. B-frames không xuất hiện trong mẫu ffprobe; GOP ~1 s không tự gây backlog tăng dần nhiều giây. Link 100 Mb/s không có evidence bão hòa từ bitrate đã đo.</p>
+<h2>7. Thứ tự tối ưu đề xuất — chưa triển khai</h2>
+<ol>
+<li><strong>Ưu tiên xác nhận low-latency CPU GStreamer 200 ms:</strong> đây là lựa chọn cân bằng tốt nhất trong dữ liệu đã đo để xử lý drift nhiều giây mà giữ throughput AI stress tốt hơn candidate NVDEC hiện tại. Thay đường screenshot khi được chọn triển khai bằng pipeline tường minh avdec_h264 → raw queue bounded/leaky → scale → RGB → latest-only mailbox. Dữ liệu 50/100/200 ms cho thấy không nên chọn 50 ms chỉ vì con số nhỏ; 200 ms giữ nhiều frame hơn. GStreamer production vốn đã có drop-on-latency và appsink bounded, nên chỉ thêm những cờ đó không sửa được backend mpv đang chạy. Giữ source 4K và model settings; phải kiểm tra full desktop read-only trước khi triển khai.</li>
+<li><strong>NVDEC + low latency là phương án tiếp theo nếu cần tiết kiệm CPU / giảm receiver lateness:</strong> decode NVMM → raw queue → nvvidconv (VIC) resize 720p, download BGRx → videoconvert RGB → appsink. Hiện có trade-off AI throughput và một lỗi allocation live, nên chưa đạt yêu cầu “không giảm đáng kể AI performance”. So sánh inference latency, memory headroom và frame continuity, không chọn chỉ từ decode FPS. <code>disable-dpb=true</code> chỉ dùng khi camera không có B-frame; mẫu hiện tại đáp ứng, nhưng cần guard khi stream đổi codec/profile. NVIDIA ghi rõ điều kiện no B-frames. <a href="https://docs.nvidia.com/jetson/archives/r36.4.4/DeveloperGuide/SD/Multimedia/AcceleratedGstreamer.html">Tài liệu NVIDIA</a>.</li>
+<li><strong>NVDEC + memory/preprocessing:</strong> chỉ sau matched full-workload benchmark. Giữ NVMM qua resize trước download; xem giảm RGB/BGR conversions, upload trùng giữa các model, và binding tensor khi layout/lifetime/synchronization được kiểm chứng. Không mặc định nvvidconv rẻ hơn mọi CPU conversion; số đo resize/download là tổng nhiều công việc. Không hứa zero-copy hay % tăng AI khi chưa có CUDA memory trace và kiểm tra ảnh/embedding.</li>
+<li><strong>Phương án khác:</strong> direct GPU preview như v1 có thể giảm screenshot overhead nhưng cần xử lý overlay timestamps; chưa benchmark GUI mới. Substream lịch sử hết drift nhưng giảm thông tin mặt, phải kiểm tra face/ReID quality. Không tự đổi stream, bitrate, GOP, source FPS, model hay sampling AI. UDP chỉ là thử nghiệm tiếp theo có kiểm soát loss; chưa có lý do ưu tiên hơn TCP từ dữ liệu hiện tại.</li>
+</ol>
+<p>Lợi ích được chứng minh ở đây là giảm <strong>drift phía nhận</strong> trong standalone capture và khác biệt CPU/buffering của từng candidate. Chưa có số đo camera→display hoặc matched full production B/C/E để cam kết latency cuối cùng hay “không giảm AI performance”. Không triển khai lựa chọn cuối cùng trước khi bước xác nhận này hoàn tất.</p>
+<h2>8. Phép đo còn thiếu và lệnh tái lập</h2>
+<p>Chạy nối tiếp từ root repository, đóng camera client khác trước khi đo. Các tool đọc URI/credentials từ camera.json trong process; không đưa URL có mật khẩu vào shell/log. Không chạy bằng pipeline production và không bật motor.</p>
+<pre><code class="language-bash"># A: production capture, AI OFF; có thể lặp lại 3 lần vào output khác nhau
+python3 tools/stream_diagnostics.py --seconds 60 --minimal-sampling --output logs/decoder_audit/recheck_A.json
+
+# B′: cùng capture + tải model độc lập, không production scheduler
+python3 tools/stream_diagnostics.py --seconds 60 --minimal-sampling --ai-load --output logs/decoder_audit/recheck_B_load.json
+
+# CPU baseline; lần lượt thay 200 bằng 100 và 50
+python3 tools/decoder_probe.py --decoder cpu --latency 200 --seconds 60 --output logs/decoder_audit/recheck_cpu.json
+python3 tools/decoder_probe.py --decoder cpu --latency 200 --seconds 60 --ai --output logs/decoder_audit/recheck_C_load.json
+
+# D / E′: NVDEC; chỉ thêm --disable-dpb sau khi xác minh no B-frames
+python3 tools/decoder_probe.py --decoder nvdec --latency 100 --seconds 60 --output logs/decoder_audit/recheck_D.json
+python3 tools/decoder_probe.py --decoder nvdec --latency 100 --seconds 60 --disable-dpb --ai --output logs/decoder_audit/recheck_E_load.json
+
+# Matched all-model stress riêng: không dùng kết quả để đánh giá accuracy live
+python3 tools/decoder_probe.py --decoder cpu --latency 200 --seconds 60 --ai --ai-fixed-image person_search/targets/target.jpg --output logs/decoder_audit/recheck_cpu_fixed.json
+python3 tools/decoder_probe.py --decoder nvdec --latency 100 --seconds 60 --disable-dpb --ai --ai-fixed-image person_search/targets/target.jpg --output logs/decoder_audit/recheck_nvdec_fixed.json
+
+# Jitter residence: extra per-packet probes, chạy riêng để quan sát overhead
+python3 tools/decoder_probe.py --decoder nvdec --latency 100 --seconds 60 --disable-dpb --jitter-probe --output logs/decoder_audit/recheck_jitter.json
+
+# Dựng báo cáo inference từ trace đã đo, không khởi động camera
+python3 tools/profile_pipeline.py report logs/decoder_audit/recheck_E_load_trace --output logs/decoder_audit/recheck_E_profile
+</code></pre>
+<p>Để hoàn tất B/C/E full production: cần adapter benchmark vô hiệu hóa camera writes lúc khởi tạo, dùng đúng InferenceWorker/FaceWorker scheduler và target reference, giữ cùng cảnh/clip, model, độ phân giải, FPS và workload/person/face counts; mỗi lượt ≥60 s sau warmup, lặp ≥3 và đổi thứ tự CPU/NVDEC. Đây là bước cần làm riêng, không dùng <code>--ai</code> hiện tại để giả nhận đã đo production. Các CLI trên chạy phần còn thiếu khả thi với probe hiện có; chưa có CLI an toàn hoàn chỉnh cho full desktop B/C/E, nên các ô đó giữ NOT_TESTED.</p>
+<p><strong>Glass-to-glass:</strong> đặt đồng hồ mili-giây hoặc LED đổi trạng thái trong FoV, quay đồng thời vật thật và màn hình preview bằng camera đối chứng có FPS biết trước. Với clock, lấy chênh hiển thị cùng ảnh quay; với LED, đếm frame từ cạnh sáng ngoài cảnh đến cạnh sáng trên preview. Lặp nhiều lần (đầu/giữa/cuối mỗi run), báo p50/p90/p99 và sai số lượng tử của camera quay. Không suy thời gian sensor từ appsink PTS; không nhắm vào motor để tạo chuyển động. Khi chưa thực hiện: camera capture→display <strong>N/A</strong>.</p>
+<h2>9. Files khi triển khai phương án được chọn</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Thay đổi cần cân nhắc sau acceptance benchmark</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>camera/rtsp_player.py</td>
+<td>Explicit codec/decoder, NVMM→VIC path, bounded raw queue; stride-safe copy; probes tùy chọn</td>
+</tr>
+<tr>
+<td>camera/stream.py</td>
+<td>Chọn backend/candidate tường minh, báo decoder thực, xử lý fallback có provenance</td>
+</tr>
+<tr>
+<td>camera.json / config.py</td>
+<td>Chỉ đổi backend/latency/decoder sau quyết định triển khai; không sửa source stream ngầm</td>
+</tr>
+<tr>
+<td>camera/mpv_player.py</td>
+<td>Nếu giữ backend: giải quyết scale/screenshot bằng benchmark, tránh đồng bộ screenshot làm chậm tiến độ</td>
+</tr>
+<tr>
+<td>runtime/frame_manager.py / telemetry/latency.py</td>
+<td>Bổ sung metadata PTS/stage timestamps tùy chọn, giữ capture_timestamp unknown và latest-only semantics</td>
+</tr>
+<tr>
+<td>gui/cctv_app.py</td>
+<td>Nếu đổi renderer: frame-consistent overlays và đo submission/physical display riêng</td>
+</tr>
+<tr>
+<td>runtime/inference_worker.py / runtime/face_worker.py / runtime/scheduling.py</td>
+<td>Chỉ adapter benchmark/readiness và memory boundary khi dữ liệu chứng minh cần; không sửa thuật toán/threshold trong audit</td>
+</tr>
+</tbody>
+</table>
+<p>Trong audit này chỉ thêm <code>tools/decoder_probe.py</code>, mở rộng <code>tools/stream_diagnostics.py</code> với model-load opt-in, và tạo report/evidence. Không cài dependency hay thay môi trường. Files production có SHA256 để đối chiếu tại <code>production_hashes.json</code>; <code>.git</code> workspace không phải repository Git khả dụng nên không suy diễn commit/diff Git.</p>
+<p>Kiểm chứng: 10 tests hiện có cho stream diagnostics/mpv PASS, Python compile PASS; probes CPU/NVDEC đã chạy RTSP thật. Các test chỉ kiểm chứng timestamp/drift và capture lifecycle, không chứng minh AI accuracy hay control behavior. Giữ nguyên lượt AI thất bại trong báo cáo, không tính nó là một lượt benchmark đủ 60 s.</p></main></html>

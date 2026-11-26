@@ -1,0 +1,10 @@
+{
+  "source": {
+    "tools/occlusion_association.py": "7cc97cd657dddd276d8732effe7f42cfa4053010277f7301619b11026a161126",
+    "tools/occlusion_visibility.py": "0cc29cd446cf69e6cb058fc42623e804e5bc44e55fa59828a00c64098fe7a655",
+    "tools/occlusion_benchmark.py": "7001ca9532b770e07fbe694a54a5e5cfcc42a9ff0e06c0792f9ed7093051796f"
+  },
+  "holdout": "capture_b4602881389f406b8db527c0bc96750d",
+  "tuning_allowed": false,
+  "retrospective": true
+}

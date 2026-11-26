@@ -1,0 +1,470 @@
+--- a/camera/hanet_controller.py
++++ b/camera/hanet_controller.py
+@@ -42,20 +42,22 @@
+         self._shutdown_timer = None
+         identity = hashlib.sha256(f'{self.ip}:{self.port}'.encode()).hexdigest()[:20]
+         self._safety_state_path = Path(safety_state_path) if safety_state_path else Path(__file__).resolve().parents[1]/'logs/camera/motor_state'/(identity+'.json')
+-        try:
+-            if self._safety_state_path.exists():
+-                saved = json.loads(self._safety_state_path.read_text())
+-                codes = saved['active_codes']
+-                if not isinstance(codes, list) or not set(codes) <= set(self.CODES.values()):
+-                    raise ValueError('Invalid motor state checkpoint')
+-                self._active_codes = set(codes)
++        self._stop_guard_path = self._safety_state_path.with_suffix('.pending')
++        load_reason = 'UNCONFIRMED_PREVIOUS_RUN'
++        try:
++            for path in (self._safety_state_path, self._stop_guard_path):
++                if path.exists():
++                    self._active_codes.update(self._load_motor_checkpoint(path))
++                    if path == self._stop_guard_path:
++                        load_reason = 'INCOMPLETE_STOP_CHECKPOINT'
+         except Exception:
+             # An unreadable checkpoint is uncertainty, not a clean restart.
+             self._active_codes = set(self.CODES.values())
++            load_reason = 'INVALID_MOTOR_CHECKPOINT'
+         if self._active_codes:
+             self._motor_fault = True
+             self.motor_state = 'FAULT_LATCHED'
+-            self._fault_event('MOTOR_FAULT_LATCHED', reason='UNCONFIRMED_PREVIOUS_RUN')
++            self._fault_event('MOTOR_FAULT_LATCHED', reason=load_reason)
+         self._absolute_capability = ZoomCapability(False, 'HANET_POSITION_UNVERIFIED')
+         if autoconnect:
+             self._poller = threading.Thread(target=self._poll, name='hanet-heartbeat', daemon=True)
+@@ -180,11 +182,29 @@
+             return self._failure('HANET command', exc)
+ 
+     def _save_motor_state(self):
+-        path = self._safety_state_path
++        self._write_motor_checkpoint(self._safety_state_path, self._active_codes)
++
++    def _load_motor_checkpoint(self, path):
++        with path.open() as stream:
++            text = stream.read(8193)
++        if len(text) > 8192:
++            raise ValueError('Motor checkpoint exceeds limit')
++        saved = json.loads(text)
++        if (not isinstance(saved, dict) or type(saved.get('version')) is not int
++                or saved['version'] != 1):
++            raise ValueError('Unsupported motor checkpoint version')
++        codes = saved.get('active_codes')
++        if (not isinstance(codes, list) or not all(isinstance(code, str) for code in codes)
++                or not set(codes) <= set(self.CODES.values())):
++            raise ValueError('Invalid motor state checkpoint')
++        return set(codes)
++
++    @staticmethod
++    def _write_motor_checkpoint(path, codes):
+         path.parent.mkdir(parents=True, exist_ok=True)
+         temp = path.with_suffix('.tmp')
+         with temp.open('w') as stream:
+-            json.dump({'version': 1, 'active_codes': sorted(self._active_codes)}, stream)
++            json.dump({'version': 1, 'active_codes': sorted(codes)}, stream)
+             stream.flush()
+             os.fsync(stream.fileno())
+         temp.replace(path)
+@@ -193,6 +213,22 @@
+             os.fsync(directory)
+         finally:
+             os.close(directory)
++
++    def _discard_stop_guard(self):
++        # Only called AFTER the main checkpoint's file and directory fsync have
++        # succeeded. A crash before this cleanup causes a conservative re-STOP.
++        try:
++            self._stop_guard_path.unlink(missing_ok=True)
++            directory = os.open(self._stop_guard_path.parent, os.O_RDONLY)
++            try:
++                os.fsync(directory)
++            finally:
++                os.close(directory)
++        except OSError as exc:
++            # The confirmed STOP is already durably committed. Failed cleanup
++            # can leave an extra fault on restart, never erase an active code.
++            self._fault_event('MOTOR_CHECKPOINT_CLEANUP_PENDING',
++                              exception_type=type(exc).__name__)
+ 
+     def _fault_event(self, event, **fields):
+         generation = getattr(self._rpc, 'generation', None)
+@@ -211,30 +247,44 @@
+         failed = False
+         previous_fault = self._motor_fault
+         self.motor_state = 'STOP_PENDING'
++        if previous_fault:
++            self._fault_event('MOTOR_RECOVERY_STARTED', operation='STOP', emergency=emergency)
+         for code in tuple(self._active_codes):
++            ack_received = False
+             try:
+                 # After failed START/connect, _rpc may be absent. Establishing
+                 # transport here is allowed ONLY to STOP the remembered direction.
+                 rpc = self._rpc or self._connect(allow_shutdown=True)
+                 if rpc.motion(code, False, 1) is not True:
+                     raise RuntimeError('HANET STOP has no explicit ACK')
++                ack_received = True
++                # Keep a durable copy of uncertainty until the replacement main
++                # checkpoint has also been directory-fsynced. If replace works
++                # but fsync fails, restart must not mistake an empty file for READY.
++                self._write_motor_checkpoint(self._stop_guard_path, self._active_codes)
+                 self._active_codes.remove(code)
+                 try:
+                     self._save_motor_state()
+                 except Exception:
+                     self._active_codes.add(code)
+                     raise
++                self._discard_stop_guard()
+             except Exception as exc:
+                 failed = True
+-                self._fault_event('PAN_TILT_STOP_UNCONFIRMED', rpc_code=code,
+-                    operation='STOP', acknowledged=False, exception_type=type(exc).__name__,
+-                    exception_message='STOP acknowledgement unavailable')
++                self._fault_event('MOTOR_CHECKPOINT_COMMIT_FAILED' if ack_received else 'PAN_TILT_STOP_UNCONFIRMED',
++                    rpc_code=code, operation='STOP', acknowledged=ack_received,
++                    rpc_stop_accepted=ack_received, physical_motor_stopped=None,
++                    exception_type=type(exc).__name__,
++                    exception_message='STOP checkpoint commit failed' if ack_received else 'STOP acknowledgement unavailable')
+         self._motor_fault = failed or bool(self._active_codes)
+         if self._motor_fault:
+             self._stop_budget.failed()
+             self.motor_state = 'FAULT_LATCHED' if self._stop_budget.exhausted else 'STOP_UNCONFIRMED'
+             if not previous_fault or self._stop_budget.attempts == self._stop_budget.limit:
+                 self._fault_event('MOTOR_FAULT_LATCHED')
++            if previous_fault:
++                self._fault_event('MOTOR_RECOVERY_FAILED', operation='STOP',
++                                  reason='STOP_OR_CHECKPOINT_UNCONFIRMED')
+             return False, 'HANET STOP unconfirmed'
+         self.motor_state = 'READY'
+         self._stop_budget.reset()
+--- a/camera/hanet_ack.py
++++ b/camera/hanet_ack.py
+@@ -33,8 +33,15 @@
+     reason: str
+ 
+ 
+-def validate_response(message, request_id):
++def validate_response(message, request_id, *, method='Control.DoPtz', operation=None, code=None):
+     """Validate a matched JSON object; never infer success from no error."""
++    if method != 'Control.DoPtz':
++        return AckDecision(ACK_UNKNOWN, 'METHOD_NOT_SUPPORTED')
++    if operation is not None and operation not in ('START', 'STOP'):
++        return AckDecision(PROTOCOL_ERROR, 'INVALID_PTZ_OPERATION')
++    if code is not None and code not in (
++            'kCmdZoomTele', 'kCmdZoomWide', 'kCmdLeft', 'kCmdRight', 'kCmdUp', 'kCmdDown'):
++        return AckDecision(PROTOCOL_ERROR, 'UNSUPPORTED_PTZ_CODE')
+     if not isinstance(message, dict):
+         return AckDecision(PROTOCOL_ERROR, 'RESPONSE_NOT_OBJECT')
+     if type(message.get('id')) is not type(request_id) or message.get('id') != request_id:
+@@ -51,6 +58,10 @@
+         return AckDecision(ACK_REJECTED, 'BOOLEAN_FALSE')
+     if message.get('result') is True:
+         return AckDecision(ACK_SUCCESS, 'LEGACY_BOOLEAN_TRUE')
++    if isinstance(message.get('result'), dict) and not message['result']:
++        # Observed STOP kCmdZoomWide response on 2026-11-13. Its envelope is
++        # known; device command semantics and physical STOP are NOT verified.
++        return AckDecision(ACK_UNKNOWN, 'EMPTY_RESULT_UNVERIFIED')
+     return AckDecision(ACK_UNKNOWN, 'RESULT_MISSING' if 'result' not in message
+                        else 'UNVERIFIED_RESULT_SCHEMA')
+ 
+--- a/camera/hanet_rpc.py
++++ b/camera/hanet_rpc.py
+@@ -337,7 +337,7 @@
+                     self._response_diagnostic(None, request_id, operation, code,
+                         AckDecision(PROTOCOL_ERROR, 'MALFORMED_JSON'))
+                     raise HanetProtocolError('Malformed HANET response') from None
+-                decision = validate_response(message, request_id)
++                decision = validate_response(message, request_id, operation=operation, code=code)
+                 self._response_diagnostic(message, request_id, operation, code, decision)
+                 if decision.reason == 'REQUEST_ID_MISMATCH':
+                     mismatch = True
+--- a/tools/run_hanet_fault_tests.py
++++ b/tools/run_hanet_fault_tests.py
+@@ -27,7 +27,8 @@
+     parser.add_argument('--regression', action='store_true')
+     parser.add_argument('--json', type=Path)
+     args = parser.parse_args()
+-    modules = ['test_hanet_ack_compatibility', 'test_hanet_fault_injection', 'test_hanet_shutdown']
++    modules = ['test_hanet_persisted_recovery', 'test_hanet_ack_compatibility',
++               'test_hanet_fault_injection', 'test_hanet_shutdown']
+     if args.regression:
+         modules += ['test_hanet_rpc', 'test_hanet_controller', 'test_auto_pan_tilt',
+             'test_pan_follow_revision', 'test_auto_zoom', 'test_zoom_ownership',
+--- /dev/null
++++ b/test/test_hanet_persisted_recovery.py
+@@ -0,0 +1,256 @@
++"""Offline checkpoint durability and full pan transport path, no firmware claims."""
++import json
++import os
++from pathlib import Path
++import stat
++import sys
++import tempfile
++import threading
++import time
++from types import SimpleNamespace
++import unittest
++from unittest.mock import Mock, patch
++from contextlib import ExitStack
++
++sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
++import config
++from camera.hanet_controller import HanetController
++from camera.hanet_rpc import HanetPTZClient
++from control.auto_pan_tilt import AutoPanTiltController
++from control.auto_zoom import AutoZoomController
++from control.orchestrator import ControlOrchestrator
++from telemetry import latency
++from camera.hanet_ack import validate_response, ACK_UNKNOWN, PROTOCOL_ERROR
++import test_hanet_fault_injection as fixtures
++
++
++class RecordedSchemaTests(unittest.TestCase):
++    def test_observed_stop_shape_is_not_firmware_success_fixture(self):
++        fixture=json.loads((Path(__file__).parent/'fixtures/hanet_stop_empty_result_20261113.json').read_text())
++        decision=validate_response(fixture['response'],fixture['request_id'],
++            operation=fixture['provenance']['operation'],code=fixture['provenance']['code'])
++        self.assertEqual((decision.classification,decision.reason),(ACK_UNKNOWN,'EMPTY_RESULT_UNVERIFIED'))
++        self.assertFalse(fixture['provenance']['raw_response_captured'])
++
++    def test_scope_is_control_do_ptz_and_unknown_not_promoted_for_any_direction(self):
++        self.assertEqual(validate_response({'id':'r','result':True},'r',method='Other.Method').classification,ACK_UNKNOWN)
++        for op in ('START','STOP'):
++            for code in HanetController.CODES.values():
++                with self.subTest(operation=op,code=code):
++                    self.assertEqual(validate_response({'id':'r','result':{}},'r',operation=op,code=code).classification,ACK_UNKNOWN)
++        self.assertEqual(validate_response({'id':'r','result':True},'r',operation='MOVE').classification,PROTOCOL_ERROR)
++        self.assertEqual(validate_response({'id':'r','result':True},'r',code='other').classification,PROTOCOL_ERROR)
++
++
++class PersistedRecoveryTests(unittest.TestCase):
++    def setUp(self):
++        self.stack = ExitStack(); self.addCleanup(self.stack.close)
++        self.directory = Path(self.stack.enter_context(tempfile.TemporaryDirectory()))
++        self.path = self.directory/'motor.json'
++        self.stack.enter_context(patch('socket.create_connection', side_effect=AssertionError('NO REAL SOCKET')))
++        self.stack.enter_context(patch('requests.sessions.Session.request', side_effect=AssertionError('NO REAL HTTP')))
++
++    def camera(self, rpc=None):
++        if rpc is None:
++            rpc=Mock(); rpc.motion.return_value=True
++        camera=HanetController(ip='offline.invalid',username='u',password='p',timeout=.1,
++            autoconnect=False,rpc_factory=lambda *a,**k:rpc,safety_state_path=self.path)
++        self.addCleanup(camera.close)
++        return camera,rpc
++
++    def test_clean_startup_and_version_one_empty_checkpoint(self):
++        camera,rpc=self.camera()
++        self.assertEqual(camera.motor_state,'READY');rpc.motion.assert_not_called()
++        camera.close()
++        self.path.write_text(json.dumps({'version':1,'active_codes':[]}))
++        camera,rpc=self.camera()
++        self.assertEqual(camera.motor_state,'READY');rpc.motion.assert_not_called()
++
++    def test_unknown_checkpoint_version_must_not_grant_ready(self):
++        self.path.write_text(json.dumps({'version':999,'active_codes':[]}))
++        camera,rpc=self.camera()
++        self.assertTrue(camera._motor_fault)
++        self.assertFalse(camera.command('pan_left')[0]);rpc.motion.assert_not_called()
++
++    def test_incomplete_or_corrupt_checkpoint_blocks_start(self):
++        for text in ('{', '{}', '{"active_codes":[]}', '{"version":true,"active_codes":[]}',
++                     '{"version":1,"active_codes":["foreign"]}'):
++            with self.subTest(text=text):
++                self.path.write_text(text)
++                camera,rpc=self.camera()
++                self.assertTrue(camera._motor_fault)
++                self.assertFalse(camera.command('zoom_in')[0]);rpc.motion.assert_not_called()
++                camera.close()
++
++    def test_loaded_fault_has_no_start_replay_and_explicit_recovery_updates_disk(self):
++        self.path.write_text(json.dumps({'version':1,'active_codes':['kCmdZoomWide']}))
++        camera,rpc=self.camera()
++        self.assertEqual(camera.motor_state,'FAULT_LATCHED')
++        self.assertFalse(camera.command('pan_left')[0]);rpc.motion.assert_not_called()
++        self.assertTrue(camera.emergency_stop()[0])
++        self.assertEqual(rpc.motion.call_args.args,('kCmdZoomWide',False,1))
++        self.assertEqual(json.loads(self.path.read_text())['active_codes'],[])
++        camera.close()
++        restarted,new_rpc=self.camera()
++        self.assertEqual(restarted.motor_state,'READY');new_rpc.motion.assert_not_called()
++
++    def test_unknown_stop_keeps_checkpoint(self):
++        from camera.hanet_ack import HanetACKUnknown
++        self.path.write_text(json.dumps({'version':1,'active_codes':['kCmdZoomWide']}))
++        camera,rpc=self.camera();rpc.motion.side_effect=HanetACKUnknown('unknown')
++        self.assertFalse(camera.emergency_stop()[0])
++        self.assertTrue(camera._motor_fault)
++        self.assertEqual(json.loads(self.path.read_text())['active_codes'],['kCmdZoomWide'])
++
++    def test_crash_after_stop_ack_before_checkpoint_write_keeps_old_fault(self):
++        camera,rpc=self.camera();camera.command('pan_left')
++        # Preserve the on-disk snapshot as if the process died before persistence.
++        old=self.path.read_bytes()
++        with patch.object(camera,'_save_motor_state',side_effect=OSError('disk')):
++            self.assertFalse(camera.stop()[0])
++        self.assertEqual(self.path.read_bytes(),old)
++        restarted,_=self.camera()
++        self.assertTrue(restarted._motor_fault)
++
++    def test_directory_fsync_failure_after_empty_replace_keeps_restart_fault(self):
++        camera,rpc=self.camera();camera.command('pan_left')
++        real=os.fsync
++        def fail_after_clear(fd):
++            if stat.S_ISDIR(os.fstat(fd).st_mode) and not json.loads(self.path.read_text())['active_codes']:
++                raise OSError('simulated directory fsync failure')
++            return real(fd)
++        with patch('camera.hanet_controller.os.fsync',side_effect=fail_after_clear):
++            self.assertFalse(camera.stop()[0])
++        self.assertTrue(camera._motor_fault)
++        restarted,_=self.camera()
++        self.assertTrue(restarted._motor_fault)
++        self.assertIn('kCmdLeft',restarted._active_codes)
++
++    def test_checkpoint_write_failure_is_not_reported_as_no_wire_ack(self):
++        camera,rpc=self.camera();camera.command('pan_left')
++        with (patch.object(camera,'_save_motor_state',side_effect=OSError('disk')),
++              patch.object(latency.profiler,'event',wraps=latency.profiler.event) as events):
++            self.assertFalse(camera.stop()[0])
++        self.assertTrue(any(c.args[0]=='MOTOR_CHECKPOINT_COMMIT_FAILED'
++                            and c.kwargs.get('rpc_stop_accepted') is True for c in events.call_args_list))
++
++    def test_durable_guard_survives_crash_before_cleanup(self):
++        camera,rpc=self.camera();camera.command('pan_left')
++        with patch.object(camera,'_discard_stop_guard'):
++            self.assertTrue(camera.stop()[0])
++        self.assertEqual(json.loads(self.path.read_text())['active_codes'],[])
++        restarted,_=self.camera()
++        self.assertTrue(restarted._motor_fault)
++        self.assertEqual(restarted._active_codes,{'kCmdLeft'})
++        self.assertTrue(restarted.emergency_stop()[0])
++        self.assertFalse(restarted._stop_guard_path.exists())
++
++    def test_corrupt_pending_guard_never_grants_ready(self):
++        self.path.write_text(json.dumps({'version':1,'active_codes':[]}))
++        self.path.with_suffix('.pending').write_text('{broken')
++        camera,rpc=self.camera()
++        self.assertTrue(camera._motor_fault)
++        self.assertFalse(camera.command('pan_left')[0]);rpc.motion.assert_not_called()
++
++    def test_guard_cleanup_failure_retains_restart_uncertainty(self):
++        camera,rpc=self.camera();camera.command('zoom_out')
++        real=Path.unlink
++        def fail_guard(path,*a,**kw):
++            if path==camera._stop_guard_path:raise OSError('cleanup failed')
++            return real(path,*a,**kw)
++        with patch.object(Path,'unlink',fail_guard):
++            self.assertTrue(camera.stop()[0])  # main STOP checkpoint is already durable
++        restarted,_=self.camera()
++        self.assertTrue(restarted._motor_fault)
++
++    def test_write_failure_before_start_never_transmits_start(self):
++        camera,rpc=self.camera()
++        with patch.object(camera,'_save_motor_state',side_effect=OSError('disk')):
++            self.assertFalse(camera.command('pan_left')[0])
++        self.assertFalse(any(call.args[1] for call in rpc.motion.call_args_list))
++
++    def test_partial_multi_direction_stop_keeps_unconfirmed_direction(self):
++        from camera.hanet_ack import HanetACKUnknown
++        self.path.write_text(json.dumps({'version':1,'active_codes':['kCmdLeft','kCmdZoomWide']}))
++        camera,rpc=self.camera()
++        def motion(code,start,speed):
++            if code=='kCmdZoomWide':raise HanetACKUnknown('unknown')
++            return True
++        rpc.motion.side_effect=motion
++        self.assertFalse(camera.emergency_stop()[0])
++        self.assertEqual(camera._active_codes,{'kCmdZoomWide'})
++        self.assertEqual(json.loads(self.path.read_text())['active_codes'],['kCmdZoomWide'])
++
++
++class PanTransportRecoveryTests(unittest.TestCase):
++    def setUp(self):
++        self.stack=ExitStack();self.addCleanup(self.stack.close)
++        self.directory=Path(self.stack.enter_context(tempfile.TemporaryDirectory()))
++        self.stack.enter_context(patch('requests.sessions.Session.request',side_effect=AssertionError('NO REAL HTTP')))
++        self.wire=fixtures.FakeSocket()
++        self.stack.enter_context(patch('camera.hanet_rpc.socket.create_connection',return_value=self.wire))
++        def login(client):client.session_id='synthetic-session'
++        self.stack.enter_context(patch.object(HanetPTZClient,'_login',login))
++        self.client=HanetPTZClient('offline.invalid',80,'u','p',timeout=.1)
++        self.camera=HanetController(ip='offline.invalid',username='u',password='p',timeout=.1,
++            autoconnect=False,rpc_factory=lambda *a,**k:self.client,safety_state_path=self.directory/'state.json')
++        self.addCleanup(self.camera.close)
++        self.owner=ControlOrchestrator()
++        self.cfg=SimpleNamespace(**{k:getattr(config,k) for k in dir(config) if k.isupper()})
++        self.cfg.AUTO_PAN_TILT_ENABLED=True
++        self.pan=AutoPanTiltController(self.camera,self.owner,self.cfg)
++        self.pan.session_valid=lambda session,track:session=='current' and track==1
++        self.addCleanup(self.pan.close)
++        self.events=[];self.ended=threading.Event();self.blocked=threading.Event()
++        def event(name,**fields):
++            self.events.append((name,fields))
++            if name=='PAN_TILT_COMMAND_ENDED':self.ended.set()
++            if name=='PAN_TILT_DECISION' and fields.get('decision_reason')=='MOTOR_BUSY':self.blocked.set()
++        self.stack.enter_context(patch.object(latency.profiler,'event',side_effect=event))
++
++    def submit(self,box=(700,200,900,400),age=0,session='current'):
++        return self.pan.submit({'bbox':box},(600,1000,3),time.monotonic()-age,session,1)
++
++    def test_full_path_valid_off_center_target_dispatches_start_stop(self):
++        self.assertTrue(self.submit());self.assertTrue(self.ended.wait(2))
++        operations=[r['params']['data']['operate'] for r in self.wire.commands]
++        self.assertEqual(operations,['kOperateStart','kOperateStop'])
++        names=[n for n,f in self.events]
++        for name in ('PAN_TILT_DISPATCH','PAN_TILT_START_ACK','PAN_TILT_STOP_ACK'):
++            self.assertIn(name,names)
++        self.assertEqual(self.camera.motor_state,'READY');self.assertIsNone(self.owner.owner)
++
++    def test_deadzone_uncertain_and_stale_do_not_dispatch(self):
++        for kwargs,reason in (({'box':(450,250,550,350)},'DEADZONE'),
++                              ({'session':'other'},'TARGET_UNCERTAIN'),
++                              ({'age':10},'STALE_OBSERVATION')):
++            with self.subTest(reason=reason):
++                self.assertFalse(self.submit(**kwargs))
++                self.assertEqual(self.events[-1][1]['decision_reason'],reason)
++        self.assertFalse(self.wire.commands)
++
++    def test_zoom_owner_blocks_pan_until_confirmed_recovery_then_real_dispatch(self):
++        self.owner.acquire('zoom')
++        # Active/fault state created through the real backend; synthetic response contract only.
++        self.assertTrue(self.camera.command('zoom_out')[0])
++        self.wire.outcomes.append({})
++        self.assertFalse(self.camera.stop()[0])
++        self.assertTrue(self.submit());self.assertTrue(self.blocked.wait(1))
++        self.assertEqual(len(self.wire.commands),2)
++        self.pan.cancel()  # hold admission until a fresh post-recovery observation
++        zoom=AutoZoomController(self.camera,orchestrator=self.owner,wait_after_zoom=0)
++        self.addCleanup(zoom.close)
++        zoom.busy=zoom.zoom_motor_active=True;zoom._started=time.monotonic();zoom.zoom_direction=-1
++        # Explicit operator recovery after backoff, with a new fake connection.
++        second=fixtures.FakeSocket()
++        with patch('camera.hanet_rpc.socket.create_connection',return_value=second):
++            self.client._next_reconnect=0
++            self.assertTrue(self.camera.emergency_stop()[0]);zoom.stop()
++            self.assertIsNone(self.owner.owner)
++            self.assertTrue(self.submit());self.assertTrue(self.ended.wait(2))
++        self.assertEqual([r['params']['data']['operate'] for r in second.commands],
++                         ['kOperateStop','kOperateStart','kOperateStop'])
++        self.assertFalse(zoom.busy)
++
++
++if __name__=='__main__':unittest.main()
+--- /dev/null
++++ b/test/fixtures/hanet_stop_empty_result_20261113.json
+@@ -0,0 +1,19 @@
++{
++  "provenance": {
++    "source": "logs/camera/first_failures_20261113_102030_063664.json",
++    "timestamp": "2026-11-13T10:20:44.084+07:00",
++    "operation": "STOP",
++    "code": "kCmdZoomWide",
++    "connection_generation": 1,
++    "reconstructed_from_sanitized_schema": true,
++    "raw_response_captured": false,
++    "device_command_semantics": "UNVERIFIED",
++    "physical_motor_stopped": null
++  },
++  "request_id": "7b105f63-22f1-4311-bc62-a551d8bd3f43",
++  "response": {
++    "id": "7b105f63-22f1-4311-bc62-a551d8bd3f43",
++    "jsonrpc": "2.0",
++    "result": {}
++  }
++}

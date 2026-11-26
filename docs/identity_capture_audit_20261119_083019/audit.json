@@ -1,0 +1,149 @@
+{
+  "captures": [
+    {
+      "capture": "logs/identity_capture/capture_706c13123cb84c2294eecf5fa4c3850f",
+      "summary": {
+        "complete": true,
+        "frames": 1667,
+        "dropped": 0,
+        "errors": 0,
+        "recorded_bytes": 810900652,
+        "frames_sha256": "3a9bc686e8c27ce83d9ace8d7f33a801af08cf8a455011e9465f8f6987d42c32",
+        "max_frames": 3000,
+        "max_bytes": 1000000000,
+        "ground_truth": false
+      },
+      "created": "2026-11-19T08:30:54.078608+07:00",
+      "start": 3317.939443255,
+      "end": 3467.839215462,
+      "duration_s": 149.8997722070003,
+      "shape": [
+        480,
+        704,
+        3
+      ],
+      "interval_s": {
+        "n": 1666,
+        "median": 0.09402985249994344,
+        "p95": 0.13760020524978245,
+        "max": 0.2341237010000441
+      },
+      "age_ms": {
+        "n": 1667,
+        "median": 53.1175850001091,
+        "p95": 108.37372279979715,
+        "max": 237.9555640000035
+      },
+      "detector_ms": {
+        "n": 1667,
+        "median": 39.15756500009593,
+        "p95": 90.06900559998024,
+        "max": 158.29800700021224
+      },
+      "states": {
+        "SEARCHING": 108,
+        "TARGET_LOCKED": 8,
+        "PERSON_ZOOM": 974,
+        "OCCLUDED_HOLD": 47,
+        "VERIFIED": 530
+      },
+      "labels": {
+        "UNCONFIRMED": 155,
+        "TARGET_SELECTED": 1512
+      },
+      "track_ids": [
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34
+      ]
+    }
+  ],
+  "metrics": {
+    "record_intervals": {
+      "frame_age_ms": {
+        "n": 144,
+        "median": 69.64764000008472,
+        "p95": 146.93048120004732,
+        "max": 208.73646700010795
+      },
+      "yolo_ms": {
+        "n": 144,
+        "median": 44.26120900006936,
+        "p95": 88.14743459986403,
+        "max": 104.38478600008239
+      },
+      "reid_ms": {
+        "n": 144,
+        "median": 0.9818685000482219,
+        "p95": 91.23919159994783,
+        "max": 122.32864400039034
+      },
+      "face_ms": {
+        "n": 144,
+        "median": 0.07993400004124851,
+        "p95": 0.16143945001658716,
+        "max": 0.4094810001333826
+      }
+    },
+    "outside_record_intervals": {
+      "frame_age_ms": {
+        "n": 58,
+        "median": 80.02115149997735,
+        "p95": 186.81545360027485,
+        "max": 277.98621800002365
+      },
+      "yolo_ms": {
+        "n": 58,
+        "median": 36.49272100005874,
+        "p95": 72.37466660017161,
+        "max": 124.7447480000119
+      },
+      "reid_ms": {
+        "n": 58,
+        "median": 0.11370249990250159,
+        "p95": 119.28336370006035,
+        "max": 224.53590700024506
+      },
+      "face_ms": {
+        "n": 58,
+        "median": 0.0670480001190299,
+        "p95": 0.18121410000730973,
+        "max": 0.3649229997790826
+      }
+    }
+  },
+  "events": {
+    "REID_SCORE": 45,
+    "FRAME_METRICS": 202,
+    "TARGET_CANDIDATE": 4,
+    "TARGET_CONFIRMED": 1,
+    "FACE_DETECTED": 97,
+    "FACE_LOST": 97,
+    "TARGET_LOST": 3,
+    "PERCEPTION_RESULT_STALE": 2,
+    "TARGET_REACQUIRED": 2,
+    "ZOOM_START": 32,
+    "ZOOM_STOP": 32
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "evidence_source": "mock",
+  "absolute_commands": 1,
+  "pulse_commands": 0,
+  "ack_preceded_completion": true,
+  "final_state": "ZOOM_HOLD",
+  "corrections": 0,
+  "trace": "docs/zoom_audit/mock_run/zoom/zoom_trace_20261008_095139_750395.jsonl",
+  "summary": "docs/zoom_audit/mock_run/zoom/zoom_summary_20261008_095139_750395.csv"
+}

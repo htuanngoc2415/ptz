@@ -1,0 +1,57 @@
+{
+  "no_overlap": {
+    "selected": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "locked": true,
+    "hold": false,
+    "track_id": 1
+  },
+  "minor_acquisition": {
+    "selected": [
+      false,
+      false,
+      false,
+      false
+    ],
+    "locked": false,
+    "hold": false,
+    "track_id": 0
+  },
+  "minor_continuity": {
+    "selected": [
+      true,
+      true,
+      false,
+      false
+    ],
+    "locked": true,
+    "hold": true,
+    "track_id": 1
+  },
+  "severe": {
+    "selected": [
+      false,
+      false,
+      false,
+      false
+    ],
+    "locked": true,
+    "hold": true,
+    "track_id": 1
+  },
+  "switch_id": {
+    "selected": [
+      false,
+      false,
+      false,
+      false
+    ],
+    "locked": true,
+    "hold": true,
+    "track_id": 1
+  }
+}

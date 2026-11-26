@@ -1,0 +1,117 @@
+--- ai/hybrid_reid.py (before this request)
++++ ai/hybrid_reid.py
+@@ -10,6 +10,7 @@
+ from ai.reid_target import ReIDTargetSelector, iou
+ from telemetry import latency
+ from ai.overlap_policy import OverlapMemory, overlap_geometry, minor_contact
++from ai.approach_risk import ApproachRisk
+ 
+ 
+ class HybridReIDTargetSelector(ReIDTargetSelector):
+@@ -30,6 +31,8 @@
+         self._confirmation_time = None
+         self._pending_time = None
+         self._overlap_memory = OverlapMemory()
++        self._approach_risk = ApproachRisk()
++        self._preoverlap_risk = False
+         self._hold_scan_at = float("-inf")
+         self._weak_overlap_active = False
+         self._previous_observation_time = None
+@@ -48,7 +51,7 @@
+         # One bounded job. The background scorer sees a snapshot, never live state.
+         if getattr(self, '_verification', None) is not None:
+             return
+-        if getattr(self.cfg,'REID_CANDIDATE_AWARE',False):
++        if getattr(self.cfg,'REID_CANDIDATE_AWARE',False) and not self._preoverlap_risk:
+             target = next((p for p in persons if p.get('track_id')==self.track_id),None)
+             if target is None:return
+             persons = [p for p in persons if p is target or
+@@ -265,6 +268,8 @@
+         self.observation_time = now
+         self.just_locked = False
+         current = next((p for p in persons if p.get('track_id') == self.track_id), None)
++        self._preoverlap_risk = self._approach_risk.assess(current,persons,
++            (self.lock_session_id,self.track_id),now)
+         overlapping = current is not None and self._candidate_overlap(current, persons)
+         jump = (current is not None and self.person_box is not None
+                 and iou(current['bbox'], self.person_box) < self.cfg.REID_TRACK_IOU)
+@@ -279,7 +284,12 @@
+             self.tracking_status = 'TRACKED'
+             weak_due = (getattr(self,'_weak_overlap_active',False) and self._overlap_memory.since is not None
+                         and self.last_verify < self._overlap_memory.since)
+-            if weak_due or now-self.last_verify >= self.cfg.REID_VERIFY_INTERVAL:
++            approach_due = self._preoverlap_risk and now-self.last_verify >= .2
++            if approach_due:
++                latency.profiler.event('TARGET_APPROACH_REVERIFY',frame_id=self.frame_id,
++                    target_track_id=self.track_id,lock_session_id=self.lock_session_id,
++                    evidence='geometry_risk_not_identity_truth')
++            if weak_due or approach_due or now-self.last_verify >= self.cfg.REID_VERIFY_INTERVAL:
+                 self._start_verification(frame, persons, now)
+             return current
+         recovering = True
+--- runtime/inference_worker.py (before this request)
++++ runtime/inference_worker.py
+@@ -20,6 +20,7 @@
+ from runtime.scheduling import scheduler
+ from runtime.face_worker import FaceWorker
+ from runtime.target_session import TargetSession
++from runtime.target_prediction import TargetPrediction
+ from runtime.byte_tracking import ByteTrackPersonTracker
+ from ai.reid_target import iou, inside
+ 
+@@ -48,6 +49,7 @@
+             self.target_session.publish(None)
+         if hasattr(self, 'face_worker'):
+             self.face_worker.invalidate()
++        self._pan_prediction = TargetPrediction()
+         self._identity_logged_session = None
+         self._usable_logged_session = None
+         if hasattr(self, 'face_framing'):
+@@ -496,9 +498,18 @@
+                 self.auto_zoom.motion_feedback(person, frame_bgr.shape, frame_time,
+                     self.reid_target.lock_session_id, self.reid_target.track_id)
+                 if hasattr(self, 'auto_pan_tilt'):
++                    if not hasattr(self, '_pan_prediction'):
++                        self._pan_prediction = TargetPrediction()
++                    prediction = None
++                    if self.auto_pan_tilt.enabled and person is not None and not self.reid_target.crossing_hold:
++                        prediction = self._pan_prediction.observe(frame_bgr,person['bbox'],persons,
++                            frame_time,binding,time.monotonic())
++                    else:
++                        self._pan_prediction.reset()
+                     pan_needed = self.auto_pan_tilt.submit(person, frame_bgr.shape, frame_time,
+                         self.reid_target.lock_session_id, self.reid_target.track_id,
+                         metadata=dict(frame_id=frame_sequence, detection_completed_timestamp=detection_completed,
++                            motion_prediction=prediction, track_generation=self.reid_target.track_generation,
+                             target_uid=getattr(self.reid_target, 'target_uid', None),
+                             tracking_state=getattr(self.reid_target, 'tracking_status', self.reid_target.stage),
+                             identity_state=getattr(self.reid_target, 'identity_status', None),
+--- control/auto_pan_tilt.py (before this request)
++++ control/auto_pan_tilt.py
+@@ -6,6 +6,7 @@
+ from uuid import uuid4
+ from .pan_policy import plan_pan
+ from runtime.stop_retry import StopRetryBudget
++from runtime.target_prediction import predict_box
+ 
+ 
+ class AutoPanTiltController:
+@@ -109,11 +110,16 @@
+             if self._latest and received <= self._latest[0]:
+                 self._decision('OUT_OF_ORDER_OBSERVATION', fields)
+                 return self._latest[3] is not None
+-            direction = self._direction(box, shape)
++            # Identity-authorized bbox stays unchanged for face/zoom/UI consumers.
++            plan_box, prediction_fields = predict_box(box,shape,fields.get('motion_prediction'),now,
++                (session,track,fields.get('track_generation')))
++            if prediction_fields:fields.update(prediction_fields)
++            fields['planned_bbox'] = plan_box
++            direction = self._direction(plan_box, shape)
+             if direction:
+                 h,w = shape[:2]
+                 center = ((box[0]+box[2])/2, (box[1]+box[3])/2)
+-                duration = self._pulse(box, shape)
++                duration = self._pulse(plan_box, shape)
+                 fields.update(target_center=center, normalized_error_x=center[0]/w-.5,
+                     normalized_error_y=center[1]/h-.5, command_direction=direction[0],
+                     command_speed=direction[1], command_duration_ms=duration*1000,

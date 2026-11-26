@@ -1,0 +1,92 @@
+{
+  "capture_9b6f72b28e284599a83a2ca918947993": {
+    "old_selected": 0,
+    "new_selected": 0,
+    "changes": {},
+    "longest_remaining_holds": [],
+    "windows": []
+  },
+  "capture_706c13123cb84c2294eecf5fa4c3850f": {
+    "old_selected": 1270,
+    "new_selected": 1443,
+    "changes": {
+      "added_selection": 173
+    },
+    "longest_remaining_holds": [
+      {
+        "start_s": 30.53410706600016,
+        "frames": 19,
+        "end_s": 32.532887439000206,
+        "last_index": 337
+      },
+      {
+        "start_s": 91.26539507400003,
+        "frames": 10,
+        "end_s": 92.06337885200037,
+        "last_index": 989
+      },
+      {
+        "start_s": 29.465243321000344,
+        "frames": 6,
+        "end_s": 30.070154298000034,
+        "last_index": 314
+      },
+      {
+        "start_s": 90.43253593400004,
+        "frames": 7,
+        "end_s": 90.9326893110001,
+        "last_index": 976
+      }
+    ],
+    "windows": [
+      {
+        "start": 27.166,
+        "end": 32.533,
+        "frames": 54,
+        "selected": 21,
+        "reasons": {
+          "LOW_REFERENCE_SIMILARITY": 7,
+          "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 7,
+          "CONFIRMED_MULTI_CUE": 21,
+          "PERSON_OVERLAP": 19
+        }
+      },
+      {
+        "start": 70.964,
+        "end": 81.699,
+        "frames": 124,
+        "selected": 119,
+        "reasons": {
+          "PERSON_OVERLAP": 3,
+          "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 2,
+          "CONFIRMED_MULTI_CUE": 119
+        }
+      },
+      {
+        "start": 141.632,
+        "end": 144.264,
+        "frames": 32,
+        "selected": 29,
+        "reasons": {
+          "PERSON_OVERLAP": 1,
+          "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 2,
+          "CONFIRMED_MULTI_CUE": 29
+        }
+      }
+    ]
+  },
+  "capture_eb68f45a3a914ba897f811ba3c0129b5": {
+    "old_selected": 59,
+    "new_selected": 59,
+    "changes": {},
+    "longest_remaining_holds": [
+      {
+        "start_s": 9.669878357000016,
+        "frames": 21,
+        "end_s": 11.27285596799993,
+        "last_index": 113
+      }
+    ],
+    "windows": []
+  }
+}

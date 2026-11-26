@@ -1,0 +1,13 @@
+{
+  "model_filename": "person.pt",
+  "model_class": "DetectionModel",
+  "head_class": "Detect",
+  "model_end2end": true,
+  "head_end2end": true,
+  "task": "detect",
+  "classes": {
+    "0": "person"
+  },
+  "ultralytics_version": "8.4.25",
+  "model_sha256": "cf07f3fac8dfa98a0a6acf2bcc7f22585256015042e494e8b8ed242293f99ab8"
+}

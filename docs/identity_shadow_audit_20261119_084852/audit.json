@@ -1,0 +1,326 @@
+{
+  "capture": {
+    "path": "logs/identity_capture/capture_1b1ecfbd76204aefa35e048b8e6ed40a",
+    "summary": {
+      "complete": true,
+      "frames": 1559,
+      "dropped": 0,
+      "errors": 0,
+      "recorded_bytes": 785762129,
+      "frames_sha256": "abede7d45c4f5da838cd6b89a0b5b4d3f0f53d067d911e912df6f66213d726cd",
+      "max_frames": 3000,
+      "max_bytes": 1000000000,
+      "ground_truth": false
+    },
+    "duration": 166.7490601569998,
+    "interval_s": {
+      "n": 1558,
+      "median": 0.10000675050014252,
+      "p95": 0.19831017154942848,
+      "max": 0.4390479769999729
+    }
+  },
+  "shadow": {
+    "start": {
+      "event": "SHADOW_START",
+      "source": "identity_shadow",
+      "ground_truth": false,
+      "physical_commands": 0,
+      "interval_s": 0.2,
+      "max_age_s": 0.8,
+      "comparison": "same sampled frame; baseline proposal before final motor gates",
+      "additional_inference": true,
+      "wall_time_ns": 1795052982608092029
+    },
+    "stop": {
+      "event": "SHADOW_STOP",
+      "saved": 471,
+      "skipped": 1063,
+      "stale": 10,
+      "different": 70,
+      "physical_commands": 0
+    },
+    "samples": 471,
+    "duration": 164.97314526599985,
+    "interval_s": {
+      "n": 470,
+      "median": 0.29993584199974066,
+      "p95": 0.6515963005999753,
+      "max": 1.5334338470001967
+    },
+    "processing_ms": {
+      "n": 471,
+      "median": 223.00269799961825,
+      "p95": 565.794670500054,
+      "max": 728.2043240002167
+    },
+    "age_ms": {
+      "n": 471,
+      "median": 336.59692000037467,
+      "p95": 622.2421594998195,
+      "max": 790.0183330002619
+    },
+    "categories": {
+      "baseline_only": 59,
+      "both_hold": 177,
+      "shadow_only": 11,
+      "same_candidate": 224
+    },
+    "reasons": {
+      "LOW_REFERENCE_SIMILARITY": 53,
+      "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 34,
+      "CONFIRMED_MULTI_CUE": 235,
+      "PERSON_OVERLAP": 144,
+      "LOW_DETECTION_CONFIDENCE": 5
+    },
+    "sessions": [
+      {
+        "event": "SHADOW_SESSION",
+        "session_id": "82e4e823f86b414199121270cf20db5e",
+        "target_uid": "target_cb71639e4d8f428e82f45ed6d8dea71d",
+        "reference_sha256": "c4f3b2408f4fd80995cbab21f7943f5d068f166ba847b255d5eefc3cb0007daf"
+      },
+      {
+        "event": "SHADOW_SESSION",
+        "session_id": "20c239fe5f1e4bd593a6d819ea26c3cd",
+        "target_uid": "target_cb71639e4d8f428e82f45ed6d8dea71d",
+        "reference_sha256": "c4f3b2408f4fd80995cbab21f7943f5d068f166ba847b255d5eefc3cb0007daf"
+      },
+      {
+        "event": "SHADOW_SESSION",
+        "session_id": "eb8df46942274fd59854f0f24ef958f1",
+        "target_uid": "target_cb71639e4d8f428e82f45ed6d8dea71d",
+        "reference_sha256": "c4f3b2408f4fd80995cbab21f7943f5d068f166ba847b255d5eefc3cb0007daf"
+      },
+      {
+        "event": "SHADOW_SESSION",
+        "session_id": "84cf05d9c66d4db0aa7499726f557e0b",
+        "target_uid": "target_cb71639e4d8f428e82f45ed6d8dea71d",
+        "reference_sha256": "c4f3b2408f4fd80995cbab21f7943f5d068f166ba847b255d5eefc3cb0007daf"
+      },
+      {
+        "event": "SHADOW_SESSION",
+        "session_id": "7d273b5566b046cba205173e6f8a39d0",
+        "target_uid": "target_cb71639e4d8f428e82f45ed6d8dea71d",
+        "reference_sha256": "c4f3b2408f4fd80995cbab21f7943f5d068f166ba847b255d5eefc3cb0007daf"
+      }
+    ],
+    "matched_capture_frames": 471,
+    "metadata_mismatches": [],
+    "difference_spans": [
+      {
+        "category": "baseline_only",
+        "start": 4446.628590845,
+        "first_frame": 1398,
+        "frames": 7,
+        "end": 4449.858068058,
+        "last_frame": 1495,
+        "last_index": 6
+      },
+      {
+        "category": "shadow_only",
+        "start": 4450.591660632,
+        "first_frame": 1517,
+        "frames": 1,
+        "end": 4450.591660632,
+        "last_frame": 1517,
+        "last_index": 8
+      },
+      {
+        "category": "baseline_only",
+        "start": 4456.09050792,
+        "first_frame": 1682,
+        "frames": 1,
+        "end": 4456.09050792,
+        "last_frame": 1682,
+        "last_index": 26
+      },
+      {
+        "category": "baseline_only",
+        "start": 4458.659535925,
+        "first_frame": 1759,
+        "frames": 2,
+        "end": 4458.891780626,
+        "last_frame": 1766,
+        "last_index": 31
+      },
+      {
+        "category": "baseline_only",
+        "start": 4463.093057751,
+        "first_frame": 1892,
+        "frames": 2,
+        "end": 4463.292130646,
+        "last_frame": 1898,
+        "last_index": 42
+      },
+      {
+        "category": "baseline_only",
+        "start": 4465.223929148,
+        "first_frame": 1956,
+        "frames": 19,
+        "end": 4472.559874318,
+        "last_frame": 2176,
+        "last_index": 65
+      },
+      {
+        "category": "shadow_only",
+        "start": 4476.593164413,
+        "first_frame": 2297,
+        "frames": 3,
+        "end": 4477.092619612,
+        "last_frame": 2312,
+        "last_index": 83
+      },
+      {
+        "category": "baseline_only",
+        "start": 4491.526711413,
+        "first_frame": 2745,
+        "frames": 1,
+        "end": 4491.526711413,
+        "last_frame": 2745,
+        "last_index": 142
+      },
+      {
+        "category": "baseline_only",
+        "start": 4528.997373747,
+        "first_frame": 3869,
+        "frames": 13,
+        "end": 4533.86286277,
+        "last_frame": 4015,
+        "last_index": 247
+      },
+      {
+        "category": "shadow_only",
+        "start": 4539.331638527,
+        "first_frame": 4179,
+        "frames": 2,
+        "end": 4539.498025548,
+        "last_frame": 4184,
+        "last_index": 261
+      },
+      {
+        "category": "baseline_only",
+        "start": 4541.634626965,
+        "first_frame": 4248,
+        "frames": 2,
+        "end": 4542.197365469,
+        "last_frame": 4265,
+        "last_index": 267
+      },
+      {
+        "category": "baseline_only",
+        "start": 4551.332539784,
+        "first_frame": 4539,
+        "frames": 9,
+        "end": 4555.332408517,
+        "last_frame": 4659,
+        "last_index": 293
+      },
+      {
+        "category": "baseline_only",
+        "start": 4562.499088166,
+        "first_frame": 4874,
+        "frames": 1,
+        "end": 4562.499088166,
+        "last_frame": 4874,
+        "last_index": 321
+      },
+      {
+        "category": "baseline_only",
+        "start": 4566.568034924,
+        "first_frame": 4996,
+        "frames": 2,
+        "end": 4566.833235761,
+        "last_frame": 5004,
+        "last_index": 330
+      },
+      {
+        "category": "shadow_only",
+        "start": 4599.036405005,
+        "first_frame": 5970,
+        "frames": 5,
+        "end": 4600.069284286,
+        "last_frame": 6001,
+        "last_index": 420
+      }
+    ]
+  },
+  "metrics": {
+    "before": {
+      "frame_age_ms": {
+        "n": 43,
+        "median": 83.97228899957554,
+        "p95": 179.65305390007416,
+        "max": 300.4324640005507
+      },
+      "yolo_ms": {
+        "n": 43,
+        "median": 47.56948700014618,
+        "p95": 95.85894830070174,
+        "max": 109.54551400027412
+      },
+      "reid_ms": {
+        "n": 43,
+        "median": 0.18258300042361952,
+        "p95": 116.59652980024474,
+        "max": 212.04183000008925
+      }
+    },
+    "shadow_sample_interval": {
+      "frame_age_ms": {
+        "n": 156,
+        "median": 79.91953800001284,
+        "p95": 190.68778950054366,
+        "max": 246.3051489994541
+      },
+      "yolo_ms": {
+        "n": 156,
+        "median": 75.97761799979708,
+        "p95": 116.12824324993198,
+        "max": 137.65368800068245
+      },
+      "reid_ms": {
+        "n": 156,
+        "median": 1.276630000120349,
+        "p95": 125.3897579997556,
+        "max": 152.99714999946445
+      }
+    },
+    "after": {
+      "frame_age_ms": {
+        "n": 18,
+        "median": 60.68947149969972,
+        "p95": 149.71562239938976,
+        "max": 151.99387400025444
+      },
+      "yolo_ms": {
+        "n": 18,
+        "median": 34.81999299992822,
+        "p95": 86.48339274982389,
+        "max": 91.07450200008316
+      },
+      "reid_ms": {
+        "n": 18,
+        "median": 0.15994850036804564,
+        "p95": 89.3190944997059,
+        "max": 90.68268999999418
+      }
+    }
+  },
+  "latency": {
+    "retained_start": "2026-11-19T08:51:48.876+07:00",
+    "retained_end": "2026-11-19T08:52:46.664979+07:00",
+    "during": {
+      "n": 489,
+      "median": 59.361885,
+      "p95": 77.1497352,
+      "max": 99.821223
+    },
+    "outside": {
+      "n": 251,
+      "median": 56.360806,
+      "p95": 73.183734,
+      "max": 106.731261
+    }
+  }
+}

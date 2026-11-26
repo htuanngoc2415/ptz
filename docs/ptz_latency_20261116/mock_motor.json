@@ -1,0 +1,46 @@
+{
+  "direction": "pan_right",
+  "step": 1,
+  "requested_duration_s": 0.12,
+  "start_ack": true,
+  "stop_ack": true,
+  "error": null,
+  "events": [
+    {
+      "event": "START_REQUEST",
+      "monotonic_s": 18704.885193314,
+      "wall_time_ns": 1794811235864959296,
+      "direction": "pan_right",
+      "step": 1
+    },
+    {
+      "event": "START_RETURN",
+      "monotonic_s": 18704.885273005,
+      "wall_time_ns": 1794811235865038009,
+      "acknowledged": true,
+      "rpc_ms": 0.07731599907856435
+    },
+    {
+      "event": "STOP_REQUEST",
+      "monotonic_s": 18705.005308041,
+      "wall_time_ns": 1794811235985074792,
+      "cancelled": false
+    },
+    {
+      "event": "STOP_RETURN",
+      "monotonic_s": 18705.005414691,
+      "wall_time_ns": 1794811235985179626,
+      "acknowledged": true,
+      "rpc_ms": 0.10239000039291568
+    }
+  ],
+  "physical_motor_stopped": null,
+  "angular_displacement_deg": null,
+  "startup_delay_s": null,
+  "acceleration_deg_s2": null,
+  "deceleration_deg_s2": null,
+  "video_timestamps": null,
+  "physical": false,
+  "device": null,
+  "operator_observed_safe": false
+}

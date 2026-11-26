@@ -1,0 +1,360 @@
+{
+  "timestamp": "2026-10-08T09:29:40.136459+07:00",
+  "read_only": true,
+  "responses": {
+    "magicBox.getSystemInfo": {
+      "result": true,
+      "error": null,
+      "params": {
+        "appAutoStart": true,
+        "deviceType": "IP Camera",
+        "hardwareVersion": "1.00",
+        "processor": "NT98529",
+        "serialNumber": "MF0743PAZ00081",
+        "updateSerial": "SCZ8032KI"
+      }
+    },
+    "magicBox.getSoftwareVersion": {
+      "result": true,
+      "error": null,
+      "params": {
+        "version": {
+          "Build": "20250908",
+          "BuildDate": "2025-09-08",
+          "Version": "1.000.0000.0.R",
+          "WebVersion": "1.0.0.9557"
+        }
+      }
+    },
+    "ptz.getStatus": {
+      "result": true,
+      "error": null,
+      "params": {
+        "status": {
+          "Foci": 74,
+          "Focus": {
+            "Focus": {
+              "FocusPosition": 0.0,
+              "Status": "Unknown"
+            }
+          },
+          "FocusPosition": 0.0,
+          "FocusStatus": "Idle",
+          "HFov": 0,
+          "Iris": {
+            "Iris": {
+              "IrisValue": 0.0,
+              "Status": "Unknown"
+            }
+          },
+          "PTZFocusHD": 2048,
+          "PTZZoomHD": 1043,
+          "PanAngleHD": 0,
+          "PanAngleHHD": 0.0,
+          "PanStatus": "Idle",
+          "Postion": [
+            0.0,
+            -0.0,
+            0.06365966796875
+          ],
+          "TiltAngleHD": 0,
+          "TiltAngleHHD": 0.0,
+          "TiltStatus": "Idle",
+          "VFov": 0,
+          "ZoomStatus": "Idle",
+          "ZoomValue": 11
+        }
+      }
+    },
+    "ptz.getCurrentProtocolCaps": {
+      "result": true,
+      "error": null,
+      "params": {
+        "caps": {
+          "AlarmLen": 0,
+          "AutoPan": true,
+          "AutoPanMax": 1,
+          "AutoPanMin": 1,
+          "AutoScan": true,
+          "AutoScanComplex": false,
+          "AutoScanMax": 5,
+          "AutoScanMin": 1,
+          "AuxMax": 8,
+          "AuxMin": 1,
+          "CamAddrMax": 255,
+          "CamAddrMin": 1,
+          "Focus": true,
+          "HighAuxMask": 0,
+          "IdleMotion": {
+            "Support": true
+          },
+          "Internal": 200,
+          "Iris": true,
+          "Light": true,
+          "LowAuxMask": 0,
+          "Menu": false,
+          "MonAddrMax": 255,
+          "MonAddrMin": 0,
+          "Move": [
+            "Absolutely",
+            "Directly",
+            "Relatively"
+          ],
+          "MoveAbsolutely": {
+            "PTZ": [
+              "Pan",
+              "Tile",
+              "Zoom"
+            ]
+          },
+          "Name": "PELCOD",
+          "PTZShake": {
+            "Support": false
+          },
+          "Pan": true,
+          "PanSpeedMax": 63,
+          "PanSpeedMin": 1,
+          "Pattern": true,
+          "PatternMax": 5,
+          "PatternMin": 1,
+          "Photoresistor": false,
+          "PowerUp": {
+            "Support": true
+          },
+          "Preset": true,
+          "PresetMax": 255,
+          "PresetMin": 0,
+          "PrivacyMasking": {
+            "SetColorSupport": false,
+            "Support": false,
+            "SupportCount": 24
+          },
+          "PtzAutoMovement": {
+            "Action": [
+              "Preset",
+              "Tour",
+              "Pattern",
+              "AutoScan"
+            ],
+            "Support": true,
+            "SupportSnapShot": false,
+            "TaskNum": 4
+          },
+          "PtzCrane": {
+            "Support": false
+          },
+          "PtzDefog": {
+            "Support": true,
+            "SupportOSD": [
+              false
+            ]
+          },
+          "PtzDefrost": {
+            "Support": false
+          },
+          "PtzElevation": {
+            "AngleRange": [
+              0,
+              -200
+            ],
+            "Support": false
+          },
+          "PtzFan": {
+            "Support": false
+          },
+          "PtzFunctionMenu": {
+            "Support": true,
+            "SupportOSDMenu": false
+          },
+          "PtzHeater": {
+            "Support": false,
+            "SupportOSD": [
+              false
+            ]
+          },
+          "PtzLimit": {
+            "DownSupport": false,
+            "LeftSupport": false,
+            "RightSupport": false,
+            "Support": false,
+            "UpSupport": false
+          },
+          "PtzMotionRange": {
+            "HorizontalAngle": [
+              0,
+              360
+            ],
+            "VerticalAngle": [
+              -90,
+              90
+            ]
+          },
+          "PtzOperationStatus": {
+            "Support": false
+          },
+          "PtzThermalCamera": {
+            "Control": false,
+            "Support": false
+          },
+          "RemovePreset": true,
+          "RemoveTour": true,
+          "ScanTour": false,
+          "ScanTourMax": 0,
+          "ScanTourMin": 0,
+          "SupportFocusMode": null,
+          "SupportLensFovOSD": false,
+          "SupportLensInit": true,
+          "SupportPTZCoordinates": true,
+          "SupportPTZOSDMenu": true,
+          "SupportPTZZoom": true,
+          "SupportPtzPatternOSD": false,
+          "SupportPtzRS485DetectOSD": false,
+          "SupportRegionFocus": true,
+          "SupportRestartCam": false,
+          "SupportViewRangeType": null,
+          "Tile": true,
+          "TileSpeedMax": 63,
+          "TileSpeedMin": 1,
+          "Tour": true,
+          "TourMax": 8,
+          "TourMin": 1,
+          "Type": 1,
+          "VoltageStatus": {
+            "Support": false
+          },
+          "Wiper": true,
+          "Zoom": true,
+          "lowMask": 29048815
+        }
+      }
+    },
+    "ptz.isMoving": {
+      "result": true,
+      "error": null,
+      "params": {
+        "moving": false
+      }
+    },
+    "ptz.listMethod": {
+      "result": true,
+      "error": null,
+      "params": {
+        "method": [
+          "ptz.factory.instance",
+          "ptz.destroy",
+          "ptz.factory.getCollect",
+          "ptz.getProtocolList",
+          "ptz.getProtocol",
+          "ptz.getCurrentProtocolCaps",
+          "ptz.reset",
+          "ptz.moveAbsolutely",
+          "ptz.moveRelatively",
+          "ptz.moveDirectly",
+          "ptz.moveContinuously",
+          "ptz.stopMove",
+          "ptz.isMoving",
+          "ptz.getStatus",
+          "ptz.attachStatusProc",
+          "ptz.detachStatusProc",
+          "ptz.setFocusMode",
+          "ptz.setFocusPoint",
+          "ptz.focusManually",
+          "ptz.setIrisMode",
+          "ptz.setIrisValue",
+          "ptz.adjustIris",
+          "ptz.setPreset",
+          "ptz.getPresets",
+          "ptz.gotoPreset",
+          "ptz.removePreset",
+          "ptz.setHomePosition",
+          "ptz.gotoHomePosition",
+          "ptz.setTour",
+          "ptz.getTours",
+          "ptz.removeTour",
+          "ptz.addTourPoint",
+          "ptz.removeTourPoint",
+          "ptz.getTourPoints",
+          "ptz.startTour",
+          "ptz.autoTour",
+          "ptz.stopTour",
+          "ptz.startPatternRecord",
+          "ptz.stopPatternRecord",
+          "ptz.getPatterns",
+          "ptz.removePattern",
+          "ptz.startPatternReplay",
+          "ptz.stopPatternReplay",
+          "ptz.menuControl",
+          "ptz.auxControl",
+          "ptz.start",
+          "ptz.stop",
+          "ptz.focusContinuously",
+          "ptz.stopFocus",
+          "ptz.listMethod",
+          "ptz.getMotorSteps",
+          "ptz.setMotorSteps",
+          "ptz.continueMoveDirectly",
+          "ptz.focusAbsolutely",
+          "ptz.focusRelatively",
+          "ptz.setScanLimit",
+          "ptz.startScan",
+          "ptz.stopScan",
+          "ptz.moveAutoPan",
+          "ptz.restartPtz",
+          "ptz.restartCamera",
+          "ptz.markLimit",
+          "ptz.gotoLimit",
+          "ptz.enableLimit",
+          "ptz.attachViewRangeStatus",
+          "ptz.detachViewRangeStatus",
+          "ptz.attachWeatherInfo",
+          "ptz.detachWeatherInfo",
+          "ptz.setViewRange",
+          "ptz.getViewRangeStatus",
+          "ptz.focusRegion",
+          "ptz.setDirection",
+          "ptz.lensInit",
+          "ptz.directionCalibration",
+          "ptz.getOperationStatus",
+          "ptz.getStartupStatus",
+          "ptz.getLifetimeEncrypt",
+          "ptz.setStatisticPlan",
+          "ptz.gotoStatisticPlan"
+        ]
+      }
+    },
+    "configManager.getConfig": {
+      "result": true,
+      "error": null,
+      "params": {
+        "table": [
+          [
+            {
+              "AutoFocusTrace": 0,
+              "FocusLimit": 5000,
+              "FocusLimitSelectMode": "Auto",
+              "IRCorrection": 2,
+              "Mode": 3,
+              "Sensitivity": 1
+            },
+            {
+              "AutoFocusTrace": 0,
+              "FocusLimit": 5000,
+              "FocusLimitSelectMode": "Auto",
+              "IRCorrection": 2,
+              "Mode": 3,
+              "Sensitivity": 1
+            },
+            {
+              "AutoFocusTrace": 0,
+              "FocusLimit": 5000,
+              "FocusLimitSelectMode": "Auto",
+              "IRCorrection": 2,
+              "Mode": 3,
+              "Sensitivity": 1
+            }
+          ]
+        ]
+      }
+    }
+  }
+}

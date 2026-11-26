@@ -1,0 +1,61 @@
+{
+  "source_created": [
+    "ptz/runtime/identity_tracking.py",
+    "ptz/ai/identity_manager.py",
+    "ptz/ai/reid/trusted_gallery.py",
+    "ptz/tools/identity_replay.py",
+    "ptz/tools/identity_report.py",
+    "ptz/tools/annotate_identity_replay.py",
+    "ptz/test/test_identity_tracking.py"
+  ],
+  "source_modified": [
+    "ptz/config.py",
+    "ptz/gui/cctv_app.py",
+    "ptz/runtime/inference_worker.py",
+    "ptz/ai/reid_target.py",
+    "ptz/runtime/face_worker.py"
+  ],
+  "source_backup": ".hotfix_checkpoints/identity_tracking_20261116",
+  "documentation": [
+    "ptz/docs/identity_tracking_20261116/audit.md",
+    "ptz/docs/identity_tracking_20261116/implementation_report.md"
+  ],
+  "cached_data": [
+    "ptz/logs/identity_replay_nov16",
+    "ptz/logs/identity_replay_cpu_smoke"
+  ],
+  "sha256": {
+    "ptz/config.py": "210ecd82d7ad1311a7332121b303ebd6f62ea71a41b4d2ea1a9ae8ee59dd7602",
+    "ptz/gui/cctv_app.py": "2f3121eb26f12c17801bec9d8bc8a003e69d590574004d781c5e122d41ee502a",
+    "ptz/runtime/inference_worker.py": "ca56fd57127399d568e31d9508e50fce8cabc482a835f4872618fe5e31301dc7",
+    "ptz/ai/reid_target.py": "bf504bcb980c47ff8ed5723bb0e25455e9399f4475b6870b6c615115e5a45182",
+    "ptz/runtime/face_worker.py": "12b08edec5c835ac982fd516484e793206df92fbb5955341d749860bc9be23b8",
+    "ptz/runtime/identity_tracking.py": "b1c50a0a2f68a5dcde046e7b650bd0bf803a231668c7b8d89bca0552244484a4",
+    "ptz/ai/identity_manager.py": "864b8804b26f2d28279ef73b3d3945f22815cb75006121d9c014d188365f9e65",
+    "ptz/ai/reid/trusted_gallery.py": "b656be28e09bc2a4db4f48955a9d16e14db2478e87ea439b2bfba8c95c82fca6",
+    "ptz/tools/identity_replay.py": "cea04e5884a9472e67070f94e4106a5bc7c8e17c4009e039b12fe07d2df070e6",
+    "ptz/tools/identity_report.py": "38e15f219e6b2665becb31af3d533364f049d8bc6114b38adf061c87c9bcdb95",
+    "ptz/tools/annotate_identity_replay.py": "9256e040d1d8e2c822b02810630dff2f64df77ce5f14acf2c05c6316fbbcd909",
+    "ptz/test/test_identity_tracking.py": "e89c7620d621c1fdeb9ea8f7828026c97fe18f35d3bd8e8732c4c58701333c07"
+  },
+  "validation_artifacts": [
+    "ptz/docs/identity_tracking_20261116/cpu_smoke.json",
+    "ptz/docs/identity_tracking_20261116/cpu_smoke.log",
+    "ptz/docs/identity_tracking_20261116/cpu_smoke_identity_decisions.jsonl",
+    "ptz/docs/identity_tracking_20261116/cpu_smoke_legacy_decisions.jsonl",
+    "ptz/docs/identity_tracking_20261116/final_scoped.log",
+    "ptz/docs/identity_tracking_20261116/implementation.patch",
+    "ptz/docs/identity_tracking_20261116/legacy_log_schema_check.json",
+    "ptz/docs/identity_tracking_20261116/nov16_annotations.jsonl",
+    "ptz/docs/identity_tracking_20261116/nov16_replay.json",
+    "ptz/docs/identity_tracking_20261116/nov16_replay.log",
+    "ptz/docs/identity_tracking_20261116/nov16_replay_identity_decisions.jsonl",
+    "ptz/docs/identity_tracking_20261116/nov16_replay_legacy_decisions.jsonl",
+    "ptz/docs/identity_tracking_20261116/regression.log",
+    "ptz/docs/identity_tracking_20261116/synthetic_replay.json",
+    "ptz/docs/identity_tracking_20261116/synthetic_replay.log",
+    "ptz/docs/identity_tracking_20261116/synthetic_replay_identity_decisions.jsonl",
+    "ptz/docs/identity_tracking_20261116/synthetic_replay_legacy_decisions.jsonl",
+    "ptz/docs/identity_tracking_20261116/unit.log"
+  ]
+}

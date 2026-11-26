@@ -1,0 +1,15 @@
+{
+  "identical": true,
+  "sections_equal": {
+    "scope": true,
+    "frames": true,
+    "transitions": true,
+    "effective_config": true,
+    "model_sha256": true,
+    "source_config_sha256": true
+  },
+  "observations": 127,
+  "transitions": 7,
+  "config_values": 153,
+  "models": 6
+}

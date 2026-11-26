@@ -1,0 +1,4 @@
+{"event": "START_REQUEST", "monotonic_s": 24563.010169558, "wall_time_ns": 1794824061883253769, "direction": "pan_right", "step": 1}
+{"event": "START_RETURN", "monotonic_s": 24563.010228644, "wall_time_ns": 1794824061883311388, "acknowledged": true, "rpc_ms": 0.05713099744752981}
+{"event": "STOP_REQUEST", "monotonic_s": 24563.130293546, "wall_time_ns": 1794824062003378665, "cancelled": false}
+{"event": "STOP_RETURN", "monotonic_s": 24563.13037128, "wall_time_ns": 1794824062003454443, "acknowledged": true, "rpc_ms": 0.07493999873986468}

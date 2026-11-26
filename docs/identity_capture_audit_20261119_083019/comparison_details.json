@@ -1,0 +1,201 @@
+{
+  "comparison_counts": {
+    "both_none": 154,
+    "same_candidate": 1270,
+    "baseline_only": 243
+  },
+  "spans": [
+    {
+      "category": "both_none",
+      "first_frame": 933,
+      "start_s": 0.0,
+      "frames": 10,
+      "last_frame": 972,
+      "end_s": 1.2991726240002208
+    },
+    {
+      "category": "same_candidate",
+      "first_frame": 975,
+      "start_s": 1.3974563910001052,
+      "frames": 115,
+      "last_frame": 1296,
+      "end_s": 12.097053458000119
+    },
+    {
+      "category": "both_none",
+      "first_frame": 1299,
+      "start_s": 12.198897334000321,
+      "frames": 10,
+      "last_frame": 1339,
+      "end_s": 13.533151145000375
+    },
+    {
+      "category": "same_candidate",
+      "first_frame": 1344,
+      "start_s": 13.7008083540004,
+      "frames": 149,
+      "last_frame": 1745,
+      "end_s": 27.064924180000162
+    },
+    {
+      "category": "baseline_only",
+      "first_frame": 1748,
+      "start_s": 27.16678335200004,
+      "frames": 54,
+      "last_frame": 1909,
+      "end_s": 32.532887439000206
+    },
+    {
+      "category": "both_none",
+      "first_frame": 1914,
+      "start_s": 32.699340438000036,
+      "frames": 131,
+      "last_frame": 2312,
+      "end_s": 45.963093180000214
+    },
+    {
+      "category": "same_candidate",
+      "first_frame": 2317,
+      "start_s": 46.133514583000306,
+      "frames": 115,
+      "last_frame": 2627,
+      "end_s": 56.46582192100004
+    },
+    {
+      "category": "both_none",
+      "first_frame": 2629,
+      "start_s": 56.53239282600043,
+      "frames": 3,
+      "last_frame": 2637,
+      "end_s": 56.800545759000215
+    },
+    {
+      "category": "same_candidate",
+      "first_frame": 2642,
+      "start_s": 56.96765806300027,
+      "frames": 157,
+      "last_frame": 3058,
+      "end_s": 70.83482033900009
+    },
+    {
+      "category": "baseline_only",
+      "first_frame": 3062,
+      "start_s": 70.96444254900007,
+      "frames": 124,
+      "last_frame": 3384,
+      "end_s": 81.6988841350003
+    },
+    {
+      "category": "same_candidate",
+      "first_frame": 3387,
+      "start_s": 81.80381354600013,
+      "frames": 102,
+      "last_frame": 3643,
+      "end_s": 90.33069694599999
+    },
+    {
+      "category": "baseline_only",
+      "first_frame": 3646,
+      "start_s": 90.43253593400004,
+      "frames": 7,
+      "last_frame": 3661,
+      "end_s": 90.9326893110001
+    },
+    {
+      "category": "same_candidate",
+      "first_frame": 3664,
+      "start_s": 91.03218804500011,
+      "frames": 3,
+      "last_frame": 3669,
+      "end_s": 91.19894136400035
+    },
+    {
+      "category": "baseline_only",
+      "first_frame": 3671,
+      "start_s": 91.26539507400003,
+      "frames": 10,
+      "last_frame": 3695,
+      "end_s": 92.06337885200037
+    },
+    {
+      "category": "same_candidate",
+      "first_frame": 3697,
+      "start_s": 92.14685381300023,
+      "frames": 11,
+      "last_frame": 3721,
+      "end_s": 92.93141088100037
+    },
+    {
+      "category": "baseline_only",
+      "first_frame": 3724,
+      "start_s": 93.03121810500033,
+      "frames": 3,
+      "last_frame": 3729,
+      "end_s": 93.19815573599999
+    },
+    {
+      "category": "same_candidate",
+      "first_frame": 3732,
+      "start_s": 93.30142012200031,
+      "frames": 117,
+      "last_frame": 4025,
+      "end_s": 103.0690618460003
+    },
+    {
+      "category": "baseline_only",
+      "first_frame": 4027,
+      "start_s": 103.1327235660001,
+      "frames": 3,
+      "last_frame": 4031,
+      "end_s": 103.26623847100018
+    },
+    {
+      "category": "same_candidate",
+      "first_frame": 4035,
+      "start_s": 103.39874178900027,
+      "frames": 442,
+      "last_frame": 5179,
+      "end_s": 141.53516700800037
+    },
+    {
+      "category": "baseline_only",
+      "first_frame": 5182,
+      "start_s": 141.632246915,
+      "frames": 32,
+      "last_frame": 5261,
+      "end_s": 144.26322513000014
+    },
+    {
+      "category": "same_candidate",
+      "first_frame": 5262,
+      "start_s": 144.2988132280002,
+      "frames": 59,
+      "last_frame": 5404,
+      "end_s": 149.0310564260003
+    },
+    {
+      "category": "baseline_only",
+      "first_frame": 5407,
+      "start_s": 149.13596719000043,
+      "frames": 10,
+      "last_frame": 5430,
+      "end_s": 149.8997722070003
+    }
+  ],
+  "identity_reasons": {
+    "LOW_REFERENCE_SIMILARITY": 245,
+    "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 23,
+    "CONFIRMED_MULTI_CUE": 1270,
+    "PERSON_OVERLAP": 116,
+    "LOW_DETECTION_CONFIDENCE": 13
+  },
+  "identity_states": {
+    "AMBIGUOUS": 374,
+    "VISIBLE_UNVERIFIED": 23,
+    "CONFIRMED_VISIBLE": 1270
+  },
+  "live_selected": 1512,
+  "replay_live_selection_agreements": 1666,
+  "physical_commands": 0,
+  "ground_truth": false
+}

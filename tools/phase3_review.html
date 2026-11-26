@@ -1,0 +1,24 @@
+<!doctype html><meta charset="utf-8"><title>Phase 3 manual bbox review</title>
+<style>body{font:16px sans-serif;max-width:1100px;margin:auto}canvas{max-width:100%;border:1px solid}button,input,select{margin:5px}p{line-height:1.4}</style>
+<h1>Phase 3 — nhãn thủ công</h1><p>Chọn cùng một người qua các frame. Kéo bbox trực tiếp trên ảnh; không có bbox dự đoán hoặc nội suy. UNKNOWN không được tính là nhãn. Khi che hoàn toàn/ra ngoài ảnh, bỏ bbox. File export cần được lưu; trang không tự lưu.</p>
+<label>Người duyệt <input id="reviewer"></label><input type="file" id="importer" accept=".json"><button id="save">Export JSON</button><br>
+<button id="prev">←</button><input type="number" id="index" min="0" value="0"><button id="next">→</button><span id="info"></span><br>
+<label>Visibility <select id="visibility"><option>UNKNOWN</option><option>visible</option><option>partial</option><option>full_occlusion</option><option>out_of_frame</option></select></label>
+<label>Camera <select id="camera_motion"><option>UNKNOWN</option><option>static</option><option>pan</option><option>tilt</option><option>zoom</option><option>mixed</option></select></label>
+<label>Identity <select id="identity"><option>UNKNOWN</option><option>target</option><option>distractor</option></select></label>
+<label>Event <select id="event"><option>UNKNOWN</option><option>lateral</option><option>speed_change</option><option>turn</option><option>approach</option><option>crossing</option><option>occlusion</option><option>border</option><option>blur</option><option>similar_person</option></select></label>
+<button id="clear">Xóa bbox</button><button id="mark">Đánh dấu đã duyệt</button><br><canvas id="canvas"></canvas>
+<script>
+let pack=/*PACK*/, n=0, image=new Image(), start=null;
+const $=id=>document.getElementById(id), canvas=$('canvas'),ctx=canvas.getContext('2d');
+const fields=['visibility','camera_motion','identity','event'];
+function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(image,0,0);let b=pack.rows[n].bbox;if(b){ctx.strokeStyle='orange';ctx.lineWidth=2;ctx.strokeRect(b[0],b[1],b[2]-b[0],b[3]-b[1]);}}
+function show(){n=Math.max(0,Math.min(pack.rows.length-1,n));let r=pack.rows[n];$('index').value=n;$('info').textContent=`frame ${r.frame_id} | ${r.media_timestamp.toFixed(3)}s | reviewed=${r.reviewed}`;fields.forEach(f=>$(f).value=r[f]);canvas.width=pack.width;canvas.height=pack.height;image.onload=draw;image.src=r.image;}
+function point(e){let b=canvas.getBoundingClientRect();return [Math.max(0,Math.min(canvas.width,(e.clientX-b.left)*canvas.width/b.width)),Math.max(0,Math.min(canvas.height,(e.clientY-b.top)*canvas.height/b.height))];}
+canvas.onpointerdown=e=>{start=point(e);canvas.setPointerCapture(e.pointerId);};canvas.onpointerup=e=>{if(!start)return;let end=point(e);pack.rows[n].bbox=[Math.min(start[0],end[0]),Math.min(start[1],end[1]),Math.max(start[0],end[0]),Math.max(start[1],end[1])];pack.rows[n].reviewed=false;start=null;draw();};
+fields.forEach(f=>$(f).onchange=()=>{pack.rows[n][f]=$(f).value;pack.rows[n].reviewed=false;});
+$('prev').onclick=()=>{n--;show();};$('next').onclick=()=>{n++;show();};$('index').onchange=()=>{n=Number($('index').value);show();};$('clear').onclick=()=>{pack.rows[n].bbox=null;pack.rows[n].reviewed=false;draw();};
+$('mark').onclick=()=>{let r=pack.rows[n];if(!$('reviewer').value.trim()||r.visibility==='UNKNOWN'||r.identity==='UNKNOWN'){alert('Cần reviewer, visibility và identity');return;}if(['visible','partial'].includes(r.visibility)&&(!r.bbox||r.bbox[2]<=r.bbox[0]||r.bbox[3]<=r.bbox[1])){alert('Cần bbox hợp lệ');return;}if(['full_occlusion','out_of_frame'].includes(r.visibility)&&r.bbox){alert('Xóa bbox khi không nhìn thấy target');return;}r.reviewed=true;show();};
+$('save').onclick=()=>{pack.reviewer=$('reviewer').value.trim();let u=URL.createObjectURL(new Blob([JSON.stringify(pack,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=u;a.download='manual_bbox.json';a.click();URL.revokeObjectURL(u);};
+$('importer').onchange=async()=>{try{let p=JSON.parse(await $('importer').files[0].text());if(p.schema!==pack.schema||p.source_sha256!==pack.source_sha256||p.width!==pack.width||p.height!==pack.height||p.rows.length!==pack.rows.length||p.rows.some((r,i)=>r.frame_id!==pack.rows[i].frame_id||r.image!==pack.rows[i].image))throw Error('Pack mismatch');pack=p;$('reviewer').value=p.reviewer;show();}catch(e){alert(e.message);}};show();
+</script>

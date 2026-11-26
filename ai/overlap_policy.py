@@ -5,7 +5,16 @@ from ai.reid_target import iou
 def overlap_geometry(a,b):
     area=lambda box:max(0,box[2]-box[0])*max(0,box[3]-box[1])
     inter=max(0,min(a[2],b[2])-max(a[0],b[0]))*max(0,min(a[3],b[3])-max(a[1],b[1]))
-    return dict(iou=iou(a,b),overlap=inter/max(1,min(area(a),area(b))),target_cover=inter/max(1,area(a)))
+    return dict(iou=iou(a,b),overlap=inter/max(1,min(area(a),area(b))),target_cover=inter/max(1,area(a)),
+                competitor_cover=inter/max(1,area(b)))
+
+def minor_contact(geometry, cfg):
+    """Both crops must remain mostly uncontaminated; containment is not minor."""
+    return (getattr(cfg, 'REID_MINOR_OVERLAP_ENABLED', False)
+            and geometry['target_cover'] <= cfg.REID_MINOR_TARGET_COVER
+            and geometry['competitor_cover'] <= cfg.REID_MINOR_COMPETITOR_COVER
+            and geometry['iou'] <= cfg.REID_MINOR_IOU)
+
 
 class OverlapMemory:
     def __init__(self):self.reset()
@@ -15,7 +24,8 @@ class OverlapMemory:
         cfg=selector.cfg;box=candidate['bbox']
         conflicts=[(p,overlap_geometry(box,p['bbox'])) for p in persons
             if p is not candidate and not (p.get('track_id')==candidate.get('track_id') and tuple(p['bbox'])==tuple(box))]
-        conflicts=[(p,g) for p,g in conflicts if g['overlap']>=cfg.REID_CROSSING_OVERLAP]
+        conflicts=[(p,g) for p,g in conflicts if g['overlap']>=cfg.REID_CROSSING_OVERLAP
+                   and not minor_contact(g, cfg)]
         key=(selector.lock_session_id,selector.track_id)
         if key!=self.key:self.reset();self.key=key
         if not conflicts:self.reset();self.key=key;return False,'NO_OVERLAP'

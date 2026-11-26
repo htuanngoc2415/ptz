@@ -1,0 +1,4 @@
+Would restore camera/hanet_controller.py
+Would restore camera/hanet_ack.py
+Would restore camera/hanet_rpc.py
+Tracking, configuration, models, logs and motor checkpoints are untouched.

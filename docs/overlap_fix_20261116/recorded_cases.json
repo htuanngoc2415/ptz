@@ -1,0 +1,2337 @@
+[
+  {
+    "marker": "2026-11-16T11:55:26.073+07:00",
+    "frame_id": 2870,
+    "observation_time": 12395.022978524,
+    "persons": [
+      {
+        "track_id": 41,
+        "bbox": [
+          123,
+          76,
+          270,
+          475
+        ],
+        "confidence": 0.9366599917411804
+      },
+      {
+        "track_id": 40,
+        "bbox": [
+          447,
+          0,
+          491,
+          143
+        ],
+        "confidence": 0.5502880811691284
+      },
+      {
+        "track_id": 51,
+        "bbox": [
+          131,
+          1,
+          207,
+          95
+        ],
+        "confidence": 0.842375636100769
+      },
+      {
+        "track_id": 52,
+        "bbox": [
+          675,
+          0,
+          704,
+          73
+        ],
+        "confidence": 0.17273394763469696
+      }
+    ],
+    "target_id": 41,
+    "session": "lock_da9104563e874bd6984b8713a1b3bd6e",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12394.724468939,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:55:26.613+07:00",
+    "frame_id": 2887,
+    "observation_time": 12395.592547508,
+    "persons": [
+      {
+        "track_id": 41,
+        "bbox": [
+          134,
+          66,
+          281,
+          472
+        ],
+        "confidence": 0.9244372248649597
+      },
+      {
+        "track_id": 40,
+        "bbox": [
+          471,
+          2,
+          512,
+          144
+        ],
+        "confidence": 0.20668639242649078
+      },
+      {
+        "track_id": 51,
+        "bbox": [
+          155,
+          0,
+          235,
+          99
+        ],
+        "confidence": 0.8892309069633484
+      }
+    ],
+    "target_id": 41,
+    "session": "lock_da9104563e874bd6984b8713a1b3bd6e",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12394.724468939,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:55:27.189+07:00",
+    "frame_id": 2904,
+    "observation_time": 12396.162337684,
+    "persons": [
+      {
+        "track_id": 41,
+        "bbox": [
+          149,
+          67,
+          296,
+          466
+        ],
+        "confidence": 0.9054107666015625
+      },
+      {
+        "track_id": 40,
+        "bbox": [
+          486,
+          2,
+          534,
+          146
+        ],
+        "confidence": 0.1944931298494339
+      },
+      {
+        "track_id": 51,
+        "bbox": [
+          171,
+          0,
+          249,
+          85
+        ],
+        "confidence": 0.8741991519927979
+      }
+    ],
+    "target_id": 41,
+    "session": "lock_da9104563e874bd6984b8713a1b3bd6e",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12394.724468939,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:55:27.729+07:00",
+    "frame_id": 2921,
+    "observation_time": 12396.724380154,
+    "persons": [
+      {
+        "track_id": 41,
+        "bbox": [
+          153,
+          68,
+          294,
+          466
+        ],
+        "confidence": 0.9078371524810791
+      },
+      {
+        "track_id": 40,
+        "bbox": [
+          486,
+          1,
+          532,
+          146
+        ],
+        "confidence": 0.5988360643386841
+      },
+      {
+        "track_id": 51,
+        "bbox": [
+          169,
+          0,
+          246,
+          83
+        ],
+        "confidence": 0.8352510929107666
+      }
+    ],
+    "target_id": 41,
+    "session": "lock_da9104563e874bd6984b8713a1b3bd6e",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12394.724468939,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:55:28.256+07:00",
+    "frame_id": 2937,
+    "observation_time": 12397.256664891,
+    "persons": [
+      {
+        "track_id": 41,
+        "bbox": [
+          151,
+          69,
+          293,
+          465
+        ],
+        "confidence": 0.8952565789222717
+      },
+      {
+        "track_id": 40,
+        "bbox": [
+          486,
+          4,
+          529,
+          146
+        ],
+        "confidence": 0.522947371006012
+      },
+      {
+        "track_id": 51,
+        "bbox": [
+          167,
+          1,
+          247,
+          83
+        ],
+        "confidence": 0.8732249736785889
+      }
+    ],
+    "target_id": 41,
+    "session": "lock_da9104563e874bd6984b8713a1b3bd6e",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12394.724468939,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:55:28.763+07:00",
+    "frame_id": 2952,
+    "observation_time": 12397.758714935,
+    "persons": [
+      {
+        "track_id": 41,
+        "bbox": [
+          140,
+          71,
+          266,
+          474
+        ],
+        "confidence": 0.9369364976882935
+      },
+      {
+        "track_id": 40,
+        "bbox": [
+          486,
+          4,
+          528,
+          146
+        ],
+        "confidence": 0.5425797700881958
+      },
+      {
+        "track_id": 51,
+        "bbox": [
+          167,
+          0,
+          244,
+          120
+        ],
+        "confidence": 0.922358512878418
+      }
+    ],
+    "target_id": 41,
+    "session": "lock_da9104563e874bd6984b8713a1b3bd6e",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12394.724468939,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:55:29.323+07:00",
+    "frame_id": 2968,
+    "observation_time": 12398.293533717,
+    "persons": [
+      {
+        "track_id": 41,
+        "bbox": [
+          102,
+          79,
+          259,
+          470
+        ],
+        "confidence": 0.9174768924713135
+      },
+      {
+        "track_id": 40,
+        "bbox": [
+          485,
+          0,
+          528,
+          147
+        ],
+        "confidence": 0.6510836482048035
+      },
+      {
+        "track_id": 51,
+        "bbox": [
+          168,
+          1,
+          244,
+          142
+        ],
+        "confidence": 0.9369001984596252
+      }
+    ],
+    "target_id": 41,
+    "session": "lock_da9104563e874bd6984b8713a1b3bd6e",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12394.724468939,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:55:30.080+07:00",
+    "frame_id": 2991,
+    "observation_time": 12399.056502691,
+    "persons": [
+      {
+        "track_id": 53,
+        "bbox": [
+          171,
+          0,
+          248,
+          145
+        ],
+        "confidence": 0.9277075529098511
+      },
+      {
+        "track_id": 54,
+        "bbox": [
+          67,
+          88,
+          202,
+          473
+        ],
+        "confidence": 0.8828266263008118
+      },
+      {
+        "track_id": 55,
+        "bbox": [
+          485,
+          0,
+          529,
+          147
+        ],
+        "confidence": 0.7184412479400635
+      }
+    ],
+    "target_id": 53,
+    "session": "lock_5c40847e37a440cdb9d9e75033251a5b",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12398.861343827,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:55:30.886+07:00",
+    "frame_id": 3015,
+    "observation_time": 12399.855955637,
+    "persons": [
+      {
+        "track_id": 53,
+        "bbox": [
+          179,
+          0,
+          261,
+          145
+        ],
+        "confidence": 0.91804039478302
+      },
+      {
+        "track_id": 54,
+        "bbox": [
+          80,
+          84,
+          226,
+          469
+        ],
+        "confidence": 0.8849964737892151
+      },
+      {
+        "track_id": 55,
+        "bbox": [
+          500,
+          8,
+          549,
+          148
+        ],
+        "confidence": 0.7242757678031921
+      }
+    ],
+    "target_id": 53,
+    "session": "lock_5c40847e37a440cdb9d9e75033251a5b",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12399.056502691,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:55:31.423+07:00",
+    "frame_id": 3031,
+    "observation_time": 12400.389971982,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          103,
+          80,
+          265,
+          463
+        ],
+        "confidence": 0.9281482100486755
+      },
+      {
+        "track_id": 55,
+        "bbox": [
+          522,
+          3,
+          569,
+          150
+        ],
+        "confidence": 0.6506320238113403
+      },
+      {
+        "track_id": 53,
+        "bbox": [
+          201,
+          0,
+          278,
+          142
+        ],
+        "confidence": 0.7869774699211121
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_5c40847e37a440cdb9d9e75033251a5b",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12399.056502691,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:55:33.252+07:00",
+    "frame_id": 3086,
+    "observation_time": 12402.224660014,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          79,
+          56,
+          202,
+          434
+        ],
+        "confidence": 0.9415438771247864
+      },
+      {
+        "track_id": 55,
+        "bbox": [
+          538,
+          0,
+          585,
+          153
+        ],
+        "confidence": 0.6391777992248535
+      },
+      {
+        "track_id": 53,
+        "bbox": [
+          220,
+          0,
+          295,
+          139
+        ],
+        "confidence": 0.7792368531227112
+      },
+      {
+        "track_id": 56,
+        "bbox": [
+          75,
+          17,
+          114,
+          130
+        ],
+        "confidence": 0.556182324886322
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_b7d459b0275d421aa5887787870236fa",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12401.192149223,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:55:36.070+07:00",
+    "frame_id": 3171,
+    "observation_time": 12405.061350876,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          183,
+          9,
+          284,
+          342
+        ],
+        "confidence": 0.9263665676116943
+      },
+      {
+        "track_id": 53,
+        "bbox": [
+          324,
+          1,
+          397,
+          132
+        ],
+        "confidence": 0.815661609172821
+      },
+      {
+        "track_id": 55,
+        "bbox": [
+          595,
+          0,
+          665,
+          226
+        ],
+        "confidence": 0.9135591387748718
+      },
+      {
+        "track_id": 59,
+        "bbox": [
+          671,
+          1,
+          704,
+          124
+        ],
+        "confidence": 0.5023782253265381
+      },
+      {
+        "track_id": 60,
+        "bbox": [
+          180,
+          2,
+          211,
+          78
+        ],
+        "confidence": 0.46866118907928467
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_b7d459b0275d421aa5887787870236fa",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12404.289097753,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:55:38.710+07:00",
+    "frame_id": 3250,
+    "observation_time": 12407.692583403,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          301,
+          0,
+          378,
+          210
+        ],
+        "confidence": 0.9139681458473206
+      },
+      {
+        "track_id": 53,
+        "bbox": [
+          363,
+          3,
+          439,
+          151
+        ],
+        "confidence": 0.9058594107627869
+      },
+      {
+        "track_id": 55,
+        "bbox": [
+          607,
+          82,
+          703,
+          407
+        ],
+        "confidence": 0.957639753818512
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_b7d459b0275d421aa5887787870236fa",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12407.159223683,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:55:39.271+07:00",
+    "frame_id": 3267,
+    "observation_time": 12408.258113094,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          316,
+          13,
+          384,
+          231
+        ],
+        "confidence": 0.9224086999893188
+      },
+      {
+        "track_id": 53,
+        "bbox": [
+          370,
+          17,
+          437,
+          165
+        ],
+        "confidence": 0.8851181268692017
+      },
+      {
+        "track_id": 55,
+        "bbox": [
+          615,
+          125,
+          703,
+          476
+        ],
+        "confidence": 0.9530439376831055
+      },
+      {
+        "track_id": 61,
+        "bbox": [
+          687,
+          0,
+          704,
+          131
+        ],
+        "confidence": 0.8519200682640076
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_b7d459b0275d421aa5887787870236fa",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12407.159223683,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:55:39.832+07:00",
+    "frame_id": 3284,
+    "observation_time": 12408.825878253,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          307,
+          15,
+          368,
+          238
+        ],
+        "confidence": 0.9204344749450684
+      },
+      {
+        "track_id": 53,
+        "bbox": [
+          355,
+          19,
+          427,
+          179
+        ],
+        "confidence": 0.8797247409820557
+      },
+      {
+        "track_id": 55,
+        "bbox": [
+          630,
+          197,
+          703,
+          478
+        ],
+        "confidence": 0.580755889415741
+      },
+      {
+        "track_id": 61,
+        "bbox": [
+          687,
+          0,
+          704,
+          150
+        ],
+        "confidence": 0.8420666456222534
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_b7d459b0275d421aa5887787870236fa",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12407.159223683,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:55:40.383+07:00",
+    "frame_id": 3300,
+    "observation_time": 12409.356134905,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          306,
+          18,
+          369,
+          242
+        ],
+        "confidence": 0.9176620841026306
+      },
+      {
+        "track_id": 53,
+        "bbox": [
+          354,
+          22,
+          430,
+          134
+        ],
+        "confidence": 0.23127207159996033
+      },
+      {
+        "track_id": 61,
+        "bbox": [
+          686,
+          0,
+          704,
+          150
+        ],
+        "confidence": 0.855556309223175
+      },
+      {
+        "track_id": 62,
+        "bbox": [
+          352,
+          21,
+          431,
+          188
+        ],
+        "confidence": 0.459049254655838
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_b7d459b0275d421aa5887787870236fa",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12407.159223683,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:55:40.909+07:00",
+    "frame_id": 3316,
+    "observation_time": 12409.892433059,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          295,
+          18,
+          363,
+          246
+        ],
+        "confidence": 0.8854725360870361
+      },
+      {
+        "track_id": 61,
+        "bbox": [
+          686,
+          0,
+          704,
+          151
+        ],
+        "confidence": 0.8524460792541504
+      },
+      {
+        "track_id": 62,
+        "bbox": [
+          349,
+          26,
+          434,
+          188
+        ],
+        "confidence": 0.7829744219779968
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_b7d459b0275d421aa5887787870236fa",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12407.159223683,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:55:46.794+07:00",
+    "frame_id": 3492,
+    "observation_time": 12415.759692593,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          419,
+          134,
+          544,
+          477
+        ],
+        "confidence": 0.9633082747459412
+      },
+      {
+        "track_id": 62,
+        "bbox": [
+          443,
+          36,
+          537,
+          157
+        ],
+        "confidence": 0.6992397308349609
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_9fd899973b794818865872a3cca14ef4",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12415.526387723,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:55:47.296+07:00",
+    "frame_id": 3508,
+    "observation_time": 12416.291806069,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          433,
+          124,
+          552,
+          476
+        ],
+        "confidence": 0.9675394892692566
+      },
+      {
+        "track_id": 62,
+        "bbox": [
+          437,
+          29,
+          529,
+          162
+        ],
+        "confidence": 0.903216540813446
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_9fd899973b794818865872a3cca14ef4",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12415.759692593,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:55:47.887+07:00",
+    "frame_id": 3525,
+    "observation_time": 12416.859262138,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          414,
+          123,
+          533,
+          476
+        ],
+        "confidence": 0.9665219187736511
+      },
+      {
+        "track_id": 62,
+        "bbox": [
+          410,
+          26,
+          501,
+          164
+        ],
+        "confidence": 0.740310788154602
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_9fd899973b794818865872a3cca14ef4",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12415.759692593,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:55:48.421+07:00",
+    "frame_id": 3541,
+    "observation_time": 12417.390811486,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          404,
+          123,
+          518,
+          478
+        ],
+        "confidence": 0.9681110978126526
+      },
+      {
+        "track_id": 62,
+        "bbox": [
+          390,
+          31,
+          475,
+          158
+        ],
+        "confidence": 0.8448326587677002
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_9fd899973b794818865872a3cca14ef4",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12416.859262138,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:55:53.497+07:00",
+    "frame_id": 3693,
+    "observation_time": 12422.459214562,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          517,
+          101,
+          642,
+          479
+        ],
+        "confidence": 0.9446732997894287
+      },
+      {
+        "track_id": 62,
+        "bbox": [
+          209,
+          21,
+          298,
+          164
+        ],
+        "confidence": 0.9249628186225891
+      },
+      {
+        "track_id": 63,
+        "bbox": [
+          525,
+          0,
+          568,
+          109
+        ],
+        "confidence": 0.38916629552841187
+      },
+      {
+        "track_id": 64,
+        "bbox": [
+          549,
+          11,
+          607,
+          117
+        ],
+        "confidence": 0.4921090006828308
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_9fd899973b794818865872a3cca14ef4",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12422.092718938,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:55:54.021+07:00",
+    "frame_id": 3709,
+    "observation_time": 12422.990331979,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          499,
+          98,
+          618,
+          480
+        ],
+        "confidence": 0.9535151720046997
+      },
+      {
+        "track_id": 62,
+        "bbox": [
+          193,
+          21,
+          282,
+          164
+        ],
+        "confidence": 0.9134082198143005
+      },
+      {
+        "track_id": 63,
+        "bbox": [
+          507,
+          0,
+          545,
+          104
+        ],
+        "confidence": 0.44459304213523865
+      },
+      {
+        "track_id": 64,
+        "bbox": [
+          529,
+          3,
+          587,
+          116
+        ],
+        "confidence": 0.7460517287254333
+      },
+      {
+        "track_id": 66,
+        "bbox": [
+          0,
+          123,
+          57,
+          337
+        ],
+        "confidence": 0.13291102647781372
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_9fd899973b794818865872a3cca14ef4",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12422.459214562,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:55:54.752+07:00",
+    "frame_id": 3730,
+    "observation_time": 12423.693970027,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          480,
+          97,
+          596,
+          479
+        ],
+        "confidence": 0.9042524695396423
+      },
+      {
+        "track_id": 62,
+        "bbox": [
+          164,
+          23,
+          250,
+          171
+        ],
+        "confidence": 0.8297705054283142
+      },
+      {
+        "track_id": 63,
+        "bbox": [
+          478,
+          0,
+          518,
+          104
+        ],
+        "confidence": 0.22918443381786346
+      },
+      {
+        "track_id": 64,
+        "bbox": [
+          501,
+          1,
+          559,
+          116
+        ],
+        "confidence": 0.6729217767715454
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_9fd899973b794818865872a3cca14ef4",
+    "previous_observation": [
+      12423.494065566,
+      [
+        484,
+        95,
+        595,
+        479
+      ]
+    ],
+    "last_positive_evidence_timestamp": 12422.990331979,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:56:00.640+07:00",
+    "frame_id": 3908,
+    "observation_time": 12429.625674164,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          492,
+          59,
+          626,
+          437
+        ],
+        "confidence": 0.9423296451568604
+      },
+      {
+        "track_id": 64,
+        "bbox": [
+          274,
+          3,
+          328,
+          103
+        ],
+        "confidence": 0.582525372505188
+      },
+      {
+        "track_id": 63,
+        "bbox": [
+          247,
+          0,
+          285,
+          108
+        ],
+        "confidence": 0.6624668836593628
+      },
+      {
+        "track_id": 69,
+        "bbox": [
+          524,
+          1,
+          582,
+          87
+        ],
+        "confidence": 0.41804274916648865
+      },
+      {
+        "track_id": 68,
+        "bbox": [
+          571,
+          1,
+          614,
+          61
+        ],
+        "confidence": 0.5044941902160645
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_9fd899973b794818865872a3cca14ef4",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12429.298121636,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:56:01.202+07:00",
+    "frame_id": 3925,
+    "observation_time": 12430.193378611,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          538,
+          60,
+          662,
+          436
+        ],
+        "confidence": 0.9169758558273315
+      },
+      {
+        "track_id": 64,
+        "bbox": [
+          255,
+          3,
+          308,
+          107
+        ],
+        "confidence": 0.6963097453117371
+      },
+      {
+        "track_id": 63,
+        "bbox": [
+          226,
+          1,
+          269,
+          110
+        ],
+        "confidence": 0.6037378907203674
+      },
+      {
+        "track_id": 70,
+        "bbox": [
+          652,
+          20,
+          703,
+          192
+        ],
+        "confidence": 0.7886448502540588
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_9fd899973b794818865872a3cca14ef4",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12429.625674164,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:56:01.961+07:00",
+    "frame_id": 3947,
+    "observation_time": 12430.926802495,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          510,
+          41,
+          632,
+          425
+        ],
+        "confidence": 0.9220931529998779
+      },
+      {
+        "track_id": 64,
+        "bbox": [
+          222,
+          3,
+          276,
+          108
+        ],
+        "confidence": 0.707431972026825
+      },
+      {
+        "track_id": 63,
+        "bbox": [
+          191,
+          1,
+          232,
+          119
+        ],
+        "confidence": 0.7290586829185486
+      },
+      {
+        "track_id": 70,
+        "bbox": [
+          621,
+          29,
+          685,
+          193
+        ],
+        "confidence": 0.5563769936561584
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_9fd899973b794818865872a3cca14ef4",
+    "previous_observation": [
+      12430.727450154,
+      [
+        516,
+        46,
+        640,
+        426
+      ]
+    ],
+    "last_positive_evidence_timestamp": 12430.458736505,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:56:02.490+07:00",
+    "frame_id": 3963,
+    "observation_time": 12431.463802837,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          510,
+          35,
+          613,
+          401
+        ],
+        "confidence": 0.9480333924293518
+      },
+      {
+        "track_id": 64,
+        "bbox": [
+          203,
+          5,
+          254,
+          111
+        ],
+        "confidence": 0.8008055090904236
+      },
+      {
+        "track_id": 63,
+        "bbox": [
+          169,
+          0,
+          210,
+          117
+        ],
+        "confidence": 0.8057502508163452
+      },
+      {
+        "track_id": 70,
+        "bbox": [
+          602,
+          30,
+          668,
+          191
+        ],
+        "confidence": 0.2267305552959442
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_9fd899973b794818865872a3cca14ef4",
+    "previous_observation": [
+      12431.287634444,
+      [
+        510,
+        35,
+        614,
+        413
+      ]
+    ],
+    "last_positive_evidence_timestamp": 12430.926802495,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:56:03.077+07:00",
+    "frame_id": 3981,
+    "observation_time": 12432.059322803,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          491,
+          36,
+          628,
+          394
+        ],
+        "confidence": 0.9573569893836975
+      },
+      {
+        "track_id": 64,
+        "bbox": [
+          179,
+          4,
+          228,
+          115
+        ],
+        "confidence": 0.855064868927002
+      },
+      {
+        "track_id": 63,
+        "bbox": [
+          144,
+          0,
+          187,
+          120
+        ],
+        "confidence": 0.81892329454422
+      },
+      {
+        "track_id": 72,
+        "bbox": [
+          396,
+          1,
+          435,
+          65
+        ],
+        "confidence": 0.3006678819656372
+      },
+      {
+        "track_id": 70,
+        "bbox": [
+          586,
+          41,
+          641,
+          181
+        ],
+        "confidence": 0.23220114409923553
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_9fd899973b794818865872a3cca14ef4",
+    "previous_observation": [
+      12431.828398843,
+      [
+        499,
+        37,
+        619,
+        394
+      ]
+    ],
+    "last_positive_evidence_timestamp": 12431.287634444,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:56:03.859+07:00",
+    "frame_id": 4005,
+    "observation_time": 12432.857555396,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          526,
+          34,
+          628,
+          390
+        ],
+        "confidence": 0.94983971118927
+      },
+      {
+        "track_id": 64,
+        "bbox": [
+          154,
+          9,
+          209,
+          117
+        ],
+        "confidence": 0.745084822177887
+      },
+      {
+        "track_id": 72,
+        "bbox": [
+          371,
+          0,
+          411,
+          63
+        ],
+        "confidence": 0.613044261932373
+      },
+      {
+        "track_id": 69,
+        "bbox": [
+          551,
+          3,
+          597,
+          98
+        ],
+        "confidence": 0.4541000425815582
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_9fd899973b794818865872a3cca14ef4",
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": 12431.287634444,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:56:04.955+07:00",
+    "frame_id": 4037,
+    "observation_time": 12433.925815447,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          545,
+          32,
+          648,
+          358
+        ],
+        "confidence": 0.9500824809074402
+      },
+      {
+        "track_id": 64,
+        "bbox": [
+          155,
+          7,
+          206,
+          96
+        ],
+        "confidence": 0.7160208225250244
+      },
+      {
+        "track_id": 72,
+        "bbox": [
+          371,
+          0,
+          412,
+          57
+        ],
+        "confidence": 0.6501840353012085
+      },
+      {
+        "track_id": 63,
+        "bbox": [
+          122,
+          1,
+          164,
+          123
+        ],
+        "confidence": 0.6703020930290222
+      },
+      {
+        "track_id": 73,
+        "bbox": [
+          195,
+          4,
+          224,
+          62
+        ],
+        "confidence": 0.31277018785476685
+      },
+      {
+        "track_id": 69,
+        "bbox": [
+          552,
+          2,
+          597,
+          103
+        ],
+        "confidence": 0.652993381023407
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_c1514912b92b4a3f81d49fb03ff91ce4",
+    "previous_observation": [
+      12433.858735219,
+      [
+        544,
+        34,
+        645,
+        359
+      ]
+    ],
+    "last_positive_evidence_timestamp": 12433.489596968,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:56:05.591+07:00",
+    "frame_id": 4056,
+    "observation_time": 12434.557806728,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          546,
+          13,
+          662,
+          335
+        ],
+        "confidence": 0.951261579990387
+      },
+      {
+        "track_id": 64,
+        "bbox": [
+          137,
+          1,
+          191,
+          108
+        ],
+        "confidence": 0.6609131097793579
+      },
+      {
+        "track_id": 72,
+        "bbox": [
+          354,
+          0,
+          395,
+          59
+        ],
+        "confidence": 0.48321208357810974
+      },
+      {
+        "track_id": 63,
+        "bbox": [
+          104,
+          1,
+          145,
+          127
+        ],
+        "confidence": 0.22143025696277618
+      },
+      {
+        "track_id": 69,
+        "bbox": [
+          532,
+          2,
+          589,
+          169
+        ],
+        "confidence": 0.36937573552131653
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_c1514912b92b4a3f81d49fb03ff91ce4",
+    "previous_observation": [
+      12434.392692693,
+      [
+        542,
+        27,
+        661,
+        341
+      ]
+    ],
+    "last_positive_evidence_timestamp": 12433.489596968,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:56:06.136+07:00",
+    "frame_id": 4072,
+    "observation_time": 12435.091149092,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          548,
+          3,
+          651,
+          330
+        ],
+        "confidence": 0.9541205763816833
+      },
+      {
+        "track_id": 64,
+        "bbox": [
+          126,
+          2,
+          179,
+          117
+        ],
+        "confidence": 0.44745370745658875
+      },
+      {
+        "track_id": 72,
+        "bbox": [
+          343,
+          2,
+          382,
+          61
+        ],
+        "confidence": 0.2907100319862366
+      },
+      {
+        "track_id": 69,
+        "bbox": [
+          520,
+          0,
+          579,
+          162
+        ],
+        "confidence": 0.5470444560050964
+      },
+      {
+        "track_id": 74,
+        "bbox": [
+          421,
+          0,
+          472,
+          80
+        ],
+        "confidence": 0.44688665866851807
+      },
+      {
+        "track_id": 63,
+        "bbox": [
+          92,
+          1,
+          137,
+          128
+        ],
+        "confidence": 0.38085484504699707
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_c1514912b92b4a3f81d49fb03ff91ce4",
+    "previous_observation": [
+      12434.958554659,
+      [
+        549,
+        5,
+        653,
+        333
+      ]
+    ],
+    "last_positive_evidence_timestamp": 12433.489596968,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:56:06.624+07:00",
+    "frame_id": 4087,
+    "observation_time": 12435.591582198,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          544,
+          3,
+          639,
+          295
+        ],
+        "confidence": 0.9324261546134949
+      },
+      {
+        "track_id": 72,
+        "bbox": [
+          343,
+          2,
+          381,
+          65
+        ],
+        "confidence": 0.29476380348205566
+      },
+      {
+        "track_id": 69,
+        "bbox": [
+          522,
+          1,
+          582,
+          160
+        ],
+        "confidence": 0.4495014250278473
+      },
+      {
+        "track_id": 74,
+        "bbox": [
+          421,
+          0,
+          471,
+          66
+        ],
+        "confidence": 0.4783427119255066
+      },
+      {
+        "track_id": 63,
+        "bbox": [
+          92,
+          1,
+          139,
+          126
+        ],
+        "confidence": 0.7685374617576599
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_c1514912b92b4a3f81d49fb03ff91ce4",
+    "previous_observation": [
+      12435.528473042,
+      [
+        545,
+        2,
+        639,
+        300
+      ]
+    ],
+    "last_positive_evidence_timestamp": 12433.489596968,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:56:07.131+07:00",
+    "frame_id": 4103,
+    "observation_time": 12436.124788295,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          545,
+          0,
+          631,
+          288
+        ],
+        "confidence": 0.94038325548172
+      },
+      {
+        "track_id": 72,
+        "bbox": [
+          343,
+          2,
+          381,
+          69
+        ],
+        "confidence": 0.3563494384288788
+      },
+      {
+        "track_id": 69,
+        "bbox": [
+          521,
+          1,
+          572,
+          160
+        ],
+        "confidence": 0.5505880117416382
+      },
+      {
+        "track_id": 74,
+        "bbox": [
+          421,
+          0,
+          471,
+          68
+        ],
+        "confidence": 0.505912721157074
+      },
+      {
+        "track_id": 63,
+        "bbox": [
+          92,
+          1,
+          139,
+          126
+        ],
+        "confidence": 0.7666983604431152
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_c1514912b92b4a3f81d49fb03ff91ce4",
+    "previous_observation": [
+      12436.060590774,
+      [
+        545,
+        0,
+        632,
+        290
+      ]
+    ],
+    "last_positive_evidence_timestamp": 12433.489596968,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:56:07.692+07:00",
+    "frame_id": 4119,
+    "observation_time": 12436.659094488,
+    "persons": [
+      {
+        "track_id": 54,
+        "bbox": [
+          531,
+          0,
+          616,
+          260
+        ],
+        "confidence": 0.9049721956253052
+      },
+      {
+        "track_id": 72,
+        "bbox": [
+          342,
+          1,
+          380,
+          69
+        ],
+        "confidence": 0.49450868368148804
+      },
+      {
+        "track_id": 69,
+        "bbox": [
+          521,
+          0,
+          570,
+          137
+        ],
+        "confidence": 0.3036269247531891
+      },
+      {
+        "track_id": 74,
+        "bbox": [
+          420,
+          0,
+          471,
+          66
+        ],
+        "confidence": 0.5244271159172058
+      },
+      {
+        "track_id": 63,
+        "bbox": [
+          92,
+          0,
+          137,
+          126
+        ],
+        "confidence": 0.8459736704826355
+      }
+    ],
+    "target_id": 54,
+    "session": "lock_c1514912b92b4a3f81d49fb03ff91ce4",
+    "previous_observation": [
+      12436.590266924,
+      [
+        533,
+        0,
+        621,
+        259
+      ]
+    ],
+    "last_positive_evidence_timestamp": 12433.489596968,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:56:08.223+07:00",
+    "frame_id": 4135,
+    "observation_time": 12437.19077339,
+    "persons": [
+      {
+        "track_id": 75,
+        "bbox": [
+          510,
+          0,
+          579,
+          171
+        ],
+        "confidence": 0.7710326910018921
+      },
+      {
+        "track_id": 76,
+        "bbox": [
+          92,
+          0,
+          139,
+          126
+        ],
+        "confidence": 0.7489014863967896
+      },
+      {
+        "track_id": 77,
+        "bbox": [
+          420,
+          0,
+          471,
+          69
+        ],
+        "confidence": 0.5391121506690979
+      },
+      {
+        "track_id": 78,
+        "bbox": [
+          510,
+          0,
+          578,
+          228
+        ],
+        "confidence": 0.5171236991882324
+      },
+      {
+        "track_id": 79,
+        "bbox": [
+          343,
+          2,
+          381,
+          68
+        ],
+        "confidence": 0.4823552966117859
+      }
+    ],
+    "target_id": 75,
+    "session": null,
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": null,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:56:08.822+07:00",
+    "frame_id": 4152,
+    "observation_time": 12437.757961595,
+    "persons": [
+      {
+        "track_id": 75,
+        "bbox": [
+          490,
+          0,
+          550,
+          122
+        ],
+        "confidence": 0.4815971851348877
+      },
+      {
+        "track_id": 76,
+        "bbox": [
+          92,
+          0,
+          137,
+          125
+        ],
+        "confidence": 0.863661527633667
+      },
+      {
+        "track_id": 77,
+        "bbox": [
+          420,
+          0,
+          471,
+          65
+        ],
+        "confidence": 0.6330487728118896
+      },
+      {
+        "track_id": 79,
+        "bbox": [
+          342,
+          2,
+          382,
+          69
+        ],
+        "confidence": 0.5154355764389038
+      },
+      {
+        "track_id": 78,
+        "bbox": [
+          532,
+          3,
+          578,
+          158
+        ],
+        "confidence": 0.6526901125907898
+      }
+    ],
+    "target_id": 75,
+    "session": null,
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": null,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:56:09.382+07:00",
+    "frame_id": 4170,
+    "observation_time": 12438.358482443,
+    "persons": [
+      {
+        "track_id": 75,
+        "bbox": [
+          450,
+          0,
+          514,
+          162
+        ],
+        "confidence": 0.5899662375450134
+      },
+      {
+        "track_id": 76,
+        "bbox": [
+          92,
+          0,
+          137,
+          126
+        ],
+        "confidence": 0.8594253659248352
+      },
+      {
+        "track_id": 77,
+        "bbox": [
+          420,
+          0,
+          466,
+          74
+        ],
+        "confidence": 0.3210367262363434
+      },
+      {
+        "track_id": 79,
+        "bbox": [
+          342,
+          2,
+          383,
+          69
+        ],
+        "confidence": 0.5245898365974426
+      },
+      {
+        "track_id": 78,
+        "bbox": [
+          514,
+          0,
+          582,
+          164
+        ],
+        "confidence": 0.6499874591827393
+      }
+    ],
+    "target_id": 75,
+    "session": null,
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": null,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:56:10.112+07:00",
+    "frame_id": 4191,
+    "observation_time": 12439.06025309,
+    "persons": [
+      {
+        "track_id": 76,
+        "bbox": [
+          87,
+          1,
+          135,
+          137
+        ],
+        "confidence": 0.9142781496047974
+      },
+      {
+        "track_id": 77,
+        "bbox": [
+          378,
+          1,
+          423,
+          76
+        ],
+        "confidence": 0.14806024730205536
+      },
+      {
+        "track_id": 79,
+        "bbox": [
+          343,
+          1,
+          382,
+          70
+        ],
+        "confidence": 0.6154855489730835
+      },
+      {
+        "track_id": 78,
+        "bbox": [
+          522,
+          1,
+          581,
+          161
+        ],
+        "confidence": 0.7335364818572998
+      },
+      {
+        "track_id": 80,
+        "bbox": [
+          126,
+          5,
+          177,
+          104
+        ],
+        "confidence": 0.4798048734664917
+      }
+    ],
+    "target_id": 76,
+    "session": null,
+    "previous_observation": [
+      12438.957287382,
+      [
+        88,
+        0,
+        136,
+        137
+      ]
+    ],
+    "last_positive_evidence_timestamp": null,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:56:16.406+07:00",
+    "frame_id": 4381,
+    "observation_time": 12445.38960799,
+    "persons": [
+      {
+        "track_id": 76,
+        "bbox": [
+          420,
+          62,
+          540,
+          450
+        ],
+        "confidence": 0.953055739402771
+      },
+      {
+        "track_id": 78,
+        "bbox": [
+          524,
+          3,
+          596,
+          168
+        ],
+        "confidence": 0.830131471157074
+      },
+      {
+        "track_id": 81,
+        "bbox": [
+          417,
+          1,
+          474,
+          77
+        ],
+        "confidence": 0.21560868620872498
+      },
+      {
+        "track_id": 82,
+        "bbox": [
+          396,
+          2,
+          445,
+          79
+        ],
+        "confidence": 0.30206936597824097
+      }
+    ],
+    "target_id": 76,
+    "session": null,
+    "previous_observation": [
+      12445.258314326,
+      [
+        367,
+        70,
+        507,
+        451
+      ]
+    ],
+    "last_positive_evidence_timestamp": null,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:56:18.865+07:00",
+    "frame_id": 4455,
+    "observation_time": 12447.858266356,
+    "persons": [
+      {
+        "track_id": 76,
+        "bbox": [
+          475,
+          1,
+          542,
+          121
+        ],
+        "confidence": 0.8290952444076538
+      },
+      {
+        "track_id": 81,
+        "bbox": [
+          420,
+          0,
+          470,
+          57
+        ],
+        "confidence": 0.44064322113990784
+      },
+      {
+        "track_id": 78,
+        "bbox": [
+          527,
+          3,
+          598,
+          172
+        ],
+        "confidence": 0.7175745964050293
+      }
+    ],
+    "target_id": 76,
+    "session": null,
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": null,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  },
+  {
+    "marker": "2026-11-16T11:56:19.585+07:00",
+    "frame_id": 4476,
+    "observation_time": 12448.570946524,
+    "persons": [
+      {
+        "track_id": 76,
+        "bbox": [
+          428,
+          0,
+          494,
+          156
+        ],
+        "confidence": 0.8744246959686279
+      },
+      {
+        "track_id": 78,
+        "bbox": [
+          523,
+          2,
+          598,
+          176
+        ],
+        "confidence": 0.8533467650413513
+      },
+      {
+        "track_id": 84,
+        "bbox": [
+          229,
+          189,
+          329,
+          254
+        ],
+        "confidence": 0.3883821964263916
+      },
+      {
+        "track_id": 82,
+        "bbox": [
+          381,
+          1,
+          441,
+          79
+        ],
+        "confidence": 0.14570797979831696
+      }
+    ],
+    "target_id": 76,
+    "session": null,
+    "previous_observation": null,
+    "last_positive_evidence_timestamp": null,
+    "ground_truth_identity": null,
+    "raw_frame_available": false
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "scope": true,
+  "frames": true,
+  "transitions": true,
+  "effective_config": true,
+  "model_sha256": true,
+  "source_config_sha256": true,
+  "all_identical": true
+}

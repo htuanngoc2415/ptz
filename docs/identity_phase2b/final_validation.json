@@ -1,0 +1,12 @@
+{
+  "original_sources_unchanged": 167,
+  "failure_rows": 205,
+  "review_images": 2201,
+  "independent_reviewed_frames": 0,
+  "strict_C_E_parity": true,
+  "provisional_anchor_age_within_08": true,
+  "tests_passed": 359,
+  "ground_truth": false,
+  "physical_commands": 0,
+  "decision": "NO_GO"
+}

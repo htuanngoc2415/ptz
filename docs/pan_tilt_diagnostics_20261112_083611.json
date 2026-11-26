@@ -1,0 +1,50 @@
+{
+  "run_id": "d7f4fce31f7e43709cdd9b97aafe83d9",
+  "malformed_lines": 0,
+  "retained_span_seconds": 72.116318037,
+  "retained_dispatch_count": 46,
+  "retained_command_rate_hz": 0.6378584105805185,
+  "total_command_count": 439,
+  "decision_scope": "full_run_evaluations",
+  "decision_counts": {
+    "TARGET_UNCERTAIN": 647,
+    "TARGET_LOCKED": 200,
+    "MOTOR_BUSY": 369,
+    "COOLDOWN": 482,
+    "DEADZONE": 493
+  },
+  "decision_ratio": {
+    "TARGET_UNCERTAIN": 0.2952989502510269,
+    "TARGET_LOCKED": 0.09128251939753537,
+    "MOTOR_BUSY": 0.16841624828845275,
+    "COOLDOWN": 0.21999087174806026,
+    "DEADZONE": 0.2250114103149247
+  },
+  "detection_to_supervisor_dispatch_ms": {
+    "count": 46,
+    "mean": 33.55424606521094,
+    "max": 145.13848699994014
+  },
+  "observation_to_supervisor_dispatch_ms": {
+    "count": 46,
+    "mean": 105.09878249999979,
+    "max": 211.47098500000538
+  },
+  "observation_to_wire_dispatch_ms": {
+    "count": 46,
+    "mean": 106.5641943043483,
+    "max": 211.74329699999817
+  },
+  "host_active_duration_ms": {
+    "count": 47,
+    "mean": 135.59097702128102,
+    "max": 161.195386999907
+  },
+  "inter_pulse_wait_ms": {
+    "count": 46,
+    "mean": 800.9291816521746,
+    "max": 15484.456762999911
+  },
+  "image_displacement_samples": 22,
+  "note": "Retained trace may omit rotated-away data; ACK/durations are not physical motor telemetry."
+}

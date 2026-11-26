@@ -1,0 +1,356 @@
+{
+  "cache": "docs/identity_shadow_audit_20261119_191352/capture_cache",
+  "capture": "/mnt/files/Project/ptz/ptz/logs/identity_capture/capture_18e5ba0fa26d492cbb7c19839cccb4b2",
+  "observations_sha256": "a5c61f5d0e288016c9b03f885cd28d066fe1a4e37ceb788eb9c3a60e7754fe25",
+  "source_sha256": {
+    "config.py": "3814e6250f48a5be0370556893da32536edb5dd9e5dbbc8cdbe4b08570732fdb",
+    "ai/target_identity.py": "8376b7da84d5617154231da1518af3334714c305d87be5ac35a4bc1fc686ac2a",
+    "runtime/identity_events.py": "f9e043117fb720f700aab8b71caa8fbef93aeec3ddb02798b9d6fb40e1e1e9e8",
+    "runtime/identity_shadow.py": "56ca7bd19fae3028779dd465fb13cb5b12751e97f752e94f18519549801ad12c",
+    "runtime/identity_shadow_batch.py": "4e3c7e8dcef6933321c52f49270f22c660708c87c132e0f84f554a3e8d583f19",
+    "tools/benchmark_identity_phase2.py": "433c293fc53ef0f94fbcab151e8eb4f0a55cfd18912919151db8662432961ff2"
+  },
+  "model_sha256": {
+    "/mnt/files/Project/ptz/ptz/models/person/person.pt": "cf07f3fac8dfa98a0a6acf2bcc7f22585256015042e494e8b8ed242293f99ab8",
+    "/mnt/files/Project/ptz/ptz/person_search/models/osnet_ain_x1_0_msmt17.pth": "8a07e8da38946f7cee37f4561617bf8b6d2fe8f3a4027852893ea092e46d919f"
+  },
+  "phase2_policy": {
+    "filtering": true,
+    "memory": true,
+    "association": true,
+    "capacity": 32,
+    "ttl": 3.0,
+    "minor_target_cover": 0.05,
+    "minor_competitor_cover": 0.25,
+    "minor_iou": 0.05
+  },
+  "metrics": {
+    "A": {
+      "samples": 1120,
+      "duration_s": 137.4324116099997,
+      "ambiguous_state_duration_s": 6.248450209997827,
+      "target_correct_tracking_time_s": null,
+      "wrong_target_tracking_time_s": null,
+      "id_switches": null,
+      "fragmentation": null,
+      "target_loss": null,
+      "recovery_latency_s": null,
+      "annotated_duration_s": 0.0,
+      "annotation_coverage": 0.0,
+      "detection_latency_ms": {
+        "count": 1120,
+        "mean": 76.51091681069114,
+        "p95": 135.87043400184484
+      },
+      "reid_latency_ms": {
+        "count": 1120,
+        "mean": 33.60513105896124,
+        "p95": 44.681051000225125
+      },
+      "frame_age_ms": {
+        "n": 1120,
+        "p50": 72.25850100076059,
+        "p95": 152.87080029884234,
+        "max": 281.09985700211837
+      },
+      "detection_service_fps": 13.07003028697555,
+      "detection_sample_fps": 8.142184124480435,
+      "selected": 937,
+      "reasons": {
+        "RESET": 133,
+        "PERIODIC_VERIFY": 914,
+        "TRACK_MISSING": 61,
+        "PERSON_OVERLAP": 12
+      },
+      "false_rejection_of_true_target": null,
+      "false_acceptance_of_distractor": null,
+      "live_detection_fps": null,
+      "live_ptz_decision_latency_ms": null,
+      "association_ms": {
+        "n": 0,
+        "p50": null,
+        "p95": null,
+        "max": null
+      },
+      "dry_plan_ms": {
+        "n": 0,
+        "p50": null,
+        "p95": null,
+        "max": null
+      },
+      "reid_invocations_actual": 0,
+      "inference_scope": "shared cached policy replay"
+    },
+    "B": {
+      "samples": 1120,
+      "duration_s": 137.4324116099997,
+      "ambiguous_state_duration_s": 36.00438815899179,
+      "target_correct_tracking_time_s": null,
+      "wrong_target_tracking_time_s": null,
+      "id_switches": null,
+      "fragmentation": null,
+      "target_loss": null,
+      "recovery_latency_s": null,
+      "annotated_duration_s": 0.0,
+      "annotation_coverage": 0.0,
+      "detection_latency_ms": {
+        "count": 1120,
+        "mean": 76.51091681069114,
+        "p95": 135.87043400184484
+      },
+      "reid_latency_ms": {
+        "count": 1120,
+        "mean": 33.60513105896124,
+        "p95": 44.681051000225125
+      },
+      "frame_age_ms": {
+        "n": 1120,
+        "p50": 72.25850100076059,
+        "p95": 152.87080029884234,
+        "max": 281.09985700211837
+      },
+      "detection_service_fps": 13.07003028697555,
+      "detection_sample_fps": 8.142184124480435,
+      "selected": 786,
+      "reasons": {
+        "LOW_REFERENCE_SIMILARITY": 151,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 26,
+        "CONFIRMED_MULTI_CUE": 786,
+        "LOW_DETECTION_CONFIDENCE": 6,
+        "NO_OBSERVATION_UNKNOWN": 53,
+        "PERSON_OVERLAP": 98
+      },
+      "false_rejection_of_true_target": null,
+      "false_acceptance_of_distractor": null,
+      "live_detection_fps": null,
+      "live_ptz_decision_latency_ms": null,
+      "association_ms": {
+        "n": 0,
+        "p50": null,
+        "p95": null,
+        "max": null
+      },
+      "dry_plan_ms": {
+        "n": 0,
+        "p50": null,
+        "p95": null,
+        "max": null
+      },
+      "reid_invocations_actual": 0,
+      "inference_scope": "shared cached policy replay"
+    },
+    "C": {
+      "samples": 1120,
+      "duration_s": 137.4324116099997,
+      "ambiguous_state_duration_s": 62.046082476990705,
+      "target_correct_tracking_time_s": null,
+      "wrong_target_tracking_time_s": null,
+      "id_switches": null,
+      "fragmentation": null,
+      "target_loss": null,
+      "recovery_latency_s": null,
+      "annotated_duration_s": 0.0,
+      "annotation_coverage": 0.0,
+      "detection_latency_ms": {
+        "count": 0,
+        "mean": null,
+        "p95": null
+      },
+      "reid_latency_ms": {
+        "count": 0,
+        "mean": null,
+        "p95": null
+      },
+      "frame_age_ms": {
+        "n": 1120,
+        "p50": 72.25850100076059,
+        "p95": 152.87080029884234,
+        "max": 281.09985700211837
+      },
+      "detection_service_fps": null,
+      "detection_sample_fps": 8.142184124480435,
+      "selected": 581,
+      "reasons": {
+        "UNCERTAIN_CROP_QUALITY": 133,
+        "LOW_REFERENCE_SIMILARITY": 208,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 41,
+        "CONFIRMED_MULTI_CUE": 581,
+        "LOW_DETECTION_CONFIDENCE": 6,
+        "NO_OBSERVATION_UNKNOWN": 53,
+        "PERSON_OVERLAP": 98
+      },
+      "false_rejection_of_true_target": null,
+      "false_acceptance_of_distractor": null,
+      "live_detection_fps": null,
+      "live_ptz_decision_latency_ms": null,
+      "association_ms": {
+        "n": 1120,
+        "p50": 1.290235499254777,
+        "p95": 2.2034639003322805,
+        "max": 4.906087000563275
+      },
+      "dry_plan_ms": {
+        "n": 1120,
+        "p50": 0.0453275006293552,
+        "p95": 0.08584050028730417,
+        "max": 0.1644100011617411
+      },
+      "reid_invocations_actual": 0,
+      "inference_scope": "shared cached policy replay"
+    },
+    "D": {
+      "samples": 1120,
+      "duration_s": 137.4324116099997,
+      "ambiguous_state_duration_s": 127.97371001798456,
+      "target_correct_tracking_time_s": null,
+      "wrong_target_tracking_time_s": null,
+      "id_switches": null,
+      "fragmentation": null,
+      "target_loss": null,
+      "recovery_latency_s": null,
+      "annotated_duration_s": 0.0,
+      "annotation_coverage": 0.0,
+      "detection_latency_ms": {
+        "count": 0,
+        "mean": null,
+        "p95": null
+      },
+      "reid_latency_ms": {
+        "count": 0,
+        "mean": null,
+        "p95": null
+      },
+      "frame_age_ms": {
+        "n": 354,
+        "p50": 101.15927049810125,
+        "p95": 260.70206215226784,
+        "max": 341.1099639997701
+      },
+      "detection_service_fps": null,
+      "detection_sample_fps": 8.142184124480435,
+      "selected": 71,
+      "reasons": {
+        "NO_FRESH_REID_EVENT": 766,
+        "LOW_REFERENCE_SIMILARITY": 176,
+        "AWAITING_MULTI_OBSERVATION_CONFIRMATION": 82,
+        "CONFIRMED_MULTI_CUE": 71,
+        "UNCERTAIN_CROP_QUALITY": 25
+      },
+      "false_rejection_of_true_target": null,
+      "false_acceptance_of_distractor": null,
+      "live_detection_fps": null,
+      "live_ptz_decision_latency_ms": null,
+      "association_ms": {
+        "n": 354,
+        "p50": 1.3062644993624417,
+        "p95": 2.2380609498213744,
+        "max": 2.6660980001906864
+      },
+      "dry_plan_ms": {
+        "n": 354,
+        "p50": 0.03953099985665176,
+        "p95": 0.07019125059741772,
+        "max": 0.10169099914492108
+      },
+      "reid_invocations_actual": 354,
+      "inference_scope": "real event frames"
+    }
+  },
+  "disagreement": {
+    "AB": {
+      "same": 969,
+      "left_only": 151
+    },
+    "BC": {
+      "same": 915,
+      "left_only": 205
+    },
+    "CD": {
+      "same": 606,
+      "left_only": 512,
+      "right_only": 2
+    }
+  },
+  "quality": {
+    "unknown": 401,
+    "measured_clear": 1584
+  },
+  "max_distractor_entries": 2,
+  "quality_analysis_ms": {
+    "n": 1120,
+    "p50": 0.5526984987227479,
+    "p95": 0.9917287514326744,
+    "max": 1.9627840010798536
+  },
+  "event_planning_ms": {
+    "n": 1120,
+    "p50": 0.20676849999290425,
+    "p95": 0.43342885292076966,
+    "max": 0.8522179996361956
+  },
+  "full_inference_reference": {
+    "jobs": 1120,
+    "candidates": 1985,
+    "minibatches": 1264,
+    "total_outer_hold_ms": 19488.276581025275,
+    "wall_ms": {
+      "n": 1120,
+      "p50": 20.47904650135024,
+      "p95": 41.04179189907881,
+      "max": 409.16397999899345
+    },
+    "held_ms": {
+      "n": 1120,
+      "p50": 15.033881501949509,
+      "p95": 32.21083505122805,
+      "max": 289.7120020024886
+    }
+  },
+  "event_inference": {
+    "jobs": 354,
+    "candidates": 680,
+    "minibatches": 428,
+    "total_outer_hold_ms": 6330.992435028747,
+    "wall_ms": {
+      "n": 354,
+      "p50": 20.465637500819867,
+      "p95": 41.47517755063744,
+      "max": 54.31428399970173
+    },
+    "held_ms": {
+      "n": 354,
+      "p50": 14.83214000109001,
+      "p95": 33.346246848486764,
+      "max": 44.3686400030856
+    }
+  },
+  "event_timeouts": 0,
+  "event_gap_s": {
+    "n": 353,
+    "p50": 0.26944977500170353,
+    "p95": 0.6975516946011339,
+    "max": 7.667880490000243
+  },
+  "event_gaps_above_1s": 7,
+  "event_reasons": {
+    "INITIAL_ACQUISITION": 22,
+    "ACTIVE_OVERLAP": 70,
+    "PERIODIC_IDENTITY_CHECK": 62,
+    "POST_OVERLAP_SEPARATION": 17,
+    "TRACKING_UNCERTAIN": 263,
+    "TARGET_REACQUISITION": 263,
+    "TRACK_ID_CHANGE": 34,
+    "APPROACHING_OVERLAP": 104
+  },
+  "full_v4_score_cache_max_diff": 2.980232238769531e-07,
+  "ground_truth": false,
+  "physical_commands": 0,
+  "review_frames": 43,
+  "limitations": [
+    "Serial media-time replay; no live foreground/RTSP contention",
+    "Full reference is all-candidate v4 cost, not baseline A invocation cost",
+    "D skips are unknown/HOLD; no extrapolated identity authorization between checks",
+    "Quality proxy cannot certify full-body visibility; thresholds not calibrated",
+    "Development captures, not independent holdout; selection counts are not accuracy"
+  ]
+}

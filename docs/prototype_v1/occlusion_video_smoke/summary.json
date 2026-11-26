@@ -1,0 +1,14 @@
+{
+  "frames": 13,
+  "physical_commands": 0,
+  "source_sha256": "12b3a673cc0a04d9421bb74c07a9f3a732abac15f940cb62e36977db2b89ff56",
+  "reference_sha256": "62b4503a0e8d206132c46d10c48221da8833c058c83a484dc1681e9010574be0",
+  "C": "NOT_RUN_NO_LOCAL_SEG_WEIGHTS",
+  "independent_gt": false,
+  "timestamp_basis": "file_pts_plus_compute_age",
+  "live_warning": "Diagnostic sequential observer: decode/network backlog not measured; never control authority",
+  "localization_recall": null,
+  "identity_switch_count": null,
+  "lost_target_duration": null,
+  "actual_ptz_interruption_s": null
+}

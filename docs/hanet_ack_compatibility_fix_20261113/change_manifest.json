@@ -1,0 +1,20 @@
+{
+  "checkpoint_path": "/mnt/files/Project/ptz/.hotfix_checkpoints/hanet_ack_20261113",
+  "checkpoint": "01ac2d9086e076e07275c4df273081b689d78855",
+  "modified": [
+    "camera/hanet_rpc.py",
+    "tools/run_hanet_fault_tests.py",
+    "telemetry/latency.py"
+  ],
+  "added": [
+    "camera/hanet_ack.py",
+    "test/test_hanet_ack_compatibility.py"
+  ],
+  "sha256": {
+    "camera/hanet_rpc.py": "1a7cf32e092aab785e7be14a48ecee02fbc9b71ac945ece379ef1cb3431a41e6",
+    "tools/run_hanet_fault_tests.py": "1f559dc05bdf6007c0691a20129b0a02996489aaebcdba9eb78dd9826c2acf2a",
+    "telemetry/latency.py": "4accde4ab2d61937d5c14941a46775e0e790df6640b7d319ea20f497e9ac87a3",
+    "camera/hanet_ack.py": "1b51531f1293951dc0a0cb36ef7331ac9d1536e74032c53a7b426c447737ece0",
+    "test/test_hanet_ack_compatibility.py": "e331e3b0449a5e03289d8792d2aa999c6924f6696cb90008912b0a78d24792de"
+  }
+}

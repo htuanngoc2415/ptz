@@ -1,0 +1,109 @@
+{
+  "kind": "Scripted scores; no YOLO/OSNet/GPU/FPS benchmark",
+  "results": [
+    {
+      "scenario": "single",
+      "frames": 160,
+      "selected": 152,
+      "hold_frames": 6,
+      "incorrect_following": 0,
+      "target_track_ids": 1,
+      "scripted_reid_calls": 11,
+      "scripted_reid_candidates": 11,
+      "reacquisition_seconds": null,
+      "logic_wall_ms": {
+        "p50": 0.30552449993592745,
+        "p95": 0.3951118001623399,
+        "p99": 0.6050605899918072
+      }
+    },
+    {
+      "scenario": "proven_alias",
+      "frames": 160,
+      "selected": 0,
+      "hold_frames": 0,
+      "incorrect_following": 0,
+      "target_track_ids": 1,
+      "scripted_reid_calls": 160,
+      "scripted_reid_candidates": 320,
+      "reacquisition_seconds": null,
+      "logic_wall_ms": {
+        "p50": 0.43466249985613103,
+        "p95": 0.7191229495902007,
+        "p99": 0.9043185002701647
+      }
+    },
+    {
+      "scenario": "ambiguous_overlap",
+      "frames": 160,
+      "selected": 0,
+      "hold_frames": 0,
+      "incorrect_following": 0,
+      "target_track_ids": 1,
+      "scripted_reid_calls": 160,
+      "scripted_reid_candidates": 320,
+      "reacquisition_seconds": null,
+      "logic_wall_ms": {
+        "p50": 0.41601499992793833,
+        "p95": 0.6241763499701847,
+        "p99": 0.7780744700630745
+      }
+    },
+    {
+      "scenario": "fragmentation",
+      "frames": 160,
+      "selected": 152,
+      "hold_frames": 6,
+      "incorrect_following": 0,
+      "target_track_ids": 2,
+      "scripted_reid_calls": 12,
+      "scripted_reid_candidates": 12,
+      "reacquisition_seconds": null,
+      "logic_wall_ms": {
+        "p50": 0.2990294997289311,
+        "p95": 0.4014697000457089,
+        "p99": 0.5469643400238056
+      }
+    },
+    {
+      "scenario": "missing_reacquire",
+      "frames": 160,
+      "selected": 55,
+      "hold_frames": 30,
+      "incorrect_following": 0,
+      "target_track_ids": 2,
+      "scripted_reid_calls": 6,
+      "scripted_reid_candidates": 6,
+      "reacquisition_seconds": 0.30000000000000004,
+      "logic_wall_ms": {
+        "p50": 0.14453800008595863,
+        "p95": 0.4358431500122605,
+        "p99": 0.6342107599039077
+      }
+    },
+    {
+      "scenario": "camera_translation",
+      "frames": 160,
+      "selected": 151,
+      "hold_frames": 7,
+      "incorrect_following": 0,
+      "target_track_ids": 2,
+      "scripted_reid_calls": 12,
+      "scripted_reid_candidates": 12,
+      "reacquisition_seconds": null,
+      "logic_wall_ms": {
+        "p50": 0.3263025000705966,
+        "p95": 0.46108774990898355,
+        "p99": 0.8018874100389435
+      }
+    }
+  ],
+  "recovery": {
+    "attempts": 20,
+    "pulses": 0,
+    "spent_seconds": 0.0,
+    "exhausted": false,
+    "successful_reacquisitions": 0,
+    "invalid_direction_commands": 0
+  }
+}

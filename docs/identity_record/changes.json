@@ -1,0 +1,26 @@
+{
+  "before": {
+    "config.py": "c124a51a36f504a00b2b6856d6879adb2d7a5426bb3d8c5e2154e6af3b20746f",
+    "gui/cctv_app.py": "6ba12e45b3d6eb8d769f7639a373e5059ffc5925873fbb186d42092fb921f5d8",
+    "runtime/inference_worker.py": "3cdd8187c386f7a70efc27a603f705265f6098d454b0fdb2623335c88b207d0d",
+    "runtime/motion_recording.py": "bd4b5e92cc1789ab6de3e792c68abe7039f1877fc12c08dbf07a0ad5e37211d8"
+  },
+  "after": {
+    "config.py": "fdf7a9d4ffd0b6e24a5680aa687905a8f23b4ef1d05be6d9ffd9b065c2fdcafc",
+    "gui/cctv_app.py": "31283fb202ad598e5594a6b7866cfbf574dc7d368d95112084be2f6e943a995b",
+    "runtime/inference_worker.py": "97c521432b75aa1b706a115c48d8aa07de8ee0fb6bf020eb4e1caa26cd138b29",
+    "runtime/motion_recording.py": "4b09244da8fe419fd440352c34557b29a9b0bfb5155fc6fc9d53979ad21785b9",
+    "runtime/identity_recording.py": "8c0b2b9c9c849dc90bcad609a77b46b84f7cb613249f9c8411f8ab5d7a07d4a3",
+    "tools/identity_dataset.py": "7ddb93d92a701a1bcd756105927630a1c56d250cc7ebb0fcd6ed6e6d3ec6407b",
+    "tools/label_identity_capture.py": "745ae192ed769d4b78c2435d07dc395cbb6dd0e8a83149405f0bd916910a808f",
+    "tools/prepare_identity_capture.py": "ac10befd8befc76ea90ca6a2d9fddcd5dc116434e07b13a4e0886ce34c199cca",
+    "test/test_identity_recording.py": "b7cbee065772fbb40d64799c3048a2194708ff617cef9292a0155a2b0c0db221"
+  },
+  "created": [
+    "runtime/identity_recording.py",
+    "tools/identity_dataset.py",
+    "tools/label_identity_capture.py",
+    "tools/prepare_identity_capture.py",
+    "test/test_identity_recording.py"
+  ]
+}

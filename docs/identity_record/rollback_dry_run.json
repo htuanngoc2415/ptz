@@ -1,0 +1,17 @@
+{
+  "apply": false,
+  "restore": [
+    "config.py",
+    "gui/cctv_app.py",
+    "runtime/inference_worker.py",
+    "runtime/motion_recording.py"
+  ],
+  "quarantine": [
+    "runtime/identity_recording.py",
+    "tools/identity_dataset.py",
+    "tools/label_identity_capture.py",
+    "tools/prepare_identity_capture.py",
+    "test/test_identity_recording.py"
+  ],
+  "preserve": "captures, annotations, docs and previous Phase 1/user changes"
+}

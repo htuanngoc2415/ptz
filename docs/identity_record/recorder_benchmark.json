@@ -1,0 +1,39 @@
+{
+  "kind": "offline recorder cost only, not live FPS; real image with synthetic target metadata",
+  "source": "docs/identity_phase01/video_cache/first_frame.jpg",
+  "queue": "drained after each sample outside measured submit; not overload test",
+  "results": [
+    {
+      "shape": [
+        480,
+        704,
+        3
+      ],
+      "samples": 40,
+      "submit_mean_ms": 0.493495499972596,
+      "submit_p95_ms": 1.0802714500414359,
+      "first_start_submit_ms": 1.7637739999827318,
+      "encode_write_complete_mean_ms": 19.009459224969305,
+      "encode_write_complete_p95_ms": 20.192329500116557,
+      "written": 40,
+      "dropped": 0,
+      "errors": 0
+    },
+    {
+      "shape": [
+        1080,
+        1920,
+        3
+      ],
+      "samples": 40,
+      "submit_mean_ms": 1.5342888500015306,
+      "submit_p95_ms": 2.0582699499982464,
+      "first_start_submit_ms": 5.97227399998701,
+      "encode_write_complete_mean_ms": 91.37359612500973,
+      "encode_write_complete_p95_ms": 94.62376910008742,
+      "written": 40,
+      "dropped": 0,
+      "errors": 0
+    }
+  ]
+}

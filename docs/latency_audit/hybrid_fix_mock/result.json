@@ -1,0 +1,15 @@
+{
+  "evidence_source": "mock",
+  "lock_to_zoom_request_ms": 2.277209,
+  "lock_to_first_zoom_command_ms": 3.802527,
+  "absolute_commands": 1,
+  "pulse_commands": 0,
+  "no_face_zoom_final_state": "ZOOM_HOLD",
+  "simulated_recognition_processing_ms": 388,
+  "simulated_frame_age_ms": 1100,
+  "identity_observation_accepted": true,
+  "delayed_bbox_valid_for_motor": false,
+  "identity_confirmed": false,
+  "trace": "docs/latency_audit/hybrid_fix_mock/zoom/zoom_trace_20261008_110250_393011.jsonl",
+  "summary": "docs/latency_audit/hybrid_fix_mock/zoom/zoom_summary_20261008_110250_393011.csv"
+}
